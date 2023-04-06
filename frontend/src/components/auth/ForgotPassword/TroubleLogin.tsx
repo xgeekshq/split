@@ -2,8 +2,6 @@ import { Dispatch, SetStateAction, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { joiResolver } from '@hookform/resolvers/joi';
 
-import { styled } from '@/styles/stitches/stitches.config';
-
 import Icon from '@/components/Primitives/Icons/Icon/Icon';
 import Button from '@/components/Primitives/Inputs/Button/Button';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
@@ -12,19 +10,17 @@ import Text from '@/components/Primitives/Text/Text';
 import SchemaEmail from '@/schema/schemaEmail';
 import { EmailUser } from '@/types/user/user';
 import useResetToken from '@/hooks/auth/useResetToken';
-import EmailSent from './EmailSent';
-
-const MainContainer = styled('form', Flex, {
-  width: '100%',
-});
+import EmailSent from '@/components/auth/ForgotPassword/EmailSent';
+import { FlexForm } from '@/styles/pages/pages.styles';
 
 interface TroubleLoginProps {
   setShowTroubleLogin: Dispatch<SetStateAction<boolean>>;
 }
 
-const TroubleLogin: React.FC<TroubleLoginProps> = ({ setShowTroubleLogin }) => {
+const TroubleLogin = ({ setShowTroubleLogin }: TroubleLoginProps) => {
   const [currentEmail, setCurrentEmail] = useState('');
   const [showEmailSent, setShowEmailSent] = useState(false);
+
   const methods = useForm<EmailUser>({
     mode: 'onChange',
     reValidateMode: 'onChange',
@@ -34,28 +30,43 @@ const TroubleLogin: React.FC<TroubleLoginProps> = ({ setShowTroubleLogin }) => {
     resolver: joiResolver(SchemaEmail),
   });
 
-  const { mutateAsync } = useResetToken();
+  const { mutate } = useResetToken();
 
   const handleShowTroubleLogginIn = () => {
     setShowTroubleLogin(false);
   };
 
-  const handleRecoverPassword = async (email: string) => {
-    await mutateAsync({ email });
-
-    setShowEmailSent(true);
-    setCurrentEmail(email);
+  const handleRecoverPassword = (email: string) => {
+    mutate(
+      { email },
+      {
+        onSuccess: () => {
+          setShowEmailSent(true);
+          setCurrentEmail(email);
+        },
+      },
+    );
   };
-  if (showEmailSent) return <EmailSent userEmail={currentEmail} />;
+
+  if (showEmailSent)
+    return (
+      <EmailSent
+        userEmail={currentEmail}
+        resendEmail={() => {
+          handleRecoverPassword(currentEmail);
+        }}
+        goBack={handleShowTroubleLogginIn}
+      />
+    );
+
   return (
-    <MainContainer
+    <FlexForm
       direction="column"
       onSubmit={methods.handleSubmit(({ email }) => {
         handleRecoverPassword(email);
       })}
     >
       <FormProvider {...methods}>
-        <Icon name="logo" />
         <Text css={{ mt: '$24' }} heading="1">
           Trouble logging in?
         </Text>
@@ -78,7 +89,7 @@ const TroubleLogin: React.FC<TroubleLoginProps> = ({ setShowTroubleLogin }) => {
           </Button>
         </Flex>
       </FormProvider>
-    </MainContainer>
+    </FlexForm>
   );
 };
 

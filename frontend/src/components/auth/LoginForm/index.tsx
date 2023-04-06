@@ -27,8 +27,9 @@ import { DASHBOARD_ROUTE } from '@/utils/routes';
 import Button from '@/components/Primitives/Inputs/Button/Button';
 import { getCookie, deleteCookie } from 'cookies-next';
 import loginWithAzure from '@/hooks/auth/loginWithAzure';
-import { OrSeparator, StyledForm, StyledHoverIconFlex } from './styles';
-import LoginSSO from './LoginSSO';
+import Separator from '@/components/Primitives/Separator/Separator';
+import { FlexForm } from '@/styles/pages/pages.styles';
+import LoginSSO from '@/components/auth/LoginForm/LoginSSO';
 
 interface LoginFormProps {
   setShowTroubleLogin: Dispatch<SetStateAction<boolean>>;
@@ -91,10 +92,9 @@ const LoginForm = ({ setShowTroubleLogin }: LoginFormProps) => {
     <LoginSSO handleLoginAzure={handleLoginAzure} />
   ) : (
     <FormProvider {...methods}>
-      <StyledForm
+      <FlexForm
         autoComplete="off"
         direction="column"
-        style={{ width: '100%' }}
         onSubmit={methods.handleSubmit((credentials: LoginUser) => {
           handleLogin(credentials);
         })}
@@ -129,33 +129,33 @@ const LoginForm = ({ setShowTroubleLogin }: LoginFormProps) => {
         </Button>
         {AUTH_SSO && (
           <Flex align="center" direction="column" justify="center">
-            <OrSeparator>
-              <hr />
+            <Flex align="center" css={{ width: '100%', my: '$26' }} gap="16">
+              <Separator />
               <Text color="primary300" size="sm" fontWeight="medium">
-                or
+                OR
               </Text>
-              <hr />
-            </OrSeparator>
+              <Separator />
+            </Flex>
             <Flex gap="32">
               {NEXT_PUBLIC_ENABLE_GIT && (
-                <StyledHoverIconFlex>
-                  <Icon css={{ width: '$60', height: '$60' }} name="github" />
-                </StyledHoverIconFlex>
+                <Button size="xl" isIcon>
+                  <Icon size={60} name="github" />
+                </Button>
               )}
               {NEXT_PUBLIC_ENABLE_GOOGLE && (
-                <StyledHoverIconFlex>
-                  <Icon css={{ width: '$60', height: '$60' }} name="google" />
-                </StyledHoverIconFlex>
+                <Button size="xl" isIcon>
+                  <Icon size={60} name="google" />
+                </Button>
               )}
               {NEXT_PUBLIC_ENABLE_AZURE && (
-                <StyledHoverIconFlex data-loading={loading.sso} onClick={handleLoginAzure}>
-                  <Icon css={{ width: '$60', height: '$60' }} name="microsoft" />
-                </StyledHoverIconFlex>
+                <Button size="xl" isIcon data-loading={loading.sso} onClick={handleLoginAzure}>
+                  <Icon size={60} name="microsoft" />
+                </Button>
               )}
             </Flex>
           </Flex>
         )}
-      </StyledForm>
+      </FlexForm>
     </FormProvider>
   );
 };
