@@ -13,11 +13,9 @@ import { CardToAdd } from '@/types/card/card';
 import UpdateCardDto from '@/types/card/updateCard.dto';
 import AddCommentDto from '@/types/comment/addComment.dto';
 import UpdateCommentDto from '@/types/comment/updateComment.dto';
-import { styled } from '@/styles/stitches/stitches.config';
 import { CARD_TEXT_DEFAULT } from '@/utils/constants';
-import Icon from '../Primitives/Icons/Icon/Icon';
-
-const StyledForm = styled('form', Flex, { width: '100%' });
+import { FlexForm } from '@/styles/pages/pages.styles';
+import Icon from '@/components/Primitives/Icons/Icon/Icon';
 
 type AddCardProps = {
   isUpdate: boolean;
@@ -232,7 +230,7 @@ const AddCard = React.memo<AddCardProps>(
       );
 
     return (
-      <StyledForm
+      <FlexForm
         {...props}
         align="center"
         direction="column"
@@ -304,7 +302,7 @@ const AddCard = React.memo<AddCardProps>(
             </Flex>
           </Flex>
         </FormProvider>
-      </StyledForm>
+      </FlexForm>
     );
   },
 );

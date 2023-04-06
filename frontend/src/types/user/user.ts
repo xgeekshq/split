@@ -47,8 +47,8 @@ export interface ResetTokenResponse {
 }
 
 export interface NewPassword {
-  password: string;
-  passwordConf: string;
+  newPassword: string;
+  newPasswordConf: string;
   token: string;
 }
 

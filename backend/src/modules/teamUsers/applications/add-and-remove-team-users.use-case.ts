@@ -6,6 +6,7 @@ import { CreateTeamUserServiceInterface } from '../interfaces/services/create.te
 import { DeleteTeamUserServiceInterface } from '../interfaces/services/delete.team.user.service.interface';
 import UpdateTeamUserDto from '../dto/update.team.user.dto';
 import { UseCase } from 'src/libs/interfaces/use-case.interface';
+import TeamUserDto from '../dto/team.user.dto';
 
 @Injectable()
 export class AddAndRemoveTeamUsersUseCase implements UseCase<UpdateTeamUserDto, TeamUser[]> {
@@ -15,19 +16,42 @@ export class AddAndRemoveTeamUsersUseCase implements UseCase<UpdateTeamUserDto, 
 		@Inject(TYPES.services.DeleteTeamUserService)
 		private deleteTeamUserService: DeleteTeamUserServiceInterface
 	) {}
+
 	async execute({ addUsers, removeUsers }: UpdateTeamUserDto): Promise<TeamUser[]> {
 		try {
-			let createdTeamUsers: TeamUser[] = [];
-
-			if (addUsers.length > 0)
-				createdTeamUsers = await this.createTeamUserService.createTeamUsers(addUsers);
-
-			if (removeUsers.length > 0)
-				await this.deleteTeamUserService.deleteTeamUsers(removeUsers, false);
+			const createdTeamUsers: TeamUser[] =
+				(await this.addAndRemoveTeamUsersHandleAbortSession(addUsers, removeUsers)) ?? [];
+			await this.createTeamUserService.commitTransaction();
+			await this.deleteTeamUserService.commitTransaction();
 
 			return createdTeamUsers;
 		} catch (error) {
 			throw new BadRequestException(UPDATE_FAILED);
 		}
+	}
+
+	/* --------------- HELPERS --------------- */
+
+	private async addAndRemoveTeamUsersHandleAbortSession(
+		addUsers: TeamUserDto[],
+		removeUsers: string[]
+	) {
+		let createdTeamUsers: TeamUser[];
+		try {
+			await this.createTeamUserService.startTransaction();
+			await this.deleteTeamUserService.startTransaction();
+
+			if (addUsers.length > 0)
+				createdTeamUsers = await this.createTeamUserService.createTeamUsers(addUsers, null, true);
+
+			if (removeUsers.length > 0)
+				await this.deleteTeamUserService.deleteTeamUsers(removeUsers, true);
+		} catch (error) {
+			await this.createTeamUserService.abortTransaction();
+			await this.deleteTeamUserService.abortTransaction();
+			throw new BadRequestException(UPDATE_FAILED);
+		}
+
+		return createdTeamUsers;
 	}
 }
