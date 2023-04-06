@@ -4,7 +4,7 @@ import { fireEvent, waitFor } from '@testing-library/react';
 import { renderWithProviders } from '@/utils/testing/renderWithProviders';
 import { USERS_ROUTE } from '@/utils/routes';
 import { UserFactory } from '@/utils/factories/user';
-import UserHeader, { UserHeaderProps } from './Header';
+import UserHeader, { UserHeaderProps } from './UserHeader';
 
 const { mockRouter } = libraryMocks.mockNextRouter({ pathname: '/users' });
 const render = (props: Partial<UserHeaderProps> = {}) =>
