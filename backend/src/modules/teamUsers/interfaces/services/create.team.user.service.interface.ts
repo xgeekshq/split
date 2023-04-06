@@ -3,6 +3,9 @@ import TeamUserDto from '../../dto/team.user.dto';
 import TeamUser from 'src/modules/teamUsers/entities/team.user.schema';
 
 export interface CreateTeamUserServiceInterface extends SessionInterface {
-	createTeamUsers(teamUsers: TeamUserDto[], teamId?: string): Promise<TeamUser[]>;
-	createTeamUser(teamUser: TeamUserDto): Promise<TeamUser>;
+	createTeamUsers(
+		teamUsers: TeamUserDto[],
+		teamId?: string,
+		withSession?: boolean
+	): Promise<TeamUser[]>;
 }
