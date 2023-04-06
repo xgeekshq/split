@@ -2,7 +2,9 @@ import { createMockRouter } from '@/utils/testing/mocks';
 import { renderWithProviders } from '@/utils/testing/renderWithProviders';
 import { UserListFactory } from '@/utils/factories/user';
 import { fireEvent, waitFor } from '@testing-library/react';
-import UserListDialog, { UserListDialogProps } from './UserListDialog';
+import UserListDialog, {
+  UserListDialogProps,
+} from '@/components/Primitives/Dialogs/UserListDialog/UserListDialog';
 
 const router = createMockRouter({});
 

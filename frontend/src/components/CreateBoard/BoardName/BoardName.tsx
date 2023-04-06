@@ -4,7 +4,7 @@ import { useRecoilValue } from 'recoil';
 import Input from '@/components/Primitives/Inputs/Input/Input';
 import Text from '@/components/Primitives/Text/Text';
 import { createBoardError } from '@/store/createBoard/atoms/create-board.atom';
-import Flex from '../../Primitives/Layout/Flex/Flex';
+import Flex from '@/components/Primitives/Layout/Flex/Flex';
 
 type BoardNameProps = {
   title: string;

@@ -7,7 +7,7 @@ import {
   TeamUser,
   TeamUserAddAndRemove,
   TeamUserUpdate,
-} from '../types/team/team.user';
+} from '@/types/team/team.user';
 
 // #region GET
 export const getAllTeams = (context?: GetServerSidePropsContext): Promise<Team[]> =>

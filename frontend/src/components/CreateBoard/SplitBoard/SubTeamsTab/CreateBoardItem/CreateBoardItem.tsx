@@ -15,8 +15,8 @@ import { CreateBoardData, createBoardError } from '@/store/createBoard/atoms/cre
 import { BoardToAdd } from '@/types/board/board';
 import { Team } from '@/types/team/team';
 
-import CreateSubBoardItem from './CreateSubBoardItem/CreateSubBoardItem';
-import { StyledMainBoardItem } from './styles';
+import CreateSubBoardItem from '@/components/CreateBoard/SplitBoard/SubTeamsTab/CreateBoardItem/CreateSubBoardItem/CreateSubBoardItem';
+import { StyledMainBoardItem } from '@/components/CreateBoard/SplitBoard/SubTeamsTab/CreateBoardItem/styles';
 
 interface SubBoardListProp {
   dividedBoards: BoardToAdd[];

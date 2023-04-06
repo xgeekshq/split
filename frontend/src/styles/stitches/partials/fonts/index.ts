@@ -1,7 +1,7 @@
-import { fontSizes } from './fontSizes';
-import { fontWeights } from './fontWeights';
-import { letterSpacings } from './letterSpacings';
-import { lineHeights } from './lineHeights';
+import { fontSizes } from '@/styles/stitches/partials/fonts/fontSizes';
+import { fontWeights } from '@/styles/stitches/partials/fonts/fontWeights';
+import { letterSpacings } from '@/styles/stitches/partials/fonts/letterSpacings';
+import { lineHeights } from '@/styles/stitches/partials/fonts/lineHeights';
 
 export const fontsSettings = {
   fonts: {

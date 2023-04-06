@@ -1,4 +1,4 @@
-import { globalCss } from './stitches/stitches.config';
+import { globalCss } from '@/styles/stitches/stitches.config';
 
 const globalStyles = globalCss({
   '@import': [

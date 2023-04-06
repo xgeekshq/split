@@ -24,6 +24,7 @@ import { ScrollableContent } from '@/components/Boards/MyBoards/ListBoardMembers
 import Button from '@/components/Primitives/Inputs/Button/Button';
 import ColumnType, { CreateColumn } from '@/types/column';
 import { FlexForm } from '@/styles/pages/pages.styles';
+
 import ConfigurationSwitch from '@/components/Primitives/Inputs/Switches/ConfigurationSwitch/ConfigurationSwitch';
 import { ConfigurationSettings } from '@/components/Board/Settings/partials/ConfigurationSettings';
 import { TeamResponsibleSettings } from '@/components/Board/Settings/partials/TeamResponsible';

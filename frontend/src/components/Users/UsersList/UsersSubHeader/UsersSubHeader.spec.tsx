@@ -1,6 +1,8 @@
 import { renderWithProviders } from '@/utils/testing/renderWithProviders';
 import { fireEvent, waitFor } from '@testing-library/react';
-import UsersSubHeader, { UsersSubHeaderProps } from './UsersSubHeader';
+import UsersSubHeader, {
+  UsersSubHeaderProps,
+} from '@/components/Users/UsersList/UsersSubHeader/UsersSubHeader';
 
 const render = (props: Partial<UsersSubHeaderProps> = {}) =>
   renderWithProviders(

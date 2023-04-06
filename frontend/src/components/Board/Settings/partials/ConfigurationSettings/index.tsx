@@ -7,7 +7,7 @@ import {
   StyledAccordionTrigger,
   StyledAccordionIcon,
   StyledAccordionContent,
-} from '../../styles';
+} from '@/components/Board/Settings/styles';
 
 const ConfigurationSettings = ({ children }: ChildrenProp) => (
   <StyledAccordionItem value="configurations" variant="first">

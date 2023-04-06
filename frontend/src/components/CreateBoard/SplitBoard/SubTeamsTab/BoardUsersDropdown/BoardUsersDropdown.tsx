@@ -1,7 +1,12 @@
 import { User } from '@/types/user/user';
 import Text from '@/components/Primitives/Text/Text';
 import * as HoverCard from '@radix-ui/react-hover-card';
-import { UserNamesContainer, Dropdown, DropdownContent, DropdownItem } from './styles';
+import {
+  UserNamesContainer,
+  Dropdown,
+  DropdownContent,
+  DropdownItem,
+} from '@/components/CreateBoard/SplitBoard/SubTeamsTab/BoardUsersDropdown/styles';
 
 type UsersBoxProps = {
   haveError: boolean;

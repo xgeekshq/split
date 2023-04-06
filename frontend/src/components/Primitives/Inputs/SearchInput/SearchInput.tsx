@@ -3,7 +3,12 @@ import React from 'react';
 import Icon from '@/components/Primitives/Icons/Icon/Icon';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 
-import { IconWrapper, PlaceholderText, StyledInput, StyledInputWrapper } from '../Input/styles';
+import {
+  IconWrapper,
+  PlaceholderText,
+  StyledInput,
+  StyledInputWrapper,
+} from '@/components/Primitives/Inputs/Input/styles';
 
 export type SearchInputProps = {
   placeholder: string;
