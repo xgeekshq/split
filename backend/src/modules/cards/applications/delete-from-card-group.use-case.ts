@@ -89,7 +89,7 @@ export class DeleteFromCardGroupUseCase implements UseCase<DeleteFromCardGroupUs
 		}
 		const usersWithVotes = getUserWithVotes(getCardItem.votes);
 
-		if (!isEmpty(getCardItem.votes)) {
+		if (usersWithVotes?.size > 0) {
 			try {
 				const result = await this.updateBoardUserService.updateManyUserVotes(
 					boardId,
