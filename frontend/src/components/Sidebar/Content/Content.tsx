@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { signOut } from 'next-auth/react';
 
-import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Separator from '@/components/Primitives/Separator/Separator';
 import {
   ACCOUNT_ROUTE,
@@ -15,6 +14,9 @@ import {
   AZURE_LOGOUT_ROUTE,
 } from '@/utils/routes';
 import SidebarItem from '@/components/Sidebar/Item/Item';
+import { sidebarState } from '@/store/sidebar/atom/sidebar.atom';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { CollapsibleContent } from '../styles';
 
 export type SidebarContentProps = {
   strategy: string;
@@ -32,6 +34,9 @@ const SidebarContent = ({ strategy }: SidebarContentProps) => {
   const [active, setActive] = useState(router.asPath);
   const isStrategyLocal = strategy === 'local';
 
+  const { collapsed } = useRecoilValue(sidebarState);
+  const setSidebarState = useSetRecoilState(sidebarState);
+
   const handleSignOut = async () => {
     const result = await signOut({
       callbackUrl: isStrategyLocal ? START_PAGE_ROUTE : AZURE_LOGOUT_ROUTE,
@@ -44,10 +49,15 @@ const SidebarContent = ({ strategy }: SidebarContentProps) => {
 
   useEffect(() => {
     setActive(router.asPath);
+    setSidebarState({ collapsed: true }); // Collapses sidebar when route changes
   }, [router.asPath]);
 
   return (
-    <Flex direction="column" css={{ mt: '$16' }} data-testid="sidebarContent">
+    <CollapsibleContent
+      direction="column"
+      data-testid="sidebarContent"
+      collapsed={{ '@initial': collapsed, '@md': false }}
+    >
       {sidebarItems.map((item) => (
         <SidebarItem {...item} active={active} key={item.label} />
       ))}
@@ -72,7 +82,7 @@ const SidebarContent = ({ strategy }: SidebarContentProps) => {
       <Separator css={{ my: '$16', backgroundColor: '$primary600' }} />
 
       <SidebarItem iconName="log-out" label="Log out" active={active} onClick={handleSignOut} />
-    </Flex>
+    </CollapsibleContent>
   );
 };
 
