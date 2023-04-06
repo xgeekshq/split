@@ -13,11 +13,6 @@ const BodyContainer = styled(Flex, {
   },
 });
 
-const FormContainer = styled(Flex, {
-  height: '100%',
-  justifyContent: 'space-between',
-});
-
 const ImageContainer = styled(Flex, {
   flexGrow: 1,
   py: '$24',
@@ -46,4 +41,4 @@ const BannerContainer = styled(Flex, {
   },
 });
 
-export { BannerContainer, BodyContainer, FormContainer, ImageContainer, ImageBackground };
+export { BannerContainer, BodyContainer, ImageContainer, ImageBackground };
