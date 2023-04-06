@@ -126,8 +126,8 @@ export class TeamUserRepository
 		return this.findByIdAndDelete(teamUserId, withSession);
 	}
 
-	deleteTeamUsers(teamUsers: string[], withSession: boolean): Promise<number> {
-		return this.deleteMany(
+	deleteTeamUsers(teamUsers: string[], withSession: boolean): Promise<DeleteResult> {
+		return this.deleteManyWithAcknowledged(
 			{
 				_id: { $in: teamUsers }
 			},
@@ -144,7 +144,7 @@ export class TeamUserRepository
 		);
 	}
 
-	deleteTeamUsersOfUser(userId: string, withSession: boolean): Promise<number> {
-		return this.deleteMany({ user: userId }, withSession);
+	deleteTeamUsersOfUser(userId: string, withSession: boolean): Promise<DeleteResult> {
+		return this.deleteManyWithAcknowledged({ user: userId }, withSession);
 	}
 }
