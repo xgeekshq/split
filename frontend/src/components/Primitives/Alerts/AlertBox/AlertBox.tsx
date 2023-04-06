@@ -12,30 +12,34 @@ const AlertStyle = styled(Flex, Box, {
   borderRadius: '$12',
   variants: {
     type: {
+      success: {
+        backgroundColor: '$successLightest',
+        borderColor: '$colors$successBase',
+      },
       warning: {
         backgroundColor: '$warningLightest',
-        border: '1px solid $colors$warningBase',
+        borderColor: '$colors$warningBase',
       },
       error: {
         backgroundColor: '$dangerLightest',
-        border: '1px solid $colors$highlight4Base',
+        borderColor: '$colors$dangerBase',
       },
       info: {
         backgroundColor: '$infoLightest',
-        border: '1px solid $colors$infoBase',
+        borderColor: '$colors$infoBase',
       },
     },
   },
 });
 
 export type AlertBoxProps = CSSProps & {
-  type: 'warning' | 'info' | 'error';
+  type: 'success' | 'warning' | 'info' | 'error';
   children?: React.ReactNode;
   title?: string;
   text?: string;
 };
 
-const AlertBox = ({ type, title = undefined, text = undefined, children, css }: AlertBoxProps) => (
+const AlertBox = ({ type, title, text, children, css }: AlertBoxProps) => (
   <AlertStyle
     align="center"
     justify="between"

@@ -7,6 +7,8 @@ export const StyledForm = styled('form', Flex, {
   padding: '64px 92px 57px 152px',
 });
 
+export const FlexForm = styled('form', Flex, { width: '100%' });
+
 export const InnerContainer = styled(Flex, Box, {
   px: '$32',
   py: '$22',

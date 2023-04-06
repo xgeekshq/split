@@ -2,9 +2,10 @@ import React, { useMemo, useRef, useState } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 
 import Icon from '@/components/Primitives/Icons/Icon/Icon';
-import isEmpty from '@/utils/isEmpty';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Text from '@/components/Primitives/Text/Text';
+import isEmpty from '@/utils/isEmpty';
+
 import {
   HelperTextWrapper,
   IconWrapper,
@@ -25,27 +26,19 @@ type InputProps = {
   showCount?: boolean;
 } & React.ComponentProps<typeof StyledInput>;
 
-const Input: React.FC<InputProps> = ({
+const Input = ({
   id,
   placeholder,
   icon,
   iconPosition,
-  helperText,
+  helperText = '',
   type,
-  disabled,
+  disabled = false,
   css,
   maxChars,
   min,
-  showCount,
-}) => {
-  Input.defaultProps = {
-    iconPosition: undefined,
-    icon: undefined,
-    helperText: '',
-    disabled: false,
-    maxChars: undefined,
-    showCount: false,
-  };
+  showCount = false,
+}: InputProps) => {
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [currentType, setType] = useState(type);
   const [isVisible, setIsVisible] = useState<boolean>(false);

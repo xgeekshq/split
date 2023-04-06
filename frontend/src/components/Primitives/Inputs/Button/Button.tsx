@@ -87,7 +87,6 @@ const Button = styled('button', {
       },
       transparent: {
         py: '$12',
-        gap: '0',
         backgroundColor: '$tansparent',
         '&:disabled': {
           backgroundColor: '$primary50',
@@ -96,7 +95,6 @@ const Button = styled('button', {
       },
       transparentHover: {
         py: '$2',
-        gap: '0',
         backgroundColor: '$tansparent',
         '@hover': {
           '&:hover': {
@@ -211,6 +209,22 @@ const Button = styled('button', {
       },
     },
     size: {
+      xl: {
+        height: '$64',
+        fontWeight: '$medium',
+        fontSize: '$24',
+        lineHeight: '$28',
+        px: '$32',
+        py: '$20',
+        '& svg': {
+          height: '$32',
+          width: '$32',
+        },
+        '& span': {
+          height: '$32',
+          width: '$32',
+        },
+      },
       lg: {
         height: '$56',
         fontWeight: '$medium',
@@ -256,12 +270,32 @@ const Button = styled('button', {
         },
       },
       xs: {
+        height: '$28',
+        fontWeight: '$medium',
+        fontSize: '$12',
+        lineHeight: '$12',
+        px: '$12',
+        py: '$6',
+        '& svg': {
+          height: '$12',
+          width: '$12',
+        },
+        '& span': {
+          height: '$12',
+          width: '$12',
+        },
+      },
+      xxs: {
         height: '$10',
         fontWeight: '$bold',
         fontSize: '$12',
         lineHeight: '$1',
         px: '$1',
         py: '$1',
+        '& svg': {
+          height: '$8',
+          width: '$8',
+        },
         '& span': {
           height: '$10',
           width: '$10',
@@ -294,6 +328,16 @@ const Button = styled('button', {
     },
   },
   compoundVariants: [
+    {
+      isIcon: 'true',
+      size: 'xl',
+      css: {
+        '& svg': {
+          height: '$60',
+          width: '$60',
+        },
+      },
+    },
     {
       isIcon: 'true',
       size: 'lg',

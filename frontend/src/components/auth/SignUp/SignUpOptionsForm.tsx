@@ -7,8 +7,7 @@ import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Text from '@/components/Primitives/Text/Text';
 import { SignUpEnum } from '@/utils/signUp.enum';
 import loginWithAzure from '@/hooks/auth/loginWithAzure';
-
-import { OrSeparator } from '@/components/auth/LoginForm/styles';
+import Separator from '@/components/Primitives/Separator/Separator';
 
 const Container = styled(Flex, { width: '100%' });
 
@@ -47,13 +46,13 @@ const SignUpOptionsForm: React.FC<SignUpOptionsFormProps> = ({
       >
         Log in with SSO
       </Button>
-      <OrSeparator css={{ mt: '$22', mb: '$22' }}>
-        <hr />
+      <Flex align="center" css={{ width: '100%', my: '$26' }} gap="16">
+        <Separator />
         <Text color="primary300" size="sm" fontWeight="medium">
-          or
+          OR
         </Text>
-        <hr />
-      </OrSeparator>
+        <Separator />
+      </Flex>
       <Text
         fontWeight="medium"
         size="sm"

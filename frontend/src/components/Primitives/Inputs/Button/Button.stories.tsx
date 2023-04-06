@@ -27,8 +27,7 @@ export default {
         Interactive element activated by a user. Once activated, it then performs an action.
 
         **File Path:**
-        \`@/components/Primitives/Inputs/Button/Button.tsx\`
-        `,
+        \`@/components/Primitives/Inputs/Button/Button.tsx\``,
       },
     },
   },

@@ -5,28 +5,30 @@ import UserCheckbox, {
   UserCheckboxProps,
 } from '@/components/Primitives/Inputs/Checkboxes/UserCheckbox/UserCheckbox';
 
-const DEFAULT_PROPS = {
-  user: UserListFactory.create({ isChecked: true }),
-  disabled: false,
-  handleChecked: jest.fn(),
-};
-
 const router = createMockRouter({});
 
-const render = (props: UserCheckboxProps = DEFAULT_PROPS) =>
-  renderWithProviders(<UserCheckbox {...props} />, { routerOptions: router });
+const render = (props: Partial<UserCheckboxProps> = {}) =>
+  renderWithProviders(
+    <UserCheckbox
+      user={UserListFactory.create()}
+      disabled={false}
+      handleChecked={jest.fn()}
+      {...props}
+    />,
+    { routerOptions: router },
+  );
 
-describe('Components/Primitives/Checkboxes/UserCheckbox', () => {
+describe('Components/Primitives/Inputs/Checkboxes/UserCheckbox', () => {
   it('should render correctly', () => {
     // Arrange
-    const testProps = { ...DEFAULT_PROPS };
+    const user = UserListFactory.create({ isChecked: true });
 
     // Act
-    const { getByText, getByTestId, getByRole } = render(testProps);
+    const { getByText, getByTestId, getByRole } = render({ user });
 
     // Assert
-    expect(getByText(`${testProps.user.firstName} ${testProps.user.lastName}`)).toBeInTheDocument();
-    expect(getByText(testProps.user.email)).toBeInTheDocument();
+    expect(getByText(`${user.firstName} ${user.lastName}`)).toBeInTheDocument();
+    expect(getByText(user.email)).toBeInTheDocument();
     expect(getByTestId('checkBox')).toBeInTheDocument();
     expect(getByRole('checkbox')).toBeChecked();
   });

@@ -3,10 +3,6 @@ import { ComponentStory } from '@storybook/react';
 
 import Dots from '@/components/Primitives/Loading/Dots/Dots';
 import dedent from 'ts-dedent';
-import { DotsColorType, DotsSizeType } from '@/stories/types/PrimitiveTypes';
-
-const COLOR_OPTIONS: DotsColorType[] = ['primary800', 'primary200', 'white'];
-const SIZE_OPTIONS: DotsSizeType[] = [8, 4, 10, 15, 50, 80, 100];
 
 export default {
   title: 'Primitives/Loading/Dots',
@@ -29,22 +25,12 @@ export default {
   },
   argTypes: {
     color: {
-      options: COLOR_OPTIONS,
       control: { type: 'select' },
       description: 'The component color.',
-      table: {
-        type: { summary: COLOR_OPTIONS.join('|') },
-        defaultValue: { summary: 'primary800' },
-      },
     },
     size: {
-      options: SIZE_OPTIONS,
       control: { type: 'select' },
       description: 'The component size.',
-      table: {
-        type: { summary: SIZE_OPTIONS.join('|') },
-        defaultValue: { summary: 15 },
-      },
     },
   },
 };

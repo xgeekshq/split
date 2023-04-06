@@ -20,7 +20,7 @@ const DUMMY_OPTIONS = [
   { label: 'Pineapple', value: 'Pineapple' },
 ];
 
-const render = (disabled: boolean) =>
+const render = (disabled: boolean = false) =>
   renderWithProviders(
     <Select disabled={disabled}>
       <SelectTrigger css={{ padding: '$24' }}>
@@ -38,21 +38,19 @@ const render = (disabled: boolean) =>
     </Select>,
   );
 
-describe('Components/Primitives/Select', () => {
+describe('Components/Primitives/Inputs/Select', () => {
   it('should render correctly', () => {
-    // Arrange
-    const disableSelect: boolean = false;
     // Act
-    const { getByTestId } = render(disableSelect);
+    const { getByTestId } = render();
+
     // Assert
     expect(getByTestId('select')).toBeInTheDocument();
   });
 
   it('should render placeholder correctly', () => {
-    // Arrange
-    const disableSelect: boolean = false;
     // Act
-    const { getByTestId, getByText } = render(disableSelect);
+    const { getByTestId, getByText } = render();
+
     // Assert
     expect(getByTestId('select')).toBeInTheDocument();
     expect(getByText('Choose a fruit')).toBeInTheDocument();

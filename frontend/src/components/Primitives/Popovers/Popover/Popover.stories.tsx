@@ -15,7 +15,6 @@ import Text from '@/components/Primitives/Text/Text';
 import { PopoverVariantType, PopoverSizeType } from '@/stories/types/PrimitiveTypes';
 
 const VARIANT_OPTIONS: PopoverVariantType[] = ['dark', 'light'];
-
 const SIZE_OPTIONS: PopoverSizeType[] = ['sm', 'md'];
 
 export default {

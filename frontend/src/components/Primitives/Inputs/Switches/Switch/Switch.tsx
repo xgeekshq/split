@@ -111,10 +111,6 @@ export type SwitchProps = {
   size?: 'xs' | 'sm' | 'md';
   onCheckedChange?: (checked: boolean) => void;
   disabled?: boolean;
-  required?: boolean;
-  name?: string;
-  defaultChecked?: boolean;
-  asChild?: boolean;
   icon?: string;
 };
 

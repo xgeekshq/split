@@ -8,7 +8,7 @@ interface SignUpTabContentProps {
   setCurrentTab: Dispatch<React.SetStateAction<string>>;
 }
 
-const SignUpTabContent: React.FC<SignUpTabContentProps> = ({ setCurrentTab }) => {
+const SignUpTabContent = ({ setCurrentTab }: SignUpTabContentProps) => {
   const [showSignUp, setShowSignUp] = useState(SignUpEnum.SIGN_UP);
   const [emailName, setEmailName] = useState({ email: '', goback: false });
   const conditionalRendering = () => {

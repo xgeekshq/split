@@ -7,17 +7,12 @@ type Props = CSSProps & {
   color?: 'primary800' | 'primary200' | 'white';
 };
 
-const Dots = ({ css, size, color, ...props }: Props) => (
+const Dots = ({ css, size = 15, color = 'primary800', ...props }: Props) => (
   <StyledDots {...props} color={color} css={css} size={size}>
     <span />
     <span />
     <span />
   </StyledDots>
 );
-
-Dots.defaultProps = {
-  size: 15,
-  color: 'primary800',
-};
 
 export default Dots;

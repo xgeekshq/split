@@ -1,39 +1,29 @@
 import { createMockRouter } from '@/utils/testing/mocks';
 import { renderWithProviders } from '@/utils/testing/renderWithProviders';
 import { fireEvent, waitFor } from '@testing-library/dom';
+
 import Dialog, { DialogProps } from '@/components/Primitives/Dialogs/Dialog/Dialog';
 import { HeaderProps } from '@/components/Primitives/Dialogs/Dialog/DialogHeader';
 import { FooterProps } from '@/components/Primitives/Dialogs/Dialog/DialogFooter';
-import Flex from '@/components/Primitives/Layout/Flex/Flex';
-
-const DEFAULT_PROPS = {
-  isOpen: true,
-  setIsOpen: jest.fn(),
-  children: 'Modal Content',
-  title: 'Modal Title',
-  affirmativeLabel: 'Confirm',
-  handleAffirmative: jest.fn(),
-  handleClose: jest.fn(),
-};
 
 const router = createMockRouter({});
 
-const render = (props: DialogProps & HeaderProps & FooterProps) =>
+const render = ({
+  isOpen = true,
+  setIsOpen = jest.fn(),
+  title = 'Title',
+  children = 'Content',
+  ...props
+}: Partial<DialogProps & HeaderProps & FooterProps> = {}) =>
   renderWithProviders(
-    <Dialog isOpen={props.isOpen} setIsOpen={props.setIsOpen}>
-      <Dialog.Header title={props.title} />
-      <Flex
-        align="center"
-        justify="center"
-        direction="column"
-        css={{ height: '100%', overflow: 'auto' }}
-      >
-        {props.children}
-      </Flex>
+    <Dialog isOpen={isOpen} setIsOpen={setIsOpen}>
+      <Dialog.Header title={title} />
+      {children}
       <Dialog.Footer
-        handleClose={props.handleClose}
-        handleAffirmative={props.handleAffirmative}
-        affirmativeLabel={props.affirmativeLabel}
+        handleClose={jest.fn()}
+        handleAffirmative={jest.fn()}
+        affirmativeLabel="Confirm"
+        {...props}
       />
     </Dialog>,
     { routerOptions: router },
@@ -41,43 +31,40 @@ const render = (props: DialogProps & HeaderProps & FooterProps) =>
 
 describe('Components/Primitives/Dialogs/Dialog', () => {
   it('should render correctly', () => {
-    // Arrange
-    const testProps = { ...DEFAULT_PROPS };
-
     // Act
-    const { getByText } = render(testProps);
+    const { getByText } = render();
 
     // Assert
-    expect(getByText(testProps.children)).toBeInTheDocument();
-    expect(getByText(testProps.title)).toBeInTheDocument();
-    expect(getByText(testProps.affirmativeLabel)).toBeInTheDocument();
+    expect(getByText('Content')).toBeInTheDocument();
+    expect(getByText('Title')).toBeInTheDocument();
+    expect(getByText('Confirm')).toBeInTheDocument();
   });
 
   it('should call handleAffirmative', async () => {
     // Arrange
-    const testProps = { ...DEFAULT_PROPS };
+    const handleAffirmative = jest.fn();
 
     // Act
-    const { getByText } = render(testProps);
-    fireEvent.click(getByText(testProps.affirmativeLabel));
+    const { getByText } = render({ handleAffirmative });
+    fireEvent.click(getByText('Confirm'));
 
     // Assert
     await waitFor(() => {
-      expect(testProps.handleAffirmative).toHaveBeenCalled();
+      expect(handleAffirmative).toHaveBeenCalled();
     });
   });
 
   it('should call handleClose', async () => {
     // Arrange
-    const testProps = { ...DEFAULT_PROPS };
+    const handleClose = jest.fn();
 
     // Act
-    const { getByText } = render(testProps);
+    const { getByText } = render({ handleClose });
     fireEvent.click(getByText('Cancel'));
 
     // Assert
     await waitFor(() => {
-      expect(testProps.handleClose).toHaveBeenCalled();
+      expect(handleClose).toHaveBeenCalled();
     });
   });
 });

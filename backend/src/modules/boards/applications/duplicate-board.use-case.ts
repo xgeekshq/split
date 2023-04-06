@@ -5,7 +5,7 @@ import Card from 'src/modules/cards/entities/card.schema';
 import Column from 'src/modules/columns/entities/column.schema';
 import { GetUserServiceInterface } from 'src/modules/users/interfaces/services/get.user.service.interface';
 import * as Users from 'src/modules/users/interfaces/types';
-import { BadRequestException, Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import Board from '../entities/board.schema';
 import { GetBoardServiceInterface } from '../interfaces/services/get.board.service.interface';
 import { TYPES } from '../interfaces/types';
@@ -15,7 +15,8 @@ import Team from 'src/modules/teams/entities/team.schema';
 import BoardUserDto from 'src/modules/boardUsers/dto/board.user.dto';
 import { UserNotFoundException } from 'src/libs/exceptions/userNotFoundException';
 import { BoardNotFoundException } from 'src/libs/exceptions/boardNotFoundException';
-import { INSERT_FAILED } from 'src/libs/exceptions/messages';
+import { CREATE_FAILED } from 'src/libs/exceptions/messages';
+import { CreateFailedException } from 'src/libs/exceptions/createFailedBadRequestException';
 
 export type DuplicateBoardDto = { boardId: string; userId: string; boardTitle: string };
 
@@ -32,7 +33,7 @@ export class DuplicateBoardUseCase implements UseCase<DuplicateBoardDto, Board> 
 		private createBoardUserService: CreateBoardUserServiceInterface
 	) {}
 
-	async execute({ boardId, userId, boardTitle }) {
+	async execute({ boardId, userId, boardTitle }: DuplicateBoardDto) {
 		const currentUser = await this.getUserService.getById(userId);
 
 		if (!currentUser) {
@@ -120,7 +121,7 @@ export class DuplicateBoardUseCase implements UseCase<DuplicateBoardDto, Board> 
 			dividedBoards: []
 		});
 
-		if (!newBoard) throw new BadRequestException(INSERT_FAILED);
+		if (!newBoard) throw new CreateFailedException(CREATE_FAILED);
 
 		await this.createBoardUserService.saveBoardUsers(users, newBoard._id);
 
