@@ -4,11 +4,8 @@ import { useQuery } from '@tanstack/react-query';
 import { useSetRecoilState } from 'recoil';
 import { joiResolver } from '@hookform/resolvers/joi';
 
-import { styled } from '@/styles/stitches/stitches.config';
-
 import { checkUserExists, checkUserExistsAD } from '@/api/authService';
 import Button from '@/components/Primitives/Inputs/Button/Button';
-import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Input from '@/components/Primitives/Inputs/Input/Input';
 import Text from '@/components/Primitives/Text/Text';
 import SchemaEmail from '@/schema/schemaEmail';
@@ -17,8 +14,7 @@ import { EmailUser } from '@/types/user/user';
 import { NEXT_PUBLIC_ENABLE_AZURE } from '@/utils/constants';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
 import { SignUpEnum } from '@/utils/signUp.enum';
-
-const StyledForm = styled('form', Flex, { width: '100%' });
+import { FlexForm } from '@/styles/pages/pages.styles';
 
 interface SignUpFormProps {
   setShowSignUp: Dispatch<React.SetStateAction<SignUpEnum>>;
@@ -26,7 +22,7 @@ interface SignUpFormProps {
   emailName: { email: string; goback: boolean };
 }
 
-const SignUpForm: React.FC<SignUpFormProps> = ({ setShowSignUp, setEmailName, emailName }) => {
+const SignUpForm = ({ setShowSignUp, setEmailName, emailName }: SignUpFormProps) => {
   const setToastState = useSetRecoilState(toastState);
   const methods = useForm<EmailUser>({
     mode: 'onChange',
@@ -83,9 +79,8 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ setShowSignUp, setEmailName, em
 
   return (
     <FormProvider {...methods}>
-      <StyledForm
+      <FlexForm
         direction="column"
-        style={{ width: '100%' }}
         onSubmit={methods.handleSubmit(({ email }) => {
           if (!email) {
             setToastState({
@@ -110,7 +105,7 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ setShowSignUp, setEmailName, em
         <Button size="lg" type="submit">
           Get Started
         </Button>
-      </StyledForm>
+      </FlexForm>
     </FormProvider>
   );
 };

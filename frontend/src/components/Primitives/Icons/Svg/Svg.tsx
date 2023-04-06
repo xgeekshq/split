@@ -6,6 +6,9 @@ const Svg = styled('svg', {
       100: {
         size: '$100',
       },
+      60: {
+        size: '$60',
+      },
       48: {
         size: '$48',
       },
