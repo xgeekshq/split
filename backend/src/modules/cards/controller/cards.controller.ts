@@ -67,7 +67,7 @@ export default class CardsController {
 		@Inject(TYPES.applications.UpdateCardTextUseCase)
 		private readonly updateCardTextUseCase: UseCase<UpdateCardTextUseCaseDto, Board>,
 		@Inject(TYPES.applications.UpdateCardGroupTextUseCase)
-		private readonly updateCardGroupTextUseCase: UseCase<UpdateCardGroupTextUseCaseDto, Board>,
+		private readonly updateCardGroupTextUseCase: UseCase<UpdateCardGroupTextUseCaseDto, void>,
 
 		@Inject(TYPES.applications.DeleteCardApplication)
 		private readonly deleteCardApp: DeleteCardApplicationInterface,
@@ -241,7 +241,7 @@ export default class CardsController {
 		type: InternalServerErrorResponse
 	})
 	@Put(':boardId/card/:cardId')
-	async updateCardGroupText(
+	updateCardGroupText(
 		@Req() request: RequestWithUser,
 		@Param() params: CardGroupParams,
 		@Body() updateCardDto: UpdateCardDto
@@ -250,18 +250,17 @@ export default class CardsController {
 		const { text, socketId } = updateCardDto;
 		const userId = request.user._id;
 
-		const board = await this.updateCardGroupTextUseCase.execute({
+		const completionHandler = () => {
+			this.socketService.sendUpdateCard(socketId, updateCardDto);
+		};
+
+		return this.updateCardGroupTextUseCase.execute({
 			boardId,
 			cardId,
 			userId,
-			text
+			text,
+			completionHandler
 		});
-
-		if (board) {
-			this.socketService.sendUpdateCard(socketId, updateCardDto);
-		}
-
-		return HttpStatus.OK;
 	}
 
 	@ApiOperation({
@@ -288,10 +287,7 @@ export default class CardsController {
 		type: InternalServerErrorResponse
 	})
 	@Patch(':boardId/card/:cardId/position')
-	async updateCardPosition(
-		@Param() params: CardGroupParams,
-		@Body() boardData: UpdateCardPositionDto
-	) {
+	updateCardPosition(@Param() params: CardGroupParams, @Body() boardData: UpdateCardPositionDto) {
 		const { boardId, cardId } = params;
 		const { targetColumnId, newPosition, socketId } = boardData;
 
@@ -299,7 +295,7 @@ export default class CardsController {
 			this.socketService.sendUpdateCardPosition(socketId, boardData);
 		};
 
-		return await this.updateCardPositionUseCase.execute({
+		return this.updateCardPositionUseCase.execute({
 			boardId,
 			cardId,
 			targetColumnId,

@@ -21,4 +21,6 @@ export default class UpdateCardGroupTextUseCaseDto {
 	@IsNotEmpty()
 	@IsString()
 	text: string;
+
+	completionHandler: () => void;
 }
