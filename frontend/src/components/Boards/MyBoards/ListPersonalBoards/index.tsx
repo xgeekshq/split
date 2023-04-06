@@ -12,7 +12,6 @@ import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import EmptyPersonalBoards from '@/components/Boards/MyBoards/ListPersonalBoards/EmptyPersonalBoards';
 import ListBoards from '@/components/Boards/MyBoards/ListBoards';
 
-
 interface ListBoardsByTeamProps {
   userId: string;
   isSuperAdmin: boolean;
