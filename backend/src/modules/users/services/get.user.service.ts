@@ -10,18 +10,8 @@ import { UserRepositoryInterface } from '../repository/user.repository.interface
 export default class GetUserService implements GetUserServiceInterface {
 	constructor(
 		@Inject(TYPES.repository)
-		private readonly userRepository: UserRepositoryInterface,
-		@Inject(TeamUsers.TYPES.services.GetTeamUserService)
-		private getTeamUserService: GetTeamUserServiceInterface
+		private readonly userRepository: UserRepositoryInterface
 	) {}
-
-	getByEmail(email: string) {
-		return this.userRepository.findOneByField({ email });
-	}
-
-	getById(_id: string) {
-		return this.userRepository.getById(_id);
-	}
 
 	async getUserIfRefreshTokenMatches(refreshToken: string, userId: string) {
 		const user = await this.getById(userId);
@@ -31,6 +21,15 @@ export default class GetUserService implements GetUserServiceInterface {
 		const isRefreshTokenMatching = await compare(refreshToken, user.currentHashedRefreshToken);
 
 		return isRefreshTokenMatching ? user : false;
+	}
+
+	// these functions won't be tested since they make direct queries to the database
+	getByEmail(email: string) {
+		return this.userRepository.findOneByField({ email });
+	}
+
+	getById(_id: string) {
+		return this.userRepository.getById(_id);
 	}
 
 	countUsers() {
