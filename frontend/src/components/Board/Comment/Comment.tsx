@@ -6,8 +6,8 @@ import useComments from '@/hooks/useComments';
 import CommentType from '@/types/comment/comment';
 import DeleteCommentDto from '@/types/comment/deleteComment.dto';
 import { BoardPhases } from '@/utils/enums/board.phases';
-import AddCardOrComment from '../AddCardOrComment';
-import PopoverCommentSettings from './PopoverSettings';
+import AddCardOrComment from '@/components/Board/AddCardOrComment';
+import PopoverCommentSettings from '@/components/Board/Comment/PopoverSettings';
 
 interface CommentProps {
   comment: CommentType;

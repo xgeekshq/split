@@ -8,7 +8,7 @@ import Icon from '@/components/Primitives/Icons/Icon/Icon';
 import NoMeetingsImage from '@/components/images/NoMeetings';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Text from '@/components/Primitives/Text/Text';
-import StyledCalendar from './StyledCalendar';
+import StyledCalendar from '@/components/Dashboard/Calendar/StyledCalendar';
 
 const StyledContainer = styled(Flex, {
   height: '100%',

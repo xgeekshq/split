@@ -10,7 +10,7 @@ import { User } from '@/types/user/user';
 import { ROUTES } from '@/utils/routes';
 import Badge from '@/components/Primitives/Badge/Badge';
 import useTeamsWithoutUser from '@/hooks/teams/useTeamsWithoutUser';
-import TeamsDialog from '../TeamsDialog/TeamsDialog';
+import TeamsDialog from '@/components/Users/User/TeamsDialog/TeamsDialog';
 
 export type UserHeaderProps = {
   user: User;

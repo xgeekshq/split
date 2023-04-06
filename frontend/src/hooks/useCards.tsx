@@ -29,8 +29,8 @@ import {
   removeFromMergeRequest,
   updateCardPositionRequest,
   updateCardRequest,
-} from '../api/boardService';
-import useBoardUtils from './useBoardUtils';
+} from '@/api/boardService';
+import useBoardUtils from '@/hooks/useBoardUtils';
 
 const useCards = () => {
   const { queryClient, setToastState } = useBoardUtils();

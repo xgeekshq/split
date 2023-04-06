@@ -17,8 +17,8 @@ import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import { useRecoilValue } from 'recoil';
 import { boardInfoState } from '@/store/board/atoms/board.atom';
 import { UpdateBoardType } from '@/types/board/board';
-import { SwitchDefaultText } from '../SwitchDefaultText';
-import ColorSquare from '../ColorSquare';
+import { SwitchDefaultText } from '@/components/Board/Column/partials/SwitchDefaultText';
+import ColorSquare from '@/components/Board/Column/partials/ColorSquare';
 
 type OptionsMenuProps = {
   disabled?: boolean;

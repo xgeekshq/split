@@ -7,7 +7,7 @@ import {
   StyledAccordionTrigger,
   StyledAccordionIcon,
   StyledAccordionContent,
-} from '../../styles';
+} from '@/components/Board/Settings/styles';
 
 const ColumnSettings = ({ children }: ChildrenProp) => (
   <StyledAccordionItem value="columns">

@@ -4,7 +4,9 @@ import { TeamFactory } from '@/utils/factories/team';
 import { renderWithProviders } from '@/utils/testing/renderWithProviders';
 import { getFormattedTeamUserRole } from '@/utils/getFormattedTeamUserRole';
 import { TeamUserRoles } from '@/utils/enums/team.user.roles';
-import RoleSelector, { RoleSelectorProps } from './RoleSelector';
+import RoleSelector, {
+  RoleSelectorProps,
+} from '@/components/Teams/Team/TeamMemberItem/RoleSelector/RoleSelector';
 
 const { mockRouter } = libraryMocks.mockNextRouter({ pathname: '/teams' });
 

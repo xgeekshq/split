@@ -7,7 +7,7 @@ import {
   StyledAccordionTrigger,
   StyledAccordionIcon,
   StyledAccordionContent,
-} from '../../styles';
+} from '@/components/Board/Settings/styles';
 
 const TeamResponsibleSettings = ({ children }: ChildrenProp) => (
   <StyledAccordionItem value="responsible">

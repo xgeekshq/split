@@ -11,7 +11,7 @@ import { BoardUser } from '@/types/board/board.user';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 
 import { usersListState } from '@/store/team/atom/team.atom';
-import ListParticipants from '../ListParticipants/ListParticipants';
+import ListParticipants from '@/components/CreateBoard/RegularBoard/ParticipantsTab/ListParticipants/ListParticipants';
 
 const BoardParticipantsList = () => {
   const [isOpen, setIsOpen] = useState(false);

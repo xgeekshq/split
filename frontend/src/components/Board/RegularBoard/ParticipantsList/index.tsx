@@ -10,8 +10,8 @@ import { BoardUser, UpdateBoardUser } from '@/types/board/board.user';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import { getGuestUserCookies } from '@/utils/getGuestUserCookies';
 
-import BoardParticipantsSubHeader from './BoardParticipantsSubHeader/BoardParticipantsSubHeader';
-import ParticipantCard from './ParticipantCard';
+import BoardParticipantsSubHeader from '@/components/Board/RegularBoard/ParticipantsList/BoardParticipantsSubHeader/BoardParticipantsSubHeader';
+import ParticipantCard from '@/components/Board/RegularBoard/ParticipantsList/ParticipantCard';
 
 type ParticipantsListProps = {
   createdBy?: string;

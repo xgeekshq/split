@@ -10,8 +10,8 @@ import { toastState } from '@/store/toast/atom/toast.atom';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
 import { usePrevious } from '@/utils/previousState';
 
-import BoardConfigurations from '../../BoardConfigurations/BoardConfigurations';
-import SubTeamsConfigurations from '../SubTeamsTab/SubTeamsTab';
+import BoardConfigurations from '@/components/CreateBoard/BoardConfigurations/BoardConfigurations';
+import SubTeamsConfigurations from '@/components/CreateBoard/SplitBoard/SubTeamsTab/SubTeamsTab';
 
 const SettingsTabs = () => {
   // Recoil Atoms

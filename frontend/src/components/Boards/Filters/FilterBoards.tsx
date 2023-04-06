@@ -4,7 +4,7 @@ import Button from '@/components/Primitives/Inputs/Button/Button';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import { filterTeamBoardsState } from '@/store/board/atoms/board.atom';
 import { useRecoilState } from 'recoil';
-import FilterSelect from './FilterSelect';
+import FilterSelect from '@/components/Boards/Filters/FilterSelect';
 
 export interface OptionType {
   value: string;

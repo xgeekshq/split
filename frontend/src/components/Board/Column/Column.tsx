@@ -11,12 +11,18 @@ import { countColumnCards } from '@/helper/board/countCards';
 import Icon from '@/components/Primitives/Icons/Icon/Icon';
 import Tooltip from '@/components/Primitives/Tooltips/Tooltip/Tooltip';
 import { useResizeDetector } from 'react-resize-detector';
-import AddCardOrComment from '../AddCardOrComment';
-import CardsList from './CardsList';
-import SortMenu from './partials/SortMenu';
-import { CardsContainer, Container, OuterContainer, Title, TitleContainer } from './styles';
-import OptionsMenu from './partials/OptionsMenu';
-import UpdateColumnDialog from './partials/UpdateColumnDialog';
+import AddCardOrComment from '@/components/Board/AddCardOrComment';
+import CardsList from '@/components/Board/Column/CardsList';
+import SortMenu from '@/components/Board/Column/partials/SortMenu';
+import {
+  CardsContainer,
+  Container,
+  OuterContainer,
+  Title,
+  TitleContainer,
+} from '@/components/Board/Column/styles';
+import OptionsMenu from '@/components/Board/Column/partials/OptionsMenu';
+import UpdateColumnDialog from '@/components/Board/Column/partials/UpdateColumnDialog';
 
 type ColumMemoProps = {
   isRegularBoard?: boolean;

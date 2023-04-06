@@ -8,9 +8,8 @@ import Tooltip from '@/components/Primitives/Tooltips/Tooltip/Tooltip';
 import useCurrentSession from '@/hooks/useCurrentSession';
 import { InnerContainer } from '@/styles/pages/pages.styles';
 import { UserWithTeams } from '@/types/user/user';
-
-import UserItemActions from './UserItemActions/UserItemActions';
-import UserTitle from './UserTitle/UserTitle';
+import UserTitle from '@/components/Users/UsersList/UserItem/UserTitle/UserTitle';
+import UserItemActions from '@/components/Users/UsersList/UserItem/UserItemActions/UserItemActions';
 
 type UserItemProps = {
   userWithTeams: UserWithTeams;
