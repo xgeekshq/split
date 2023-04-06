@@ -13,7 +13,7 @@ import BoardRolePopover from '@/components/Primitives/Popovers/BoardRolePopover/
 import useUpdateTeamUser from '@/hooks/teams/useUpdateTeamUser';
 import { createTeamState } from '@/store/team/atom/team.atom';
 import { TeamUserRoles } from '@/utils/enums/team.user.roles';
-import MemberTitle from './MemberTitle/MemberTitle';
+import MemberTitle from '@/components/Teams/Team/TeamMemberItem/MemberTitle/MemberTitle';
 
 export type TeamMemberItemProps = {
   member: TeamUser;

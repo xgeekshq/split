@@ -10,9 +10,9 @@ import Text from '@/components/Primitives/Text/Text';
 import Tooltip from '@/components/Primitives/Tooltips/Tooltip/Tooltip';
 import { highlight2Colors } from '@/styles/stitches/partials/colors/highlight2.colors';
 
-import FakeAvatarGroup from './FakeAvatarGroup/FakeAvatarGroup';
-import { StyledMainBoardItem } from '../CreateBoardItem/styles';
-import { StyledSubBoardItem } from '../CreateBoardItem/CreateSubBoardItem/styles';
+import FakeAvatarGroup from '@/components/CreateBoard/SplitBoard/SubTeamsTab/FakeBoardItem/FakeAvatarGroup/FakeAvatarGroup';
+import { StyledMainBoardItem } from '@/components/CreateBoard/SplitBoard/SubTeamsTab/CreateBoardItem/styles';
+import { StyledSubBoardItem } from '@/components/CreateBoard/SplitBoard/SubTeamsTab/CreateBoardItem/CreateSubBoardItem/styles';
 
 const FakeBoardItem = () => (
   <Flex css={{ width: '100%', height: '100%' }} direction="column" gap={8}>

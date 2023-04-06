@@ -41,7 +41,6 @@ import UpdateCardDto from '../dto/update.card.dto';
 import { UpdateCardPositionDto } from '../dto/update-position.card.dto';
 import { TYPES } from '../interfaces/types';
 import { MergeCardDto } from '../dto/group/merge.card.dto';
-import { DeleteCardApplicationInterface } from '../interfaces/applications/delete.card.application.interface';
 import CreateCardUseCaseDto from '../dto/useCase/create-card.use-case.dto';
 import { UseCase } from 'src/libs/interfaces/use-case.interface';
 import CardCreationPresenter from '../dto/useCase/presenters/create-card-res.use-case.dto';
@@ -50,6 +49,8 @@ import MergeCardUseCaseDto from '../dto/useCase/merge-card.use-case.dto';
 import UpdateCardPositionUseCaseDto from '../dto/useCase/update-card-position.use-case.dto';
 import UpdateCardTextUseCaseDto from '../dto/useCase/update-card-text.use-case.dto';
 import UpdateCardGroupTextUseCaseDto from '../dto/useCase/update-card-group-text.use-case.dto';
+import DeleteCardUseCaseDto from '../dto/useCase/delete-card.use-case.dto';
+import DeleteFromCardGroupUseCaseDto from '../dto/useCase/delete-fom-card-group.use-case.dto';
 
 @ApiBearerAuth('access-token')
 @ApiTags('Cards')
@@ -65,12 +66,14 @@ export default class CardsController {
 		private readonly updateCardTextUseCase: UseCase<UpdateCardTextUseCaseDto, void>,
 		@Inject(TYPES.applications.UpdateCardGroupTextUseCase)
 		private readonly updateCardGroupTextUseCase: UseCase<UpdateCardGroupTextUseCaseDto, void>,
-		@Inject(TYPES.applications.DeleteCardApplication)
-		private readonly deleteCardApp: DeleteCardApplicationInterface,
 		@Inject(TYPES.applications.UnmergeCardUseCase)
 		private readonly unmergeCardUseCase: UseCase<UnmergeCardUseCaseDto, string>,
 		@Inject(TYPES.applications.MergeCardUseCase)
 		private readonly mergeCardUseCase: UseCase<MergeCardUseCaseDto, boolean>,
+		@Inject(TYPES.applications.DeleteCardUseCase)
+		private readonly deleteCardUseCase: UseCase<DeleteCardUseCaseDto, void>,
+		@Inject(TYPES.applications.DeleteFromCardGroupUseCase)
+		private readonly deleteFromCardGroupUseCase: UseCase<DeleteFromCardGroupUseCaseDto, void>,
 		private readonly socketService: SocketGateway
 	) {}
 
@@ -132,16 +135,18 @@ export default class CardsController {
 		type: InternalServerErrorResponse
 	})
 	@Delete(':boardId/card/:cardId')
-	async deleteCard(
+	deleteCard(
 		@Req() request: RequestWithUser,
 		@Param() params: CardGroupParams,
 		@Body() deleteCardDto: DeleteCardDto
 	) {
 		const { boardId, cardId } = params;
-		await this.deleteCardApp.delete(boardId, cardId);
-		this.socketService.sendDeleteCard(deleteCardDto.socketId, deleteCardDto);
 
-		return HttpStatus.OK;
+		const completionHandler = () => {
+			this.socketService.sendDeleteCard(deleteCardDto.socketId, deleteCardDto);
+		};
+
+		return this.deleteCardUseCase.execute({ boardId, cardId, completionHandler });
 	}
 
 	@ApiOperation({ summary: 'Delete a specific card item' })
@@ -165,12 +170,23 @@ export default class CardsController {
 		type: InternalServerErrorResponse
 	})
 	@Delete(':boardId/card/:cardId/items/:itemId')
-	async deleteCardItem(@Param() params: CardItemParams, @Body() deleteCardDto: DeleteCardDto) {
-		const { boardId, cardId, itemId } = params;
-		await this.deleteCardApp.deleteFromCardGroup(boardId, cardId, itemId);
-		this.socketService.sendDeleteCard(deleteCardDto.socketId, deleteCardDto);
+	deleteCardItem(
+		@Req() request: RequestWithUser,
+		@Param() params: CardItemParams,
+		@Body() deleteCardDto: DeleteCardDto
+	) {
+		const { boardId, cardId, itemId: cardItemId } = params;
 
-		return HttpStatus.OK;
+		const completionHandler = () => {
+			this.socketService.sendDeleteCard(deleteCardDto.socketId, deleteCardDto);
+		};
+
+		return this.deleteFromCardGroupUseCase.execute({
+			boardId,
+			cardId,
+			cardItemId,
+			completionHandler
+		});
 	}
 
 	@ApiOperation({ summary: 'Update a specific card item' })

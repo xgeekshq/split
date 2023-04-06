@@ -21,6 +21,13 @@
       "@/public/*": ["./public/*"]
     }
   },
-  "include": ["next.config.js", ".eslintrc.js", "next-env.d.ts", "**/*.ts", "**/*.tsx"],
+  "include": [
+    "next.config.js",
+    ".eslintrc.js",
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "node_modules/eslint-plugin-react/lib/types.d.ts"
+  ],
   "exclude": ["node_modules"]
 }

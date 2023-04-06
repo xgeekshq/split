@@ -14,7 +14,7 @@ import {
   USERS_ROUTE,
   AZURE_LOGOUT_ROUTE,
 } from '@/utils/routes';
-import SidebarItem from '../Item/Item';
+import SidebarItem from '@/components/Sidebar/Item/Item';
 
 export type SidebarContentProps = {
   strategy: string;

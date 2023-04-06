@@ -15,8 +15,8 @@ import {
   StyledHeader,
   StyledLogo,
   TitleSection,
-} from '../../SplitBoard/Header/styles';
-import HeaderParticipants from './HeaderParticipants';
+} from '@/components/Board/SplitBoard/Header/styles';
+import HeaderParticipants from '@/components/Board/RegularBoard/RegularHeader/HeaderParticipants';
 
 interface Props {
   isParticipantsPage?: boolean;

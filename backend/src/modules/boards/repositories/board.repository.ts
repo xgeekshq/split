@@ -12,7 +12,7 @@ import { BoardRepositoryInterface } from './board.repository.interface';
 
 @Injectable()
 export class BoardRepository
-	extends MongoGenericRepository<Board>
+	extends MongoGenericRepository<BoardDocument>
 	implements BoardRepositoryInterface
 {
 	constructor(@InjectModel(Board.name) private model: Model<BoardDocument>) {
@@ -22,6 +22,10 @@ export class BoardRepository
 	/* GET BOARD */
 	getBoard(boardId: string): Promise<Board> {
 		return this.findOneById(boardId);
+	}
+
+	getBoardOwner(boardId: string): Promise<Board> {
+		return this.findOneById(boardId, 'createdBy');
 	}
 
 	isBoardPublic(boardId: string): Promise<Board> {
