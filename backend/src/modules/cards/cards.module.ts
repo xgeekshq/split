@@ -10,10 +10,8 @@ import {
 	getCardService,
 	mergeCardUseCase,
 	unmergeCardUseCase,
-	updateCardApplication,
 	updateCardGroupTextUseCase,
 	updateCardPositionUseCase,
-	updateCardService,
 	updateCardTextUseCase
 } from './cards.providers';
 import CardsController from './controller/cards.controller';
@@ -22,11 +20,8 @@ import CardsController from './controller/cards.controller';
 	imports: [mongooseBoardModule, forwardRef(() => SocketModule), forwardRef(() => VotesModule)],
 	controllers: [CardsController],
 	providers: [
-		updateCardService,
 		getCardService,
 		deleteCardService,
-		updateCardService,
-		updateCardApplication,
 		deleteCardApplication,
 		cardRepository,
 		createCardUseCase,
