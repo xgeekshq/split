@@ -61,21 +61,21 @@ import UpdateCardGroupTextUseCaseDto from '../dto/useCase/update-card-group-text
 export default class CardsController {
 	constructor(
 		@Inject(TYPES.applications.CreateCardUseCase)
-		private createCardUseCase: UseCase<CreateCardUseCaseDto, CardCreationPresenter>,
+		private readonly createCardUseCase: UseCase<CreateCardUseCaseDto, CardCreationPresenter>,
 		@Inject(TYPES.applications.UpdateCardPositionUseCase)
-		private updateCardPositionUseCase: UseCase<UpdateCardPositionUseCaseDto, void>,
+		private readonly updateCardPositionUseCase: UseCase<UpdateCardPositionUseCaseDto, void>,
 		@Inject(TYPES.applications.UpdateCardTextUseCase)
-		private updateCardTextUseCase: UseCase<UpdateCardTextUseCaseDto, Board>,
+		private readonly updateCardTextUseCase: UseCase<UpdateCardTextUseCaseDto, Board>,
 		@Inject(TYPES.applications.UpdateCardGroupTextUseCase)
-		private updateCardGroupTextUseCase: UseCase<UpdateCardGroupTextUseCaseDto, Board>,
+		private readonly updateCardGroupTextUseCase: UseCase<UpdateCardGroupTextUseCaseDto, Board>,
 
 		@Inject(TYPES.applications.DeleteCardApplication)
-		private deleteCardApp: DeleteCardApplicationInterface,
+		private readonly deleteCardApp: DeleteCardApplicationInterface,
 		@Inject(TYPES.applications.UnmergeCardUseCase)
-		private unmergeCardUseCase: UseCase<UnmergeCardUseCaseDto, string>,
+		private readonly unmergeCardUseCase: UseCase<UnmergeCardUseCaseDto, string>,
 		@Inject(TYPES.applications.MergeCardUseCase)
-		private mergeCardUseCase: UseCase<MergeCardUseCaseDto, boolean>,
-		private socketService: SocketGateway
+		private readonly mergeCardUseCase: UseCase<MergeCardUseCaseDto, boolean>,
+		private readonly socketService: SocketGateway
 	) {}
 
 	@ApiOperation({ summary: 'Create a new card' })
@@ -294,22 +294,18 @@ export default class CardsController {
 	) {
 		const { boardId, cardId } = params;
 		const { targetColumnId, newPosition, socketId } = boardData;
-		try {
-			await this.updateCardPositionUseCase.execute({
-				boardId,
-				cardId,
-				targetColumnId,
-				newPosition
-			});
 
+		const completionHandler = () => {
 			this.socketService.sendUpdateCardPosition(socketId, boardData);
+		};
 
-			return HttpStatus.OK;
-		} catch (e) {
-			this.socketService.sendUpdatedBoard(boardId, socketId);
-
-			throw e;
-		}
+		return await this.updateCardPositionUseCase.execute({
+			boardId,
+			cardId,
+			targetColumnId,
+			newPosition,
+			completionHandler
+		});
 	}
 
 	@ApiOperation({ summary: 'Merge two cards together' })

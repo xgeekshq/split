@@ -21,4 +21,6 @@ export default class UpdateCardPositionUseCaseDto {
 	@IsNotEmpty()
 	@IsNumber()
 	newPosition: number;
+
+	completionHandler: () => void;
 }

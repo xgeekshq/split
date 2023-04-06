@@ -25,7 +25,7 @@ export class UpdateCardPositionUseCase implements UseCase<UpdateCardPositionUseC
 	private logger = new Logger(UpdateCardPositionUseCase.name);
 
 	async execute(updateCardPositionUseCaseDto: UpdateCardPositionUseCaseDto) {
-		const { boardId, cardId } = updateCardPositionUseCaseDto;
+		const { boardId, cardId, completionHandler } = updateCardPositionUseCaseDto;
 		await this.cardRepository.startTransaction();
 
 		try {
@@ -36,6 +36,7 @@ export class UpdateCardPositionUseCase implements UseCase<UpdateCardPositionUseC
 			await this.updateCardPosition(updateCardPositionUseCaseDto, cardToMove);
 
 			await this.cardRepository.commitTransaction();
+			completionHandler();
 		} catch (e) {
 			this.logger.error(e);
 			throw new UpdateFailedException(CARD_NOT_MOVED);
