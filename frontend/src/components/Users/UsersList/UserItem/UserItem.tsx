@@ -9,10 +9,10 @@ import useCurrentSession from '@/hooks/useCurrentSession';
 import { InnerContainer } from '@/styles/pages/pages.styles';
 import { UserWithTeams } from '@/types/user/user';
 
-import UserItemActions from './UserItemActions/UserItemActions';
-import UserTitle from './UserTitle/UserTitle';
+import UserItemActions from '@/components/Users/UsersList/UserItem/UserItemActions/UserItemActions';
+import UserTitle from '@/components/Users/UsersList/UserItem/UserTitle/UserTitle';
 
-type UserItemProps = {
+export type UserItemProps = {
   userWithTeams: UserWithTeams;
 };
 
@@ -33,7 +33,7 @@ const UserItem = React.memo<UserItemProps>(({ userWithTeams }) => {
   const teamsSeparatedByComma = teamsNames?.join(', ') || '';
 
   return (
-    <Flex direction="column">
+    <Flex direction="column" data-testid="userItem">
       <InnerContainer align="center" elevation="1" gap="40">
         <Flex align="center" gap="8" css={{ flex: '2' }}>
           <Icon
@@ -44,16 +44,13 @@ const UserItem = React.memo<UserItemProps>(({ userWithTeams }) => {
               flexShrink: '0',
             }}
           />
-
           <UserTitle user={user} hasPermissions={isSAdmin!} />
         </Flex>
-
         <Flex align="center" justify="start" css={{ flex: '2' }}>
           <Text color="primary300" size="sm">
             {user.email}
           </Text>
         </Flex>
-
         <Flex align="center" css={{ flex: '1' }}>
           {!isSAdmin && user.isSAdmin && (
             <Badge pill variant="success" size="sm">
@@ -61,7 +58,6 @@ const UserItem = React.memo<UserItemProps>(({ userWithTeams }) => {
             </Badge>
           )}
         </Flex>
-
         <Flex align="center" justify="end" css={{ flex: '1' }}>
           <Tooltip content={teamsSeparatedByComma}>
             <Text css={{ cursor: 'default' }} fontWeight="bold" size="sm">
@@ -69,7 +65,6 @@ const UserItem = React.memo<UserItemProps>(({ userWithTeams }) => {
             </Text>
           </Tooltip>
         </Flex>
-
         {isSAdmin && (
           <Flex align="center" justify="end" css={{ flex: '2' }}>
             <UserItemActions user={user} />
