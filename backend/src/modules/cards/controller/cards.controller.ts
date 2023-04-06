@@ -1,5 +1,4 @@
 import {
-	BadRequestException,
 	Body,
 	Controller,
 	Delete,
@@ -28,7 +27,6 @@ import { CardGroupParams } from 'src/libs/dto/param/card.group.params';
 import { CardItemParams } from 'src/libs/dto/param/card.item.params';
 import { MergeCardsParams } from 'src/libs/dto/param/merge.cards.params';
 import { UnmergeCardsParams } from 'src/libs/dto/param/unmerge.cards.params';
-import { UPDATE_FAILED } from 'src/libs/exceptions/messages';
 import JwtAuthenticationGuard from 'src/libs/guards/jwtAuth.guard';
 import RequestWithUser from 'src/libs/interfaces/requestWithUser.interface';
 import { BadRequestResponse } from 'src/libs/swagger/errors/bad-request.swagger';
@@ -50,7 +48,6 @@ import CardCreationPresenter from '../dto/useCase/presenters/create-card-res.use
 import UnmergeCardUseCaseDto from '../dto/useCase/unmerge-card.use-case.dto';
 import MergeCardUseCaseDto from '../dto/useCase/merge-card.use-case.dto';
 import UpdateCardPositionUseCaseDto from '../dto/useCase/update-card-position.use-case.dto';
-import Board from 'src/modules/boards/entities/board.schema';
 import UpdateCardTextUseCaseDto from '../dto/useCase/update-card-text.use-case.dto';
 import UpdateCardGroupTextUseCaseDto from '../dto/useCase/update-card-group-text.use-case.dto';
 
@@ -65,10 +62,9 @@ export default class CardsController {
 		@Inject(TYPES.applications.UpdateCardPositionUseCase)
 		private readonly updateCardPositionUseCase: UseCase<UpdateCardPositionUseCaseDto, void>,
 		@Inject(TYPES.applications.UpdateCardTextUseCase)
-		private readonly updateCardTextUseCase: UseCase<UpdateCardTextUseCaseDto, Board>,
+		private readonly updateCardTextUseCase: UseCase<UpdateCardTextUseCaseDto, void>,
 		@Inject(TYPES.applications.UpdateCardGroupTextUseCase)
 		private readonly updateCardGroupTextUseCase: UseCase<UpdateCardGroupTextUseCaseDto, void>,
-
 		@Inject(TYPES.applications.DeleteCardApplication)
 		private readonly deleteCardApp: DeleteCardApplicationInterface,
 		@Inject(TYPES.applications.UnmergeCardUseCase)
@@ -198,7 +194,7 @@ export default class CardsController {
 		type: InternalServerErrorResponse
 	})
 	@Put(':boardId/card/:cardId/items/:itemId')
-	async updateCardText(
+	updateCardText(
 		@Req() request: RequestWithUser,
 		@Param() params: CardItemParams,
 		@Body() updateCardDto: UpdateCardDto
@@ -207,18 +203,18 @@ export default class CardsController {
 		const { text, socketId } = updateCardDto;
 		const userId = request.user._id;
 
-		const board = await this.updateCardTextUseCase.execute({
+		const completionHandler = () => {
+			this.socketService.sendUpdateCard(socketId, updateCardDto);
+		};
+
+		return this.updateCardTextUseCase.execute({
 			boardId,
 			cardId,
 			cardItemId,
 			userId,
-			text
+			text,
+			completionHandler
 		});
-
-		if (!board) throw new BadRequestException(UPDATE_FAILED);
-		this.socketService.sendUpdateCard(socketId, updateCardDto);
-
-		return HttpStatus.OK;
 	}
 
 	@ApiOperation({ summary: 'Update a specific card' })

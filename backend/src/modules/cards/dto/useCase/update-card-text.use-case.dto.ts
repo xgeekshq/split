@@ -26,4 +26,6 @@ export default class UpdateCardTextUseCaseDto {
 	@IsNotEmpty()
 	@IsString()
 	text: string;
+
+	completionHandler: () => void;
 }
