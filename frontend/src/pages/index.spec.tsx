@@ -29,17 +29,17 @@ describe('Pages/Home', () => {
   it('should render forgot password correctly', async () => {
     // Act
     const { getByText } = render();
-    const wellcome = getByText('Welcome');
+    const welcome = getByText('Welcome');
     const forgotPasswordBtn = getByText('Forgot password');
 
     // Assert
-    expect(wellcome).toBeInTheDocument();
+    expect(welcome).toBeInTheDocument();
     expect(forgotPasswordBtn).toBeInTheDocument();
 
     fireEvent.click(forgotPasswordBtn);
 
     await waitFor(() => {
-      expect(wellcome).not.toBeInTheDocument();
+      expect(welcome).not.toBeInTheDocument();
 
       expect(getByText('Trouble logging in?')).toBeInTheDocument();
       expect(getByText('Email address')).toBeInTheDocument();
@@ -52,11 +52,11 @@ describe('Pages/Home', () => {
   it('should render sign up correctly', async () => {
     // Act
     const { getByText } = render();
-    const wellcome = getByText('Welcome');
+    const welcome = getByText('Welcome');
     const signUpBtn = getByText('Sign up.');
 
     // Assert
-    expect(wellcome).toBeInTheDocument();
+    expect(welcome).toBeInTheDocument();
     expect(signUpBtn).toBeInTheDocument();
 
     fireEvent.click(signUpBtn);
@@ -64,7 +64,7 @@ describe('Pages/Home', () => {
     await waitFor(() => {
       const logInBtn = getByText('Log in.');
 
-      expect(wellcome).not.toBeInTheDocument();
+      expect(welcome).not.toBeInTheDocument();
 
       expect(getByText('Sign up')).toBeInTheDocument();
       expect(getByText('Email address')).toBeInTheDocument();

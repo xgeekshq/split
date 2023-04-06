@@ -5,8 +5,8 @@ import * as ReactQuery from '@tanstack/react-query';
 import { SessionUserFactory } from '@/utils/factories/user';
 
 export type MockReactQueryOptions = {
-  useQueryResult: ReactQuery.UseQueryResult;
-  useMutationResult: ReactQuery.UseMutationResult;
+  useQueryResult: Partial<ReactQuery.UseQueryResult>;
+  useMutationResult: Partial<ReactQuery.UseMutationResult>;
 };
 
 export function createMockRouter(router?: Partial<NextRouter.NextRouter>): NextRouter.NextRouter {
@@ -53,7 +53,7 @@ export const libraryMocks = {
       useRouterMockFn,
     };
   },
-  mockReactQuery(options?: MockReactQueryOptions) {
+  mockReactQuery(options?: Partial<MockReactQueryOptions>) {
     const { useQueryResult, useMutationResult } = options ?? {};
     const useQueryMockFn = jest.fn<Partial<ReactQuery.UseQueryResult>, any>(() => ({
       ...useQueryResult,
