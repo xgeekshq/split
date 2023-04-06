@@ -2,21 +2,6 @@ import { styled } from '@/styles/stitches/stitches.config';
 
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 
-const CenteredContainer = styled('div', {
-  position: 'absolute',
-  top: '5%',
-  right: '$150',
-
-  maxWidth: '500px',
-  height: 'fit-content',
-
-  display: 'flex',
-  flexDirection: 'column',
-
-  backgroundColor: '#ffffff',
-  borderRadius: '$12',
-});
-
 const BodyContainer = styled(Flex, {
   width: '100%',
   margin: '$48',
@@ -61,11 +46,4 @@ const BannerContainer = styled(Flex, {
   },
 });
 
-export {
-  BannerContainer,
-  CenteredContainer,
-  BodyContainer,
-  FormContainer,
-  ImageContainer,
-  ImageBackground,
-};
+export { BannerContainer, BodyContainer, FormContainer, ImageContainer, ImageBackground };
