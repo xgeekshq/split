@@ -43,7 +43,6 @@ import UpdateCardDto from '../dto/update.card.dto';
 import { UpdateCardPositionDto } from '../dto/update-position.card.dto';
 import { TYPES } from '../interfaces/types';
 import { MergeCardDto } from '../dto/group/merge.card.dto';
-import { UpdateCardApplicationInterface } from '../interfaces/applications/update.card.application.interface';
 import { DeleteCardApplicationInterface } from '../interfaces/applications/delete.card.application.interface';
 import CreateCardUseCaseDto from '../dto/useCase/create-card.use-case.dto';
 import { UseCase } from 'src/libs/interfaces/use-case.interface';
@@ -53,6 +52,7 @@ import MergeCardUseCaseDto from '../dto/useCase/merge-card.use-case.dto';
 import UpdateCardPositionUseCaseDto from '../dto/useCase/update-card-position.use-case.dto';
 import Board from 'src/modules/boards/entities/board.schema';
 import UpdateCardTextUseCaseDto from '../dto/useCase/update-card-text.use-case.dto';
+import UpdateCardGroupTextUseCaseDto from '../dto/useCase/update-card-group-text.use-case.dto';
 
 @ApiBearerAuth('access-token')
 @ApiTags('Cards')
@@ -62,12 +62,13 @@ export default class CardsController {
 	constructor(
 		@Inject(TYPES.applications.CreateCardUseCase)
 		private createCardUseCase: UseCase<CreateCardUseCaseDto, CardCreationPresenter>,
-		@Inject(TYPES.applications.UpdateCardApplication)
-		private updateCardApp: UpdateCardApplicationInterface,
 		@Inject(TYPES.applications.UpdateCardPositionUseCase)
 		private updateCardPositionUseCase: UseCase<UpdateCardPositionUseCaseDto, void>,
 		@Inject(TYPES.applications.UpdateCardTextUseCase)
 		private updateCardTextUseCase: UseCase<UpdateCardTextUseCaseDto, Board>,
+		@Inject(TYPES.applications.UpdateCardGroupTextUseCase)
+		private updateCardGroupTextUseCase: UseCase<UpdateCardGroupTextUseCaseDto, Board>,
+
 		@Inject(TYPES.applications.DeleteCardApplication)
 		private deleteCardApp: DeleteCardApplicationInterface,
 		@Inject(TYPES.applications.UnmergeCardUseCase)
@@ -247,16 +248,18 @@ export default class CardsController {
 	) {
 		const { boardId, cardId } = params;
 		const { text, socketId } = updateCardDto;
+		const userId = request.user._id;
 
-		const board = await this.updateCardApp.updateCardGroupText(
+		const board = await this.updateCardGroupTextUseCase.execute({
 			boardId,
 			cardId,
-			request.user._id,
+			userId,
 			text
-		);
+		});
 
-		if (!board) throw new BadRequestException(UPDATE_FAILED);
-		this.socketService.sendUpdateCard(socketId, updateCardDto);
+		if (board) {
+			this.socketService.sendUpdateCard(socketId, updateCardDto);
+		}
 
 		return HttpStatus.OK;
 	}
