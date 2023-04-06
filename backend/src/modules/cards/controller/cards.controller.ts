@@ -142,9 +142,7 @@ export default class CardsController {
 			this.socketService.sendDeleteCard(deleteCardDto.socketId, deleteCardDto);
 		};
 
-		this.deleteCardUseCase.execute({ boardId, cardId, completionHandler });
-
-		return HttpStatus.OK;
+		return this.deleteCardUseCase.execute({ boardId, cardId, completionHandler });
 	}
 
 	@ApiOperation({ summary: 'Delete a specific card item' })
@@ -179,9 +177,12 @@ export default class CardsController {
 			this.socketService.sendDeleteCard(deleteCardDto.socketId, deleteCardDto);
 		};
 
-		this.deleteFromCardGroupUseCase.execute({ boardId, cardId, cardItemId, completionHandler });
-
-		return HttpStatus.OK;
+		return this.deleteFromCardGroupUseCase.execute({
+			boardId,
+			cardId,
+			cardItemId,
+			completionHandler
+		});
 	}
 
 	@ApiOperation({ summary: 'Update a specific card item' })
