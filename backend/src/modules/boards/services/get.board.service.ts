@@ -101,5 +101,9 @@ export default class GetBoardService implements GetBoardServiceInterface {
 	getAllMainBoards() {
 		return this.boardRepository.getAllMainBoards();
 	}
+
+	getBoardOwner(boardId: string) {
+		return this.boardRepository.getBoardOwner(boardId);
+	}
 	/* Finishes here */
 }
