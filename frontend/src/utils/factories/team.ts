@@ -1,4 +1,4 @@
-import { Team } from '@/types/team/team';
+import { Team, TeamChecked } from '@/types/team/team';
 import { faker } from '@faker-js/faker';
 
 import { buildTestFactory } from '@/utils/testing';
@@ -15,5 +15,17 @@ export const TeamFactory = buildTestFactory<Team>(() => {
     name,
     users,
     boardsCount,
+  };
+});
+
+export const TeamCheckedFactory = buildTestFactory<TeamChecked>(() => {
+  const _id = faker.database.mongodbObjectId();
+  const name = faker.company.name();
+  const isChecked = faker.datatype.boolean();
+
+  return {
+    _id,
+    name,
+    isChecked,
   };
 });

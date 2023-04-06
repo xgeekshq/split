@@ -14,7 +14,7 @@ import SearchInput from '@/components/Primitives/Inputs/SearchInput/SearchInput'
 import Separator from '@/components/Primitives/Separator/Separator';
 import useUpdateUserTeams from '@/hooks/teams/useUpdateUserTeams';
 
-type TeamsDialogProps = {
+export type TeamsDialogProps = {
   teamsList: TeamChecked[];
   setIsOpen: Dispatch<SetStateAction<boolean>>;
   isOpen: boolean;
@@ -125,7 +125,7 @@ const TeamsDialog = ({
       >
         <Flex css={{ px: '$32' }} direction="column" gap={20}>
           {filteredTeams?.map((team) => (
-            <Flex key={team._id} align="center">
+            <Flex key={team._id} align="center" data-testid="checkboxTeamItem">
               <Flex css={{ flex: 1 }}>
                 <Checkbox
                   checked={team.isChecked}
