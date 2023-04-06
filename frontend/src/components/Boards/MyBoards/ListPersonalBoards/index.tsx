@@ -8,8 +8,8 @@ import { toastState } from '@/store/toast/atom/toast.atom';
 import BoardType from '@/types/board/board';
 import { Team } from '@/types/team/team';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
+import EmptyPersonalBoards from '@/components/Boards/MyBoards/ListPersonalBoards/EmptyPersonalBoards';
 import ListBoards from '../ListBoards';
-import EmptyPersonalBoards from './EmptyPersonalBoards.tsx';
 
 interface ListBoardsByTeamProps {
   userId: string;
