@@ -3,19 +3,24 @@ import { renderWithProviders } from '@/utils/testing/renderWithProviders';
 import Teams from '@/pages/teams';
 import { libraryMocks } from '@/utils/testing/mocks';
 import { TeamFactory } from '@/utils/factories/team';
+import useTeams from '@/hooks/teams/useTeams';
+import { UseQueryResult } from '@tanstack/react-query';
+import { Team } from '@/types/team/team';
+
+const mockUseTeams = useTeams as jest.Mock<UseQueryResult<Team[]>>;
+jest.mock('@/hooks/teams/useTeams');
 
 const { mockRouter } = libraryMocks.mockNextRouter({ pathname: '/teams' });
-libraryMocks.mockReactQuery({
-  useQueryResult: {
-    status: 'success',
-    data: [...TeamFactory.createMany(3)],
-  },
-});
 
 const render = () => renderWithProviders(<Teams />, { routerOptions: mockRouter });
 
 describe('Pages/Teams', () => {
   it('should render correctly', () => {
+    // Arrange
+    mockUseTeams.mockReturnValue({
+      data: TeamFactory.createMany(3),
+    } as UseQueryResult<Team[]>);
+
     // Act
     const { getByTestId } = render();
 
