@@ -15,6 +15,7 @@ import {
 import ColumnsController from './controller/columns.controller';
 import BoardUsersModule from '../boardUsers/boardusers.module';
 import TeamUsersModule from 'src/modules/teamUsers/teamusers.module';
+import { VotesModule } from '../votes/votes.module';
 
 @Module({
 	imports: [
@@ -25,7 +26,8 @@ import TeamUsersModule from 'src/modules/teamUsers/teamusers.module';
 		BoardUsersModule,
 		TeamsModule,
 		TeamUsersModule,
-		forwardRef(() => SocketModule)
+		forwardRef(() => SocketModule),
+		forwardRef(() => VotesModule)
 	],
 	controllers: [ColumnsController],
 	providers: [updateColumnService, updateColumnApplication, columnRepository]
