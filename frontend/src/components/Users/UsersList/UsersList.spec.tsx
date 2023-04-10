@@ -6,6 +6,8 @@ import { UserFactory, UserWithTeamsFactory } from '@/utils/factories/user';
 import { UserWithTeams } from '@/types/user/user';
 import userEvent from '@testing-library/user-event';
 import { waitFor } from '@testing-library/dom';
+import useUsersWithTeams from '@/hooks/users/useUsersWithTeams';
+import { UseInfiniteQueryResult } from '@tanstack/react-query';
 
 const { mockRouter } = libraryMocks.mockNextRouter({ pathname: '/users' });
 
@@ -14,9 +16,15 @@ const render = () =>
     routerOptions: mockRouter,
   });
 
+const mockUseUsersWithTeams = useUsersWithTeams as jest.Mock<Partial<UseInfiniteQueryResult>>;
+
+jest.mock('@/hooks/users/useUsersWithTeams');
+
 describe('Components/Users/User/UsersList/UserList/UserList', () => {
   beforeEach(() => {
-    libraryMocks.mockReactQuery({ useInfiniteQueryResult: { status: 'loading' } });
+    mockUseUsersWithTeams.mockReturnValue({
+      status: 'loading',
+    } as Partial<UseInfiniteQueryResult>);
   });
 
   afterEach(() => {
@@ -26,26 +34,24 @@ describe('Components/Users/User/UsersList/UserList/UserList', () => {
   it('should render correctly', async () => {
     // Arrange
     const usersWithTeams: UserWithTeams[] = UserWithTeamsFactory.createMany(5);
-    libraryMocks.mockReactQuery({
-      useInfiniteQueryResult: {
-        status: 'success',
-        data: {
-          pages: [
-            {
-              hasNextPage: false,
-              page: 0,
-              userAmount: usersWithTeams.length,
-              userWithTeams: usersWithTeams,
-            },
-          ],
-          pageParams: [null],
-        },
-        isFetching: false,
-        hasNextPage: false,
-        fetchNextPage: jest.fn(),
-        refetch: jest.fn(),
+    mockUseUsersWithTeams.mockReturnValueOnce({
+      status: 'success',
+      data: {
+        pages: [
+          {
+            hasNextPage: false,
+            page: 0,
+            userAmount: usersWithTeams.length,
+            userWithTeams: usersWithTeams,
+          },
+        ],
+        pageParams: [null],
       },
-    });
+      isFetching: false,
+      hasNextPage: false,
+      fetchNextPage: jest.fn(),
+      refetch: jest.fn(),
+    } as Partial<UseInfiniteQueryResult>);
 
     // Act
     const { getByTestId, findAllByTestId } = render();
@@ -69,26 +75,24 @@ describe('Components/Users/User/UsersList/UserList/UserList', () => {
     ]);
     const refetchMock = jest.fn();
 
-    libraryMocks.mockReactQuery({
-      useInfiniteQueryResult: {
-        status: 'success',
-        data: {
-          pages: [
-            {
-              hasNextPage: false,
-              page: 0,
-              userAmount: usersWithTeams.length,
-              userWithTeams: usersWithTeams,
-            },
-          ],
-          pageParams: [null],
-        },
-        isFetching: false,
-        hasNextPage: false,
-        fetchNextPage: jest.fn(),
-        refetch: refetchMock,
+    mockUseUsersWithTeams.mockReturnValue({
+      status: 'success',
+      data: {
+        pages: [
+          {
+            hasNextPage: false,
+            page: 0,
+            userAmount: usersWithTeams.length,
+            userWithTeams: usersWithTeams,
+          },
+        ],
+        pageParams: [null],
       },
-    });
+      isFetching: false,
+      hasNextPage: false,
+      fetchNextPage: jest.fn(),
+      refetch: refetchMock,
+    } as Partial<UseInfiniteQueryResult>);
 
     // Act
     const { getByLabelText } = render();

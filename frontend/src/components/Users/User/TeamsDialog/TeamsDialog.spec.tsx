@@ -1,12 +1,16 @@
-import { createMockRouter, libraryMocks } from '@/utils/testing/mocks';
+import { createMockRouter } from '@/utils/testing/mocks';
 import { renderWithProviders } from '@/utils/testing/renderWithProviders';
 import { UserFactory } from '@/utils/factories/user';
 import { fireEvent, waitFor } from '@testing-library/react';
 import TeamsDialog, { TeamsDialogProps } from '@/components/Users/User/TeamsDialog/TeamsDialog';
 import { TeamCheckedFactory } from '@/utils/factories/team';
 import React from 'react';
+import useUpdateUserTeams from '@/hooks/teams/useUpdateUserTeams';
+import { UseMutationResult } from '@tanstack/react-query';
+import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 
-const router = createMockRouter({});
+const user = UserFactory.create();
+const router = createMockRouter({ query: { userId: user._id } });
 
 const render = (props: Partial<TeamsDialogProps> = {}) =>
   renderWithProviders(
@@ -16,15 +20,21 @@ const render = (props: Partial<TeamsDialogProps> = {}) =>
       isOpen
       confirmationLabel="confirm"
       title="Title"
-      joinedAt={UserFactory.create().joinedAt}
+      joinedAt="2022-01-01T00:00:00+00:00"
       {...props}
     />,
     { routerOptions: router },
   );
 
+const mockUseUpdateUserTeams = useUpdateUserTeams as jest.Mock<Partial<UseMutationResult>>;
+
+jest.mock('@/hooks/teams/useUpdateUserTeams');
+
 describe('Components/Users/User/TeamsDialog', () => {
-  afterEach(() => {
-    jest.clearAllMocks();
+  beforeEach(() => {
+    mockUseUpdateUserTeams.mockReturnValue({
+      mutate: jest.fn(),
+    } as Partial<UseMutationResult>);
   });
 
   it('should render correctly', () => {
@@ -39,16 +49,29 @@ describe('Components/Users/User/TeamsDialog', () => {
     expect(getByTestId('searchInput')).toBeInTheDocument();
   });
 
-  it('should call confirmationHandler function', async () => {
+  it('should call useUpdateUserTeams mutate function', async () => {
     // Arrange
-    const udateUserTeamsMutation = jest.fn();
-    libraryMocks.mockReactQuery({ useMutationResult: { mutate: udateUserTeamsMutation } });
+    const updateUserTeamsMutation = jest.fn();
+
+    mockUseUpdateUserTeams.mockReturnValueOnce({
+      mutate: updateUserTeamsMutation,
+    } as Partial<UseMutationResult>);
 
     const teamsList = TeamCheckedFactory.createMany(3, [
       { isChecked: false },
       { isChecked: true },
       { isChecked: false },
     ]);
+
+    const mutatedTeamList = [
+      {
+        user: user._id,
+        role: TeamUserRoles.MEMBER,
+        team: teamsList[1]._id,
+        isNewJoiner: false,
+        canBeResponsible: true,
+      },
+    ];
 
     // Act
     const { getByTestId } = render({ teamsList });
@@ -57,7 +80,8 @@ describe('Components/Users/User/TeamsDialog', () => {
 
     // Assert
     await waitFor(() => {
-      expect(udateUserTeamsMutation).toBeCalled();
+      expect(updateUserTeamsMutation).toBeCalled();
+      expect(updateUserTeamsMutation).toBeCalledWith(mutatedTeamList);
     });
   });
 });

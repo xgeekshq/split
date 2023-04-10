@@ -7,6 +7,9 @@ import UserItemActions, {
   UserItemActionsProps,
 } from '@/components/Users/UsersList/UserItem/UserItemActions/UserItemActions';
 import { ROUTES } from '@/utils/routes';
+import useUpdateUser from '@/hooks/users/useUpdateUser';
+import { UseMutationResult } from '@tanstack/react-query';
+import useDeleteUser from '@/hooks/users/useDeleteUser';
 
 const { mockRouter } = libraryMocks.mockNextRouter({ pathname: '/users' });
 
@@ -15,9 +18,21 @@ const render = (props: Partial<UserItemActionsProps> = {}) =>
     routerOptions: mockRouter,
   });
 
+const mockUseUpdateUser = useUpdateUser as jest.Mock<Partial<UseMutationResult>>;
+const mockUseDeleteUser = useDeleteUser as jest.Mock<Partial<UseMutationResult>>;
+
+jest.mock('@/hooks/users/useUpdateUser');
+jest.mock('@/hooks/users/useDeleteUser');
+
 describe('Components/Users/User/UsersList/UserItem/UserItemActions', () => {
-  afterEach(() => {
-    jest.clearAllMocks();
+  beforeEach(() => {
+    mockUseUpdateUser.mockReturnValue({
+      mutateAsync: jest.fn(),
+    } as Partial<UseMutationResult>);
+
+    mockUseDeleteUser.mockReturnValue({
+      mutate: jest.fn(),
+    } as Partial<UseMutationResult>);
   });
 
   it('should render correctly', () => {
@@ -57,7 +72,10 @@ describe('Components/Users/User/UsersList/UserItem/UserItemActions', () => {
     const user = UserFactory.create();
 
     const updateUserMutation = jest.fn();
-    libraryMocks.mockReactQuery({ useMutationResult: { mutateAsync: updateUserMutation } });
+
+    mockUseUpdateUser.mockReturnValueOnce({
+      mutateAsync: updateUserMutation,
+    } as Partial<UseMutationResult>);
 
     // Act
     const { getByRole } = render({ user });
@@ -75,7 +93,10 @@ describe('Components/Users/User/UsersList/UserItem/UserItemActions', () => {
     const user = UserFactory.create();
 
     const deleteUserMutation = jest.fn();
-    libraryMocks.mockReactQuery({ useMutationResult: { mutate: deleteUserMutation } });
+
+    mockUseDeleteUser.mockReturnValueOnce({
+      mutate: deleteUserMutation,
+    } as Partial<UseMutationResult>);
 
     // Act
     const { getAllByRole, getByRole, getByText } = render({ user });
