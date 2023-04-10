@@ -48,7 +48,7 @@ const Header = ({ firstName, lastName, email }: SidebarHeaderProps) => {
         >
           <Flex
             align="center"
-            css={{ width: '58px', height: '58px', position: 'relative' }}
+            css={{ width: '$58', height: '$58', position: 'relative' }}
             justify="center"
           >
             <Icon
