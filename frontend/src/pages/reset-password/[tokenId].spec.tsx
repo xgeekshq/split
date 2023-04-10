@@ -57,7 +57,14 @@ describe('Pages/reset-password/[tokenId]', () => {
     fireEvent.click(recoverPasswordBtn);
 
     await waitFor(() => {
-      expect(mockedMutateFn).toBeCalled();
+      expect(mockedMutateFn).toBeCalledWith(
+        {
+          token: '[tokenId]',
+          newPassword: '1Potato!',
+          newPasswordConf: '1Potato!',
+        },
+        expect.anything(),
+      );
     });
   });
 });

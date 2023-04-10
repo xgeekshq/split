@@ -6,6 +6,7 @@ import userEvent from '@testing-library/user-event';
 import LoginGuestUserPage from '@/pages/login-guest-user/[boardId]';
 import useRegisterGuestUser from '@/hooks/auth/useRegisterGuestUser';
 import { START_PAGE_ROUTE } from '@/utils/routes';
+import { getUsername } from '@/utils/getUsername';
 
 const mockUseRegisterGuestUser = useRegisterGuestUser as jest.Mock<Partial<UseMutationResult>>;
 jest.mock('@/hooks/auth/useRegisterGuestUser');
@@ -53,10 +54,17 @@ describe('Pages/login-guest-user/[boardId]', () => {
     expect(guestUserName).toBeInTheDocument();
 
     await userEvent.type(guestUserName, 'Guest User');
+    const guestUser = getUsername('Guest User');
     fireEvent.click(loginAsGuestBtn);
 
     await waitFor(() => {
-      expect(mockedMutateFn).toBeCalled();
+      expect(mockedMutateFn).toBeCalledWith(
+        {
+          board: '[boardId]',
+          ...guestUser,
+        },
+        expect.anything(),
+      );
     });
   });
 
