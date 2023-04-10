@@ -73,25 +73,21 @@ export class UserRepository
 			};
 		}
 
-		return (
-			this.model
-				.find(query)
-				// .select('-password -__v -currentHashedRefreshToken -strategy')
-				.skip(page * size)
-				.limit(size)
-				.sort({ firstName: 1, lastName: 1 })
-				.exec()
-		);
+		return this.model
+			.find(query)
+			.select('-password -__v -currentHashedRefreshToken -strategy -updatedAt -isDeleted')
+			.skip(page * size)
+			.limit(size)
+			.sort({ firstName: 1, lastName: 1 })
+			.exec();
 	}
 
 	getAllSignedUpUsers() {
-		return (
-			this.model
-				.find({ $or: [{ isAnonymous: false }, { isAnonymous: undefined }] })
-				// .select('-password -__v -currentHashedRefreshToken -strategy')
-				.sort({ firstName: 1, lastName: 1 })
-				.exec()
-		);
+		return this.model
+			.find({ $or: [{ isAnonymous: false }, { isAnonymous: undefined }] })
+			.select('-password')
+			.sort({ firstName: 1, lastName: 1 })
+			.exec();
 	}
 
 	getSignedUpUsersCount() {

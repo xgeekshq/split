@@ -35,7 +35,6 @@ export default class GetAllUsersWithTeamsUseCase implements GetAllUsersWithTeams
 		});
 
 		const usersOnlyWithTeams = await this.getTeamUserService.getUsersOnlyWithTeams(users);
-		console.log(usersOnlyWithTeams);
 
 		const ids = new Set(usersOnlyWithTeams.map((userWithTeams) => String(userWithTeams.user._id)));
 
@@ -48,8 +47,7 @@ export default class GetAllUsersWithTeamsUseCase implements GetAllUsersWithTeams
 			hasNextPage,
 			page
 		};
-		// console.log(results.userWithTeams.map((users, mapped) => users));
-
+		console.log(results.userWithTeams.map((users) => users));
 		results.userWithTeams.sort((a, b) => sortAlphabetically(a.user, b.user));
 
 		return results;

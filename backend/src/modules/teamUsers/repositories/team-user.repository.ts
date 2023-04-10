@@ -5,16 +5,16 @@ import { Model } from 'mongoose';
 import { MongoGenericRepository } from 'src/libs/repositories/mongo/mongo-generic.repository';
 import User from 'src/modules/users/entities/user.schema';
 import { UserWithTeams } from 'src/modules/users/interfaces/type-user-with-teams';
-import TeamUser, { TeamUserDocument } from '../entities/team.user.schema';
-import { TeamUserRepositoryInterface } from '../interfaces/repositories/team-user.repository.interface';
-import TeamUserDto from '../dto/team.user.dto';
+import TeamUser from 'src/modules/teamUsers/entities/team.user.schema';
+import { TeamUserRepositoryInterface } from 'src/modules/teamUsers/interfaces/repositories/team-user.repository.interface';
+import TeamUserDto from 'src/modules/teamUsers/dto/team.user.dto';
 
 @Injectable()
 export class TeamUserRepository
 	extends MongoGenericRepository<TeamUser>
 	implements TeamUserRepositoryInterface
 {
-	constructor(@InjectModel(TeamUser.name) private model: Model<TeamUserDocument>) {
+	constructor(@InjectModel(TeamUser.name) private model: Model<TeamUser>) {
 		super(model);
 	}
 
@@ -82,19 +82,22 @@ export class TeamUserRepository
 					$set: { userWithTeam: '$_id' }
 				},
 				{
-					$unset: [
-						'_id',
-						'user.currentHashedRefreshToken',
-						'user.isSAdmin',
-						'user.joinedAt',
-						'user.isDeleted'
-					]
-				},
-				{
 					$project: {
 						user: '$userWithTeam',
 						teamsNames: '$teamsName'
 					}
+				},
+				{
+					$unset: [
+						'_id',
+						'user.currentHashedRefreshToken',
+						'user.joinedAt',
+						'user.isDeleted',
+						'user.password',
+						'__v',
+						'strategy',
+						'updatedAt'
+					]
 				}
 			])
 			.exec();
