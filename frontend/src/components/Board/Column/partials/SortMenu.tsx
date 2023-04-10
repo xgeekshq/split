@@ -1,10 +1,10 @@
 import Icon from '@/components/Primitives/Icons/Icon/Icon';
 import {
   Popover,
-  PopoverContent,
-  PopoverTrigger,
-  PopoverItem,
   PopoverClose,
+  PopoverContent,
+  PopoverItem,
+  PopoverTrigger,
 } from '@/components/Primitives/Popovers/Popover/Popover';
 import Text from '@/components/Primitives/Text/Text';
 
@@ -35,7 +35,7 @@ const SortMenu = ({ setFilter, filter, disabled }: Props) => {
 
   return (
     <Popover>
-      <PopoverTrigger variant="light" size="md" disabled={disabled}>
+      <PopoverTrigger disabled={disabled} size="md" variant="light">
         <Icon name={icon} size={24} />
       </PopoverTrigger>
       {!disabled && (

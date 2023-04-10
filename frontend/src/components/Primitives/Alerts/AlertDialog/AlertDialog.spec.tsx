@@ -1,5 +1,5 @@
-import { renderWithProviders } from '@/utils/testing/renderWithProviders';
 import { fireEvent, waitFor } from '@testing-library/dom';
+
 import {
   AlertDialog,
   AlertDialogAction,
@@ -10,6 +10,7 @@ import {
 } from '@/components/Primitives/Alerts/AlertDialog/AlertDialog';
 import Button from '@/components/Primitives/Inputs/Button/Button';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
+import { renderWithProviders } from '@/utils/testing/renderWithProviders';
 
 const render = ({ children, ...props }: Partial<AlertDialogProps> = {}) =>
   renderWithProviders(
@@ -21,13 +22,13 @@ const render = ({ children, ...props }: Partial<AlertDialogProps> = {}) =>
 
       {/* Actual Dialog */}
       <AlertDialogContent
-        title="Title"
         handleClose={jest.fn()}
+        title="Title"
         {...props}
         data-testid="alertDialog"
       >
         {children}
-        <Flex justify="end" gap="16">
+        <Flex gap="16" justify="end">
           <AlertDialogCancel variant="primaryOutline">Cancel</AlertDialogCancel>
           <AlertDialogAction>Action</AlertDialogAction>
         </Flex>

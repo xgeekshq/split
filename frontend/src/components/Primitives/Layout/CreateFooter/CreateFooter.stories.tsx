@@ -1,8 +1,8 @@
 import React from 'react';
 import { ComponentStory } from '@storybook/react';
+import dedent from 'ts-dedent';
 
 import CreateFooter from '@/components/Primitives/Layout/CreateFooter/CreateFooter';
-import dedent from 'ts-dedent';
 
 export default {
   title: 'Primitives/Layout/CreateFooter',

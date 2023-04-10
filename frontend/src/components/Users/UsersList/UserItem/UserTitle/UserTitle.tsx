@@ -12,7 +12,7 @@ type UserTitleProps = {
 
 const UserTitle = ({ user, hasPermissions }: UserTitleProps) => {
   const getTitle = () => (
-    <Text link={hasPermissions} fontWeight="bold" size="sm" overflow="wrap">
+    <Text fontWeight="bold" link={hasPermissions} overflow="wrap" size="sm">
       {user.firstName} {user.lastName}
     </Text>
   );

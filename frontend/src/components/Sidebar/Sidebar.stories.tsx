@@ -1,10 +1,11 @@
 import React from 'react';
 import { ComponentStory } from '@storybook/react';
-import Sidebar from '@/components/Sidebar/Sidebar';
-import SidebarHeader from '@/components/Sidebar/Header/Header';
-import SidebarContent from '@/components/Sidebar/Content/Content';
+
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
+import SidebarContent from '@/components/Sidebar/Content/Content';
+import SidebarHeader from '@/components/Sidebar/Header/Header';
 import SidebarItem from '@/components/Sidebar/Item/Item';
+import Sidebar from '@/components/Sidebar/Sidebar';
 import { UserFactory } from '@/utils/factories/user';
 
 const user = UserFactory.create();
@@ -51,7 +52,7 @@ export default {
 };
 
 const Template: ComponentStory<typeof Sidebar> = ({ firstName, lastName, email, strategy }) => (
-  <Sidebar firstName={firstName} lastName={lastName} email={email} strategy={strategy} />
+  <Sidebar email={email} firstName={firstName} lastName={lastName} strategy={strategy} />
 );
 
 export const Default = Template.bind({});
@@ -59,7 +60,7 @@ Default.storyName = 'Basic Usage';
 
 export const Header: ComponentStory<typeof SidebarHeader> = ({ firstName, lastName, email }) => (
   <Flex css={{ backgroundColor: '$primary800' }}>
-    <SidebarHeader firstName={firstName} lastName={lastName} email={email} />
+    <SidebarHeader email={email} firstName={firstName} lastName={lastName} />
   </Flex>
 );
 
@@ -70,7 +71,7 @@ Header.parameters = {
 };
 
 export const Content: ComponentStory<typeof SidebarContent> = ({ strategy }) => (
-  <Flex direction="column" css={{ backgroundColor: '$primary800', width: '256px' }}>
+  <Flex css={{ backgroundColor: '$primary800', width: '256px' }} direction="column">
     <SidebarContent strategy={strategy} />
   </Flex>
 );
@@ -92,13 +93,13 @@ export const Item: ComponentStory<typeof SidebarItem> = ({
   label,
   active,
 }) => (
-  <Flex direction="column" css={{ backgroundColor: '$primary800', width: '256px' }}>
+  <Flex css={{ backgroundColor: '$primary800', width: '256px' }} direction="column">
     <SidebarItem
+      active={active}
       disabled={disabled}
-      link={link}
       iconName={iconName}
       label={label}
-      active={active}
+      link={link}
     />
   </Flex>
 );

@@ -1,12 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
+import { useSetRecoilState } from 'recoil';
 
 import { getTeamsWithoutUser } from '@/api/teamService';
-import { ToastStateEnum } from '@/utils/enums/toast-types';
-
-import { useSetRecoilState } from 'recoil';
 import { toastState } from '@/store/toast/atom/toast.atom';
-
 import { TEAMS_KEY, USERS_KEY } from '@/utils/constants/reactQueryKeys';
+import { ToastStateEnum } from '@/utils/enums/toast-types';
 
 const useTeamsWithoutUser = (userId: string) => {
   const setToastState = useSetRecoilState(toastState);

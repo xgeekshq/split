@@ -1,22 +1,22 @@
 import { ReactElement, Suspense } from 'react';
-import { dehydrate, QueryClient } from '@tanstack/react-query';
 import { GetServerSideProps, GetServerSidePropsContext } from 'next';
 import { getSession } from 'next-auth/react';
+import { dehydrate, QueryClient } from '@tanstack/react-query';
 
-import QueryError from '@/components/Errors/QueryError';
-import Layout from '@/components/layouts/Layout/Layout';
-import LoadingPage from '@/components/Primitives/Loading/Page/Page';
-import Flex from '@/components/Primitives/Layout/Flex/Flex';
-import { TEAMS_KEY } from '@/utils/constants/reactQueryKeys';
-import requireAuthentication from '@/components/HOC/requireAuthentication';
-import TeamsList from '@/components/Teams/TeamsList/TeamList';
-import Dots from '@/components/Primitives/Loading/Dots/Dots';
-import MainPageHeader from '@/components/layouts/Layout/MainPageHeader/MainPageHeader';
-import { ROUTES } from '@/utils/routes';
-import ScrollableContent from '@/components/Primitives/Layout/ScrollableContent/ScrollableContent';
 import { getAllTeams, getUserTeams } from '@/api/teamService';
-import useCurrentSession from '@/hooks/useCurrentSession';
+import QueryError from '@/components/Errors/QueryError';
+import requireAuthentication from '@/components/HOC/requireAuthentication';
+import Layout from '@/components/layouts/Layout/Layout';
+import MainPageHeader from '@/components/layouts/Layout/MainPageHeader/MainPageHeader';
+import Flex from '@/components/Primitives/Layout/Flex/Flex';
+import ScrollableContent from '@/components/Primitives/Layout/ScrollableContent/ScrollableContent';
+import Dots from '@/components/Primitives/Loading/Dots/Dots';
+import LoadingPage from '@/components/Primitives/Loading/Page/Page';
+import TeamsList from '@/components/Teams/TeamsList/TeamList';
 import useTeams from '@/hooks/teams/useTeams';
+import useCurrentSession from '@/hooks/useCurrentSession';
+import { TEAMS_KEY } from '@/utils/constants/reactQueryKeys';
+import { ROUTES } from '@/utils/routes';
 
 const Teams = () => {
   const { isSAdmin } = useCurrentSession();
@@ -35,7 +35,7 @@ const Teams = () => {
         <Suspense fallback={<LoadingPage />}>
           <QueryError>
             {isLoading || !teamsList ? (
-              <Flex justify="center" css={{ mt: '$16' }}>
+              <Flex css={{ mt: '$16' }} justify="center">
                 <Dots />
               </Flex>
             ) : (

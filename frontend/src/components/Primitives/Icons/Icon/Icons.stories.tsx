@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
+import { FormProvider, useForm } from 'react-hook-form';
 import { ComponentStory } from '@storybook/react';
+import dedent from 'ts-dedent';
 
 import Sprite from '@/components/icons/Sprite';
-import dedent from 'ts-dedent';
 import Icon from '@/components/Primitives/Icons/Icon/Icon';
+import Input from '@/components/Primitives/Inputs/Input/Input';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Text from '@/components/Primitives/Text/Text';
-import Input from '@/components/Primitives/Inputs/Input/Input';
-import { FormProvider, useForm } from 'react-hook-form';
 import Card from '@/stories/components/Card';
 
 export default {
@@ -53,21 +53,21 @@ const Template: ComponentStory<typeof Sprite> = () => {
     <Flex direction="column">
       <FormProvider {...methods}>
         <form
-          style={{ margin: '0 2.5rem 2rem' }}
           onChange={handleOnChange}
+          style={{ margin: '0 2.5rem 2rem' }}
           onSubmit={(e) => {
             e.preventDefault();
           }}
         >
-          <Input id="search" type="text" placeholder="Search" icon="search" iconPosition="left" />
+          <Input icon="search" iconPosition="left" id="search" placeholder="Search" type="text" />
         </form>
       </FormProvider>
-      <Flex wrap="wrap" gap="16" justify="center">
+      <Flex gap="16" justify="center" wrap="wrap">
         {filteredIcons.map((icon) => {
           const displayIcon = <Icon name={icon} size={32} />;
 
           return (
-            <Card display={displayIcon} key={icon}>
+            <Card key={icon} display={displayIcon}>
               <Text>
                 <Text fontWeight="bold">Name:</Text> {icon}
               </Text>

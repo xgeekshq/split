@@ -1,19 +1,20 @@
-import { dehydrate, QueryClient } from '@tanstack/react-query';
-import { GetServerSideProps, GetServerSidePropsContext, NextPage } from 'next';
-import { useSetRecoilState } from 'recoil';
-import { getAllUsers } from '@/api/userService';
-import requireAuthentication from '@/components/HOC/requireAuthentication';
-import CreateTeam from '@/components/Teams/CreateTeam/CreateTeam';
-import { createTeamState, usersListState } from '@/store/team/atom/team.atom';
-import { TeamUserRoles } from '@/utils/enums/team.user.roles';
-import QueryError from '@/components/Errors/QueryError';
-import LoadingPage from '@/components/Primitives/Loading/Page/Page';
 import { Suspense, useEffect } from 'react';
+import { GetServerSideProps, GetServerSidePropsContext, NextPage } from 'next';
+import { dehydrate, QueryClient } from '@tanstack/react-query';
+import { useSetRecoilState } from 'recoil';
+
+import { getAllUsers } from '@/api/userService';
+import QueryError from '@/components/Errors/QueryError';
+import requireAuthentication from '@/components/HOC/requireAuthentication';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Dots from '@/components/Primitives/Loading/Dots/Dots';
+import LoadingPage from '@/components/Primitives/Loading/Page/Page';
+import CreateTeam from '@/components/Teams/CreateTeam/CreateTeam';
 import useCurrentSession from '@/hooks/useCurrentSession';
 import useUsers from '@/hooks/users/useUsers';
+import { createTeamState, usersListState } from '@/store/team/atom/team.atom';
 import { USERS_KEY } from '@/utils/constants/reactQueryKeys';
+import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 
 const NewTeam: NextPage = () => {
   const { session, userId } = useCurrentSession({ required: true });
@@ -54,7 +55,7 @@ const NewTeam: NextPage = () => {
     <Suspense fallback={<LoadingPage />}>
       <QueryError>
         {isLoading ? (
-          <Flex justify="center" css={{ mt: '$16' }}>
+          <Flex css={{ mt: '$16' }} justify="center">
             <Dots />
           </Flex>
         ) : (

@@ -1,23 +1,22 @@
 import { ReactElement, Suspense } from 'react';
-
-import QueryError from '@/components/Errors/QueryError';
-import Layout from '@/components/layouts/Layout/Layout';
-import LoadingPage from '@/components/Primitives/Loading/Page/Page';
-import Flex from '@/components/Primitives/Layout/Flex/Flex';
-import UserHeader from '@/components/Users/User/Header/Header';
-
 import { GetServerSideProps } from 'next';
-import { dehydrate, QueryClient } from '@tanstack/react-query';
-import { getTeamsWithoutUser, getUserTeams } from '@/api/teamService';
-import { TEAMS_KEY, USERS_KEY } from '@/utils/constants/reactQueryKeys';
 import { useRouter } from 'next/router';
-import Dots from '@/components/Primitives/Loading/Dots/Dots';
-import { ROUTES } from '@/utils/routes';
+import { dehydrate, QueryClient } from '@tanstack/react-query';
+
+import { getTeamsWithoutUser, getUserTeams } from '@/api/teamService';
 import { getUser } from '@/api/userService';
+import QueryError from '@/components/Errors/QueryError';
 import requireAuthentication from '@/components/HOC/requireAuthentication';
+import Layout from '@/components/layouts/Layout/Layout';
+import Flex from '@/components/Primitives/Layout/Flex/Flex';
+import Dots from '@/components/Primitives/Loading/Dots/Dots';
+import LoadingPage from '@/components/Primitives/Loading/Page/Page';
 import TeamsList from '@/components/Teams/TeamsList/TeamList';
+import UserHeader from '@/components/Users/User/Header/Header';
 import useUserTeams from '@/hooks/teams/useUserTeams';
 import useUser from '@/hooks/users/useUser';
+import { TEAMS_KEY, USERS_KEY } from '@/utils/constants/reactQueryKeys';
+import { ROUTES } from '@/utils/routes';
 
 const UserDetails = () => {
   const {
@@ -44,7 +43,7 @@ const UserDetails = () => {
         <Suspense fallback={<LoadingPage />}>
           <QueryError>
             {isLoadingUser || isLoadingTeams ? (
-              <Flex justify="center" css={{ mt: '$16' }}>
+              <Flex css={{ mt: '$16' }} justify="center">
                 <Dots />
               </Flex>
             ) : (

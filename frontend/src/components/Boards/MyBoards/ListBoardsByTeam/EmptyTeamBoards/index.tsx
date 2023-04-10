@@ -1,10 +1,11 @@
+import Link from 'next/link';
+
 import {
   EmptyBoardsText,
   StyledBox,
   StyledImage,
   StyledNewBoardLink,
 } from '@/components/Dashboard/RecentRetros/partials/EmptyBoards/styles';
-import Link from 'next/link';
 
 interface EmptyTeamBoardsProps {
   teamId: string;
@@ -17,12 +18,12 @@ const EmptyTeamBoards = ({ teamId }: EmptyTeamBoardsProps) => (
       This team has no retros yet.
       <br />
       <Link
+        legacyBehavior
+        passHref
         href={{
           pathname: `/boards/new`,
           query: { team: teamId },
         }}
-        passHref
-        legacyBehavior
       >
         <StyledNewBoardLink underline fontWeight="medium">
           Add a new team board

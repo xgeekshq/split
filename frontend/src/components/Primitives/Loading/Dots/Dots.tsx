@@ -1,6 +1,5 @@
-import { CSSProps } from '@/styles/stitches/stitches.config';
-
 import StyledDots from '@/components/Primitives/Loading/Dots/styles';
+import { CSSProps } from '@/styles/stitches/stitches.config';
 
 type Props = CSSProps & {
   size?: 8 | 4 | 10 | 15 | 50 | 80 | 100;

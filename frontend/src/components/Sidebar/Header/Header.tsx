@@ -1,9 +1,10 @@
-import BannerIcon from '@/components/Sidebar/Banner/Banner';
+import Link from 'next/link';
+
 import Icon from '@/components/Primitives/Icons/Icon/Icon';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
-import Text from '@/components/Primitives/Text/Text';
 import Separator from '@/components/Primitives/Separator/Separator';
-import Link from 'next/link';
+import Text from '@/components/Primitives/Text/Text';
+import BannerIcon from '@/components/Sidebar/Banner/Banner';
 import { DASHBOARD_ROUTE } from '@/utils/routes';
 
 export type SidebarHeaderProps = { firstName: string; lastName: string; email: string };
@@ -12,7 +13,7 @@ const Header = ({ firstName, lastName, email }: SidebarHeaderProps) => {
   const initialLetters = firstName.charAt(0) + lastName.charAt(0);
 
   return (
-    <Flex direction="column" data-testid="sidebarHeader">
+    <Flex data-testid="sidebarHeader" direction="column">
       <Flex align="center" css={{ p: '$40' }} justify="center">
         <Link href={DASHBOARD_ROUTE}>
           <Flex pointer>
@@ -48,33 +49,33 @@ const Header = ({ firstName, lastName, email }: SidebarHeaderProps) => {
               right: '0',
             }}
           />
-          <Text color="primary800" css={{ zIndex: 1 }} size="md" fontWeight="bold">
+          <Text color="primary800" css={{ zIndex: 1 }} fontWeight="bold" size="md">
             {initialLetters}
           </Text>
         </Flex>
-        <Flex direction="column" css={{ width: '80%' }}>
+        <Flex css={{ width: '80%' }} direction="column">
           <Text
             color="white"
+            fontWeight="medium"
+            size="sm"
             css={{
               textOverflow: 'ellipsis',
               width: '100%',
               overflow: 'hidden',
               wordBreak: 'keep-all',
             }}
-            size="sm"
-            fontWeight="medium"
           >
             {`${firstName} ${lastName}`}
           </Text>
           <Text
             color="primary200"
+            fontWeight="medium"
+            size="xs"
             css={{
               textOverflow: 'ellipsis',
               width: '100%',
               overflow: 'hidden',
             }}
-            size="xs"
-            fontWeight="medium"
           >
             {email}
           </Text>
