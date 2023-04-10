@@ -9,14 +9,20 @@ import { Team } from '@/types/team/team';
 import useUsers from '@/hooks/users/useUsers';
 import { User } from '@/types/user/user';
 import { UserFactory } from '@/utils/factories/user';
+import { ROUTES } from '@/utils/routes';
+import { waitFor } from '@testing-library/react';
 
+const randomTeam = TeamFactory.create();
 const mockUseTeam = useTeam as jest.Mock<UseQueryResult<Team>>;
 jest.mock('@/hooks/teams/useTeam');
 
 const mockUseUsers = useUsers as jest.Mock<UseQueryResult<User[]>>;
 jest.mock('@/hooks/users/useUsers');
 
-const { mockRouter } = libraryMocks.mockNextRouter({ pathname: '/teams/[teamId]' });
+const { mockRouter } = libraryMocks.mockNextRouter({
+  pathname: `/teams/${randomTeam.id}`,
+  query: { teamId: randomTeam.id },
+});
 
 const render = () => renderWithProviders(<TeamDetails />, { routerOptions: mockRouter });
 
@@ -38,4 +44,25 @@ describe('Pages/Teams/[teamId]', () => {
     expect(getByTestId('teamHeader')).toBeInTheDocument();
     expect(getByTestId('teamMembersList')).toBeInTheDocument();
   });
+
+  it('should redirect when no data is fetched', async () => {
+    // Arrange
+    mockUseTeam.mockReturnValue({
+      isLoading: true,
+    } as UseQueryResult<Team>);
+
+    mockUseUsers.mockReturnValue({
+      isLoading: true,
+    } as UseQueryResult<User[]>);
+
+    // Act
+    render();
+
+    // Assert
+    await waitFor(() => {
+      expect(mockRouter.replace).toHaveBeenCalledWith(ROUTES.Teams);
+    });
+  });
+
+  it.todo('should prefetch on getServerSide');
 });

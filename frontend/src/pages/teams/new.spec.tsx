@@ -6,6 +6,8 @@ import { UseQueryResult } from '@tanstack/react-query';
 import useUsers from '@/hooks/users/useUsers';
 import { User } from '@/types/user/user';
 import { UserFactory } from '@/utils/factories/user';
+import { ROUTES } from '@/utils/routes';
+import { waitFor } from '@testing-library/react';
 
 const mockUseUsers = useUsers as jest.Mock<UseQueryResult<User[]>>;
 jest.mock('@/hooks/users/useUsers');
@@ -27,4 +29,20 @@ describe('Pages/Teams/[teamId]', () => {
     // Assert
     expect(getByTestId('createTeam')).toBeInTheDocument();
   });
+
+  it('should redirect when no data is fetched', async () => {
+    // Arrange
+    mockUseUsers.mockReturnValue({
+      isLoading: true,
+    } as UseQueryResult<User[]>);
+
+    render();
+
+    // Assert
+    await waitFor(() => {
+      expect(mockRouter.replace).toHaveBeenCalledWith(ROUTES.Teams);
+    });
+  });
+
+  it.todo('should prefetch on getServerSide');
 });
