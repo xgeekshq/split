@@ -19,12 +19,14 @@ describe('Components/Sidebar/Header', () => {
     // Act
     const { getByText, getByTestId } = render(headerProps);
     const userIcon = getByTestId('sidebarHeader').querySelector('[href="#userIcon"]');
+    const menuIcon = getByTestId('sidebarHeader').querySelector('[href="#menu"]');
 
     // Assert
     expect(getByText(`${headerProps.firstName} ${headerProps.lastName}`)).toBeInTheDocument();
     expect(getByText(headerProps.email)).toBeInTheDocument();
     expect(getByTestId('splitLogo')).toBeInTheDocument();
     expect(userIcon).toBeDefined();
+    expect(menuIcon).toBeDefined();
     expect(getByText(getInitials(headerProps.firstName, headerProps.lastName).toUpperCase()));
   });
 
