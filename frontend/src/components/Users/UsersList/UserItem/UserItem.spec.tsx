@@ -1,7 +1,10 @@
 import React from 'react';
 import { renderWithProviders } from '@/utils/testing/renderWithProviders';
 import { UserFactory, UserWithTeamsFactory } from '@/utils/factories/user';
-import UserItem, { UserItemProps } from '@/components/Users/UsersList/UserItem/UserItem';
+import UserItem, {
+  UserItemProps,
+  getTeamsCountText,
+} from '@/components/Users/UsersList/UserItem/UserItem';
 
 const render = (props: Partial<UserItemProps> = {}) =>
   renderWithProviders(<UserItem userWithTeams={UserWithTeamsFactory.create()} {...props} />, {
@@ -20,16 +23,7 @@ describe('Components/Users/User/UsersList/UserItem/UserItem', () => {
     expect(getByText(userWithTeams.user.email)).toBeInTheDocument();
     expect(getByTestId('userItemActions')).toBeInTheDocument();
 
-    const getTeamsCountText = () => {
-      if (userWithTeams.teamsNames?.length === 1) {
-        return 'in 1 team';
-      }
-      if (userWithTeams.teamsNames && userWithTeams.teamsNames?.length > 1) {
-        return `in ${userWithTeams.teamsNames.length} teams`;
-      }
-      return 'no teams';
-    };
-
-    expect(getByText(getTeamsCountText())).toBeInTheDocument();
+    if (userWithTeams.teamsNames)
+      expect(getByText(getTeamsCountText(userWithTeams.teamsNames))).toBeInTheDocument();
   });
 });

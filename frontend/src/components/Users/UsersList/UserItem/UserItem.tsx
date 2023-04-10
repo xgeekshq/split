@@ -15,19 +15,19 @@ export type UserItemProps = {
   userWithTeams: UserWithTeams;
 };
 
+export const getTeamsCountText = (teamNames: string[]) => {
+  if (teamNames.length === 1) {
+    return 'in 1 team';
+  }
+  if (teamNames && teamNames.length > 1) {
+    return `in ${teamNames.length} teams`;
+  }
+  return 'no teams';
+};
+
 const UserItem = React.memo<UserItemProps>(({ userWithTeams }) => {
   const { isSAdmin } = useCurrentSession();
   const { teamsNames, user } = userWithTeams;
-
-  const getTeamsCountText = () => {
-    if (teamsNames?.length === 1) {
-      return 'in 1 team';
-    }
-    if (teamsNames && teamsNames?.length > 1) {
-      return `in ${teamsNames.length} teams`;
-    }
-    return 'no teams';
-  };
 
   const teamsSeparatedByComma = teamsNames?.join(', ') || '';
 
@@ -57,13 +57,15 @@ const UserItem = React.memo<UserItemProps>(({ userWithTeams }) => {
             </Badge>
           )}
         </Flex>
-        <Flex align="center" justify="end" css={{ flex: '1' }}>
-          <Tooltip content={teamsSeparatedByComma}>
-            <Text css={{ cursor: 'default' }} fontWeight="bold" size="sm">
-              {getTeamsCountText()}
-            </Text>
-          </Tooltip>
-        </Flex>
+        {teamsNames && (
+          <Flex align="center" justify="end" css={{ flex: '1' }}>
+            <Tooltip content={teamsSeparatedByComma}>
+              <Text css={{ cursor: 'default' }} fontWeight="bold" size="sm">
+                {getTeamsCountText(teamsNames)}
+              </Text>
+            </Tooltip>
+          </Flex>
+        )}
         {isSAdmin && (
           <Flex align="center" justify="end" css={{ flex: '2' }}>
             <UserItemActions user={user} />
