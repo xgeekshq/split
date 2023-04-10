@@ -5,7 +5,9 @@ import { getInitials } from '@/utils/getInitials';
 import { User } from '@/types/user/user';
 import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
-import AvatarGroup, { AvatarGroupProps } from './AvatarGroup';
+import AvatarGroup, {
+  AvatarGroupProps,
+} from '@/components/Primitives/Avatars/AvatarGroup/AvatarGroup';
 
 const router = createMockRouter({});
 

@@ -1,6 +1,6 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { WRITE_LOCK_ERROR } from 'src/libs/constants/database';
-import { DELETE_VOTE_FAILED } from 'src/libs/exceptions/messages';
+import { DELETE_VOTE_FAILED, UPDATE_FAILED } from 'src/libs/exceptions/messages';
 import { arrayIdToString } from 'src/libs/utils/arrayIdToString';
 import isEmpty from 'src/libs/utils/isEmpty';
 import { GetCardServiceInterface } from 'src/modules/cards/interfaces/services/get.card.service.interface';
@@ -16,6 +16,10 @@ import { DeleteFailedException } from 'src/libs/exceptions/deleteFailedBadReques
 import { UpdateFailedException } from 'src/libs/exceptions/updateFailedBadRequestException';
 import { GetBoardServiceInterface } from 'src/modules/boards/interfaces/services/get.board.service.interface';
 import Card from 'src/modules/cards/entities/card.schema';
+import {
+	getUserWithVotes,
+	mergeTwoUsersWithVotes
+} from 'src/modules/cards/utils/get-user-with-votes';
 
 @Injectable()
 export default class DeleteVoteService implements DeleteVoteServiceInterface {
@@ -23,16 +27,16 @@ export default class DeleteVoteService implements DeleteVoteServiceInterface {
 		@Inject(TYPES.repositories.VoteRepository)
 		private readonly voteRepository: VoteRepositoryInterface,
 		@Inject(BoardUsers.TYPES.services.GetBoardUserService)
-		private getBoardUserService: GetBoardUserServiceInterface,
+		private readonly getBoardUserService: GetBoardUserServiceInterface,
 		@Inject(BoardUsers.TYPES.services.UpdateBoardUserService)
-		private updateBoardUserService: UpdateBoardUserServiceInterface,
+		private readonly updateBoardUserService: UpdateBoardUserServiceInterface,
 		@Inject(Cards.TYPES.services.GetCardService)
-		private getCardService: GetCardServiceInterface,
+		private readonly getCardService: GetCardServiceInterface,
 		@Inject(Boards.TYPES.services.GetBoardService)
-		private getBoardService: GetBoardServiceInterface
+		private readonly getBoardService: GetBoardServiceInterface
 	) {}
 
-	private logger: Logger = new Logger('DeleteVoteService');
+	private logger: Logger = new Logger(DeleteVoteService.name);
 
 	async decrementVoteUser(boardId: string, userId: string, count?: number, withSession?: boolean) {
 		const updatedBoardUser = await this.updateBoardUserService.updateVoteUser(
@@ -141,6 +145,17 @@ export default class DeleteVoteService implements DeleteVoteServiceInterface {
 		} finally {
 			await this.updateBoardUserService.endSession();
 			await this.voteRepository.endSession();
+		}
+	}
+	async deleteCardVotesFromColumn(boardId: string, cardsArray: Card[]) {
+		await this.updateBoardUserService.startTransaction();
+		try {
+			await this.deleteVotesFromCards(boardId, cardsArray);
+			await this.updateBoardUserService.commitTransaction();
+		} catch (e) {
+			throw new DeleteFailedException(DELETE_VOTE_FAILED);
+		} finally {
+			await this.updateBoardUserService.endSession();
 		}
 	}
 
@@ -437,5 +452,69 @@ export default class DeleteVoteService implements DeleteVoteServiceInterface {
 		userVotes.splice(0, Math.abs(count));
 
 		return votesOnCardItem.concat(userVotes);
+	}
+
+	//Delete card votes from column helpers
+
+	private async deleteVotesFromCards(boardId, cardsArray: Card[]) {
+		try {
+			let usersWithVotes: Map<string, number>;
+
+			cardsArray.map((card) => {
+				const usersWithVotesToAdd = this.mergeUsersVotes(card);
+				usersWithVotes = mergeTwoUsersWithVotes(usersWithVotes, usersWithVotesToAdd);
+			});
+
+			if (usersWithVotes.size > 0) {
+				await this.deletedVotesFromCard(boardId, usersWithVotes);
+			}
+		} catch (e) {
+			this.logger.error(e);
+			await this.updateBoardUserService.abortTransaction();
+			throw new UpdateFailedException(UPDATE_FAILED);
+		}
+	}
+
+	private async deletedVotesFromCard(boardId: string, usersWithVotes: Map<string, number>) {
+		try {
+			const result = await this.updateBoardUserService.updateManyUserVotes(
+				boardId,
+				usersWithVotes,
+				true,
+				true
+			);
+
+			if (!result.ok) {
+				throw new UpdateFailedException(UPDATE_FAILED);
+			}
+		} catch (e) {
+			this.logger.error(e);
+			throw new UpdateFailedException(UPDATE_FAILED);
+		}
+	}
+
+	//Merge card.votes with items votes
+	private mergeUsersVotes(card: Card): Map<string, number> {
+		let cardWithVotes: Map<string, number>;
+		let itemsWithVotes: Map<string, number>;
+		let usersWithVotes: Map<string, number>;
+
+		if (Object.keys(card.items).length === 1) {
+			usersWithVotes = getUserWithVotes(card.items[0].votes);
+		}
+
+		if (Object.keys(card.items).length > 1) {
+			card.items.forEach((item) => {
+				itemsWithVotes = getUserWithVotes(item.votes);
+				usersWithVotes = mergeTwoUsersWithVotes(usersWithVotes, itemsWithVotes);
+			});
+		}
+
+		if (!isEmpty(card.votes)) {
+			cardWithVotes = getUserWithVotes(card.votes);
+			usersWithVotes = mergeTwoUsersWithVotes(usersWithVotes, cardWithVotes);
+		}
+
+		return usersWithVotes;
 	}
 }

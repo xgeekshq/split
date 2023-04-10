@@ -10,8 +10,8 @@ import Link from 'next/link';
 import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 import Button from '@/components/Primitives/Inputs/Button/Button';
 import useTeams from '@/hooks/teams/useTeams';
-import { ScrollableContent } from '../styles';
-import TeamHeader from '../../TeamHeader';
+import { ScrollableContent } from '@/components/Boards/MyBoards/styles';
+import TeamHeader from '@/components/Boards/TeamHeader';
 
 interface ListBoardsProps {
   userId: string;

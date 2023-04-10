@@ -10,7 +10,7 @@ import {
   JustifyType,
   WrapType,
   GapType,
-} from '../../../../stories/types/PrimitiveTypes';
+} from '@/stories/types/PrimitiveTypes';
 
 const DIRECTION_OPTIONS: DirectionType[] = ['row', 'column', 'rowReverse', 'columnReverse'];
 

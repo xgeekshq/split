@@ -7,7 +7,7 @@ import isEmpty from 'src/libs/utils/isEmpty';
 import { TeamDto } from 'src/modules/communication/dto/team.dto';
 import { CommunicationServiceInterface } from 'src/modules/communication/interfaces/slack-communication.service.interface';
 import * as CommunicationsType from 'src/modules/communication/interfaces/types';
-import * as Cards from 'src/modules/cards/interfaces/types';
+import * as Votes from 'src/modules/votes/interfaces/types';
 import * as Boards from 'src/modules/boards/interfaces/types';
 import * as BoardUsers from 'src/modules/boardUsers/interfaces/types';
 import User from 'src/modules/users/entities/user.schema';
@@ -19,7 +19,6 @@ import BoardUser from '../../boardUsers/entities/board.user.schema';
 import SocketGateway from 'src/modules/socket/gateway/socket.gateway';
 import Column from '../../columns/entities/column.schema';
 import ColumnDto from '../../columns/dto/column.dto';
-import { DeleteCardServiceInterface } from 'src/modules/cards/interfaces/services/delete.card.service.interface';
 import { BoardRepositoryInterface } from '../repositories/board.repository.interface';
 import { BOARD_PHASE_SERVER_UPDATED } from 'src/libs/constants/phase';
 import { FRONTEND_URL } from 'src/libs/constants/frontend';
@@ -38,6 +37,7 @@ import { generateNewSubColumns } from '../utils/generate-subcolumns';
 import { mergeCardsFromSubBoardColumnsIntoMainBoard } from '../utils/merge-cards-from-subboard';
 import { UpdateFailedException } from 'src/libs/exceptions/updateFailedBadRequestException';
 import { BoardNotFoundException } from 'src/libs/exceptions/boardNotFoundException';
+import { DeleteVoteServiceInterface } from 'src/modules/votes/interfaces/services/delete.vote.service.interface';
 
 @Injectable()
 export default class UpdateBoardService implements UpdateBoardServiceInterface {
@@ -49,8 +49,8 @@ export default class UpdateBoardService implements UpdateBoardServiceInterface {
 		@Inject(CommunicationsType.TYPES.services.SlackSendMessageService)
 		private slackSendMessageService: SendMessageServiceInterface,
 		private socketService: SocketGateway,
-		@Inject(Cards.TYPES.services.DeleteCardService)
-		private deleteCardService: DeleteCardServiceInterface,
+		@Inject(Votes.TYPES.services.DeleteVoteService)
+		private deleteVoteService: DeleteVoteServiceInterface,
 		@Inject(BoardUsers.TYPES.services.CreateBoardUserService)
 		private readonly createBoardUserService: CreateBoardUserServiceInterface,
 		@Inject(BoardUsers.TYPES.services.GetBoardUserService)
@@ -394,7 +394,7 @@ export default class UpdateBoardService implements UpdateBoardServiceInterface {
 				return board.columns.find((column) => column._id.toString() === deletedColumnId)?.cards;
 			});
 
-			await this.deleteCardService.deleteCardVotesFromColumn(boardId, cardsToDelete);
+			await this.deleteVoteService.deleteCardVotesFromColumn(boardId, cardsToDelete);
 		}
 
 		/**

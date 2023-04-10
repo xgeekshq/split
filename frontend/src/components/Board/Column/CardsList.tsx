@@ -2,7 +2,7 @@ import React from 'react';
 
 import CardType from '@/types/card/card';
 import { ColumnInnerList } from '@/types/column';
-import CardBoard from '../Card/CardBoard';
+import CardBoard from '@/components/Board/Card/CardBoard';
 
 type CardListProps = {
   isRegularBoard?: boolean;

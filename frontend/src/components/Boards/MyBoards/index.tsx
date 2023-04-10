@@ -10,10 +10,10 @@ import { filterTeamBoardsState } from '@/store/board/atoms/board.atom';
 import useBoard from '@/hooks/useBoard';
 import useTeams from '@/hooks/teams/useTeams';
 import useCurrentSession from '@/hooks/useCurrentSession';
-import FilterBoards from '../Filters/FilterBoards';
-import ListBoardsByTeam from './ListBoardsByTeam';
-import ListBoards from './ListBoards';
-import ListPersonalBoards from './ListPersonalBoards';
+import FilterBoards from '@/components/Boards/Filters/FilterBoards';
+import ListBoardsByTeam from '@/components/Boards/MyBoards/ListBoardsByTeam';
+import ListBoards from '@/components/Boards/MyBoards/ListBoards';
+import ListPersonalBoards from '@/components/Boards/MyBoards/ListPersonalBoards';
 
 interface MyBoardsProps {
   userId: string;

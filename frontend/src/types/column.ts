@@ -1,5 +1,5 @@
-import { BoardUser } from './board/board.user';
-import CardType from './card/card';
+import { BoardUser } from '@/types/board/board.user';
+import CardType from '@/types/card/card';
 
 interface ColumnType {
   _id: string;

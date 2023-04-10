@@ -13,6 +13,7 @@ export default class GetTeamUserService implements GetTeamUserServiceInterface {
 		private readonly teamUserRepository: TeamUserRepositoryInterface
 	) {}
 
+	// these functions are not tested since they make direct queries to the database
 	countTeamsOfUser(userId: string): Promise<number> {
 		return this.teamUserRepository.countTeamsOfUser(userId);
 	}

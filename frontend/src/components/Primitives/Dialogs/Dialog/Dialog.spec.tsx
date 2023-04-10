@@ -1,9 +1,10 @@
 import { createMockRouter } from '@/utils/testing/mocks';
 import { renderWithProviders } from '@/utils/testing/renderWithProviders';
 import { fireEvent, waitFor } from '@testing-library/dom';
-import Dialog, { DialogProps } from './Dialog';
-import { HeaderProps } from './DialogHeader';
-import { FooterProps } from './DialogFooter';
+
+import Dialog, { DialogProps } from '@/components/Primitives/Dialogs/Dialog/Dialog';
+import { HeaderProps } from '@/components/Primitives/Dialogs/Dialog/DialogHeader';
+import { FooterProps } from '@/components/Primitives/Dialogs/Dialog/DialogFooter';
 
 const router = createMockRouter({});
 

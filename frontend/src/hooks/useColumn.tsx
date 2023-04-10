@@ -4,7 +4,7 @@ import ColumnType from '@/types/column';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
 import { deleteCardsFromColumnRequest, updateColumnRequest } from '@/api/boardService';
 import { BoardUser } from '@/types/board/board.user';
-import useBoardUtils from './useBoardUtils';
+import useBoardUtils from '@/hooks/useBoardUtils';
 
 const useColumn = () => {
   const { queryClient, setToastState } = useBoardUtils();

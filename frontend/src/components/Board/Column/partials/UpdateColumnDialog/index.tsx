@@ -11,11 +11,11 @@ import { SchemaChangeColumnName } from '@/schema/schemaChangeColumnName';
 import { useRef } from 'react';
 import { joiResolver } from '@hookform/resolvers/joi';
 import { FormProvider, useForm, useWatch } from 'react-hook-form';
-import { styled } from '@/styles/stitches/stitches.config';
 import useColumn from '@/hooks/useColumn';
 import CardType from '@/types/card/card';
 import Text from '@/components/Primitives/Text/Text';
 import TextArea from '@/components/Primitives/Inputs/TextArea/TextArea';
+import { FlexForm } from '@/styles/pages/pages.styles';
 
 type UpdateColumnNameProps = {
   boardId: string;
@@ -31,9 +31,7 @@ type UpdateColumnNameProps = {
   socketId: string;
 };
 
-const StyledForm = styled('form', Flex, { width: '100%', backgroundColor: 'transparent' });
-
-const UpdateColumnDialog: React.FC<UpdateColumnNameProps> = ({
+const UpdateColumnDialog = ({
   boardId,
   columnId,
   columnTitle,
@@ -45,7 +43,7 @@ const UpdateColumnDialog: React.FC<UpdateColumnNameProps> = ({
   isDefaultText,
   type,
   socketId,
-}) => {
+}: UpdateColumnNameProps) => {
   const {
     updateColumn: { mutate },
   } = useColumn();
@@ -100,13 +98,14 @@ const UpdateColumnDialog: React.FC<UpdateColumnNameProps> = ({
         handleClose={handleClose}
       >
         <FormProvider {...methods}>
-          <StyledForm
+          <FlexForm
             id="form_dialog"
             onSubmit={methods.handleSubmit(({ title, text }) => {
               handleConfirm(title, text);
             })}
             direction="column"
             gap="16"
+            css={{ backgroundColor: 'transparent' }}
           >
             {type === 'ColumnName' ? (
               <Input
@@ -139,7 +138,7 @@ const UpdateColumnDialog: React.FC<UpdateColumnNameProps> = ({
                 {type === 'ColumnName' ? 'Update column name' : 'Activate card default text'}
               </AlertDialogAction>
             </Flex>
-          </StyledForm>
+          </FlexForm>
         </FormProvider>
       </AlertDialogContent>
     </AlertDialog>

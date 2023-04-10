@@ -15,8 +15,8 @@ import { toastState } from '@/store/toast/atom/toast.atom';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
 
-import BoardConfigurations from '../../BoardConfigurations/BoardConfigurations';
-import ParticipantsTab from '../ParticipantsTab/ParticipantsTab';
+import BoardConfigurations from '@/components/CreateBoard/BoardConfigurations/BoardConfigurations';
+import ParticipantsTab from '@/components/CreateBoard/RegularBoard/ParticipantsTab/ParticipantsTab';
 
 const SettingsTabs = () => {
   const { userId } = useCurrentSession();

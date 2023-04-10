@@ -13,11 +13,11 @@ import { onDragCardStart } from '@/store/card/atoms/card.atom';
 import { useRecoilValue } from 'recoil';
 import { BoardPhases } from '@/utils/enums/board.phases';
 import useCards from '@/hooks/useCards';
-import AddCardOrComment from '../AddCardOrComment';
-import Comments from '../Comment/Comments';
-import CardFooter from './CardFooter';
-import CardItemList from './CardItem/CardItemList';
-import PopoverCardSettings from './PopoverSettings';
+import AddCardOrComment from '@/components/Board/AddCardOrComment';
+import Comments from '@/components/Board/Comment/Comments';
+import CardFooter from '@/components/Board/Card/CardFooter';
+import CardItemList from '@/components/Board/Card/CardItem/CardItemList';
+import PopoverCardSettings from '@/components/Board/Card/PopoverSettings';
 
 const Container = styled(Flex, {
   borderRadius: '$8',

@@ -29,13 +29,13 @@ import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 import isEmpty from '@/utils/isEmpty';
 import { GuestUser } from '@/types/user/user';
-import { DASHBOARD_ROUTE } from '@/utils/routes';
+import { BOARDS_ROUTE } from '@/utils/routes';
 import { getGuestUserCookies } from '@/utils/getGuestUserCookies';
 import { BoardPhases } from '@/utils/enums/board.phases';
 import ConfirmationDialog from '@/components/Primitives/Alerts/ConfirmationDialog/ConfirmationDialog';
 import useCards from '@/hooks/useCards';
 import { UpdateBoardPhaseType } from '@/types/board/board';
-import { sortParticipantsList } from './participants';
+import { sortParticipantsList } from '@/pages/boards/[boardId]/participants';
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const boardId = String(context.query.boardId);
@@ -44,29 +44,27 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
   const session = await getSession(context);
 
-  if (boardId.includes('.map'))
-    return {
-      props: {},
-    };
-
-  const boardIsPublic = await getPublicStatusRequest(boardId, context);
-
-  // if board is public and user has no session
-  if (boardIsPublic && !session) {
-    // check if there are guest user cookies
-    const cookiesGuestUser: GuestUser | { user: string } = getGuestUserCookies({ req, res }, true);
-    // if there isn´t cookies, the guest user is not registered
-    if (!cookiesGuestUser) {
-      return {
-        redirect: {
-          permanent: false,
-          destination: `/login-guest-user/${boardId}`,
-        },
-      };
-    }
-  }
-
   try {
+    const boardIsPublic = await getPublicStatusRequest(boardId, context);
+
+    // if board is public and user has no session
+    if (boardIsPublic && !session) {
+      // check if there are guest user cookies
+      const cookiesGuestUser: GuestUser | { user: string } = getGuestUserCookies(
+        { req, res },
+        true,
+      );
+      // if there isn´t cookies, the guest user is not registered
+      if (!cookiesGuestUser) {
+        return {
+          redirect: {
+            permanent: false,
+            destination: `/login-guest-user/${boardId}`,
+          },
+        };
+      }
+    }
+
     await queryClient.fetchQuery(['board', { id: boardId }], () =>
       getBoardRequest(boardId, context),
     );
@@ -74,7 +72,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     return {
       redirect: {
         permanent: false,
-        destination: DASHBOARD_ROUTE,
+        destination: BOARDS_ROUTE,
       },
     };
   }

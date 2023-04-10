@@ -5,7 +5,7 @@ import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Text from '@/components/Primitives/Text/Text';
 import { filterTeamBoardsState } from '@/store/board/atoms/board.atom';
 import { useRecoilState } from 'recoil';
-import { filterByTeamSelectStyles } from './styles';
+import { filterByTeamSelectStyles } from '@/components/Boards/Filters/styles';
 
 const StyledSelect = styled(Select, {});
 interface OptionType {

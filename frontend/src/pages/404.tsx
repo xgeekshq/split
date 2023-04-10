@@ -1,38 +1,34 @@
+import { ReactElement } from 'react';
+
 import Link from 'next/link';
 
-import { BannerContainer, ContainerSection, ImageBackground } from '@/styles/pages/error.styles';
-
-import LogoIcon from '@/components/icons/Logo';
 import Text from '@/components/Primitives/Text/Text';
-import SecondaryBanner from '@/components/icons/SecondaryBanner';
 import Button from '@/components/Primitives/Inputs/Button/Button';
+import AccessLayout from '@/components/layouts/AccessLayout/AccessLayout';
+import Flex from '@/components/Primitives/Layout/Flex/Flex';
 
-export default function Custom404() {
-  return (
-    <ImageBackground>
-      <BannerContainer>
-        <SecondaryBanner />
-      </BannerContainer>
+const Custom404 = () => (
+  <Flex direction="column">
+    <Text css={{ mt: '$24' }} display="1">
+      404
+    </Text>
 
-      <ContainerSection>
-        <LogoIcon />
+    <Text css={{ mt: '$8' }} heading="2" fontWeight="medium">
+      Page Not Found
+    </Text>
+    <Text color="primary500" css={{ mt: '$24' }} size="md">
+      The page you are looking for might have been removed or is temporarily unavailable
+    </Text>
+    <Flex>
+      <Link href="/">
+        <Button css={{ mt: '$24' }} size="md">
+          Go to Home
+        </Button>
+      </Link>
+    </Flex>
+  </Flex>
+);
 
-        <Text css={{ mt: '$29' }} display="3">
-          404
-        </Text>
+Custom404.getLayout = (page: ReactElement) => <AccessLayout>{page}</AccessLayout>;
 
-        <Text css={{ mt: '$10' }} heading="2" fontWeight="medium">
-          Page Not Found
-        </Text>
-        <Text color="primary500" css={{ mt: '$24' }} size="md">
-          The page you are looking for might have been removed or is temporarily unavailable
-        </Text>
-        <Link href="/">
-          <Button css={{ mt: '$26' }} size="md">
-            Go to Home
-          </Button>
-        </Link>
-      </ContainerSection>
-    </ImageBackground>
-  );
-}
+export default Custom404;

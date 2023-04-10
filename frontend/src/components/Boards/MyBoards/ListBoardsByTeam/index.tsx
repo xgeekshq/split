@@ -8,10 +8,10 @@ import { toastState } from '@/store/toast/atom/toast.atom';
 import BoardType from '@/types/board/board';
 import { Team } from '@/types/team/team';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
-import { ScrollableContent } from '../styles';
-import TeamHeader from '../../TeamHeader';
-import EmptyTeamBoards from './EmptyTeamBoards';
-import ListBoards from '../ListBoards';
+import { ScrollableContent } from '@/components/Boards/MyBoards/styles';
+import TeamHeader from '@/components/Boards/TeamHeader';
+import EmptyTeamBoards from '@/components/Boards/MyBoards/ListBoardsByTeam/EmptyTeamBoards';
+import ListBoards from '@/components/Boards/MyBoards/ListBoards';
 
 interface ListBoardsByTeamProps {
   filteredTeam: Team;

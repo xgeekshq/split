@@ -1,4 +1,4 @@
-import { User } from '../user/user';
+import { User } from '@/types/user/user';
 
 export default interface CommentType {
   _id: string;

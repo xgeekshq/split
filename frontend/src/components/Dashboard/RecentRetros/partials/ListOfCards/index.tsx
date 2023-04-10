@@ -5,7 +5,7 @@ import CardBody from '@/components/CardBoard/CardBody/CardBody';
 import Dots from '@/components/Primitives/Loading/Dots/Dots';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import BoardType from '@/types/board/board';
-import { LastUpdatedText } from './styles';
+import { LastUpdatedText } from '@/components/Dashboard/RecentRetros/partials/ListOfCards/styles';
 
 type ListOfCardsProp = {
   data: InfiniteData<{ boards: BoardType[]; hasNextPage: boolean }> | undefined;

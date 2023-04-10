@@ -1,5 +1,5 @@
 import { styled } from '@/styles/stitches/stitches.config';
-import Flex from '../Primitives/Layout/Flex/Flex';
+import Flex from '@/components/Primitives/Layout/Flex/Flex';
 
 const StyledSidebar = styled('aside', {
   width: '256px',

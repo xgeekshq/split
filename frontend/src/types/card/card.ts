@@ -1,7 +1,7 @@
-import CommentType from '../comment/comment';
-import { User } from '../user/user';
+import CommentType from '@/types/comment/comment';
+import { User } from '@/types/user/user';
 
-import { CardItemToAdd, CardItemType } from './cardItem';
+import { CardItemToAdd, CardItemType } from '@/types/card/cardItem';
 
 export default interface CardType {
   _id: string;

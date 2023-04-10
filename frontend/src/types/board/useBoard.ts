@@ -8,8 +8,8 @@ import BoardType, {
 } from '@/types/board/board';
 import { UseInfiniteQueryResult, UseMutationResult, UseQueryResult } from '@tanstack/react-query';
 
-import { BoardUser } from './board.user';
-import UpdateBoardPhaseDto from './updateBoardPhase.dto';
+import UpdateBoardPhaseDto from '@/types/board/updateBoardPhase.dto';
+import { BoardUser } from '@/types/board/board.user';
 
 export default interface UseBoardType {
   createBoard: UseMutationResult<BoardType, unknown, CreateBoardDto, unknown>;
