@@ -16,4 +16,6 @@ describe('Pages/Users', () => {
     expect(getByTestId('MainPageHeader')).toBeInTheDocument();
     expect(getByTestId('usersList')).toBeInTheDocument();
   });
+
+  it.todo('should prefetch on getServerSide');
 });
