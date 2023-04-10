@@ -1,12 +1,13 @@
 import { Module, forwardRef } from '@nestjs/common';
 import { mongooseBoardModule } from '../../infrastructure/database/mongoose.module';
+import BoardUsersModule from '../boardUsers/boardusers.module';
 import SocketModule from '../socket/socket.module';
 import { VotesModule } from '../votes/votes.module';
 import {
 	cardRepository,
 	createCardUseCase,
-	deleteCardApplication,
-	deleteCardService,
+	deleteCardUseCase,
+	deleteFromCardGroupUseCase,
 	getCardService,
 	mergeCardUseCase,
 	unmergeCardUseCase,
@@ -16,20 +17,25 @@ import {
 import CardsController from './controller/cards.controller';
 
 @Module({
-	imports: [mongooseBoardModule, forwardRef(() => SocketModule), forwardRef(() => VotesModule)],
+	imports: [
+		mongooseBoardModule,
+		forwardRef(() => BoardUsersModule),
+		forwardRef(() => SocketModule),
+		forwardRef(() => VotesModule)
+	],
 	controllers: [CardsController],
 	providers: [
 		updateCardService,
 		getCardService,
-		deleteCardService,
 		updateCardService,
 		updateCardApplication,
-		deleteCardApplication,
 		cardRepository,
 		createCardUseCase,
-		unmergeCardUseCase,
-		mergeCardUseCase
+		mergeCardUseCase,
+		deleteCardUseCase,
+		deleteFromCardGroupUseCase,
+		unmergeCardUseCase
 	],
-	exports: [getCardService, deleteCardService]
+	exports: [getCardService]
 })
 export class CardsModule {}

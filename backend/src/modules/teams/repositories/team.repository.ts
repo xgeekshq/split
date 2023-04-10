@@ -7,7 +7,7 @@ import { TeamRepositoryInterface } from '../interfaces/repositories/team.reposit
 
 @Injectable()
 export class TeamRepository
-	extends MongoGenericRepository<Team>
+	extends MongoGenericRepository<TeamDocument>
 	implements TeamRepositoryInterface
 {
 	constructor(@InjectModel(Team.name) private model: Model<TeamDocument>) {

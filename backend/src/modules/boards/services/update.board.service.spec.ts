@@ -3,15 +3,13 @@ import { ConfigService } from '@nestjs/config';
 import SocketGateway from 'src/modules/socket/gateway/socket.gateway';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import * as CommunicationsType from 'src/modules/communication/interfaces/types';
-import * as Cards from 'src/modules/cards/interfaces/types';
 import * as Boards from 'src/modules/boards/interfaces/types';
 import * as BoardUsers from 'src/modules/boardUsers/interfaces/types';
+import * as Votes from 'src/modules/votes/interfaces/types';
 import { updateBoardService } from './../boards.providers';
 import { boardRepository } from '../boards.providers';
 import { UpdateBoardServiceInterface } from '../interfaces/services/update.board.service.interface';
 import { BoardRepositoryInterface } from '../repositories/board.repository.interface';
-import { DeleteCardServiceInterface } from 'src/modules/cards/interfaces/services/delete.card.service.interface';
-import { deleteCardService } from 'src/modules/cards/cards.providers';
 import { CommunicationServiceInterface } from 'src/modules/communication/interfaces/slack-communication.service.interface';
 import { SendMessageServiceInterface } from 'src/modules/communication/interfaces/send-message.service.interface';
 import { BoardFactory } from 'src/libs/test-utils/mocks/factories/board-factory.mock';
@@ -43,6 +41,8 @@ import { mergeCardsFromSubBoardColumnsIntoMainBoard } from '../utils/merge-cards
 import { TeamCommunicationDtoFactory } from 'src/libs/test-utils/mocks/factories/dto/teamDto-factory';
 import { UpdateFailedException } from 'src/libs/exceptions/updateFailedBadRequestException';
 import { DeepMocked, createMock } from '@golevelup/ts-jest';
+import DeleteVoteService from 'src/modules/votes/services/delete.vote.service';
+import { DeleteVoteServiceInterface } from 'src/modules/votes/interfaces/services/delete.vote.service.interface';
 import Board from '../entities/board.schema';
 import { UpdateBoardDto } from '../dto/update-board.dto';
 
@@ -122,7 +122,7 @@ describe('UpdateBoardService', () => {
 	let configServiceMock: DeepMocked<ConfigService>;
 	let slackSendMessageServiceMock: DeepMocked<SendMessageServiceInterface>;
 	let slackCommunicationServiceMock: DeepMocked<CommunicationServiceInterface>;
-	let deleteCardServiceMock: DeepMocked<DeleteCardServiceInterface>;
+	let deleteVoteServiceMock: DeepMocked<DeleteVoteService>;
 	let createBoardUserServiceMock: DeepMocked<CreateBoardUserServiceInterface>;
 	let deleteBoardUserServiceMock: DeepMocked<DeleteBoardUserServiceInterface>;
 
@@ -141,8 +141,8 @@ describe('UpdateBoardService', () => {
 					useValue: createMock<CommunicationServiceInterface>()
 				},
 				{
-					provide: deleteCardService.provide,
-					useValue: createMock<DeleteCardServiceInterface>()
+					provide: Votes.TYPES.services.DeleteVoteService,
+					useValue: createMock<DeleteVoteServiceInterface>()
 				},
 				{
 					provide: getBoardUserService.provide,
@@ -183,7 +183,7 @@ describe('UpdateBoardService', () => {
 		boardRepositoryMock = module.get(Boards.TYPES.repositories.BoardRepository);
 		updateBoardUserServiceMock = module.get(BoardUsers.TYPES.services.UpdateBoardUserService);
 		getBoardUserServiceMock = module.get(BoardUsers.TYPES.services.GetBoardUserService);
-		deleteCardServiceMock = module.get(Cards.TYPES.services.DeleteCardService);
+		deleteVoteServiceMock = module.get(Votes.TYPES.services.DeleteVoteService);
 		eventEmitterMock = module.get(EventEmitter2);
 		configServiceMock = module.get(ConfigService);
 		slackSendMessageServiceMock = module.get(
@@ -318,7 +318,7 @@ describe('UpdateBoardService', () => {
 
 			boardRepositoryMock.getBoard.mockResolvedValue(board_1);
 			getBoardUserServiceMock.getBoardResponsible.mockResolvedValue(null);
-			deleteCardServiceMock.deleteCardVotesFromColumn.mockResolvedValue(null);
+			deleteVoteServiceMock.deleteCardVotesFromColumn.mockResolvedValue(null);
 
 			const boardResult = { ...board_1, columns: board_1.columns.slice(1) };
 

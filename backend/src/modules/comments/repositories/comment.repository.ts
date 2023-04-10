@@ -8,7 +8,7 @@ import { BoardDataPopulate } from 'src/modules/boards/utils/populate-board';
 
 @Injectable()
 export class CommentRepository
-	extends MongoGenericRepository<Board>
+	extends MongoGenericRepository<BoardDocument>
 	implements CommentRepositoryInterface
 {
 	constructor(@InjectModel(Board.name) private model: Model<BoardDocument>) {
