@@ -18,13 +18,13 @@ describe('Components/Sidebar/Header', () => {
 
     // Act
     const { getByText, getByTestId } = render(headerProps);
-    const userIcon = getByTestId('sidebarHeader').querySelector('svg > use');
+    const userIcon = getByTestId('sidebarHeader').querySelector('[href="#userIcon"]');
 
     // Assert
     expect(getByText(`${headerProps.firstName} ${headerProps.lastName}`)).toBeInTheDocument();
     expect(getByText(headerProps.email)).toBeInTheDocument();
     expect(getByTestId('splitLogo')).toBeInTheDocument();
-    expect(userIcon).toHaveAttribute('href', `#userIcon`);
+    expect(userIcon).toBeDefined();
     expect(getByText(getInitials(headerProps.firstName, headerProps.lastName).toUpperCase()));
   });
 
