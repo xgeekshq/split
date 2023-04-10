@@ -14,13 +14,12 @@ import {
   AZURE_LOGOUT_ROUTE,
 } from '@/utils/routes';
 import SidebarItem from '@/components/Sidebar/Item/Item';
-import { sidebarState } from '@/store/sidebar/atom/sidebar.atom';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
-import { CollapsibleContent } from '../styles';
+import { CollapsibleContent } from '@/components/Sidebar/styles';
+import { CollapsibleProps } from '@/components/Sidebar/types';
 
-export type SidebarContentProps = {
+export interface SidebarContentProps extends CollapsibleProps {
   strategy: string;
-};
+}
 
 const sidebarItems = [
   { link: DASHBOARD_ROUTE, iconName: 'dashboard', label: 'Dashboard' },
@@ -29,13 +28,10 @@ const sidebarItems = [
   { link: TEAMS_ROUTE, iconName: 'team', label: 'Teams' },
 ];
 
-const SidebarContent = ({ strategy }: SidebarContentProps) => {
+const SidebarContent = ({ strategy, isCollapsed, handleCollapse }: SidebarContentProps) => {
   const router = useRouter();
   const [active, setActive] = useState(router.asPath);
   const isStrategyLocal = strategy === 'local';
-
-  const { collapsed } = useRecoilValue(sidebarState);
-  const setSidebarState = useSetRecoilState(sidebarState);
 
   const handleSignOut = async () => {
     const result = await signOut({
@@ -49,14 +45,14 @@ const SidebarContent = ({ strategy }: SidebarContentProps) => {
 
   useEffect(() => {
     setActive(router.asPath);
-    setSidebarState({ collapsed: true }); // Collapses sidebar when route changes
+    handleCollapse(true); // Collapses sidebar when route changes
   }, [router.asPath]);
 
   return (
     <CollapsibleContent
       direction="column"
       data-testid="sidebarContent"
-      collapsed={{ '@initial': collapsed, '@md': false }}
+      collapsed={{ '@initial': isCollapsed, '@md': false }}
     >
       {sidebarItems.map((item) => (
         <SidebarItem {...item} active={active} key={item.label} />

@@ -5,7 +5,13 @@ import { getInitials } from '@/utils/getInitials';
 import { renderWithProviders } from '@/utils/testing/renderWithProviders';
 import Header, { SidebarHeaderProps } from '@/components/Sidebar/Header/Header';
 
-const DEFAULT_PROPS = { firstName: 'First', lastName: 'Last', email: 'first.last@mail.com' };
+const DEFAULT_PROPS: SidebarHeaderProps = {
+  firstName: 'First',
+  lastName: 'Last',
+  email: 'first.last@mail.com',
+  isCollapsed: false,
+  handleCollapse: jest.fn(),
+};
 
 const { mockRouter } = libraryMocks.mockNextRouter({ pathname: '/' });
 const render = (props: SidebarHeaderProps = DEFAULT_PROPS) =>

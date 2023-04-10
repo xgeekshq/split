@@ -5,18 +5,24 @@ import Text from '@/components/Primitives/Text/Text';
 import Separator from '@/components/Primitives/Separator/Separator';
 import Link from 'next/link';
 import { DASHBOARD_ROUTE } from '@/utils/routes';
-import { sidebarState } from '@/store/sidebar/atom/sidebar.atom';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
-import { BannerContainer, MenuButton } from './styles';
-import { CollapsibleContent } from '../styles';
+import { BannerContainer, MenuButton } from '@/components/Sidebar/Header/styles';
+import { CollapsibleContent } from '@/components/Sidebar/styles';
+import { CollapsibleProps } from '@/components/Sidebar/types';
 
-export type SidebarHeaderProps = { firstName: string; lastName: string; email: string };
+export interface SidebarHeaderProps extends CollapsibleProps {
+  firstName: string;
+  lastName: string;
+  email: string;
+}
 
-const Header = ({ firstName, lastName, email }: SidebarHeaderProps) => {
+const Header = ({
+  firstName,
+  lastName,
+  email,
+  isCollapsed,
+  handleCollapse,
+}: SidebarHeaderProps) => {
   const initialLetters = firstName.charAt(0) + lastName.charAt(0);
-
-  const { collapsed } = useRecoilValue(sidebarState);
-  const setSidebarState = useSetRecoilState(sidebarState);
 
   return (
     <Flex direction="column" data-testid="sidebarHeader">
@@ -29,13 +35,13 @@ const Header = ({ firstName, lastName, email }: SidebarHeaderProps) => {
         <MenuButton
           isIcon
           size="lg"
-          onClick={() => setSidebarState({ collapsed: !collapsed })}
-          aria-expanded={!collapsed}
+          onClick={() => handleCollapse((prevIsCollapsed) => !prevIsCollapsed)}
+          aria-expanded={!isCollapsed}
         >
           <Icon name="menu" />
         </MenuButton>
       </BannerContainer>
-      <CollapsibleContent direction="column" collapsed={{ '@initial': collapsed, '@md': false }}>
+      <CollapsibleContent direction="column" collapsed={{ '@initial': isCollapsed, '@md': false }}>
         <Separator css={{ backgroundColor: '$primary600' }} />
         <Flex
           align="center"
