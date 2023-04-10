@@ -74,7 +74,7 @@ describe('Components/Users/User/UsersList/UserItem/UserItemActions', () => {
     const updateUserMutation = jest.fn();
 
     mockUseUpdateUser.mockReturnValueOnce({
-      mutateAsync: updateUserMutation,
+      mutate: updateUserMutation,
     } as Partial<UseMutationResult>);
 
     // Act
