@@ -3,7 +3,7 @@ import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import { styled } from '@/styles/stitches/stitches.config';
 
 const BannerContainer = styled(Flex, {
-  padding: '$20',
+  padding: '$20 $22',
   justifyContent: 'space-between',
 
   '@md': {
