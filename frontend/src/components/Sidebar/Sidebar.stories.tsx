@@ -1,10 +1,10 @@
-import React from 'react';
-import { ComponentStory } from '@storybook/react';
+import React, { useState } from 'react';
+import { Meta, StoryObj } from '@storybook/react';
 import Sidebar from '@/components/Sidebar/Sidebar';
-import SidebarHeader from '@/components/Sidebar/Header/Header';
-import SidebarContent from '@/components/Sidebar/Content/Content';
+import SidebarHeader, { SidebarHeaderProps } from '@/components/Sidebar/Header/Header';
+import SidebarContent, { SidebarContentProps } from '@/components/Sidebar/Content/Content';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
-import SidebarItem from '@/components/Sidebar/Item/Item';
+import SidebarItem, { SidebarItemProps } from '@/components/Sidebar/Item/Item';
 import { UserFactory } from '@/utils/factories/user';
 
 const user = UserFactory.create();
@@ -48,20 +48,27 @@ export default {
       },
     },
   },
-};
+} as Meta<typeof Sidebar>;
 
-const Template: ComponentStory<typeof Sidebar> = ({ firstName, lastName, email, strategy }) => (
-  <Sidebar firstName={firstName} lastName={lastName} email={email} strategy={strategy} />
-);
+type Template = StoryObj<typeof Sidebar>;
 
-export const Default = Template.bind({});
+export const Default: Template = {};
 Default.storyName = 'Basic Usage';
 
-export const Header: ComponentStory<typeof SidebarHeader> = ({ firstName, lastName, email }) => (
-  <Flex css={{ backgroundColor: '$primary800' }}>
-    <SidebarHeader firstName={firstName} lastName={lastName} email={email} />
-  </Flex>
-);
+export const Header = ({ firstName, lastName, email }: SidebarHeaderProps) => {
+  const [isCollapsed, setIsCollapsed] = useState(false);
+  return (
+    <Flex css={{ backgroundColor: '$primary800' }}>
+      <SidebarHeader
+        firstName={firstName}
+        lastName={lastName}
+        email={email}
+        isCollapsed={isCollapsed}
+        handleCollapse={setIsCollapsed}
+      />
+    </Flex>
+  );
+};
 
 Header.parameters = {
   controls: {
@@ -69,11 +76,18 @@ Header.parameters = {
   },
 };
 
-export const Content: ComponentStory<typeof SidebarContent> = ({ strategy }) => (
-  <Flex direction="column" css={{ backgroundColor: '$primary800', width: '256px' }}>
-    <SidebarContent strategy={strategy} />
-  </Flex>
-);
+export const Content = ({ strategy }: SidebarContentProps) => {
+  const [isCollapsed, setIsCollapsed] = useState(false);
+  return (
+    <Flex direction="column" css={{ backgroundColor: '$primary800', width: '256px' }}>
+      <SidebarContent
+        strategy={strategy}
+        isCollapsed={isCollapsed}
+        handleCollapse={setIsCollapsed}
+      />
+    </Flex>
+  );
+};
 
 Content.parameters = {
   controls: {
@@ -85,13 +99,7 @@ Content.args = {
   strategy: 'local',
 };
 
-export const Item: ComponentStory<typeof SidebarItem> = ({
-  disabled,
-  link,
-  iconName,
-  label,
-  active,
-}) => (
+export const Item = ({ disabled, link, iconName, label, active }: SidebarItemProps) => (
   <Flex direction="column" css={{ backgroundColor: '$primary800', width: '256px' }}>
     <SidebarItem
       disabled={disabled}
