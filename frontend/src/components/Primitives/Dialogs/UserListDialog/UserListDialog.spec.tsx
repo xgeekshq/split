@@ -14,10 +14,14 @@ const render = (props: Partial<UserListDialogProps> = {}) =>
     <UserListDialog
       isOpen
       confirmationHandler={jest.fn()}
-      confirmationLabel="Confirm"
+      confirmationLabel="confirm"
       setIsOpen={jest.fn()}
       title="Title"
-      usersList={UserListFactory.createMany(3)}
+      usersList={UserListFactory.createMany(3, [
+        { isChecked: false },
+        { isChecked: true },
+        { isChecked: false },
+      ])}
       {...props}
     />,
     { routerOptions: router },
@@ -41,13 +45,13 @@ describe('Components/Primitives/Dialogs/UserListDialog', () => {
     const confirmationHandler = jest.fn();
 
     // Act
-    const { findByText } = render({ confirmationHandler });
+    const { getByTestId } = render({ confirmationHandler });
 
     // Assert
-    fireEvent.click(await findByText('Update'));
+    fireEvent.click(getByTestId('dialogFooterSubmit'));
 
     await waitFor(() => {
-      expect(confirmationHandler).toHaveBeenCalled();
+      expect(confirmationHandler).toBeCalled();
     });
   });
 });
