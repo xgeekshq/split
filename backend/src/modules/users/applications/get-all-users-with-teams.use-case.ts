@@ -47,7 +47,7 @@ export default class GetAllUsersWithTeamsUseCase implements GetAllUsersWithTeams
 			hasNextPage,
 			page
 		};
-		console.log(results.userWithTeams.map((users) => users));
+
 		results.userWithTeams.sort((a, b) => sortAlphabetically(a.user, b.user));
 
 		return results;
