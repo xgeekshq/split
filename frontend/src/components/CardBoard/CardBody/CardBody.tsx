@@ -14,13 +14,13 @@ import ClickEvent from '@/types/events/clickEvent';
 import AvatarGroup from '@/components/Primitives/Avatars/AvatarGroup/AvatarGroup';
 import { Team } from '@/types/team/team';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
-import CardIcon from '../CardIcon';
-import CardEnd from './CardEnd';
-import CardTitle from './CardTitle';
-import CenterMainBoard from './CenterMainBoard';
-import CountCards from './CountCards';
-import LeftArrow from './LeftArrow';
-import SubBoards from './SubBoards';
+import CardIcon from '@/components/CardBoard/CardIcon';
+import CardEnd from '@/components/CardBoard/CardBody/CardEnd';
+import CardTitle from '@/components/CardBoard/CardBody/CardTitle';
+import CenterMainBoard from '@/components/CardBoard/CardBody/CenterMainBoard';
+import CountCards from '@/components/CardBoard/CardBody/CountCards';
+import LeftArrow from '@/components/CardBoard/CardBody/LeftArrow';
+import SubBoards from '@/components/CardBoard/CardBody/SubBoards';
 
 const InnerContainer = styled(Flex, Box, {
   px: '$32',

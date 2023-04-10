@@ -3,7 +3,7 @@ import { libraryMocks } from '@/utils/testing/mocks';
 import { renderWithProviders } from '@/utils/testing/renderWithProviders';
 import { UserFactory } from '@/utils/factories/user';
 import { BoardFactory } from '@/utils/factories/board';
-import CardEnd, { CardEndProps } from './CardEnd';
+import CardEnd, { CardEndProps } from '@/components/CardBoard/CardBody/CardEnd';
 
 const { mockRouter } = libraryMocks.mockNextRouter({ pathname: '/teams' });
 

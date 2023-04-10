@@ -34,7 +34,7 @@ import {
   StyledPopoverContent,
   StyledPopoverItem,
   TitleSection,
-} from './styles';
+} from '@/components/Board/SplitBoard/Header/styles';
 
 const BoardHeader = () => {
   const { data: session } = useSession({ required: true });

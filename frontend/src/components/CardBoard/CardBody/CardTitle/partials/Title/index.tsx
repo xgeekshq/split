@@ -1,6 +1,6 @@
 import Link from 'next/link';
 
-import { StyledBoardTitle } from './styles';
+import { StyledBoardTitle } from '@/components/CardBoard/CardBody/CardTitle/partials/Title/styles';
 
 type Props = {
   userIsParticipating: boolean;

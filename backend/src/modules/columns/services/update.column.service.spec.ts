@@ -1,5 +1,4 @@
 import { GetBoardServiceInterface } from 'src/modules/boards/interfaces/services/get.board.service.interface';
-import { DeleteCardServiceInterface } from 'src/modules/cards/interfaces/services/delete.card.service.interface';
 import { createMock } from '@golevelup/ts-jest';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import faker from '@faker-js/faker';
@@ -10,17 +9,18 @@ import SocketGateway from 'src/modules/socket/gateway/socket.gateway';
 import { updateColumnService } from '../columns.providers';
 import * as Columns from '../interfaces/types';
 import * as Boards from 'src/modules/boards/interfaces/types';
-import * as Cards from 'src/modules/cards/interfaces/types';
+import * as Votes from 'src/modules/votes/interfaces/types';
 import { ColumnRepository } from '../repositories/column.repository';
 import GetBoardService from 'src/modules/boards/services/get.board.service';
-import DeleteCardService from 'src/modules/cards/services/delete.card.service';
 import UpdateColumnService from './update.column.service';
+import DeleteVoteService from 'src/modules/votes/services/delete.vote.service';
+import { DeleteVoteServiceInterface } from 'src/modules/votes/interfaces/services/delete.vote.service.interface';
 
 const fakeBoards = BoardFactory.createMany(2);
 
 describe('UpdateColumnService', () => {
 	let columnService: UpdateColumnService;
-	let deleteCardServiceImpl: DeleteCardService;
+	let deleteVoteService: DeleteVoteService;
 	let repositoryColumn: ColumnRepository;
 	let socketService: SocketGateway;
 	let getBoardServiceImpl: GetBoardService;
@@ -39,8 +39,8 @@ describe('UpdateColumnService', () => {
 					useValue: createMock<SocketGateway>()
 				},
 				{
-					provide: Cards.TYPES.services.DeleteCardService,
-					useValue: createMock<DeleteCardServiceInterface>()
+					provide: Votes.TYPES.services.DeleteVoteService,
+					useValue: createMock<DeleteVoteServiceInterface>()
 				},
 				{
 					provide: Boards.TYPES.services.GetBoardService,
@@ -50,7 +50,7 @@ describe('UpdateColumnService', () => {
 		}).compile();
 
 		columnService = module.get<UpdateColumnService>(Columns.TYPES.services.UpdateColumnService);
-		deleteCardServiceImpl = module.get<DeleteCardService>(Cards.TYPES.services.DeleteCardService);
+		deleteVoteService = module.get<DeleteVoteService>(Votes.TYPES.services.DeleteVoteService);
 		repositoryColumn = module.get<ColumnRepository>(Columns.TYPES.repositories.ColumnRepository);
 		socketService = module.get<SocketGateway>(SocketGateway);
 		getBoardServiceImpl = module.get<GetBoardService>(Boards.TYPES.services.GetBoardService);
@@ -161,7 +161,7 @@ describe('UpdateColumnService', () => {
 					boardUpdateResult as unknown as ReturnType<typeof getBoardServiceImpl.getBoardById>
 				);
 
-			jest.spyOn(deleteCardServiceImpl, 'deleteCardVotesFromColumn').mockResolvedValue(null);
+			jest.spyOn(deleteVoteService, 'deleteCardVotesFromColumn').mockResolvedValue(null);
 			jest.spyOn(socketService, 'sendUpdatedBoard').mockReturnValue(null);
 
 			const updateBoard = await columnService.deleteCardsFromColumn(boardId, columnToDeleteCards);

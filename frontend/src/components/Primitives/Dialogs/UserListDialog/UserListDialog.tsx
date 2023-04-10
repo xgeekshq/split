@@ -6,8 +6,8 @@ import Checkbox from '@/components/Primitives/Inputs/Checkboxes/Checkbox/Checkbo
 import { UserList } from '@/types/team/userList';
 import Separator from '@/components/Primitives/Separator/Separator';
 import useCurrentSession from '@/hooks/useCurrentSession';
-import SearchInput from '../../Inputs/SearchInput/SearchInput';
-import CheckboxUserItem from '../../Inputs/Checkboxes/UserCheckbox/UserCheckbox';
+import SearchInput from '@/components/Primitives/Inputs/SearchInput/SearchInput';
+import CheckboxUserItem from '@/components/Primitives/Inputs/Checkboxes/UserCheckbox/UserCheckbox';
 
 export type UserListDialogProps = {
   usersList: UserList[];

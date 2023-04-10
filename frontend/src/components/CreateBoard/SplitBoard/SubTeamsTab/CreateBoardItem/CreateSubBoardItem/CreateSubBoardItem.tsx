@@ -15,7 +15,10 @@ import { BoardToAdd } from '@/types/board/board';
 import { BoardUserToAdd } from '@/types/board/board.user';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import { getInitials } from '@/utils/getInitials';
-import { StyledSubBoardItem, LotteryButton } from './styles';
+import {
+  StyledSubBoardItem,
+  LotteryButton,
+} from '@/components/CreateBoard/SplitBoard/SubTeamsTab/CreateBoardItem/CreateSubBoardItem/styles';
 
 interface CreateSubBoardItemProps {
   index: number;

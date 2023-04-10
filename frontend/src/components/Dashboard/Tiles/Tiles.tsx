@@ -1,7 +1,7 @@
 import { HeaderInfo } from '@/types/dashboard/header.info';
 import { BOARDS_ROUTE, TEAMS_ROUTE, USERS_ROUTE } from '@/utils/routes';
-import { TileContainer } from './styles';
-import Tile from './Tile/Tile';
+import { TileContainer } from '@/components/Dashboard/Tiles/styles';
+import Tile from '@/components/Dashboard/Tiles/Tile/Tile';
 
 export type TilesProps = {
   data: HeaderInfo;

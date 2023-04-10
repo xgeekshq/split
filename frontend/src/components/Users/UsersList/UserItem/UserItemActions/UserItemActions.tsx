@@ -21,15 +21,15 @@ export type UserItemActionsProps = {
 const UserItemActions = React.memo(({ user }: UserItemActionsProps) => {
   const { userId } = useCurrentSession();
 
-  const { mutateAsync: updateUserMutation } = useUpdateUser();
+  const { mutate: updateUserMutation } = useUpdateUser();
 
-  const handleSuperAdminChange = async (checked: boolean) => {
+  const handleSuperAdminChange = (checked: boolean) => {
     const updateTeamUser: UpdateUserIsAdmin = {
       _id: user._id,
       isSAdmin: checked,
     };
 
-    await updateUserMutation(updateTeamUser);
+    updateUserMutation(updateTeamUser);
   };
 
   const { mutate: deleteUserMutation } = useDeleteUser();

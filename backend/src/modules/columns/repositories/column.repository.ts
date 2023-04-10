@@ -9,7 +9,7 @@ import { ColumnRepositoryInterface } from './column.repository.interface';
 
 @Injectable()
 export class ColumnRepository
-	extends MongoGenericRepository<Board>
+	extends MongoGenericRepository<BoardDocument>
 	implements ColumnRepositoryInterface
 {
 	constructor(@InjectModel(Board.name) private model: Model<BoardDocument>) {

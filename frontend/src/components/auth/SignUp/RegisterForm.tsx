@@ -7,8 +7,6 @@ import { signIn } from 'next-auth/react';
 import { useSetRecoilState } from 'recoil';
 import { joiResolver } from '@hookform/resolvers/joi';
 
-import { styled } from '@/styles/stitches/stitches.config';
-
 import { registerNewUser } from '@/api/authService';
 import Icon from '@/components/Primitives/Icons/Icon/Icon';
 import Button from '@/components/Primitives/Inputs/Button/Button';
@@ -21,8 +19,7 @@ import { RegisterUser } from '@/types/user/user';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
 import { DASHBOARD_ROUTE } from '@/utils/routes';
 import { SignUpEnum } from '@/utils/signUp.enum';
-
-const StyledForm = styled('form', Flex, { width: '100%' });
+import { FlexForm } from '@/styles/pages/pages.styles';
 
 interface RegisterFormProps {
   emailName: { email: string; goback: boolean };
@@ -31,12 +28,12 @@ interface RegisterFormProps {
   setEmailName: Dispatch<React.SetStateAction<{ email: string; goback: boolean }>>;
 }
 
-const RegisterForm: React.FC<RegisterFormProps> = ({
+const RegisterForm = ({
   setShowSignUp,
   emailName,
   setCurrentTab,
   setEmailName,
-}) => {
+}: RegisterFormProps) => {
   const setToastState = useSetRecoilState(toastState);
   const methods = useForm<RegisterUser>({
     mode: 'onChange',
@@ -98,7 +95,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
 
   return (
     <FormProvider {...methods}>
-      <StyledForm
+      <FlexForm
         direction="column"
         style={{ width: '100%' }}
         onSubmit={methods.handleSubmit((credentials: RegisterUser) => {
@@ -149,7 +146,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
             Go Back
           </Button>
         </Flex>
-      </StyledForm>
+      </FlexForm>
     </FormProvider>
   );
 };

@@ -1,3 +1,5 @@
+import Card from 'src/modules/cards/entities/card.schema';
+
 export interface DeleteVoteServiceInterface {
 	deleteVoteFromCard(
 		boardId: string,
@@ -16,5 +18,12 @@ export interface DeleteVoteServiceInterface {
 		retryCount?: number
 	): Promise<void>;
 
-	decrementVoteUser(boardId: string, userId: string, count?: number | undefined): Promise<void>;
+	decrementVoteUser(
+		boardId: string,
+		userId: string,
+		count?: number | undefined,
+		withSession?: boolean
+	): Promise<void>;
+
+	deleteCardVotesFromColumn(boardId: string, cardsArray: Card[]): Promise<void>;
 }

@@ -1,6 +1,6 @@
 import { libraryMocks } from '@/utils/testing/mocks';
 import { renderWithProviders } from '@/utils/testing/renderWithProviders';
-import Sidebar, { SidebarProps } from './Sidebar';
+import Sidebar, { SidebarProps } from '@/components/Sidebar/Sidebar';
 
 const DEFAULT_PROPS = {
   firstName: 'First',

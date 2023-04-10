@@ -12,7 +12,7 @@ import {
   PlaceholderText,
   StyledInput,
   StyledInputWrapper,
-} from './styles';
+} from '@/components/Primitives/Inputs/Input/styles';
 
 type InputProps = {
   id: string;

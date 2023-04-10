@@ -7,8 +7,8 @@ import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Text from '@/components/Primitives/Text/Text';
 import { CardItemType } from '@/types/card/cardItem';
 import useCards from '@/hooks/useCards';
-import CardFooter from '../CardFooter';
-import PopoverCardSettings from '../PopoverSettings';
+import CardFooter from '@/components/Board/Card/CardFooter';
+import PopoverCardSettings from '@/components/Board/Card/PopoverSettings';
 
 interface CardItemProps {
   item: CardItemType;

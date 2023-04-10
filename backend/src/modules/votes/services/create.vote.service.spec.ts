@@ -11,22 +11,17 @@ import { UpdateBoardServiceInterface } from 'src/modules/boards/interfaces/servi
 import faker from '@faker-js/faker';
 import Board from 'src/modules/boards/entities/board.schema';
 import { BoardFactory } from 'src/libs/test-utils/mocks/factories/board-factory.mock';
-import { CardFactory } from 'src/libs/test-utils/mocks/factories/card-factory.mock';
-import CardItem from 'src/modules/cards/entities/card.item.schema';
-import Card from 'src/modules/cards/entities/card.schema';
 import { InsertFailedException } from 'src/libs/exceptions/insertFailedBadRequestException';
 import { NotFoundException } from '@nestjs/common';
 import { GetBoardServiceInterface } from 'src/modules/boards/interfaces/services/get.board.service.interface';
 import BoardUser from 'src/modules/boardUsers/entities/board.user.schema';
 import { BoardUserFactory } from 'src/libs/test-utils/mocks/factories/boardUser-factory.mock';
 import { UpdateBoardUserServiceInterface } from 'src/modules/boardUsers/interfaces/services/update.board.user.service.interface';
-import { WRITE_LOCK_ERROR } from 'src/libs/constants/database';
+import { UpdateFailedException } from 'src/libs/exceptions/updateFailedBadRequestException';
 
 const userId: string = faker.datatype.uuid();
 const board: Board = BoardFactory.create({ maxVotes: 3 });
 const boardUser: BoardUser = BoardUserFactory.create({ board: board._id, votesCount: 0 });
-const card: Card = CardFactory.create();
-const cardItem: CardItem = card.items[0];
 
 describe('CreateVoteService', () => {
 	let voteService: CreateVoteServiceInterface;
@@ -79,12 +74,12 @@ describe('CreateVoteService', () => {
 		expect(voteService).toBeDefined();
 	});
 
-	describe('addVoteToCard', () => {
-		it('should throw an error when the canUserVote function returns false', async () => {
+	describe('canUserVote', () => {
+		it('should throw an error when the returned value is false', async () => {
 			//if the board is not found
 			try {
 				getBoardServiceMock.getBoardById.mockResolvedValueOnce(null);
-				await voteService.addVoteToCard(board._id, card._id, userId, cardItem._id, 1);
+				await voteService.canUserVote(board._id, userId, 1);
 			} catch (ex) {
 				expect(ex).toBeInstanceOf(NotFoundException);
 			}
@@ -92,7 +87,7 @@ describe('CreateVoteService', () => {
 			//if the boardUser is not found
 			try {
 				getBoardUserServiceMock.getBoardUser.mockResolvedValueOnce(null);
-				await voteService.addVoteToCard(board._id, card._id, userId, cardItem._id, 1);
+				await voteService.canUserVote(board._id, userId, 1);
 			} catch (ex) {
 				expect(ex).toBeInstanceOf(InsertFailedException);
 			}
@@ -100,95 +95,31 @@ describe('CreateVoteService', () => {
 			//if count of total votes of the user is greater than the max votes of the board
 			try {
 				getBoardUserServiceMock.getBoardUser.mockResolvedValueOnce({ ...boardUser, votesCount: 3 });
-				await voteService.addVoteToCard(board._id, card._id, userId, cardItem._id, 1);
+				await voteService.canUserVote(board._id, userId, 1);
 			} catch (ex) {
 				expect(ex).toBeInstanceOf(InsertFailedException);
 			}
 		});
 
-		it('should throw an error when the addVoteToCardAndUserOperations fails', async () => {
-			//if updateBoardUserServiceMock.updateVoteUser fails
-			try {
-				updateBoardUserServiceMock.updateVoteUser.mockResolvedValueOnce(null);
-				await voteService.addVoteToCard(board._id, card._id, userId, cardItem._id, 1);
-			} catch (ex) {
-				expect(ex).toBeInstanceOf(InsertFailedException);
-			}
+		it('should return if user can vote', async () => {
+			const boardWithoutMaxVotes: Board = { ...board, maxVotes: null };
 
-			//if voteRepositoryMock.insertCardItemVote fails
-			try {
-				voteRepositoryMock.insertCardItemVote.mockResolvedValueOnce(null);
-				await voteService.addVoteToCard(board._id, card._id, userId, cardItem._id, 1);
-			} catch (ex) {
-				expect(ex).toBeInstanceOf(InsertFailedException);
-			}
+			getBoardServiceMock.getBoardById.mockResolvedValue(boardWithoutMaxVotes);
 
-			//if the error code is WRITE_ERROR_LOCK and the retryCount is less than 5
-			try {
-				voteRepositoryMock.insertCardItemVote.mockRejectedValueOnce({ code: WRITE_LOCK_ERROR });
-				await voteService.addVoteToCard(board._id, card._id, userId, cardItem._id, 1);
-			} catch (ex) {
-				expect(ex).toBeInstanceOf(InsertFailedException);
-			}
-		});
-
-		it('should call all the functions when addVoteToCard function succeeds', async () => {
-			await voteService.addVoteToCard(board._id, card._id, userId, cardItem._id, 1);
+			await voteService.canUserVote(boardWithoutMaxVotes._id, userId, 1);
 
 			expect(getBoardServiceMock.getBoardById).toBeCalledTimes(1);
-			expect(getBoardUserServiceMock.getBoardUser).toBeCalledTimes(1);
-			expect(updateBoardUserServiceMock.updateVoteUser).toBeCalled();
-			expect(voteRepositoryMock.insertCardItemVote).toBeCalled();
-		});
-
-		it('should throw an error when a commit transaction fails', async () => {
-			// this will allow to return true on verifyIfUserCanVote when board doesn't have maxVotes defined
-			const mockBoardWithoutMaxVotes: Board = { ...board, maxVotes: undefined };
-			getBoardServiceMock.getBoardById.mockResolvedValueOnce(mockBoardWithoutMaxVotes);
-
-			voteRepositoryMock.commitTransaction.mockRejectedValueOnce('Commit transaction failed');
-
-			expect(
-				async () => await voteService.addVoteToCard(board._id, card._id, userId, cardItem._id, 1)
-			).rejects.toThrow(InsertFailedException);
 		});
 	});
 
-	describe('addVoteToCardGroup', () => {
-		it('should throw an error when the voteRepository.insertCardGroupVote fails', async () => {
-			//if the error code isn't of type  WRITE_ERROR_LOCK or retryCount is greater than 5
+	describe('incrementVoteUser', () => {
+		it('should throw an error when updateBoardUserServiceMock.updateVoteUser fails', async () => {
 			try {
-				voteRepositoryMock.insertCardGroupVote.mockResolvedValueOnce(null);
-				await voteService.addVoteToCardGroup(board._id, card._id, userId, 1);
-				expect(voteService.addVoteToCardGroup).toBeCalled();
+				updateBoardUserServiceMock.updateVoteUser.mockResolvedValueOnce(null);
+				await voteService.incrementVoteUser(board._id, userId, 1);
 			} catch (ex) {
-				expect(ex).toBeInstanceOf(InsertFailedException);
+				expect(ex).toBeInstanceOf(UpdateFailedException);
 			}
-
-			//if the error code is WRITE_ERROR_LOCK and the retryCount is less than 5
-			try {
-				voteRepositoryMock.insertCardGroupVote.mockRejectedValue({ code: WRITE_LOCK_ERROR });
-				await voteService.addVoteToCardGroup(board._id, card._id, userId, 1);
-			} catch (ex) {
-				expect(ex).toBeInstanceOf(InsertFailedException);
-			}
-		});
-
-		it('should call all the functions when addVoteToCardGroup succeeds', async () => {
-			await voteService.addVoteToCardGroup(board._id, card._id, userId, 1);
-
-			expect(getBoardServiceMock.getBoardById).toBeCalledTimes(1);
-			expect(getBoardUserServiceMock.getBoardUser).toBeCalledTimes(1);
-			expect(updateBoardUserServiceMock.updateVoteUser).toBeCalled();
-			expect(voteRepositoryMock.insertCardGroupVote).toBeCalled();
-		});
-
-		it('should throw an error when a commit transaction fails', async () => {
-			voteRepositoryMock.commitTransaction.mockRejectedValueOnce('Commit transaction failed');
-
-			expect(
-				async () => await voteService.addVoteToCardGroup(board._id, card._id, userId, 1)
-			).rejects.toThrow(InsertFailedException);
 		});
 	});
 });

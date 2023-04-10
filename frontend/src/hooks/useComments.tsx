@@ -13,9 +13,9 @@ import DeleteCommentDto from '@/types/comment/deleteComment.dto';
 import UpdateCommentDto from '@/types/comment/updateComment.dto';
 import { operationsQueueAtom } from '@/store/operations/atom/operations-queue.atom';
 import { useSetRecoilState } from 'recoil';
-import { addCommentRequest, deleteCommentRequest, updateCommentRequest } from '../api/boardService';
-import { ToastStateEnum } from '../utils/enums/toast-types';
-import useBoardUtils from './useBoardUtils';
+import { ToastStateEnum } from '@/utils/enums/toast-types';
+import useBoardUtils from '@/hooks/useBoardUtils';
+import { addCommentRequest, deleteCommentRequest, updateCommentRequest } from '@/api/boardService';
 
 const useComments = () => {
   const { queryClient, setToastState } = useBoardUtils();

@@ -5,12 +5,11 @@ import Icon from '@/components/Primitives/Icons/Icon/Icon';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Text from '@/components/Primitives/Text/Text';
 import Tooltip from '@/components/Primitives/Tooltips/Tooltip/Tooltip';
+import UserItemActions from '@/components/Users/UsersList/UserItem/UserItemActions/UserItemActions';
+import UserTitle from '@/components/Users/UsersList/UserItem/UserTitle/UserTitle';
 import useCurrentSession from '@/hooks/useCurrentSession';
 import { InnerContainer } from '@/styles/pages/pages.styles';
 import { UserWithTeams } from '@/types/user/user';
-
-import UserItemActions from '@/components/Users/UsersList/UserItem/UserItemActions/UserItemActions';
-import UserTitle from '@/components/Users/UsersList/UserItem/UserTitle/UserTitle';
 
 export type UserItemProps = {
   userWithTeams: UserWithTeams;
