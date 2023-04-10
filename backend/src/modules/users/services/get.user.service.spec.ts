@@ -1,8 +1,5 @@
 import { encrypt } from 'src/libs/utils/bcrypt';
 import { faker } from '@faker-js/faker';
-import CreateGuestUserDto from 'src/modules/users/dto/create.guest.user.dto';
-import { BadRequestException } from '@nestjs/common';
-import { UserDtoFactory } from 'src/libs/test-utils/mocks/factories/dto/userDto-factory.mock';
 import { UserFactory } from 'src/libs/test-utils/mocks/factories/user-factory';
 import { GetUserServiceInterface } from 'src/modules/users/interfaces/services/get.user.service.interface';
 import { UserRepositoryInterface } from './../repository/user.repository.interface';
