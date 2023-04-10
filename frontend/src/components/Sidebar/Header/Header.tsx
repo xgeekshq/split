@@ -26,7 +26,12 @@ const Header = ({ firstName, lastName, email }: SidebarHeaderProps) => {
             <BannerIcon />
           </Flex>
         </Link>
-        <MenuButton isIcon size="lg" onClick={() => setSidebarState({ collapsed: !collapsed })}>
+        <MenuButton
+          isIcon
+          size="lg"
+          onClick={() => setSidebarState({ collapsed: !collapsed })}
+          aria-expanded={!collapsed}
+        >
           <Icon name="menu" />
         </MenuButton>
       </BannerContainer>
