@@ -1,9 +1,13 @@
 import React from 'react';
 
 import Icon from '@/components/Primitives/Icons/Icon/Icon';
+import {
+  IconWrapper,
+  PlaceholderText,
+  StyledInput,
+  StyledInputWrapper,
+} from '@/components/Primitives/Inputs/Input/styles';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
-
-import { IconWrapper, PlaceholderText, StyledInput, StyledInputWrapper } from '../Input/styles';
 
 export type SearchInputProps = {
   placeholder: string;
@@ -22,10 +26,10 @@ const SearchInput = ({
 }: SearchInputProps) => (
   <Flex
     css={{ position: 'relative', width: '100%', mb: '$16', height: 'auto' }}
-    direction="column"
     data-testid="searchInput"
+    direction="column"
   >
-    <StyledInputWrapper gap="8" disabled={disabled}>
+    <StyledInputWrapper disabled={disabled} gap="8">
       <IconWrapper>
         <Icon
           name="search"
@@ -36,27 +40,27 @@ const SearchInput = ({
       </IconWrapper>
       <Flex css={{ flexGrow: '1' }}>
         <StyledInput
-          id="searchInput"
+          css={{ pt: '$28', pb: '$8' }}
           disabled={disabled}
+          id="searchInput"
+          onChange={handleChange}
           placeholder=" "
           value={currentValue}
-          onChange={handleChange}
-          css={{ pt: '$28', pb: '$8' }}
         />
         <PlaceholderText as="label" htmlFor="searchInput">
           {placeholder}
         </PlaceholderText>
       </Flex>
       <IconWrapper
-        justify="center"
+        data-testid="searchInputClear"
         data-type="clear"
+        justify="center"
+        onClick={handleClear}
         css={{
           width: '$24',
           height: '$24',
           borderRadius: '100%',
         }}
-        onClick={handleClear}
-        data-testid="searchInputClear"
       >
         <Icon
           name="close"

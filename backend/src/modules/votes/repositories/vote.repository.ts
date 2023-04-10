@@ -8,7 +8,7 @@ import { PopulateType } from 'src/libs/repositories/interfaces/base.repository.i
 
 @Injectable()
 export class VoteRepository
-	extends MongoGenericRepository<Board>
+	extends MongoGenericRepository<BoardDocument>
 	implements VoteRepositoryInterface
 {
 	constructor(@InjectModel(Board.name) private model: Model<BoardDocument>) {

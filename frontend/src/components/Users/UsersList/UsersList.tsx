@@ -2,11 +2,10 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Dots from '@/components/Primitives/Loading/Dots/Dots';
-import { UserWithTeams } from '@/types/user/user';
-
+import UserItem from '@/components/Users/UsersList/UserItem/UserItem';
+import UsersSubHeader from '@/components/Users/UsersList/UsersSubHeader/UsersSubHeader';
 import useUsersWithTeams from '@/hooks/users/useUsersWithTeams';
-import UserItem from './UserItem/UserItem';
-import UsersSubHeader from './UsersSubHeader/UsersSubHeader';
+import { UserWithTeams } from '@/types/user/user';
 
 const UsersList = () => {
   const [search, setSearch] = useState<string>('');
@@ -48,15 +47,15 @@ const UsersList = () => {
   return (
     <>
       <UsersSubHeader
-        userAmount={userAmount}
-        search={search}
-        handleSearchUser={handleSearchUser}
         handleClearSearch={handleClearSearch}
+        handleSearchUser={handleSearchUser}
+        search={search}
+        userAmount={userAmount}
       />
       <Flex
         direction="column"
-        ref={scrollRef}
         onScroll={onScroll}
+        ref={scrollRef}
         css={{
           height: '100%',
           position: 'relative',
@@ -70,7 +69,7 @@ const UsersList = () => {
           ))}
         </Flex>
         {isFetching && (
-          <Flex justify="center" css={{ mt: '$16' }}>
+          <Flex css={{ mt: '$16' }} justify="center">
             <Dots />
           </Flex>
         )}

@@ -19,7 +19,7 @@ export interface User {
 }
 
 export interface UseUserType {
-  deleteUser: UseMutationResult<Boolean, unknown, DeleteUser, unknown>;
+  deleteUser: UseMutationResult<boolean, unknown, DeleteUser, unknown>;
 }
 
 export interface LoginUser {
@@ -47,8 +47,8 @@ export interface ResetTokenResponse {
 }
 
 export interface NewPassword {
-  password: string;
-  passwordConf: string;
+  newPassword: string;
+  newPasswordConf: string;
   token: string;
 }
 

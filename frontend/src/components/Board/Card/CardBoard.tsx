@@ -1,23 +1,23 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Draggable } from 'react-beautiful-dnd';
-import { styled } from '@/styles/stitches/stitches.config';
+import { useRecoilValue } from 'recoil';
 
+import AddCardOrComment from '@/components/Board/AddCardOrComment';
+import CardFooter from '@/components/Board/Card/CardFooter';
+import CardItemList from '@/components/Board/Card/CardItem/CardItemList';
+import PopoverCardSettings from '@/components/Board/Card/PopoverSettings';
+import Comments from '@/components/Board/Comment/Comments';
 import Icon from '@/components/Primitives/Icons/Icon/Icon';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Text from '@/components/Primitives/Text/Text';
 import { cardBlur } from '@/helper/board/blurFilter';
 import { getCommentsFromCardGroup } from '@/helper/board/comments';
+import useCards from '@/hooks/useCards';
+import { onDragCardStart } from '@/store/card/atoms/card.atom';
+import { styled } from '@/styles/stitches/stitches.config';
 import { BoardUser } from '@/types/board/board.user';
 import CardType from '@/types/card/card';
-import { onDragCardStart } from '@/store/card/atoms/card.atom';
-import { useRecoilValue } from 'recoil';
 import { BoardPhases } from '@/utils/enums/board.phases';
-import useCards from '@/hooks/useCards';
-import AddCardOrComment from '../AddCardOrComment';
-import Comments from '../Comment/Comments';
-import CardFooter from './CardFooter';
-import CardItemList from './CardItem/CardItemList';
-import PopoverCardSettings from './PopoverSettings';
 
 const Container = styled(Flex, {
   borderRadius: '$8',
@@ -160,6 +160,7 @@ const CardBoard = React.memo<CardBoardProps>(
                   isCard
                   isEditing
                   isUpdate
+                  anonymous={card.anonymous}
                   boardId={boardId}
                   cancelUpdate={handleEditing}
                   cardId={card._id}
@@ -167,10 +168,9 @@ const CardBoard = React.memo<CardBoardProps>(
                   cardText={card.text}
                   cardTextDefault={cardTextDefault}
                   colId={colId}
-                  socketId={socketId}
-                  anonymous={card.anonymous}
                   isDefaultText={isDefaultText}
                   postAnonymously={postAnonymously}
+                  socketId={socketId}
                 />
               )}
               {!editing && (
@@ -179,7 +179,7 @@ const CardBoard = React.memo<CardBoardProps>(
                     <Flex css={{ py: '$8' }} justify="between">
                       <Flex align="center" gap="4">
                         <Icon css={{ width: '$14', height: '$14' }} name="merge" />
-                        <Text size="xxs" fontWeight="medium">
+                        <Text fontWeight="medium" size="xxs">
                           {card.items.length} merged cards
                         </Text>
                       </Flex>
@@ -187,11 +187,11 @@ const CardBoard = React.memo<CardBoardProps>(
                   )}
                   {!isCardGroup && (
                     <Flex
+                      justify="between"
                       css={{
                         mb: '$14',
                         '& > div': { zIndex: 2 },
                       }}
-                      justify="between"
                     >
                       <Text
                         size="md"
@@ -212,6 +212,7 @@ const CardBoard = React.memo<CardBoardProps>(
                             firstOne={false}
                             handleDelete={handleDelete}
                             handleEditing={handleEditing}
+                            hasAdminRole={hasAdminRole}
                             hideCards={hideCards}
                             isItem={false}
                             item={card}
@@ -219,7 +220,6 @@ const CardBoard = React.memo<CardBoardProps>(
                             newPosition={0}
                             socketId={socketId}
                             userId={userId}
-                            hasAdminRole={hasAdminRole}
                           />
                         )}
                     </Flex>
@@ -229,18 +229,18 @@ const CardBoard = React.memo<CardBoardProps>(
                       boardId={boardId}
                       cardGroupId={card._id}
                       cardGroupPosition={index}
+                      cardTextDefault={cardTextDefault}
                       color={color}
                       columnId={colId}
+                      hasAdminRole={hasAdminRole}
                       hideCards={hideCards}
+                      isDefaultText={isDefaultText}
                       isMainboard={isMainboard}
                       isSubmited={isSubmited}
                       items={card.items}
+                      postAnonymously={postAnonymously}
                       socketId={socketId}
                       userId={userId}
-                      isDefaultText={isDefaultText}
-                      hasAdminRole={hasAdminRole}
-                      postAnonymously={postAnonymously}
-                      cardTextDefault={cardTextDefault}
                     />
                   )}
                   <CardFooter
@@ -253,12 +253,12 @@ const CardBoard = React.memo<CardBoardProps>(
                     isCommentsOpened={isCommentsOpened}
                     isItem={false}
                     isMainboard={isMainboard}
+                    isRegularBoard={isRegularBoard}
                     maxVotes={maxVotes}
+                    phase={phase}
                     setOpenComments={handleOpenComments}
                     socketId={socketId}
                     userId={userId}
-                    isRegularBoard={isRegularBoard}
-                    phase={phase}
                   />
                 </Flex>
               )}
@@ -268,17 +268,17 @@ const CardBoard = React.memo<CardBoardProps>(
                 boardId={boardId}
                 cardId={card._id}
                 cardItems={card.items}
+                columnId={colId}
                 comments={comments}
+                hasAdminRole={hasAdminRole}
                 hideCards={hideCards}
+                isDefaultText={isDefaultText}
+                isMainboard={isMainboard}
                 isSubmited={isSubmited}
+                phase={phase}
+                postAnonymously={postAnonymously}
                 socketId={socketId}
                 userId={userId}
-                columnId={colId}
-                isDefaultText={isDefaultText}
-                hasAdminRole={hasAdminRole}
-                postAnonymously={postAnonymously}
-                isMainboard={isMainboard}
-                phase={phase}
               />
             )}
           </Flex>

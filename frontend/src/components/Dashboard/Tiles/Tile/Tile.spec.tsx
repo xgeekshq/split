@@ -1,8 +1,9 @@
 import { fireEvent, waitFor } from '@testing-library/react';
-import { libraryMocks } from '@/utils/testing/mocks';
+
+import Tile, { TileProps } from '@/components/Dashboard/Tiles/Tile/Tile';
 import { BOARDS_ROUTE } from '@/utils/routes';
+import { libraryMocks } from '@/utils/testing/mocks';
 import { renderWithProviders } from '@/utils/testing/renderWithProviders';
-import Tile, { TileProps } from './Tile';
 
 const DEFAULT_PROPS: TileProps = {
   link: BOARDS_ROUTE,

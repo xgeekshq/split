@@ -3,8 +3,7 @@ import Link from 'next/link';
 import Icon from '@/components/Primitives/Icons/Icon/Icon';
 import Text from '@/components/Primitives/Text/Text';
 import Tooltip from '@/components/Primitives/Tooltips/Tooltip/Tooltip';
-
-import { StyledMenuItem } from '../styles';
+import { StyledMenuItem } from '@/components/Sidebar/styles';
 
 export type SidebarItemProps = {
   link?: string;
@@ -18,14 +17,14 @@ export type SidebarItemProps = {
 const SidebarItem = ({ link, active, iconName, label, disabled, onClick }: SidebarItemProps) => {
   const renderStyledMenuItem = () => (
     <StyledMenuItem
-      data-testid="sidebarItem"
       align="center"
       data-active={active === link}
+      data-testid="sidebarItem"
       disabled={disabled}
       onClick={onClick}
     >
       <Icon name={iconName} />
-      <Text size="sm" color="primary300">
+      <Text color="primary300" size="sm">
         {label}
       </Text>
     </StyledMenuItem>

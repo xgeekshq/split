@@ -1,5 +1,5 @@
+import { User } from '@/types/user/user';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
-import { User } from '../user/user';
 
 export interface BoardUser {
   id?: any;

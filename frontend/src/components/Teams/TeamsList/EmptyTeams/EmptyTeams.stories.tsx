@@ -1,5 +1,6 @@
 import { ComponentStory } from '@storybook/react';
-import EmptyTeams from './EmptyTeams';
+
+import EmptyTeams from '@/components/Teams/TeamsList/EmptyTeams/EmptyTeams';
 
 export default {
   title: 'Teams/EmptyTeams',

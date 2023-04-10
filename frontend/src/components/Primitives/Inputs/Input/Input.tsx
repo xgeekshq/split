@@ -2,17 +2,16 @@ import React, { useMemo, useRef, useState } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 
 import Icon from '@/components/Primitives/Icons/Icon/Icon';
-import Flex from '@/components/Primitives/Layout/Flex/Flex';
-import Text from '@/components/Primitives/Text/Text';
-import isEmpty from '@/utils/isEmpty';
-
 import {
   HelperTextWrapper,
   IconWrapper,
   PlaceholderText,
   StyledInput,
   StyledInputWrapper,
-} from './styles';
+} from '@/components/Primitives/Inputs/Input/styles';
+import Flex from '@/components/Primitives/Layout/Flex/Flex';
+import Text from '@/components/Primitives/Text/Text';
+import isEmpty from '@/utils/isEmpty';
 
 type InputProps = {
   id: string;
@@ -101,10 +100,10 @@ const Input = ({
       onBlur={onBlurHandler}
     >
       <StyledInputWrapper
-        gap="8"
-        variant={getCurrentState}
         data-iconposition={iconPosition}
         disabled={disabled}
+        gap="8"
+        variant={getCurrentState}
       >
         {!!icon && (
           <IconWrapper data-type={type} onClick={handleOnClickIcon}>
@@ -125,14 +124,14 @@ const Input = ({
             disabled={disabled}
             id={id}
             min={min}
+            onChange={onChange}
+            onFocus={onFocusHandler}
             placeholder=" "
             type={currentType}
             ref={(e) => {
               ref(e);
               inputRef.current = e;
             }}
-            onFocus={onFocusHandler}
-            onChange={onChange}
             {...(placeholder && { css: { pt: '$28', pb: '$8' } })}
           />
           {placeholder && (
@@ -144,12 +143,12 @@ const Input = ({
       </StyledInputWrapper>
       {(!isHelperEmpty || showCount) && (
         <HelperTextWrapper
+          color={getCurrentState === 'error' ? 'error' : 'hint'}
           css={{ mt: '$8', px: '$4' }}
           justify={!isHelperEmpty ? 'between' : 'end'}
-          color={getCurrentState === 'error' ? 'error' : 'hint'}
         >
           {!isHelperEmpty && (
-            <Flex gap="4" css={{ flexGrow: '1' }}>
+            <Flex css={{ flexGrow: '1' }} gap="4">
               {!isEmpty(errorMessage) && getCurrentState === 'error' && <Icon name="error" />}
               {!isEmpty(helperText) && getCurrentState !== 'error' && <Icon name="info" />}
 

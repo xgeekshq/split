@@ -1,9 +1,10 @@
 import React from 'react';
+
+import CardEnd, { CardEndProps } from '@/components/CardBoard/CardBody/CardEnd';
+import { BoardFactory } from '@/utils/factories/board';
+import { UserFactory } from '@/utils/factories/user';
 import { libraryMocks } from '@/utils/testing/mocks';
 import { renderWithProviders } from '@/utils/testing/renderWithProviders';
-import { UserFactory } from '@/utils/factories/user';
-import { BoardFactory } from '@/utils/factories/board';
-import CardEnd, { CardEndProps } from './CardEnd';
 
 const { mockRouter } = libraryMocks.mockNextRouter({ pathname: '/teams' });
 

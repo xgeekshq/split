@@ -1,28 +1,25 @@
 import React, { Dispatch, useEffect } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
-import { useMutation } from '@tanstack/react-query';
 import router from 'next/router';
 import { RedirectableProviderType } from 'next-auth/providers';
 import { signIn } from 'next-auth/react';
-import { useSetRecoilState } from 'recoil';
 import { joiResolver } from '@hookform/resolvers/joi';
-
-import { styled } from '@/styles/stitches/stitches.config';
+import { useMutation } from '@tanstack/react-query';
+import { useSetRecoilState } from 'recoil';
 
 import { registerNewUser } from '@/api/authService';
 import Icon from '@/components/Primitives/Icons/Icon/Icon';
 import Button from '@/components/Primitives/Inputs/Button/Button';
-import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Input from '@/components/Primitives/Inputs/Input/Input';
+import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Text from '@/components/Primitives/Text/Text';
 import SchemaRegisterForm from '@/schema/schemaRegisterForm';
 import { toastState } from '@/store/toast/atom/toast.atom';
+import { FlexForm } from '@/styles/pages/pages.styles';
 import { RegisterUser } from '@/types/user/user';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
 import { DASHBOARD_ROUTE } from '@/utils/routes';
 import { SignUpEnum } from '@/utils/signUp.enum';
-
-const StyledForm = styled('form', Flex, { width: '100%' });
 
 interface RegisterFormProps {
   emailName: { email: string; goback: boolean };
@@ -31,12 +28,12 @@ interface RegisterFormProps {
   setEmailName: Dispatch<React.SetStateAction<{ email: string; goback: boolean }>>;
 }
 
-const RegisterForm: React.FC<RegisterFormProps> = ({
+const RegisterForm = ({
   setShowSignUp,
   emailName,
   setCurrentTab,
   setEmailName,
-}) => {
+}: RegisterFormProps) => {
   const setToastState = useSetRecoilState(toastState);
   const methods = useForm<RegisterUser>({
     mode: 'onChange',
@@ -98,7 +95,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
 
   return (
     <FormProvider {...methods}>
-      <StyledForm
+      <FlexForm
         direction="column"
         style={{ width: '100%' }}
         onSubmit={methods.handleSubmit((credentials: RegisterUser) => {
@@ -108,7 +105,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
         <Text css={{ mt: '$24' }} heading="1">
           Sign up
         </Text>
-        <Text size="md" color="primary500" css={{ mt: '$8', mb: '$16' }}>
+        <Text color="primary500" css={{ mt: '$8', mb: '$16' }} size="md">
           Put in your credentials or ask your admin to add your email to the company’s azure
           database.
         </Text>
@@ -141,15 +138,15 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
         </Button>
         <Flex>
           <Button
-            variant="link"
             css={{ pl: '0', mt: '$24', color: '$primary500' }}
             onClick={handleShowSignUp}
+            variant="link"
           >
             <Icon name="arrow-long-left" />
             Go Back
           </Button>
         </Flex>
-      </StyledForm>
+      </FlexForm>
     </FormProvider>
   );
 };

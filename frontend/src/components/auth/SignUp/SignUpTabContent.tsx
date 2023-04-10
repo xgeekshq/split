@@ -1,14 +1,15 @@
 import React, { Dispatch, useState } from 'react';
+
+import RegisterForm from '@/components/auth/SignUp/RegisterForm';
+import SignUpForm from '@/components/auth/SignUp/SignUpForm';
+import SignUpOptionsForm from '@/components/auth/SignUp/SignUpOptionsForm';
 import { SignUpEnum } from '@/utils/signUp.enum';
-import RegisterForm from './RegisterForm';
-import SignUpForm from './SignUpForm';
-import SignUpOptionsForm from './SignUpOptionsForm';
 
 interface SignUpTabContentProps {
   setCurrentTab: Dispatch<React.SetStateAction<string>>;
 }
 
-const SignUpTabContent: React.FC<SignUpTabContentProps> = ({ setCurrentTab }) => {
+const SignUpTabContent = ({ setCurrentTab }: SignUpTabContentProps) => {
   const [showSignUp, setShowSignUp] = useState(SignUpEnum.SIGN_UP);
   const [emailName, setEmailName] = useState({ email: '', goback: false });
   const conditionalRendering = () => {

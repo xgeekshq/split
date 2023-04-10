@@ -1,16 +1,18 @@
+import UserCheckbox, {
+  UserCheckboxProps,
+} from '@/components/Primitives/Inputs/Checkboxes/UserCheckbox/UserCheckbox';
+import { UserListFactory } from '@/utils/factories/user';
 import { createMockRouter } from '@/utils/testing/mocks';
 import { renderWithProviders } from '@/utils/testing/renderWithProviders';
-import { UserListFactory } from '@/utils/factories/user';
-import UserCheckbox, { UserCheckboxProps } from './UserCheckbox';
 
 const router = createMockRouter({});
 
 const render = (props: Partial<UserCheckboxProps> = {}) =>
   renderWithProviders(
     <UserCheckbox
-      user={UserListFactory.create()}
       disabled={false}
       handleChecked={jest.fn()}
+      user={UserListFactory.create()}
       {...props}
     />,
     { routerOptions: router },

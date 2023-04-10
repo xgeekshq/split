@@ -1,13 +1,12 @@
 import React, { Dispatch } from 'react';
 
-import { styled } from '@/styles/stitches/stitches.config';
-
 import Button from '@/components/Primitives/Inputs/Button/Button';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
+import Separator from '@/components/Primitives/Separator/Separator';
 import Text from '@/components/Primitives/Text/Text';
-import { SignUpEnum } from '@/utils/signUp.enum';
 import loginWithAzure from '@/hooks/auth/loginWithAzure';
-import { OrSeparator } from '@/components/auth/LoginForm/styles';
+import { styled } from '@/styles/stitches/stitches.config';
+import { SignUpEnum } from '@/utils/signUp.enum';
 
 const Container = styled(Flex, { width: '100%' });
 
@@ -37,24 +36,25 @@ const SignUpOptionsForm: React.FC<SignUpOptionsFormProps> = ({
         &nbsp;supports login with company SSO (Single Sign-on)
       </Text>
       <Button
+        onClick={loginWithAzure}
         size="lg"
         type="submit"
         css={{
           mt: '$32',
         }}
-        onClick={loginWithAzure}
       >
         Log in with SSO
       </Button>
-      <OrSeparator css={{ mt: '$22', mb: '$22' }}>
-        <hr />
-        <Text color="primary300" size="sm" fontWeight="medium">
-          or
+      <Flex align="center" css={{ width: '100%', my: '$26' }} gap="16">
+        <Separator />
+        <Text color="primary300" fontWeight="medium" size="sm">
+          OR
         </Text>
-        <hr />
-      </OrSeparator>
+        <Separator />
+      </Flex>
       <Text
         fontWeight="medium"
+        onClick={handleEmailChange}
         size="sm"
         underline="true"
         css={{
@@ -64,7 +64,6 @@ const SignUpOptionsForm: React.FC<SignUpOptionsFormProps> = ({
             cursor: 'pointer',
           },
         }}
-        onClick={handleEmailChange}
       >
         Change email
       </Text>

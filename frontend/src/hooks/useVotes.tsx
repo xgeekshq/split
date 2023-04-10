@@ -1,16 +1,16 @@
-import { useMutation } from '@tanstack/react-query';
 import { useSession } from 'next-auth/react';
+import { useMutation } from '@tanstack/react-query';
+import { useSetRecoilState } from 'recoil';
 
 import { handleVotes } from '@/api/boardService';
-import { CardItemType } from '@/types/card/cardItem';
-import { ToastStateEnum } from '@/utils/enums/toast-types';
-import isEmpty from '@/utils/isEmpty';
-import VoteDto from '@/types/vote/vote.dto';
+import useBoardUtils from '@/hooks/useBoardUtils';
 import { operationsQueueAtom } from '@/store/operations/atom/operations-queue.atom';
-import { useSetRecoilState } from 'recoil';
-import BoardType from '../types/board/board';
-import { getRemainingVotes } from '../utils/getRemainingVotes';
-import useBoardUtils from './useBoardUtils';
+import BoardType from '@/types/board/board';
+import { CardItemType } from '@/types/card/cardItem';
+import VoteDto from '@/types/vote/vote.dto';
+import { ToastStateEnum } from '@/utils/enums/toast-types';
+import { getRemainingVotes } from '@/utils/getRemainingVotes';
+import isEmpty from '@/utils/isEmpty';
 
 enum Action {
   Add = 'add',

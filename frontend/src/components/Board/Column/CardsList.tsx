@@ -1,8 +1,8 @@
 import React from 'react';
 
+import CardBoard from '@/components/Board/Card/CardBoard';
 import CardType from '@/types/card/card';
 import { ColumnInnerList } from '@/types/column';
-import CardBoard from '../Card/CardBoard';
 
 type CardListProps = {
   isRegularBoard?: boolean;
@@ -37,21 +37,21 @@ const CardsList = React.memo<CardListProps>(
           boardId={boardId}
           boardUser={boardUser}
           card={card}
+          cardTextDefault={cardTextDefault}
           colId={colId}
           color={color}
+          hasAdminRole={hasAdminRole}
           hideCards={hideCards}
           index={idx}
+          isDefaultText={isDefaultText || true}
           isMainboard={isMainboard}
+          isRegularBoard={isRegularBoard}
           isSubmited={isSubmited}
           maxVotes={maxVotes}
+          phase={phase}
+          postAnonymously={postAnonymously}
           socketId={socketId}
           userId={userId}
-          isDefaultText={isDefaultText || true}
-          hasAdminRole={hasAdminRole}
-          postAnonymously={postAnonymously}
-          isRegularBoard={isRegularBoard}
-          cardTextDefault={cardTextDefault}
-          phase={phase}
         />
       ))}
     </>

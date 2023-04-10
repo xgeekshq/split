@@ -1,28 +1,9 @@
+import { useMemo, useState } from 'react';
 import Link from 'next/link';
 import { useSession } from 'next-auth/react';
-import { useRecoilValue } from 'recoil';
 import { Popover, PopoverPortal, PopoverTrigger } from '@radix-ui/react-popover';
+import { useRecoilValue } from 'recoil';
 
-import Breadcrumb from '@/components/Primitives/Breadcrumb/Breadcrumb';
-import Icon from '@/components/Primitives/Icons/Icon/Icon';
-import LogoIcon from '@/components/icons/Logo';
-import Flex from '@/components/Primitives/Layout/Flex/Flex';
-import Separator from '@/components/Primitives/Separator/Separator';
-import Text from '@/components/Primitives/Text/Text';
-import Tooltip from '@/components/Primitives/Tooltips/Tooltip/Tooltip';
-import { boardInfoState } from '@/store/board/atoms/board.atom';
-import BoardType from '@/types/board/board';
-import { BoardUserNoPopulated } from '@/types/board/board.user';
-import { BreadcrumbType } from '@/types/board/Breadcrumb';
-import { TeamUser } from '@/types/team/team.user';
-import { TeamUserRoles } from '@/utils/enums/team.user.roles';
-import isEmpty from '@/utils/isEmpty';
-import { StyledBoardTitle } from '@/components/CardBoard/CardBody/CardTitle/partials/Title/styles';
-import { ListBoardMembers } from '@/components/Boards/MyBoards/ListBoardMembers';
-import { useMemo, useState } from 'react';
-import { User } from '@/types/user/user';
-import AvatarGroup from '@/components/Primitives/Avatars/AvatarGroup/AvatarGroup';
-import { BoardPhases } from '@/utils/enums/board.phases';
 import {
   BoardCounter,
   MergeIconContainer,
@@ -34,7 +15,26 @@ import {
   StyledPopoverContent,
   StyledPopoverItem,
   TitleSection,
-} from './styles';
+} from '@/components/Board/SplitBoard/Header/styles';
+import { ListBoardMembers } from '@/components/Boards/MyBoards/ListBoardMembers';
+import { StyledBoardTitle } from '@/components/CardBoard/CardBody/CardTitle/partials/Title/styles';
+import LogoIcon from '@/components/icons/Logo';
+import AvatarGroup from '@/components/Primitives/Avatars/AvatarGroup/AvatarGroup';
+import Breadcrumb from '@/components/Primitives/Breadcrumb/Breadcrumb';
+import Icon from '@/components/Primitives/Icons/Icon/Icon';
+import Flex from '@/components/Primitives/Layout/Flex/Flex';
+import Separator from '@/components/Primitives/Separator/Separator';
+import Text from '@/components/Primitives/Text/Text';
+import Tooltip from '@/components/Primitives/Tooltips/Tooltip/Tooltip';
+import { boardInfoState } from '@/store/board/atoms/board.atom';
+import BoardType from '@/types/board/board';
+import { BoardUserNoPopulated } from '@/types/board/board.user';
+import { BreadcrumbType } from '@/types/board/Breadcrumb';
+import { TeamUser } from '@/types/team/team.user';
+import { User } from '@/types/user/user';
+import { BoardPhases } from '@/utils/enums/board.phases';
+import { TeamUserRoles } from '@/utils/enums/team.user.roles';
+import isEmpty from '@/utils/isEmpty';
 
 const BoardHeader = () => {
   const { data: session } = useSession({ required: true });
@@ -111,7 +111,7 @@ const BoardHeader = () => {
 
   return (
     <StyledHeader>
-      <Flex align="center" gap="20" justify="between" css={{ width: '100%' }}>
+      <Flex align="center" css={{ width: '100%' }} gap="20" justify="between">
         <Flex direction="column">
           <Flex align="center" gap={!isSubBoard ? 26 : undefined}>
             <Breadcrumb items={breadcrumbItems} />
@@ -120,6 +120,8 @@ const BoardHeader = () => {
               <Flex align="center" gap={10}>
                 <Separator css={{ height: '$14 !important' }} orientation="vertical" />
                 <Link
+                  legacyBehavior
+                  passHref
                   href={{
                     pathname: `[boardId]`,
                     query: {
@@ -128,8 +130,6 @@ const BoardHeader = () => {
                       mainBoardTitle: boardData?.board.title,
                     },
                   }}
-                  passHref
-                  legacyBehavior
                 >
                   <StyledBoardLink>{getSubBoard()?.title.replace('team ', '')}</StyledBoardLink>
                 </Link>
@@ -165,8 +165,8 @@ const BoardHeader = () => {
               <StyledBoardTitle onClick={handleOpenDialog}>
                 <Text
                   color="primary800"
-                  size="sm"
                   fontWeight="medium"
+                  size="sm"
                   css={{
                     textOverflow: 'ellipsis',
                     whiteSpace: 'nowrap',
@@ -176,7 +176,7 @@ const BoardHeader = () => {
                   {`Sub-team ${boardNumber}`}
                 </Text>
               </StyledBoardTitle>
-              <AvatarGroup listUsers={users} userId={session!.user.id} hasDrawer />
+              <AvatarGroup hasDrawer listUsers={users} userId={session!.user.id} />
             </Flex>
 
             <Separator orientation="vertical" size="lg" />
@@ -184,13 +184,13 @@ const BoardHeader = () => {
               <Text color="primary300" size="sm">
                 Responsible
               </Text>
-              <AvatarGroup responsible listUsers={users} userId={session!.user.id} hasDrawer />
+              <AvatarGroup hasDrawer responsible listUsers={users} userId={session!.user.id} />
             </Flex>
             <ListBoardMembers
+              isSubBoard
               boardMembers={boardMembers}
               isOpen={dialogIsOpen}
               setIsOpen={setDialogIsOpen}
-              isSubBoard
             />
           </Flex>
         ) : (
@@ -200,8 +200,8 @@ const BoardHeader = () => {
                 <StyledBoardTitle>
                   <Text
                     color="primary800"
-                    size="sm"
                     fontWeight="medium"
+                    size="sm"
                     css={{
                       textOverflow: 'ellipsis',
                       whiteSpace: 'nowrap',
@@ -211,7 +211,7 @@ const BoardHeader = () => {
                     {team.name}
                   </Text>
                 </StyledBoardTitle>
-                <AvatarGroup listUsers={teamUsers} userId={session!.user.id} isClickable />
+                <AvatarGroup isClickable listUsers={teamUsers} userId={session!.user.id} />
               </Flex>
               {!isEmpty(
                 teamUsers.filter((user: TeamUser) => user.role === TeamUserRoles.ADMIN),
@@ -223,10 +223,10 @@ const BoardHeader = () => {
                       Team admins
                     </Text>
                     <AvatarGroup
+                      isClickable
                       teamAdmins
                       listUsers={teamUsers}
                       userId={session!.user.id}
-                      isClickable
                     />
                   </Flex>
                 </>
@@ -243,10 +243,10 @@ const BoardHeader = () => {
                       Stakeholders
                     </Text>
                     <AvatarGroup
+                      isClickable
                       stakeholders
                       listUsers={teamUsers}
                       userId={session!.user.id}
-                      isClickable
                     />
                   </Flex>
                 </>

@@ -1,17 +1,17 @@
 import React, { useMemo, useRef } from 'react';
-
-import { getBoardsRequest } from '@/api/boardService';
-import { ToastStateEnum } from '@/utils/enums/toast-types';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { useSetRecoilState } from 'recoil';
+
+import { getBoardsRequest } from '@/api/boardService';
+import ListBoards from '@/components/Boards/MyBoards/ListBoards';
+import EmptyTeamBoards from '@/components/Boards/MyBoards/ListBoardsByTeam/EmptyTeamBoards';
+import { ScrollableContent } from '@/components/Boards/MyBoards/styles';
+import TeamHeader from '@/components/Boards/TeamHeader';
+import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import { toastState } from '@/store/toast/atom/toast.atom';
 import BoardType from '@/types/board/board';
 import { Team } from '@/types/team/team';
-import Flex from '@/components/Primitives/Layout/Flex/Flex';
-import { ScrollableContent } from '../styles';
-import TeamHeader from '../../TeamHeader';
-import EmptyTeamBoards from './EmptyTeamBoards';
-import ListBoards from '../ListBoards';
+import { ToastStateEnum } from '@/utils/enums/toast-types';
 
 interface ListBoardsByTeamProps {
   filteredTeam: Team;
@@ -80,7 +80,7 @@ const ListBoardsByTeam = ({ filteredTeam, userId, isSuperAdmin }: ListBoardsByTe
 
   if (dataByTeamAndDate.boardsTeamAndDate.size === 0 && !isLoading) {
     return (
-      <ScrollableContent direction="column" justify="start" ref={scrollRef} onScroll={onScroll}>
+      <ScrollableContent direction="column" justify="start" onScroll={onScroll} ref={scrollRef}>
         <Flex key={filteredTeam.id} css={{ mb: '$24' }} direction="column">
           <Flex
             direction="column"
@@ -101,13 +101,13 @@ const ListBoardsByTeam = ({ filteredTeam, userId, isSuperAdmin }: ListBoardsByTe
 
   return (
     <ListBoards
-      userId={userId}
-      isSuperAdmin={isSuperAdmin}
       dataByTeamAndDate={dataByTeamAndDate}
-      scrollRef={scrollRef}
-      onScroll={onScroll}
       filter={filteredTeam.id}
       isLoading={isLoading}
+      isSuperAdmin={isSuperAdmin}
+      onScroll={onScroll}
+      scrollRef={scrollRef}
+      userId={userId}
     />
   );
 };

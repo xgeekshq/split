@@ -1,39 +1,37 @@
 import { Dispatch, SetStateAction, useRef, useState } from 'react';
 import { FormProvider, useFieldArray, useForm } from 'react-hook-form';
-import { useRecoilState, useRecoilValue } from 'recoil';
 import { joiResolver } from '@hookform/resolvers/joi';
 import { Accordion } from '@radix-ui/react-accordion';
 import { deepClone } from 'fast-json-patch';
+import { useRecoilState, useRecoilValue } from 'recoil';
 
-import Icon from '@/components/Primitives/Icons/Icon/Icon';
+import { colors } from '@/components/Board/Column/partials/OptionsMenu';
+import { ColumnSettings } from '@/components/Board/Settings/partials/Columns';
+import { ColumnBoxAndDelete } from '@/components/Board/Settings/partials/Columns/ColumnBoxAndDelete';
+import { ConfigurationSettings } from '@/components/Board/Settings/partials/ConfigurationSettings';
+import { TeamResponsibleSettings } from '@/components/Board/Settings/partials/TeamResponsible';
+import { ScrollableContent } from '@/components/Boards/MyBoards/ListBoardMembers/styles';
 import Avatar from '@/components/Primitives/Avatars/Avatar/Avatar';
-import Flex from '@/components/Primitives/Layout/Flex/Flex';
+import Dialog from '@/components/Primitives/Dialogs/Dialog/Dialog';
+import Icon from '@/components/Primitives/Icons/Icon/Icon';
+import Button from '@/components/Primitives/Inputs/Button/Button';
 import Input from '@/components/Primitives/Inputs/Input/Input';
+import ConfigurationSwitch from '@/components/Primitives/Inputs/Switches/ConfigurationSwitch/ConfigurationSwitch';
+import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Separator from '@/components/Primitives/Separator/Separator';
 import Text from '@/components/Primitives/Text/Text';
 import useBoard from '@/hooks/useBoard';
 import SchemaUpdateBoard from '@/schema/schemaUpdateBoardForm';
 import { boardInfoState, deletedColumnsState } from '@/store/board/atoms/board.atom';
+import { FlexForm } from '@/styles/pages/pages.styles';
 import { UpdateBoardType } from '@/types/board/board';
 import { BoardUserToAdd } from '@/types/board/board.user';
+import ColumnType, { CreateColumn } from '@/types/column';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import { getInitials } from '@/utils/getInitials';
 import isEmpty from '@/utils/isEmpty';
-import Dialog from '@/components/Primitives/Dialogs/Dialog/Dialog';
-import { styled } from '@/styles/stitches/stitches.config';
-import { ScrollableContent } from '@/components/Boards/MyBoards/ListBoardMembers/styles';
-import Button from '@/components/Primitives/Inputs/Button/Button';
-import ColumnType, { CreateColumn } from '@/types/column';
-import ConfigurationSwitch from '../../Primitives/Inputs/Switches/ConfigurationSwitch/ConfigurationSwitch';
-import { ConfigurationSettings } from './partials/ConfigurationSettings';
-import { TeamResponsibleSettings } from './partials/TeamResponsible';
-import { ColumnBoxAndDelete } from './partials/Columns/ColumnBoxAndDelete';
-import { ColumnSettings } from './partials/Columns';
-import { colors } from '../Column/partials/OptionsMenu';
 
 const DEFAULT_MAX_VOTES = 6;
-
-const StyledForm = styled('form', { height: '100%', display: 'flex', flexDirection: 'column' });
 
 type Props = {
   setIsOpen: Dispatch<SetStateAction<boolean>>;
@@ -297,7 +295,9 @@ const BoardSettings = ({
   return (
     <Dialog isOpen={isOpen} setIsOpen={setIsOpen}>
       <FormProvider {...methods}>
-        <StyledForm
+        <FlexForm
+          css={{ height: '100%' }}
+          direction="column"
           onSubmit={methods.handleSubmit(({ title, maxVotes, formColumns }) => {
             updateBoard(title, maxVotes, formColumns);
           })}
@@ -307,7 +307,7 @@ const BoardSettings = ({
             <Flex direction="column">
               <Flex css={{ padding: '$24 $32 $40' }} direction="column" gap={16}>
                 <Text heading="4">Board Name</Text>
-                <Input id="title" maxChars="45" placeholder="Board Name" type="text" showCount />
+                <Input showCount id="title" maxChars="45" placeholder="Board Name" type="text" />
               </Flex>
 
               <Text css={{ display: 'block', px: '$32' }} heading="4">
@@ -373,10 +373,10 @@ const BoardSettings = ({
                 {isSubBoard && hasPermissions && (
                   <TeamResponsibleSettings>
                     <ConfigurationSwitch
+                      handleCheckedChange={handleResponsibleChange}
                       isChecked={switchesState.responsible}
                       text="Change responsible participant for this board."
                       title="Team Responsible"
-                      handleCheckedChange={handleResponsibleChange}
                     >
                       <Flex
                         align="center"
@@ -395,6 +395,7 @@ const BoardSettings = ({
                         <Flex
                           align="center"
                           justify="center"
+                          onClick={handleRandomResponsible}
                           css={{
                             height: '$24',
                             width: '$24',
@@ -412,7 +413,6 @@ const BoardSettings = ({
                                 }
                               : 'none',
                           }}
-                          onClick={handleRandomResponsible}
                         >
                           <Icon
                             name="wand"
@@ -451,14 +451,14 @@ const BoardSettings = ({
                       {fields.map((column, index) => (
                         <ColumnBoxAndDelete
                           key={column.id}
-                          index={index}
                           disableDeleteColumn={fields.length <= 1}
+                          index={index}
                           remove={remove}
                         />
                       ))}
                       <Flex direction="row" justify="start">
                         {fields.length < 4 && (
-                          <Button variant="link" size="sm" onClick={handleAddColumn}>
+                          <Button onClick={handleAddColumn} size="sm" variant="link">
                             <Icon name="plus" />
                             Add new column
                           </Button>
@@ -471,13 +471,13 @@ const BoardSettings = ({
             </Flex>
           </ScrollableContent>
           <Dialog.Footer
+            affirmativeLabel="Save"
+            buttonRef={submitBtnRef}
             handleClose={() => {
               setIsOpen(false);
             }}
-            affirmativeLabel="Save"
-            buttonRef={submitBtnRef}
           />
-        </StyledForm>
+        </FlexForm>
       </FormProvider>
     </Dialog>
   );

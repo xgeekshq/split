@@ -1,22 +1,29 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { Draggable, Droppable } from 'react-beautiful-dnd';
+import { useResizeDetector } from 'react-resize-detector';
+import { useSetRecoilState } from 'recoil';
+
+import AddCardOrComment from '@/components/Board/AddCardOrComment';
+import CardsList from '@/components/Board/Column/CardsList';
+import OptionsMenu from '@/components/Board/Column/partials/OptionsMenu';
+import SortMenu from '@/components/Board/Column/partials/SortMenu';
+import UpdateColumnDialog from '@/components/Board/Column/partials/UpdateColumnDialog';
+import {
+  CardsContainer,
+  Container,
+  OuterContainer,
+  Title,
+  TitleContainer,
+} from '@/components/Board/Column/styles';
+import Icon from '@/components/Primitives/Icons/Icon/Icon';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Separator from '@/components/Primitives/Separator/Separator';
 import Text from '@/components/Primitives/Text/Text';
-import { getCardVotes } from '@/helper/board/votes';
-import { ColumnBoardType } from '@/types/column';
-import { useSetRecoilState } from 'recoil';
-import { filteredColumnsState } from '@/store/board/atoms/filterColumns';
-import { countColumnCards } from '@/helper/board/countCards';
-import Icon from '@/components/Primitives/Icons/Icon/Icon';
 import Tooltip from '@/components/Primitives/Tooltips/Tooltip/Tooltip';
-import { useResizeDetector } from 'react-resize-detector';
-import AddCardOrComment from '../AddCardOrComment';
-import CardsList from './CardsList';
-import SortMenu from './partials/SortMenu';
-import { CardsContainer, Container, OuterContainer, Title, TitleContainer } from './styles';
-import OptionsMenu from './partials/OptionsMenu';
-import UpdateColumnDialog from './partials/UpdateColumnDialog';
+import { countColumnCards } from '@/helper/board/countCards';
+import { getCardVotes } from '@/helper/board/votes';
+import { filteredColumnsState } from '@/store/board/atoms/filterColumns';
+import { ColumnBoardType } from '@/types/column';
 
 type ColumMemoProps = {
   isRegularBoard?: boolean;
@@ -181,17 +188,17 @@ const Column = React.memo<ColumMemoProps>(
                         )}
                         {hasAdminRole && isRegularBoard && (
                           <OptionsMenu
-                            disabled={false}
-                            title={title}
-                            cards={cards}
-                            cardText={cardText}
-                            columnId={columnId}
                             boardId={boardId}
-                            setOpenDialogName={handleDialogNameChange}
-                            isDefaultText={isDefaultText}
+                            cardText={cardText}
+                            cards={cards}
                             color={color}
-                            socketId={socketId}
+                            columnId={columnId}
+                            disabled={false}
+                            isDefaultText={isDefaultText}
                             postAnonymously={postAnonymously}
+                            setOpenDialogName={handleDialogNameChange}
+                            socketId={socketId}
+                            title={title}
                           />
                         )}
                       </Flex>
@@ -209,17 +216,17 @@ const Column = React.memo<ColumMemoProps>(
                           {addCards && (
                             <AddCardOrComment
                               isCard
-                              boardId={boardId}
-                              colId={columnId}
-                              defaultOpen={countAllCards === 0}
-                              isUpdate={false}
-                              socketId={socketId}
                               anonymous={undefined}
+                              boardId={boardId}
                               cardTextDefault={cardText}
-                              isDefaultText={isDefaultText ?? true}
-                              postAnonymously={postAnonymously}
+                              colId={columnId}
                               columnName={title}
+                              defaultOpen={countAllCards === 0}
+                              isDefaultText={isDefaultText ?? true}
                               isRegularBoard={isRegularBoard}
+                              isUpdate={false}
+                              postAnonymously={postAnonymously}
+                              socketId={socketId}
                             />
                           )}
                         </Flex>
@@ -232,20 +239,20 @@ const Column = React.memo<ColumMemoProps>(
                         <CardsList
                           boardId={boardId}
                           boardUser={boardUser}
+                          cardTextDefault={cardText}
                           cards={filteredCards()}
                           colId={columnId}
                           color={color}
+                          hasAdminRole={hasAdminRole}
                           hideCards={hideCards}
                           isMainboard={isMainboard}
+                          isRegularBoard={isRegularBoard}
                           isSubmited={isSubmited}
                           maxVotes={maxVotes}
+                          phase={phase}
+                          postAnonymously={postAnonymously}
                           socketId={socketId}
                           userId={userId}
-                          hasAdminRole={hasAdminRole}
-                          postAnonymously={postAnonymously}
-                          isRegularBoard={isRegularBoard}
-                          cardTextDefault={cardText}
-                          phase={phase}
                         />
                         {provided.placeholder}
                       </CardsContainer>
@@ -258,16 +265,16 @@ const Column = React.memo<ColumMemoProps>(
         </Draggable>
         <UpdateColumnDialog
           boardId={boardId}
-          isOpen={openDialog.columnName}
-          setIsOpen={handleDialogChange}
+          cardText={cardText}
+          cards={cards}
+          columnColor={color}
           columnId={columnId}
           columnTitle={title}
-          columnColor={color}
-          cards={cards}
-          cardText={cardText}
           isDefaultText={isDefaultText}
-          type={dialogType}
+          isOpen={openDialog.columnName}
+          setIsOpen={handleDialogChange}
           socketId={socketId}
+          type={dialogType}
         />
       </>
     );

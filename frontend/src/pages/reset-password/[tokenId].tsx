@@ -1,50 +1,78 @@
+import { ReactElement } from 'react';
+import { FormProvider, useForm } from 'react-hook-form';
 import { useRouter } from 'next/router';
+import { joiResolver } from '@hookform/resolvers/joi';
 
-import { styled } from '@/styles/stitches/stitches.config';
+import AccessLayout from '@/components/layouts/AccessLayout/AccessLayout';
+import Button from '@/components/Primitives/Inputs/Button/Button';
+import Input from '@/components/Primitives/Inputs/Input/Input';
+import Text from '@/components/Primitives/Text/Text';
+import useResetPassword from '@/hooks/auth/useResetPassword';
+import SchemaResetPasswordForm from '@/schema/schemaResetPasswordForm';
+import { FlexForm } from '@/styles/pages/pages.styles';
+import { NewPassword } from '@/types/user/user';
 
-import ResetPassword from '@/components/auth/ForgotPassword/ResetPassword';
-import Banner from '@/components/icons/Banner';
-import Flex from '@/components/Primitives/Layout/Flex/Flex';
-
-const CenteredContainer = styled(Flex, {
-  position: 'absolute',
-  top: '$202',
-  right: '$162',
-  boxSizing: 'border-box',
-  '@media (max-height: 1023px)': {
-    top: 'calc((100vh - 710px) / 2)',
-  },
-  '&:focus': { outline: 'none' },
-});
-
-const MainContainer = styled(Flex, {
-  height: '100vh',
-  width: '100%',
-  position: 'relative',
-  backgroundColor: '$black',
-  backgroundImage: 'url(/images/background.svg)',
-  backgroundSize: 'cover',
-  backgroundRepeat: 'no-repeat',
-});
-
-const BannerContainer = styled(Flex, {
-  mt: '$74',
-  ml: '$62',
-  size: 'fit-content',
-});
-
-const TokenId = () => {
+const ResetPasswordPage = () => {
   const router = useRouter();
-  const { tokenId } = router.query || { tokenId: '' };
-  const stringedToken = String(tokenId);
+  const tokenId = (router.query.tokenId || '') as string;
+
+  const { mutate } = useResetPassword();
+
+  const methods = useForm<NewPassword>({
+    mode: 'onChange',
+    reValidateMode: 'onChange',
+    defaultValues: {
+      newPassword: '',
+      newPasswordConf: '',
+    },
+    resolver: joiResolver(SchemaResetPasswordForm),
+  });
+
+  const handleRecoverPassword = (params: NewPassword) => {
+    mutate(params, {
+      onSuccess: () => {
+        router.push('/');
+      },
+    });
+  };
 
   return (
-    <MainContainer>
-      <BannerContainer>
-        <Banner />
-      </BannerContainer>
-      <CenteredContainer>{tokenId && <ResetPassword token={stringedToken} />}</CenteredContainer>
-    </MainContainer>
+    <FormProvider {...methods}>
+      <FlexForm
+        direction="column"
+        onSubmit={methods.handleSubmit((params) => {
+          handleRecoverPassword({ ...params, token: tokenId });
+        })}
+      >
+        <Text css={{ mt: '$24' }} heading="1">
+          Reset Password
+        </Text>
+        <Text color="primary500" css={{ mt: '$8' }} size="md">
+          Enter your new password
+        </Text>
+        <Input
+          css={{ mt: '$32' }}
+          icon="eye"
+          iconPosition="right"
+          id="newPassword"
+          placeholder="Type new password here"
+          type="password"
+        />
+        <Input
+          icon="eye"
+          iconPosition="right"
+          id="newPasswordConf"
+          placeholder="Repeat password"
+          type="password"
+        />
+        <Button size="lg" type="submit">
+          Recover password
+        </Button>
+      </FlexForm>
+    </FormProvider>
   );
 };
-export default TokenId;
+
+ResetPasswordPage.getLayout = (page: ReactElement) => <AccessLayout>{page}</AccessLayout>;
+
+export default ResetPasswordPage;

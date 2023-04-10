@@ -1,17 +1,16 @@
-import { useSession } from 'next-auth/react';
-import { useRouter } from 'next/router';
 import React from 'react';
+import { useRouter } from 'next/router';
+import { useSession } from 'next-auth/react';
 import { useRecoilValue } from 'recoil';
 
+import BoardParticipantsSubHeader from '@/components/Board/RegularBoard/ParticipantsList/BoardParticipantsSubHeader/BoardParticipantsSubHeader';
+import ParticipantCard from '@/components/Board/RegularBoard/ParticipantsList/ParticipantCard';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import useParticipants from '@/hooks/useParticipants';
 import { boardParticipantsState } from '@/store/board/atoms/board.atom';
 import { BoardUser, UpdateBoardUser } from '@/types/board/board.user';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import { getGuestUserCookies } from '@/utils/getGuestUserCookies';
-
-import BoardParticipantsSubHeader from './BoardParticipantsSubHeader/BoardParticipantsSubHeader';
-import ParticipantCard from './ParticipantCard';
 
 type ParticipantsListProps = {
   createdBy?: string;
@@ -63,8 +62,8 @@ const ParticipantsList = ({ createdBy }: ParticipantsListProps) => {
   return (
     <>
       <BoardParticipantsSubHeader
-        hasPermissions={isResponsible || isSAdmin}
         boardParticipants={boardParticipants}
+        hasPermissions={isResponsible || isSAdmin}
       />
       <Flex
         direction="column"
@@ -81,13 +80,13 @@ const ParticipantsList = ({ createdBy }: ParticipantsListProps) => {
           {boardParticipants?.map((participant) => (
             <ParticipantCard
               key={participant.user._id}
-              participant={participant}
               handleRemoveParticipant={handleRemoveParticipant}
-              updateIsResponsibleStatus={updateIsResponsibleStatus}
-              isMemberCurrentUser={participant.user._id === userId}
+              isCreatedByCurrentUser={createdBy === participant.user._id}
               isCurrentUserResponsible={isResponsible}
               isCurrentUserSAdmin={isSAdmin}
-              isCreatedByCurrentUser={createdBy === participant.user._id}
+              isMemberCurrentUser={participant.user._id === userId}
+              participant={participant}
+              updateIsResponsibleStatus={updateIsResponsibleStatus}
             />
           ))}
         </Flex>

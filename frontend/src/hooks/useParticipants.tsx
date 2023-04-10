@@ -1,9 +1,10 @@
-import { ToastStateEnum } from '@/utils/enums/toast-types';
-import { addAndRemoveBoardParticipantsRequest } from '@/api/boardService';
 import { useMutation } from '@tanstack/react-query';
-import { BoardUser } from '@/types/board/board.user';
+
+import { addAndRemoveBoardParticipantsRequest } from '@/api/boardService';
+import useBoardUtils from '@/hooks/useBoardUtils';
 import { GetBoardResponse } from '@/types/board/board';
-import useBoardUtils from './useBoardUtils';
+import { BoardUser } from '@/types/board/board.user';
+import { ToastStateEnum } from '@/utils/enums/toast-types';
 
 const useParticipants = () => {
   const { boardId, queryClient, setToastState, usersList } = useBoardUtils();

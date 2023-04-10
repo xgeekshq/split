@@ -5,12 +5,11 @@ import Icon from '@/components/Primitives/Icons/Icon/Icon';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Text from '@/components/Primitives/Text/Text';
 import Tooltip from '@/components/Primitives/Tooltips/Tooltip/Tooltip';
+import UserItemActions from '@/components/Users/UsersList/UserItem/UserItemActions/UserItemActions';
+import UserTitle from '@/components/Users/UsersList/UserItem/UserTitle/UserTitle';
 import useCurrentSession from '@/hooks/useCurrentSession';
 import { InnerContainer } from '@/styles/pages/pages.styles';
 import { UserWithTeams } from '@/types/user/user';
-
-import UserItemActions from './UserItemActions/UserItemActions';
-import UserTitle from './UserTitle/UserTitle';
 
 type UserItemProps = {
   userWithTeams: UserWithTeams;
@@ -35,7 +34,7 @@ const UserItem = React.memo<UserItemProps>(({ userWithTeams }) => {
   return (
     <Flex direction="column">
       <InnerContainer align="center" elevation="1" gap="40">
-        <Flex align="center" gap="8" css={{ flex: '2' }}>
+        <Flex align="center" css={{ flex: '2' }} gap="8">
           <Icon
             name="blob-personal"
             size={32}
@@ -45,10 +44,10 @@ const UserItem = React.memo<UserItemProps>(({ userWithTeams }) => {
             }}
           />
 
-          <UserTitle user={user} hasPermissions={isSAdmin!} />
+          <UserTitle hasPermissions={isSAdmin!} user={user} />
         </Flex>
 
-        <Flex align="center" justify="start" css={{ flex: '2' }}>
+        <Flex align="center" css={{ flex: '2' }} justify="start">
           <Text color="primary300" size="sm">
             {user.email}
           </Text>
@@ -56,13 +55,13 @@ const UserItem = React.memo<UserItemProps>(({ userWithTeams }) => {
 
         <Flex align="center" css={{ flex: '1' }}>
           {!isSAdmin && user.isSAdmin && (
-            <Badge pill variant="success" size="sm">
+            <Badge pill size="sm" variant="success">
               SUPER ADMIN
             </Badge>
           )}
         </Flex>
 
-        <Flex align="center" justify="end" css={{ flex: '1' }}>
+        <Flex align="center" css={{ flex: '1' }} justify="end">
           <Tooltip content={teamsSeparatedByComma}>
             <Text css={{ cursor: 'default' }} fontWeight="bold" size="sm">
               {getTeamsCountText()}
@@ -71,7 +70,7 @@ const UserItem = React.memo<UserItemProps>(({ userWithTeams }) => {
         </Flex>
 
         {isSAdmin && (
-          <Flex align="center" justify="end" css={{ flex: '2' }}>
+          <Flex align="center" css={{ flex: '2' }} justify="end">
             <UserItemActions user={user} />
           </Flex>
         )}

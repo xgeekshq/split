@@ -2,13 +2,12 @@
 import { useState } from 'react';
 import { CalendarTileProperties } from 'react-calendar';
 
-import { styled } from '@/styles/stitches/stitches.config';
-
-import Icon from '@/components/Primitives/Icons/Icon/Icon';
+import StyledCalendar from '@/components/Dashboard/Calendar/StyledCalendar';
 import NoMeetingsImage from '@/components/images/NoMeetings';
+import Icon from '@/components/Primitives/Icons/Icon/Icon';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Text from '@/components/Primitives/Text/Text';
-import StyledCalendar from './StyledCalendar';
+import { styled } from '@/styles/stitches/stitches.config';
 
 const StyledContainer = styled(Flex, {
   height: '100%',
@@ -70,13 +69,13 @@ const CalendarBar = () => {
           minDate={new Date(new Date().getFullYear(), new Date().getMonth(), 1)}
           minDetail="year"
           nextLabel={<Icon name="arrow-right" />}
+          onChange={handleOnChange}
           prevLabel={<Icon name="arrow-left" />}
           tileContent={tileContent}
           value={currentValue}
           formatShortWeekday={(locale: string, date: Date) =>
             ['Su', 'Mo', 'Th', 'We', 'Th', 'Fr', 'Sa'][date.getDay()]
           }
-          onChange={handleOnChange}
         />
       )}
     </StyledContainer>

@@ -1,13 +1,16 @@
 import { fireEvent, waitFor } from '@testing-library/react';
-import { ROUTES } from '@/utils/routes';
+
+import TeamBoards, {
+  TeamBoardsProps,
+} from '@/components/Teams/TeamsList/TeamItem/TeamBoards/TeamBoards';
 import { TeamFactory } from '@/utils/factories/team';
+import { ROUTES } from '@/utils/routes';
 import { libraryMocks } from '@/utils/testing/mocks';
 import { renderWithProviders } from '@/utils/testing/renderWithProviders';
-import TeamBoards, { TeamBoardsProps } from './TeamBoards';
 
 const { mockRouter } = libraryMocks.mockNextRouter({ pathname: '/teams' });
 const render = (props: Partial<TeamBoardsProps> = {}) =>
-  renderWithProviders(<TeamBoards team={TeamFactory.create()} havePermissions {...props} />, {
+  renderWithProviders(<TeamBoards havePermissions team={TeamFactory.create()} {...props} />, {
     routerOptions: mockRouter,
   });
 

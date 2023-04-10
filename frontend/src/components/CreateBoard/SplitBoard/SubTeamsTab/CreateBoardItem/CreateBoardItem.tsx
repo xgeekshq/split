@@ -2,6 +2,8 @@ import React from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 import { SetterOrUpdater, useRecoilValue } from 'recoil';
 
+import CreateSubBoardItem from '@/components/CreateBoard/SplitBoard/SubTeamsTab/CreateBoardItem/CreateSubBoardItem/CreateSubBoardItem';
+import { StyledMainBoardItem } from '@/components/CreateBoard/SplitBoard/SubTeamsTab/CreateBoardItem/styles';
 import AvatarGroup from '@/components/Primitives/Avatars/AvatarGroup/AvatarGroup';
 import Icon from '@/components/Primitives/Icons/Icon/Icon';
 import Checkbox from '@/components/Primitives/Inputs/Checkboxes/Checkbox/Checkbox';
@@ -14,9 +16,6 @@ import useCreateBoard from '@/hooks/useCreateBoard';
 import { CreateBoardData, createBoardError } from '@/store/createBoard/atoms/create-board.atom';
 import { BoardToAdd } from '@/types/board/board';
 import { Team } from '@/types/team/team';
-
-import CreateSubBoardItem from './CreateSubBoardItem/CreateSubBoardItem';
-import { StyledMainBoardItem } from './styles';
 
 interface SubBoardListProp {
   dividedBoards: BoardToAdd[];
@@ -56,11 +55,11 @@ const CreateBoardItem = React.memo(({ team }: CreateBoardItemInterface) => {
 
   return (
     <Flex css={{ width: '100%', height: '100%' }} direction="column" gap={8}>
-      <StyledMainBoardItem align="center" elevation="1" justify="between" gap={24}>
-        <Flex align="center" gap={8} css={{ flex: 2 }}>
+      <StyledMainBoardItem align="center" elevation="1" gap={24} justify="between">
+        <Flex align="center" css={{ flex: 2 }} gap={8}>
           <Tooltip content="It’s a main board. All sub-team boards got merged into this main board.">
             <div>
-              <Icon size={32} name="blob-split" />
+              <Icon name="blob-split" size={32} />
             </div>
           </Tooltip>
           <Text heading="6">{boardName.length > 0 ? boardName : board.title}</Text>
@@ -77,6 +76,7 @@ const CreateBoardItem = React.memo(({ team }: CreateBoardItemInterface) => {
             <Flex
               align="center"
               justify="center"
+              onClick={handleRemoveTeam}
               css={{
                 width: '$24',
                 height: '$24',
@@ -89,13 +89,13 @@ const CreateBoardItem = React.memo(({ team }: CreateBoardItemInterface) => {
                   backgroundColor: canReduce ? '$primary100' : '$white',
                 },
               }}
-              onClick={handleRemoveTeam}
             >
               <Icon name="minus" size={12} />
             </Flex>
             <Flex
               align="center"
               justify="center"
+              onClick={handleAddTeam}
               css={{
                 width: '$24',
                 height: '$24',
@@ -108,14 +108,13 @@ const CreateBoardItem = React.memo(({ team }: CreateBoardItemInterface) => {
                   backgroundColor: canAdd ? '$primary100' : '$white',
                 },
               }}
-              onClick={handleAddTeam}
             >
               <Icon name="plus" size={12} />
             </Flex>
           </Flex>
         </Flex>
-        <Flex align="center" justify="end" gap="8" css={{ flex: 3 }}>
-          <Text size="sm" fontWeight="medium">
+        <Flex align="center" css={{ flex: 3 }} gap="8" justify="end">
+          <Text fontWeight="medium" size="sm">
             {team.name}
           </Text>
           <AvatarGroup haveError={haveError} listUsers={team.users} userId="1" />
@@ -124,10 +123,10 @@ const CreateBoardItem = React.memo(({ team }: CreateBoardItemInterface) => {
       <SubBoardList dividedBoards={board.dividedBoards} setBoard={setCreateBoardData} />
       <Box>
         <Checkbox
+          checked={slackEnable}
           id="slackEnable"
           label="Create Slack group for each sub-team"
           size="md"
-          checked={slackEnable}
           handleChange={(checked) => {
             setValue('slackEnable', checked);
           }}

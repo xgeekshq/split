@@ -1,6 +1,9 @@
 import React from 'react';
 
 import LeftArrow from '@/components/CardBoard/CardBody/LeftArrow';
+import { StyledSubBoardItem } from '@/components/CreateBoard/SplitBoard/SubTeamsTab/CreateBoardItem/CreateSubBoardItem/styles';
+import { StyledMainBoardItem } from '@/components/CreateBoard/SplitBoard/SubTeamsTab/CreateBoardItem/styles';
+import FakeAvatarGroup from '@/components/CreateBoard/SplitBoard/SubTeamsTab/FakeBoardItem/FakeAvatarGroup/FakeAvatarGroup';
 import Avatar from '@/components/Primitives/Avatars/Avatar/Avatar';
 import Icon from '@/components/Primitives/Icons/Icon/Icon';
 import Checkbox from '@/components/Primitives/Inputs/Checkboxes/Checkbox/Checkbox';
@@ -10,17 +13,13 @@ import Text from '@/components/Primitives/Text/Text';
 import Tooltip from '@/components/Primitives/Tooltips/Tooltip/Tooltip';
 import { highlight2Colors } from '@/styles/stitches/partials/colors/highlight2.colors';
 
-import FakeAvatarGroup from './FakeAvatarGroup/FakeAvatarGroup';
-import { StyledMainBoardItem } from '../CreateBoardItem/styles';
-import { StyledSubBoardItem } from '../CreateBoardItem/CreateSubBoardItem/styles';
-
 const FakeBoardItem = () => (
   <Flex css={{ width: '100%', height: '100%' }} direction="column" gap={8}>
-    <StyledMainBoardItem align="center" elevation="1" justify="between" css={{ opacity: '0.5' }}>
-      <Flex align="center" gap={8} css={{ flex: 2 }}>
+    <StyledMainBoardItem align="center" css={{ opacity: '0.5' }} elevation="1" justify="between">
+      <Flex align="center" css={{ flex: 2 }} gap={8}>
         <Tooltip content="It’s a main board. All sub-team boards got merged into this main board.">
           <div>
-            <Icon size={32} name="blob-split" />
+            <Icon name="blob-split" size={32} />
           </div>
         </Tooltip>
         <Text heading="6">Main Board -</Text>
@@ -62,8 +61,8 @@ const FakeBoardItem = () => (
           </Flex>
         </Flex>
       </Flex>
-      <Flex align="center" justify="end" gap={8} css={{ flex: 3 }}>
-        <Text size="sm" fontWeight="medium">
+      <Flex align="center" css={{ flex: 3 }} gap={8} justify="end">
+        <Text fontWeight="medium" size="sm">
           -----
         </Text>
         <FakeAvatarGroup />
@@ -72,7 +71,7 @@ const FakeBoardItem = () => (
     <Flex css={{ mb: '$50' }} direction="column" gap={8}>
       <Flex>
         <LeftArrow index={0} isDashboard={false} />
-        <StyledSubBoardItem align="center" elevation="1" justify="between" css={{ opacity: '0.5' }}>
+        <StyledSubBoardItem align="center" css={{ opacity: '0.5' }} elevation="1" justify="between">
           <Flex css={{ flex: 2 }}>
             <Text heading="5">Sub-team board 1</Text>
           </Flex>
@@ -106,7 +105,7 @@ const FakeBoardItem = () => (
               />
             </Flex>
           </Flex>
-          <Flex align="center" justify="end" gap={8} css={{ flex: 2 }}>
+          <Flex align="center" css={{ flex: 2 }} gap={8} justify="end">
             <Text size="sm">-----</Text>
             <FakeAvatarGroup />
           </Flex>
@@ -114,7 +113,7 @@ const FakeBoardItem = () => (
       </Flex>
       <Flex>
         <LeftArrow index={1} isDashboard={false} />
-        <StyledSubBoardItem align="center" elevation="1" justify="between" css={{ opacity: '0.5' }}>
+        <StyledSubBoardItem align="center" css={{ opacity: '0.5' }} elevation="1" justify="between">
           <Flex css={{ flex: 2 }}>
             <Text heading="5">Sub-team board 2</Text>
           </Flex>
@@ -148,7 +147,7 @@ const FakeBoardItem = () => (
               />
             </Flex>
           </Flex>
-          <Flex align="center" justify="end" gap={8} css={{ flex: 2 }}>
+          <Flex align="center" css={{ flex: 2 }} gap={8} justify="end">
             <Text size="sm">-----</Text>
             <FakeAvatarGroup />
           </Flex>
@@ -157,7 +156,7 @@ const FakeBoardItem = () => (
     </Flex>
     <Tooltip color="primary800" content="First select a team">
       <Flex css={{ width: 'fit-content' }}>
-        <Checkbox id="slack" label="Create Slack group for each sub-team" size="md" disabled />
+        <Checkbox disabled id="slack" label="Create Slack group for each sub-team" size="md" />
       </Flex>
     </Tooltip>
   </Flex>

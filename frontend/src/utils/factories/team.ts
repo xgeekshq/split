@@ -1,8 +1,8 @@
-import { Team } from '@/types/team/team';
 import { faker } from '@faker-js/faker';
 
+import { Team } from '@/types/team/team';
+import { TeamUserFactory } from '@/utils/factories/user';
 import { buildTestFactory } from '@/utils/testing';
-import { TeamUserFactory } from './user';
 
 export const TeamFactory = buildTestFactory<Team>(() => {
   const id = faker.database.mongodbObjectId();

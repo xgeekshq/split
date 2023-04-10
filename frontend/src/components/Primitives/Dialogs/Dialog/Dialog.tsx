@@ -1,9 +1,13 @@
 import React from 'react';
 import { Dialog as RadixDialog, Portal } from '@radix-ui/react-dialog';
-import { StyledDialogContent, StyledDialogOverlay } from './styles';
-import DialogFooter from './DialogFooter';
-import DialogHeader from './DialogHeader';
-import Flex from '../../Layout/Flex/Flex';
+
+import DialogFooter from '@/components/Primitives/Dialogs/Dialog/DialogFooter';
+import DialogHeader from '@/components/Primitives/Dialogs/Dialog/DialogHeader';
+import {
+  StyledDialogContent,
+  StyledDialogOverlay,
+} from '@/components/Primitives/Dialogs/Dialog/styles';
+import Flex from '@/components/Primitives/Layout/Flex/Flex';
 
 export type DialogProps = {
   isOpen: boolean;
@@ -12,7 +16,7 @@ export type DialogProps = {
 };
 
 const Dialog = ({ isOpen, setIsOpen, children }: DialogProps) => (
-  <RadixDialog open={isOpen} onOpenChange={setIsOpen}>
+  <RadixDialog onOpenChange={setIsOpen} open={isOpen}>
     <Portal>
       <StyledDialogOverlay />
       <StyledDialogContent
@@ -20,7 +24,7 @@ const Dialog = ({ isOpen, setIsOpen, children }: DialogProps) => (
           e.preventDefault();
         }}
       >
-        <Flex direction="column" css={{ height: '100%' }}>
+        <Flex css={{ height: '100%' }} direction="column">
           {children}
         </Flex>
       </StyledDialogContent>

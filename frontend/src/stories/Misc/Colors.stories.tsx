@@ -1,13 +1,13 @@
 import React from 'react';
 import { ComponentStory } from '@storybook/react';
-
 import dedent from 'ts-dedent';
+
 import Sprite from '@/components/icons/Sprite';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Text from '@/components/Primitives/Text/Text';
+import Card from '@/stories/components/Card';
+import { capitalize } from '@/stories/utils';
 import { colors } from '@/styles/stitches/partials/colors';
-import Card from '../components/Card';
-import { capitalize } from '../utils';
 
 const GROUPS = [
   'primary',
@@ -57,10 +57,10 @@ const Template: ComponentStory<any> = () => {
     <Flex direction="column">
       {Object.entries(groupedColors).map(([groupKey, groupValues]: any) => (
         <>
-          <Text heading="2" fontWeight="bold" css={{ mb: '$8' }}>
+          <Text css={{ mb: '$8' }} fontWeight="bold" heading="2">
             {capitalize(groupKey)}
           </Text>
-          <Flex wrap="wrap" gap="16" justify="start" css={{ mb: '$32' }}>
+          <Flex css={{ mb: '$32' }} gap="16" justify="start" wrap="wrap">
             {groupValues.map((color: any) => {
               const [colorKey, colorValue] = color;
               return (

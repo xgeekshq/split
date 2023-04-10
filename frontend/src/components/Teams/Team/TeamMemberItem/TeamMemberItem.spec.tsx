@@ -1,14 +1,17 @@
 import React from 'react';
-import { renderWithProviders } from '@/utils/testing/renderWithProviders';
+
+import TeamMemberItem, {
+  TeamMemberItemProps,
+} from '@/components/Teams/Team/TeamMemberItem/TeamMemberItem';
 import { TeamUserFactory } from '@/utils/factories/user';
 import { getFormattedUsername } from '@/utils/getFormattedUsername';
 import { libraryMocks } from '@/utils/testing/mocks';
-import TeamMemberItem, { TeamMemberItemProps } from './TeamMemberItem';
+import { renderWithProviders } from '@/utils/testing/renderWithProviders';
 
 const { mockRouter } = libraryMocks.mockNextRouter({ pathname: '/teams' });
 
 const render = (props: Partial<TeamMemberItemProps> = {}) =>
-  renderWithProviders(<TeamMemberItem member={TeamUserFactory.create()} isTeamPage {...props} />, {
+  renderWithProviders(<TeamMemberItem isTeamPage member={TeamUserFactory.create()} {...props} />, {
     routerOptions: mockRouter,
   });
 

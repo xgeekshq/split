@@ -1,16 +1,16 @@
 import React from 'react';
 import { ComponentStory } from '@storybook/react';
-
-import Flex from '@/components/Primitives/Layout/Flex/Flex';
-import Button from '@/components/Primitives/Inputs/Button/Button';
 import dedent from 'ts-dedent';
+
+import Button from '@/components/Primitives/Inputs/Button/Button';
+import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import {
-  DirectionType,
   AlignType,
+  DirectionType,
+  GapType,
   JustifyType,
   WrapType,
-  GapType,
-} from '../../../../stories/types/PrimitiveTypes';
+} from '@/stories/types/PrimitiveTypes';
 
 const DIRECTION_OPTIONS: DirectionType[] = ['row', 'column', 'rowReverse', 'columnReverse'];
 

@@ -1,12 +1,13 @@
 import React from 'react';
-import { libraryMocks } from '@/utils/testing/mocks';
-import { renderWithProviders } from '@/utils/testing/renderWithProviders';
-import { UserFactory } from '@/utils/factories/user';
-import { fireEvent, waitFor, act } from '@testing-library/react';
+import { act, fireEvent, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+
 import DuplicateBoardNameDialog, {
   DuplicateBoardNameDialogProps,
-} from './DuplicateBoardNameDialog';
+} from '@/components/CardBoard/CardBody/DuplicateBoardNameDialog';
+import { UserFactory } from '@/utils/factories/user';
+import { libraryMocks } from '@/utils/testing/mocks';
+import { renderWithProviders } from '@/utils/testing/renderWithProviders';
 
 const { mockRouter } = libraryMocks.mockNextRouter({ pathname: '/teams' });
 
@@ -14,7 +15,7 @@ const mockUser = UserFactory.create();
 
 const render = (props: Partial<DuplicateBoardNameDialogProps> = {}) =>
   renderWithProviders(
-    <DuplicateBoardNameDialog handleDuplicateBoard={jest.fn()} boardTitle="My Board" {...props} />,
+    <DuplicateBoardNameDialog boardTitle="My Board" handleDuplicateBoard={jest.fn()} {...props} />,
     {
       routerOptions: mockRouter,
       sessionOptions: { user: mockUser },

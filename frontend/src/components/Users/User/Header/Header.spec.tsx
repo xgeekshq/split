@@ -1,10 +1,11 @@
 import React from 'react';
-import { libraryMocks } from '@/utils/testing/mocks';
 import { fireEvent, waitFor } from '@testing-library/react';
-import { renderWithProviders } from '@/utils/testing/renderWithProviders';
-import { USERS_ROUTE } from '@/utils/routes';
+
+import UserHeader, { UserHeaderProps } from '@/components/Users/User/Header/Header';
 import { UserFactory } from '@/utils/factories/user';
-import UserHeader, { UserHeaderProps } from './Header';
+import { USERS_ROUTE } from '@/utils/routes';
+import { libraryMocks } from '@/utils/testing/mocks';
+import { renderWithProviders } from '@/utils/testing/renderWithProviders';
 
 const { mockRouter } = libraryMocks.mockNextRouter({ pathname: '/users' });
 const render = (props: Partial<UserHeaderProps> = {}) =>

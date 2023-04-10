@@ -2,9 +2,9 @@ import React from 'react';
 import { useRecoilValue } from 'recoil';
 
 import Input from '@/components/Primitives/Inputs/Input/Input';
+import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Text from '@/components/Primitives/Text/Text';
 import { createBoardError } from '@/store/createBoard/atoms/create-board.atom';
-import Flex from '../../Primitives/Layout/Flex/Flex';
 
 type BoardNameProps = {
   title: string;
@@ -21,10 +21,10 @@ const BoardName = ({ title, description }: BoardNameProps) => {
         {description}
       </Text>
       <Input
+        showCount
         disabled={haveError}
         id="text"
         maxChars="45"
-        showCount
         placeholder={title}
         type="text"
       />

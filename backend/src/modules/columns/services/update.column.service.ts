@@ -1,26 +1,26 @@
 import { BadRequestException, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { COLUMN_NOT_FOUND, UPDATE_FAILED } from 'src/libs/exceptions/messages';
-import * as Cards from 'src/modules/cards/interfaces/types';
 import * as Boards from 'src/modules/boards/interfaces/types';
+import * as Votes from 'src/modules/votes/interfaces/types';
 import * as Columns from '../interfaces/types';
 import { UpdateColumnServiceInterface } from '../interfaces/services/update.column.service.interface';
 import { UpdateColumnDto } from '../dto/update-column.dto';
 import { ColumnDeleteCardsDto } from 'src/modules/columns/dto/colum.deleteCards.dto';
-import { DeleteCardServiceInterface } from 'src/modules/cards/interfaces/services/delete.card.service.interface';
 import SocketGateway from 'src/modules/socket/gateway/socket.gateway';
 import { ColumnRepositoryInterface } from '../repositories/column.repository.interface';
 import { GetBoardServiceInterface } from 'src/modules/boards/interfaces/services/get.board.service.interface';
+import { DeleteVoteServiceInterface } from 'src/modules/votes/interfaces/services/delete.vote.service.interface';
 
 @Injectable()
 export default class UpdateColumnService implements UpdateColumnServiceInterface {
 	constructor(
 		@Inject(Columns.TYPES.repositories.ColumnRepository)
 		private readonly columnRepository: ColumnRepositoryInterface,
-		private socketService: SocketGateway,
-		@Inject(Cards.TYPES.services.DeleteCardService)
-		private deleteCardService: DeleteCardServiceInterface,
+		private readonly socketService: SocketGateway,
 		@Inject(Boards.TYPES.services.GetBoardService)
-		private getBoardService: GetBoardServiceInterface
+		private readonly getBoardService: GetBoardServiceInterface,
+		@Inject(Votes.TYPES.services.DeleteVoteService)
+		private readonly deleteVoteService: DeleteVoteServiceInterface
 	) {}
 
 	async updateColumn(boardId: string, column: UpdateColumnDto) {
@@ -46,7 +46,7 @@ export default class UpdateColumnService implements UpdateColumnServiceInterface
 
 		if (!cardsToUpdate) throw new NotFoundException(COLUMN_NOT_FOUND);
 
-		await this.deleteCardService.deleteCardVotesFromColumn(boardId, cardsToUpdate);
+		await this.deleteVoteService.deleteCardVotesFromColumn(boardId, cardsToUpdate);
 
 		const updateBoard = await this.columnRepository.deleteCards(boardId, column.id);
 

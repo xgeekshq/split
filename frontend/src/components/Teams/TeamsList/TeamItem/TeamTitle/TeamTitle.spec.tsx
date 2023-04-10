@@ -1,13 +1,16 @@
 import { fireEvent, waitFor } from '@testing-library/react';
+
+import TeamTitle, {
+  TeamTitleProps,
+} from '@/components/Teams/TeamsList/TeamItem/TeamTitle/TeamTitle';
 import { TeamFactory } from '@/utils/factories/team';
 import { ROUTES } from '@/utils/routes';
 import { libraryMocks } from '@/utils/testing/mocks';
 import { renderWithProviders } from '@/utils/testing/renderWithProviders';
-import TeamTitle, { TeamTitleProps } from './TeamTitle';
 
 const { mockRouter } = libraryMocks.mockNextRouter({ pathname: '/teams' });
 const render = (props: Partial<TeamTitleProps>) =>
-  renderWithProviders(<TeamTitle title="MyTeam" teamId="123" {...props} />, {
+  renderWithProviders(<TeamTitle teamId="123" title="MyTeam" {...props} />, {
     routerOptions: mockRouter,
   });
 

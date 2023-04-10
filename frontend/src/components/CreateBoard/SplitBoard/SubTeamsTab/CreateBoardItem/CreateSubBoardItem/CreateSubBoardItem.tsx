@@ -1,8 +1,12 @@
-import { deepClone } from 'fast-json-patch';
 import React from 'react';
+import { deepClone } from 'fast-json-patch';
 import { SetterOrUpdater } from 'recoil';
 
 import LeftArrow from '@/components/CardBoard/CardBody/LeftArrow';
+import {
+  LotteryButton,
+  StyledSubBoardItem,
+} from '@/components/CreateBoard/SplitBoard/SubTeamsTab/CreateBoardItem/CreateSubBoardItem/styles';
 import Avatar from '@/components/Primitives/Avatars/Avatar/Avatar';
 import AvatarGroup from '@/components/Primitives/Avatars/AvatarGroup/AvatarGroup';
 import Icon from '@/components/Primitives/Icons/Icon/Icon';
@@ -15,7 +19,6 @@ import { BoardToAdd } from '@/types/board/board';
 import { BoardUserToAdd } from '@/types/board/board.user';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import { getInitials } from '@/utils/getInitials';
-import { StyledSubBoardItem, LotteryButton } from './styles';
 
 interface CreateSubBoardItemProps {
   index: number;
@@ -78,8 +81,8 @@ const CreateSubBoardItem = ({ board, index, setBoard }: CreateSubBoardItemProps)
             <Separator orientation="vertical" size="md" />
             <LotteryButton
               align="center"
-              justify="center"
               disabled={users.length <= 1}
+              justify="center"
               {...(users.length > 1 && { onClick: handleLottery })}
             >
               <Icon name="wand" size={12} />
@@ -87,33 +90,33 @@ const CreateSubBoardItem = ({ board, index, setBoard }: CreateSubBoardItemProps)
             <Flex>
               <Text
                 color="primary300"
+                size="sm"
                 css={{
                   textOverflow: 'ellipsis',
                   whiteSpace: 'nowrap',
                   overflow: 'hidden',
                 }}
-                size="sm"
               >
                 {responsible?.firstName} {responsible?.lastName}
               </Text>
             </Flex>
             <Avatar
               css={{ position: 'relative' }}
-              fallbackText={getInitials(
-                responsible?.firstName ?? '-',
-                responsible?.lastName ?? '-',
-              )}
               size={32}
               colors={{
                 bg: highlight2Colors.highlight2Lighter,
                 fontColor: highlight2Colors.highlight2Dark,
               }}
+              fallbackText={getInitials(
+                responsible?.firstName ?? '-',
+                responsible?.lastName ?? '-',
+              )}
             />
           </Flex>
         </Flex>
-        <Flex align="center" justify="end" gap={8} css={{ flex: 2 }}>
+        <Flex align="center" css={{ flex: 2 }} gap={8} justify="end">
           <Text size="sm">Sub team {index + 1}</Text>
-          <AvatarGroup listUsers={board.users} userId="1" hasDrawer />
+          <AvatarGroup hasDrawer listUsers={board.users} userId="1" />
         </Flex>
       </StyledSubBoardItem>
     </Flex>

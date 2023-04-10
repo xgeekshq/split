@@ -1,7 +1,8 @@
+import Link from 'next/link';
+
+import { StyledTile, TileArrow, TileBlob } from '@/components/Dashboard/Tiles/Tile/styles';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Text from '@/components/Primitives/Text/Text';
-import Link from 'next/link';
-import { StyledTile, TileArrow, TileBlob } from './styles';
 
 export type TileProps = {
   link: string;
@@ -27,14 +28,14 @@ const Tile = ({ link, title, count, color }: TileProps) => {
   return (
     <Link href={link}>
       <StyledTile data-testid="tile">
-        <Flex direction="column" css={{ width: '80%', py: '$20', px: '$24' }}>
+        <Flex css={{ width: '80%', py: '$20', px: '$24' }} direction="column">
           <Text color="white" size="md">
             {title}
           </Text>
           <h3>{count}</h3>
         </Flex>
 
-        <TileBlob name={`blob-${color}`} css={styles} />
+        <TileBlob css={styles} name={`blob-${color}`} />
         <TileArrow name="arrow-long-right" />
       </StyledTile>
     </Link>

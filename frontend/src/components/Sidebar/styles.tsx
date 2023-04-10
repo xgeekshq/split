@@ -1,5 +1,5 @@
+import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import { styled } from '@/styles/stitches/stitches.config';
-import Flex from '../Primitives/Layout/Flex/Flex';
 
 const StyledSidebar = styled('aside', {
   width: '256px',
@@ -58,4 +58,4 @@ const StyledMenuItem = styled(Flex, {
   },
 });
 
-export { StyledSidebar, StyledMenuItem };
+export { StyledMenuItem, StyledSidebar };

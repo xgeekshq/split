@@ -2,16 +2,15 @@ import { MouseEvent, useState } from 'react';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 
 import ParticipantCard from '@/components/Board/RegularBoard/ParticipantsList/ParticipantCard';
+import ListParticipants from '@/components/CreateBoard/RegularBoard/ParticipantsTab/ListParticipants/ListParticipants';
 import Icon from '@/components/Primitives/Icons/Icon/Icon';
 import Button from '@/components/Primitives/Inputs/Button/Button';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import useCurrentSession from '@/hooks/useCurrentSession';
 import { createBoardDataState } from '@/store/createBoard/atoms/create-board.atom';
+import { usersListState } from '@/store/team/atom/team.atom';
 import { BoardUser } from '@/types/board/board.user';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
-
-import { usersListState } from '@/store/team/atom/team.atom';
-import ListParticipants from '../ListParticipants/ListParticipants';
 
 const BoardParticipantsList = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -57,9 +56,9 @@ const BoardParticipantsList = () => {
   };
 
   return (
-    <Flex direction="column" gap={16} css={{ width: '100%' }}>
-      <Flex justify="end" css={{ mt: '$10' }}>
-        <Button variant="link" size="sm" onClick={handleOpen}>
+    <Flex css={{ width: '100%' }} direction="column" gap={16}>
+      <Flex css={{ mt: '$10' }} justify="end">
+        <Button onClick={handleOpen} size="sm" variant="link">
           <Icon name="plus" />
           Add/remove participants
         </Button>
@@ -68,13 +67,13 @@ const BoardParticipantsList = () => {
         {createBoardData.users.map((participant) => (
           <ParticipantCard
             key={participant.user._id}
-            participant={{ ...participant, _id: participant.user._id }}
-            handleRemoveParticipant={handleRemoveParticipant}
-            updateIsResponsibleStatus={updateIsResponsibleStatus}
-            isMemberCurrentUser={participant.user._id === userId}
             isCurrentUserResponsible
-            isCurrentUserSAdmin={!!isSAdmin}
+            handleRemoveParticipant={handleRemoveParticipant}
             isCreatedByCurrentUser={userId === participant.user._id}
+            isCurrentUserSAdmin={!!isSAdmin}
+            isMemberCurrentUser={participant.user._id === userId}
+            participant={{ ...participant, _id: participant.user._id }}
+            updateIsResponsibleStatus={updateIsResponsibleStatus}
           />
         ))}
       </Flex>

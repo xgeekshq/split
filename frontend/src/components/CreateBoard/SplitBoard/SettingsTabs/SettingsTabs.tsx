@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 
+import BoardConfigurations from '@/components/CreateBoard/BoardConfigurations/BoardConfigurations';
+import SubTeamsConfigurations from '@/components/CreateBoard/SplitBoard/SubTeamsTab/SubTeamsTab';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Tab, { TabList } from '@/components/Primitives/Tab/Tab';
 import Text from '@/components/Primitives/Text/Text';
@@ -9,9 +11,6 @@ import { createBoardError, createBoardTeam } from '@/store/createBoard/atoms/cre
 import { toastState } from '@/store/toast/atom/toast.atom';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
 import { usePrevious } from '@/utils/previousState';
-
-import BoardConfigurations from '../../BoardConfigurations/BoardConfigurations';
-import SubTeamsConfigurations from '../SubTeamsTab/SubTeamsTab';
 
 const SettingsTabs = () => {
   // Recoil Atoms
@@ -61,14 +60,14 @@ const SettingsTabs = () => {
 
   return (
     <Flex direction="column" gap={16}>
-      <Text heading={3} css={{ mt: '$16' }}>
+      <Text css={{ mt: '$16' }} heading={3}>
         Settings
       </Text>
       <Tab
-        tabList={tabList}
-        defaultValue={initialTabValue}
         activeValue={activeTab}
+        defaultValue={initialTabValue}
         onChangeActiveValue={handleTabChange}
+        tabList={tabList}
       />
     </Flex>
   );

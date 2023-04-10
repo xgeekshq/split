@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 
+import AddCardOrComment from '@/components/Board/AddCardOrComment';
+import PopoverCommentSettings from '@/components/Board/Comment/PopoverSettings';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Text from '@/components/Primitives/Text/Text';
 import useComments from '@/hooks/useComments';
 import CommentType from '@/types/comment/comment';
 import DeleteCommentDto from '@/types/comment/deleteComment.dto';
 import { BoardPhases } from '@/utils/enums/board.phases';
-import AddCardOrComment from '../AddCardOrComment';
-import PopoverCommentSettings from './PopoverSettings';
 
 interface CommentProps {
   comment: CommentType;
@@ -96,8 +96,8 @@ const Comment: React.FC<CommentProps> = React.memo(
             <Flex align="center" css={{ minHeight: '$24', maxWidth: '$226' }}>
               {!comment.anonymous && (
                 <Text
-                  size="xs"
                   fontWeight="medium"
+                  size="xs"
                   css={{
                     textOverflow: 'ellipsis',
                     overflow: 'hidden',
@@ -114,6 +114,7 @@ const Comment: React.FC<CommentProps> = React.memo(
           <AddCardOrComment
             isEditing
             isUpdate
+            anonymous={comment.anonymous}
             boardId={boardId}
             cancelUpdate={handleEditing}
             cardId={cardId}
@@ -122,11 +123,10 @@ const Comment: React.FC<CommentProps> = React.memo(
             colId={columnId}
             commentId={comment._id}
             isCard={false}
-            socketId={socketId}
-            anonymous={comment.anonymous}
             isDefaultText={isDefaultText}
-            postAnonymously={postAnonymously}
             isOwner={userId === comment.createdBy?._id}
+            postAnonymously={postAnonymously}
+            socketId={socketId}
           />
         )}
       </Flex>

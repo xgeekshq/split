@@ -1,10 +1,11 @@
+import { fireEvent, waitFor } from '@testing-library/react';
+
+import TeamsList, { TeamsListProps } from '@/components/Teams/TeamsList/TeamList';
+import { Team } from '@/types/team/team';
+import { TeamFactory } from '@/utils/factories/team';
+import { ROUTES } from '@/utils/routes';
 import { libraryMocks } from '@/utils/testing/mocks';
 import { renderWithProviders } from '@/utils/testing/renderWithProviders';
-import { TeamFactory } from '@/utils/factories/team';
-import { fireEvent, waitFor } from '@testing-library/react';
-import { ROUTES } from '@/utils/routes';
-import { Team } from '@/types/team/team';
-import TeamsList, { TeamsListProps } from './TeamList';
 
 const { mockRouter } = libraryMocks.mockNextRouter({ pathname: '/teams' });
 

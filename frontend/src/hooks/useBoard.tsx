@@ -1,3 +1,4 @@
+import { InfiniteData, useInfiniteQuery, useMutation, useQuery } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 import { useSetRecoilState } from 'recoil';
 
@@ -11,6 +12,7 @@ import {
   updateBoardRequest,
 } from '@/api/boardService';
 import { handleNewBoardUser } from '@/helper/board/transformBoard';
+import useBoardUtils from '@/hooks/useBoardUtils';
 import { newBoardState } from '@/store/board/atoms/board.atom';
 import { operationsQueueAtom } from '@/store/operations/atom/operations-queue.atom';
 import BoardType, { InfiniteBoards, PhaseChangeEventType } from '@/types/board/board';
@@ -18,9 +20,6 @@ import { BoardUser } from '@/types/board/board.user';
 import UseBoardType from '@/types/board/useBoard';
 import { BoardPhases } from '@/utils/enums/board.phases';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
-import { InfiniteData, useInfiniteQuery, useMutation, useQuery } from '@tanstack/react-query';
-
-import useBoardUtils from './useBoardUtils';
 
 interface AutoFetchProps {
   autoFetchBoard?: boolean;

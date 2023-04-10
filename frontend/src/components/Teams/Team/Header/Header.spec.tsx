@@ -1,15 +1,16 @@
 import React from 'react';
-import { libraryMocks } from '@/utils/testing/mocks';
 import { fireEvent, waitFor } from '@testing-library/react';
-import { renderWithProviders } from '@/utils/testing/renderWithProviders';
-import { TEAMS_ROUTE } from '@/utils/routes';
+
+import TeamHeader, { TeamHeaderProps } from '@/components/Teams/Team/Header/Header';
 import { TeamFactory } from '@/utils/factories/team';
-import TeamHeader, { TeamHeaderProps } from './Header';
+import { TEAMS_ROUTE } from '@/utils/routes';
+import { libraryMocks } from '@/utils/testing/mocks';
+import { renderWithProviders } from '@/utils/testing/renderWithProviders';
 
 const { mockRouter } = libraryMocks.mockNextRouter({ pathname: '/teams' });
 libraryMocks.mockReactQuery();
 const render = (props: Partial<TeamHeaderProps> = {}) =>
-  renderWithProviders(<TeamHeader title="MyTeam" hasPermissions {...props} />, {
+  renderWithProviders(<TeamHeader hasPermissions title="MyTeam" {...props} />, {
     routerOptions: mockRouter,
   });
 

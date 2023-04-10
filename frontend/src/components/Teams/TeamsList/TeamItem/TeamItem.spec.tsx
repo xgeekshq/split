@@ -1,19 +1,19 @@
 // TODO: Test if Members & Team Admins <<Avatar Group>> is in the Document
 
-import { renderWithProviders } from '@/utils/testing/renderWithProviders';
+import TeamItem, { TeamItemProps } from '@/components/Teams/TeamsList/TeamItem/TeamItem';
+import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 import { TeamFactory } from '@/utils/factories/team';
 import { TeamUserFactory } from '@/utils/factories/user';
-import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 import { libraryMocks } from '@/utils/testing/mocks';
-import TeamItem, { TeamItemProps } from './TeamItem';
+import { renderWithProviders } from '@/utils/testing/renderWithProviders';
 
 const { mockRouter } = libraryMocks.mockNextRouter({ pathname: '/teams' });
 
 const render = (props: Partial<TeamItemProps> = {}, options?: any) =>
   renderWithProviders(
     <TeamItem
-      team={TeamFactory.create()}
       isSAdmin={options?.user.isSAdmin ?? false}
+      team={TeamFactory.create()}
       userId={options?.user._id}
       {...props}
     />,

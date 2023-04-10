@@ -1,41 +1,87 @@
-import { NextPage } from 'next';
+import { ReactElement } from 'react';
+import { FormProvider, useForm } from 'react-hook-form';
+import { useRouter } from 'next/router';
+import { joiResolver } from '@hookform/resolvers/joi';
 
-import Banner from '@/components/icons/Banner';
+import AccessLayout from '@/components/layouts/AccessLayout/AccessLayout';
+import Button from '@/components/Primitives/Inputs/Button/Button';
+import Input from '@/components/Primitives/Inputs/Input/Input';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
-import { BannerContainer, ImageBackground } from '@/styles/pages/auth.styles';
-import GuestUserForm from '@/components/auth/GuestUserForm';
+import Separator from '@/components/Primitives/Separator/Separator';
+import Text from '@/components/Primitives/Text/Text';
+import useRegisterGuestUser from '@/hooks/auth/useRegisterGuestUser';
+import SchemaLoginGuestForm from '@/schema/schemaLoginGuestForm';
+import { FlexForm } from '@/styles/pages/pages.styles';
+import { CreateGuestUser } from '@/types/user/create-login.user';
+import { LoginGuestUser } from '@/types/user/user';
+import { getUsername } from '@/utils/getUsername';
+import { START_PAGE_ROUTE } from '@/utils/routes';
 
-const LoginGuestUser: NextPage = () => (
-  <Flex justify="between" css={{ minHeight: '100vh', overflow: 'auto' }}>
-    <Flex direction="column" css={{ flexGrow: '1' }}>
-      <BannerContainer>
-        <Banner />
-      </BannerContainer>
-      <Flex
+const LoginGuestUserPage = () => {
+  const router = useRouter();
+  const board = (router.query.boardId || '') as string;
+
+  const { mutate } = useRegisterGuestUser();
+
+  const methods = useForm<LoginGuestUser>({
+    mode: 'onChange',
+    reValidateMode: 'onChange',
+    defaultValues: {
+      username: '',
+    },
+    resolver: joiResolver(SchemaLoginGuestForm),
+  });
+
+  const handleLogin = (guestUser: CreateGuestUser) => {
+    mutate(guestUser, {
+      onSuccess: () => {
+        router.push({ pathname: `/boards/[boardId]`, query: { boardId: board } });
+      },
+    });
+  };
+
+  const handleClick = () => {
+    router.push(START_PAGE_ROUTE);
+  };
+
+  return (
+    <FormProvider {...methods}>
+      <FlexForm
+        autoComplete="off"
         direction="column"
-        css={{
-          ml: '$72',
-          mr: '$72',
-          mt: '9.7%',
-          mb: '$24',
-          height: '100%',
-          justifyContent: 'space-between',
-        }}
+        onSubmit={methods.handleSubmit(({ username }) => {
+          const user = getUsername(username);
+          handleLogin({ board, firstName: user.firstName, lastName: user.lastName });
+        })}
       >
-        <GuestUserForm />
-      </Flex>
-    </Flex>
-    <Flex
-      css={{
-        width: '65%',
-        py: '$24',
-        pr: '$24',
-        flexShrink: 0,
-      }}
-    >
-      <ImageBackground css={{ boxShadow: '-8px 8px 24px rgba(0, 0, 0, 0.16)' }} />
-    </Flex>
-  </Flex>
-);
+        <Text css={{ mt: '$24' }} heading="1">
+          Guest User
+        </Text>
+        <Text color="primary500" css={{ mt: '$8' }} size="md">
+          Enter a guest user name and join the retro.
+        </Text>
+        <Input css={{ mt: '$32' }} id="username" placeholder="Guest user name" type="text" />
 
-export default LoginGuestUser;
+        <Button size="lg" type="submit">
+          Log in as guest
+        </Button>
+        <Flex align="center" direction="column" justify="center">
+          <Flex align="center" css={{ width: '100%', my: '$26' }} gap="16">
+            <Separator />
+            <Text color="primary300" fontWeight="medium" size="sm">
+              OR
+            </Text>
+            <Separator />
+          </Flex>
+          <Button css={{ width: '100%' }} onClick={handleClick} size="lg">
+            Sign In
+          </Button>
+        </Flex>
+      </FlexForm>
+    </FormProvider>
+  );
+};
+
+LoginGuestUserPage.getLayout = (page: ReactElement) => <AccessLayout>{page}</AccessLayout>;
+
+export default LoginGuestUserPage;

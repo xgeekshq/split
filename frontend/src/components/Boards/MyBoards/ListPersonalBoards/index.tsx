@@ -1,15 +1,15 @@
 import React, { useMemo, useRef } from 'react';
-
-import { getPersonalBoardsRequest } from '@/api/boardService';
-import { ToastStateEnum } from '@/utils/enums/toast-types';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { useSetRecoilState } from 'recoil';
+
+import { getPersonalBoardsRequest } from '@/api/boardService';
+import ListBoards from '@/components/Boards/MyBoards/ListBoards';
+import EmptyPersonalBoards from '@/components/Boards/MyBoards/ListPersonalBoards/EmptyPersonalBoards';
+import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import { toastState } from '@/store/toast/atom/toast.atom';
 import BoardType from '@/types/board/board';
 import { Team } from '@/types/team/team';
-import Flex from '@/components/Primitives/Layout/Flex/Flex';
-import ListBoards from '../ListBoards';
-import EmptyPersonalBoards from './EmptyPersonalBoards.tsx';
+import { ToastStateEnum } from '@/utils/enums/toast-types';
 
 interface ListBoardsByTeamProps {
   userId: string;
@@ -84,13 +84,13 @@ const ListPersonalBoards = ({ userId, isSuperAdmin }: ListBoardsByTeamProps) => 
 
   return (
     <ListBoards
-      userId={userId}
-      isSuperAdmin={isSuperAdmin}
       dataByTeamAndDate={dataByTeamAndDate}
-      scrollRef={scrollRef}
-      onScroll={onScroll}
       filter="personal"
       isLoading={isLoading}
+      isSuperAdmin={isSuperAdmin}
+      onScroll={onScroll}
+      scrollRef={scrollRef}
+      userId={userId}
     />
   );
 };
