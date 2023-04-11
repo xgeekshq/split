@@ -2,7 +2,11 @@ import { libraryMocks } from '@/utils/testing/mocks';
 import { renderWithProviders } from '@/utils/testing/renderWithProviders';
 import Content, { SidebarContentProps } from '@/components/Sidebar/Content/Content';
 
-const DEFAULT_PROPS = { strategy: 'local' };
+const DEFAULT_PROPS: SidebarContentProps = {
+  strategy: 'local',
+  isCollapsed: false,
+  handleCollapse: jest.fn(),
+};
 
 const { mockRouter } = libraryMocks.mockNextRouter({ pathname: '/' });
 const render = (props: SidebarContentProps = DEFAULT_PROPS) =>
