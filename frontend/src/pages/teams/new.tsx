@@ -14,9 +14,12 @@ import Dots from '@/components/Primitives/Loading/Dots/Dots';
 import useCurrentSession from '@/hooks/useCurrentSession';
 import useUsers from '@/hooks/users/useUsers';
 import { USERS_KEY } from '@/utils/constants/reactQueryKeys';
+import { useRouter } from 'next/router';
+import { ROUTES } from '@/utils/routes';
 
 const NewTeam: NextPage = () => {
   const { session, userId } = useCurrentSession({ required: true });
+  const { replace } = useRouter();
 
   const { data: usersData, isLoading } = useUsers();
 
@@ -48,13 +51,16 @@ const NewTeam: NextPage = () => {
     setUsersListState(usersWithChecked);
   }, [usersData, userId, setUsersListState, setCreateTeamState]);
 
-  if (!session || !usersData) return null;
+  if (!session || !usersData) {
+    replace(ROUTES.Teams);
+    return null;
+  }
 
   return (
     <Suspense fallback={<LoadingPage />}>
       <QueryError>
         {isLoading ? (
-          <Flex justify="center" css={{ mt: '$16' }}>
+          <Flex justify="center" css={{ mt: '$16' }} data-testid="loading">
             <Dots />
           </Flex>
         ) : (
