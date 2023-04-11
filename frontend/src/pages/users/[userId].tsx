@@ -4,7 +4,7 @@ import QueryError from '@/components/Errors/QueryError';
 import Layout from '@/components/layouts/Layout/Layout';
 import LoadingPage from '@/components/Primitives/Loading/Page/Page';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
-import UserHeader from '@/components/Users/User/Header/Header';
+import UserHeader from '@/components/Users/User/UserHeader/UserHeader';
 
 import { GetServerSideProps } from 'next';
 import { dehydrate, QueryClient } from '@tanstack/react-query';

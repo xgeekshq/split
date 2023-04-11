@@ -6,6 +6,7 @@ import { SessionUserFactory } from '@/utils/factories/user';
 
 export type MockReactQueryOptions = {
   useQueryResult: Partial<ReactQuery.UseQueryResult>;
+  useInfiniteQueryResult: Partial<ReactQuery.UseInfiniteQueryResult>;
   useMutationResult: Partial<ReactQuery.UseMutationResult>;
 };
 
@@ -53,17 +54,22 @@ export const libraryMocks = {
       useRouterMockFn,
     };
   },
+  
   mockReactQuery(options?: Partial<MockReactQueryOptions>) {
-    const { useQueryResult, useMutationResult } = options ?? {};
+    const { useQueryResult, useInfiniteQueryResult, useMutationResult } = options ?? {};
+    
     const useQueryMockFn = jest.fn<Partial<ReactQuery.UseQueryResult>, any>(() => ({
       ...useQueryResult,
     }));
+    const useInfiniteQueryMockFn = jest.fn<Partial<ReactQuery.UseInfiniteQueryResult>, any>(() => ({
+      ...useInfiniteQueryResult,
+    }));
     const useMutationMockFn = jest.fn<Partial<ReactQuery.UseMutationResult>, any>(() => ({
       ...useMutationResult,
-      mutate: jest.fn(),
     }));
 
     jest.spyOn(ReactQuery, 'useQuery').mockImplementation(useQueryMockFn as any);
+    jest.spyOn(ReactQuery, 'useInfiniteQuery').mockImplementation(useInfiniteQueryMockFn as any);
     jest.spyOn(ReactQuery, 'useMutation').mockImplementation(useMutationMockFn as any);
 
     return {
@@ -76,7 +82,7 @@ export const libraryMocks = {
 
 export function createMockSession(session?: Partial<Session>, user?: User): Session {
   return {
-    user: SessionUserFactory.create({ ...user, id: user?._id, isSAdmin: false }),
+    user: SessionUserFactory.create({ ...user, id: user?._id, isSAdmin: user?.isSAdmin ?? false }),
     expires: new Date().toISOString(),
     strategy: 'local',
     error: '',
