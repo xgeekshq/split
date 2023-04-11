@@ -17,7 +17,7 @@ const TeamsList = ({ teams }: TeamsListProps) => {
   if (isEmpty(teams)) return <EmptyTeams />;
 
   return (
-    <Flex direction="column" gap="8" data-testid="teamsList">
+    <Flex data-testid="teamsList" direction="column" gap="8">
       {teams.map((team: Team) => (
         <TeamItem key={team.id} isSAdmin={isSAdmin} team={team} userId={userId} />
       ))}

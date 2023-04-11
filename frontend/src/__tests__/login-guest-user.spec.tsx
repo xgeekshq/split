@@ -1,12 +1,13 @@
-import { renderWithProviders } from '@/utils/testing/renderWithProviders';
-import { fireEvent, waitFor } from '@testing-library/react';
-import { libraryMocks } from '@/utils/testing/mocks';
 import { UseMutationResult } from '@tanstack/react-query';
+import { fireEvent, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import LoginGuestUserPage from '@/pages/login-guest-user/[boardId]';
+
 import useRegisterGuestUser from '@/hooks/auth/useRegisterGuestUser';
-import { START_PAGE_ROUTE } from '@/utils/routes';
+import LoginGuestUserPage from '@/pages/login-guest-user/[boardId]';
 import { getUsername } from '@/utils/getUsername';
+import { START_PAGE_ROUTE } from '@/utils/routes';
+import { libraryMocks } from '@/utils/testing/mocks';
+import { renderWithProviders } from '@/utils/testing/renderWithProviders';
 
 const mockUseRegisterGuestUser = useRegisterGuestUser as jest.Mock<Partial<UseMutationResult>>;
 jest.mock('@/hooks/auth/useRegisterGuestUser');
