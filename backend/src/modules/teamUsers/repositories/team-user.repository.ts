@@ -11,7 +11,7 @@ import TeamUserDto from 'src/modules/teamUsers/dto/team.user.dto';
 
 @Injectable()
 export class TeamUserRepository
-	extends MongoGenericRepository<TeamUserDocument>
+	extends MongoGenericRepository<TeamUser>
 	implements TeamUserRepositoryInterface
 {
 	constructor(@InjectModel(TeamUser.name) private model: Model<TeamUser>) {

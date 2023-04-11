@@ -7,7 +7,7 @@ import { UserRepositoryInterface } from './user.repository.interface';
 
 @Injectable()
 export class UserRepository
-	extends MongoGenericRepository<UserDocument>
+	extends MongoGenericRepository<User>
 	implements UserRepositoryInterface
 {
 	constructor(@InjectModel(User.name) private model: Model<User>) {
