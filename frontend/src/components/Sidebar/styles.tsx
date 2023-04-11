@@ -2,14 +2,21 @@ import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import { styled } from '@/styles/stitches/stitches.config';
 
 const StyledSidebar = styled('aside', {
-  width: '256px',
-  height: '100%',
   overflowY: 'auto',
   position: 'fixed', // Position fixed avoiding problems with scrolls
   top: 0,
   left: 0,
   right: 0,
   backgroundColor: '$primary800',
+  zIndex: 9999,
+  height: '100vh',
+
+  variants: {
+    collapsed: {
+      true: { width: '100%', height: '$82' },
+      false: { '@md': { width: '$256', height: '100vh' } },
+    },
+  },
 });
 
 const StyledMenuItem = styled(Flex, {
@@ -58,4 +65,13 @@ const StyledMenuItem = styled(Flex, {
   },
 });
 
-export { StyledMenuItem, StyledSidebar };
+const CollapsibleContent = styled(Flex, {
+  variants: {
+    collapsed: {
+      true: { display: 'none' },
+      false: { display: 'flex' },
+    },
+  },
+});
+
+export { CollapsibleContent, StyledMenuItem, StyledSidebar };

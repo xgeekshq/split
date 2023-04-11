@@ -2,9 +2,10 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { signOut } from 'next-auth/react';
 
-import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Separator from '@/components/Primitives/Separator/Separator';
 import SidebarItem from '@/components/Sidebar/Item/Item';
+import { CollapsibleContent } from '@/components/Sidebar/styles';
+import { CollapsibleProps } from '@/components/Sidebar/types';
 import {
   ACCOUNT_ROUTE,
   AZURE_LOGOUT_ROUTE,
@@ -16,9 +17,9 @@ import {
   USERS_ROUTE,
 } from '@/utils/routes';
 
-export type SidebarContentProps = {
+export interface SidebarContentProps extends CollapsibleProps {
   strategy: string;
-};
+}
 
 const sidebarItems = [
   { link: DASHBOARD_ROUTE, iconName: 'dashboard', label: 'Dashboard' },
@@ -27,7 +28,7 @@ const sidebarItems = [
   { link: TEAMS_ROUTE, iconName: 'team', label: 'Teams' },
 ];
 
-const SidebarContent = ({ strategy }: SidebarContentProps) => {
+const SidebarContent = ({ strategy, isCollapsed, handleCollapse }: SidebarContentProps) => {
   const router = useRouter();
   const [active, setActive] = useState(router.asPath);
   const isStrategyLocal = strategy === 'local';
@@ -44,10 +45,15 @@ const SidebarContent = ({ strategy }: SidebarContentProps) => {
 
   useEffect(() => {
     setActive(router.asPath);
+    handleCollapse(true); // Collapses sidebar when route changes
   }, [router.asPath]);
 
   return (
-    <Flex css={{ mt: '$16' }} data-testid="sidebarContent" direction="column">
+    <CollapsibleContent
+      collapsed={{ '@initial': isCollapsed, '@md': false }}
+      data-testid="sidebarContent"
+      direction="column"
+    >
       {sidebarItems.map((item) => (
         <SidebarItem {...item} key={item.label} active={active} />
       ))}
@@ -72,7 +78,7 @@ const SidebarContent = ({ strategy }: SidebarContentProps) => {
       <Separator css={{ my: '$16', backgroundColor: '$primary600' }} />
 
       <SidebarItem active={active} iconName="log-out" label="Log out" onClick={handleSignOut} />
-    </Flex>
+    </CollapsibleContent>
   );
 };
 

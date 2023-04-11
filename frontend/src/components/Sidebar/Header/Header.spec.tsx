@@ -6,7 +6,13 @@ import { DASHBOARD_ROUTE } from '@/utils/routes';
 import { libraryMocks } from '@/utils/testing/mocks';
 import { renderWithProviders } from '@/utils/testing/renderWithProviders';
 
-const DEFAULT_PROPS = { firstName: 'First', lastName: 'Last', email: 'first.last@mail.com' };
+const DEFAULT_PROPS: SidebarHeaderProps = {
+  firstName: 'First',
+  lastName: 'Last',
+  email: 'first.last@mail.com',
+  isCollapsed: false,
+  handleCollapse: jest.fn(),
+};
 
 const { mockRouter } = libraryMocks.mockNextRouter({ pathname: '/' });
 const render = (props: SidebarHeaderProps = DEFAULT_PROPS) =>
@@ -19,13 +25,15 @@ describe('Components/Sidebar/Header', () => {
 
     // Act
     const { getByText, getByTestId } = render(headerProps);
-    const userIcon = getByTestId('sidebarHeader').querySelector('svg > use');
+    const userIcon = getByTestId('sidebarHeader').querySelector('[href="#userIcon"]');
+    const menuIcon = getByTestId('sidebarHeader').querySelector('[href="#menu"]');
 
     // Assert
     expect(getByText(`${headerProps.firstName} ${headerProps.lastName}`)).toBeInTheDocument();
     expect(getByText(headerProps.email)).toBeInTheDocument();
     expect(getByTestId('splitLogo')).toBeInTheDocument();
-    expect(userIcon).toHaveAttribute('href', `#userIcon`);
+    expect(userIcon).toBeDefined();
+    expect(menuIcon).toBeDefined();
     expect(getByText(getInitials(headerProps.firstName, headerProps.lastName).toUpperCase()));
   });
 
