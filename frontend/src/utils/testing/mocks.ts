@@ -58,6 +58,7 @@ export const libraryMocks = {
 
   mockReactQuery(options?: Partial<MockReactQueryOptions>) {
     const { useQueryResult, useInfiniteQueryResult, useMutationResult } = options ?? {};
+
     const useQueryMockFn = jest.fn<Partial<ReactQuery.UseQueryResult>, any>(() => ({
       ...useQueryResult,
     }));

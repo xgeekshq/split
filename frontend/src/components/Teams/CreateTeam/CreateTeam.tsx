@@ -84,7 +84,11 @@ const CreateTeam = () => {
   }, [status]);
 
   return (
-    <Flex css={{ height: '100vh', backgroundColor: '$primary50' }} direction="column">
+    <Flex
+      css={{ height: '100vh', backgroundColor: '$primary50' }}
+      data-testid="createTeam"
+      direction="column"
+    >
       <CreateHeader disableBack={disableButtons} handleBack={handleBack} title="Create New Team" />
       <Flex css={{ height: '100%', position: 'relative', overflowY: 'auto' }} direction="column">
         <Flex css={{ flex: '1' }}>

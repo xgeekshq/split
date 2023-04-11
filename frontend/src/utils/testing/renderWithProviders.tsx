@@ -51,7 +51,13 @@ export function renderWithProviders(
   return rtlRender(ui, {
     wrapper: ({ children }: { children: ReactNode }) => {
       const router = createMockRouter(options?.routerOptions);
-      const queryClient = options?.queryClient ?? new QueryClient();
+
+      const defaultQueryOptions = {
+        defaultOptions: {
+          queries: { retry: false },
+        },
+      };
+      const queryClient = options?.queryClient ?? new QueryClient(defaultQueryOptions);
       const session = createMockSession(
         options?.sessionOptions?.session,
         options?.sessionOptions?.user,

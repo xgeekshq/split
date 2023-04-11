@@ -35,7 +35,7 @@ const Teams = () => {
         <Suspense fallback={<LoadingPage />}>
           <QueryError>
             {isLoading || !teamsList ? (
-              <Flex css={{ mt: '$16' }} justify="center">
+              <Flex css={{ mt: '$16' }} justify="center"  data-testid="loading">
                 <Dots />
               </Flex>
             ) : (

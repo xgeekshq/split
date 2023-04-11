@@ -1,5 +1,6 @@
 import { Suspense, useEffect } from 'react';
 import { GetServerSideProps, GetServerSidePropsContext, NextPage } from 'next';
+import { useRouter } from 'next/router';
 import { dehydrate, QueryClient } from '@tanstack/react-query';
 import { useSetRecoilState } from 'recoil';
 
@@ -15,9 +16,11 @@ import useUsers from '@/hooks/users/useUsers';
 import { createTeamState, usersListState } from '@/store/team/atom/team.atom';
 import { USERS_KEY } from '@/utils/constants/reactQueryKeys';
 import { TeamUserRoles } from '@/utils/enums/team.user.roles';
+import { ROUTES } from '@/utils/routes';
 
 const NewTeam: NextPage = () => {
   const { session, userId } = useCurrentSession({ required: true });
+  const { replace } = useRouter();
 
   const { data: usersData, isLoading } = useUsers();
 
@@ -49,13 +52,16 @@ const NewTeam: NextPage = () => {
     setUsersListState(usersWithChecked);
   }, [usersData, userId, setUsersListState, setCreateTeamState]);
 
-  if (!session || !usersData) return null;
+  if (!session || !usersData) {
+    replace(ROUTES.Teams);
+    return null;
+  }
 
   return (
     <Suspense fallback={<LoadingPage />}>
       <QueryError>
         {isLoading ? (
-          <Flex css={{ mt: '$16' }} justify="center">
+          <Flex css={{ mt: '$16' }} data-testid="loading" justify="center">
             <Dots />
           </Flex>
         ) : (
