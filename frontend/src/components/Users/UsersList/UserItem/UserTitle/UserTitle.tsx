@@ -5,14 +5,14 @@ import Text from '@/components/Primitives/Text/Text';
 import { User } from '@/types/user/user';
 import { ROUTES } from '@/utils/routes';
 
-type UserTitleProps = {
+export type UserTitleProps = {
   user: User;
   hasPermissions: boolean;
 };
 
 const UserTitle = ({ user, hasPermissions }: UserTitleProps) => {
   const getTitle = () => (
-    <Text link={hasPermissions} fontWeight="bold" size="sm" overflow="wrap">
+    <Text link={hasPermissions} fontWeight="bold" size="sm" overflow="wrap" data-testid="userTitle">
       {user.firstName} {user.lastName}
     </Text>
   );

@@ -14,7 +14,7 @@ import { ROUTES } from '@/utils/routes';
 import useUpdateUser from '@/hooks/users/useUpdateUser';
 import useDeleteUser from '@/hooks/users/useDeleteUser';
 
-type UserItemActionsProps = {
+export type UserItemActionsProps = {
   user: User;
 };
 
@@ -49,7 +49,7 @@ const UserItemActions = React.memo(({ user }: UserItemActionsProps) => {
   };
 
   return (
-    <Flex justify="end">
+    <Flex justify="end" data-testid="userItemActions">
       <Flex css={{ alignItems: 'center' }} gap={24}>
         <ConfigurationSwitch
           handleCheckedChange={handleSuperAdminChange}

@@ -63,6 +63,7 @@ const UsersList = () => {
           overflowY: 'auto',
           pr: '$8',
         }}
+        data-testid="usersList"
       >
         <Flex direction="column" gap="8">
           {users.map((user: UserWithTeams) => (
