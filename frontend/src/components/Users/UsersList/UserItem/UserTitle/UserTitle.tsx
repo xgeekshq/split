@@ -12,7 +12,7 @@ export type UserTitleProps = {
 
 const UserTitle = ({ user, hasPermissions }: UserTitleProps) => {
   const getTitle = () => (
-    <Text fontWeight="bold" link={hasPermissions} overflow="wrap" size="sm">
+    <Text data-testid="userTitle" fontWeight="bold" link={hasPermissions} overflow="wrap" size="sm">
       {user.firstName} {user.lastName}
     </Text>
   );
