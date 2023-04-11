@@ -7,51 +7,55 @@ const StyledCalendar = styled(Calendar, {
     maxWidth: '100%',
     backgroundColor: 'white',
     fontFamily: '$body',
-    border: 'none',
   },
   '.react-calendar__navigation': {
     display: 'flex',
-    height: '56px',
-    mb: '$8',
+    height: 'fit-content',
+    mb: '$20',
     border: 'none',
+    paddingBottom: '$5',
   },
   '.react-calendar__navigation__label': {
-    position: 'absolute',
+    display: 'flex',
     '&:hover': {
       cursor: 'pointer',
     },
     '&:disabled': {
       cursor: 'default',
     },
-    top: '158px',
-    ml: '$6',
+    paddingLeft: '10px',
   },
   '.react-calendar__navigation__label__labelText--from': {
+    order: 1,
     fontWeight: '$bold',
     fontSize: '$20',
-    lineHeight: '$24',
+    lineHeight: '24px',
     letterSpacing: '$0-25',
     fontFamily: '$body',
   },
-  '.react-calendar__navigation__next-button': {
-    position: 'absolute',
-    '&:hover': {
-      cursor: 'pointer',
-    },
-    top: '158px',
-    right: '42px',
-  },
   '.react-calendar__navigation__prev-button': {
-    position: 'absolute',
+    display: 'flex',
+    marginLeft: 'auto',
+    order: 2,
     '&:hover': {
       cursor: 'pointer',
     },
     '&:disabled': {
       cursor: 'default',
     },
-    top: '158px',
-    right: '66.2px',
+    lineHeight: '24px',
   },
+  '.react-calendar__navigation__next-button': {
+    display: 'flex',
+
+    order: 3,
+
+    '&:hover': {
+      cursor: 'pointer',
+    },
+    lineHeight: '24px',
+  },
+
   '.react-calendar--doubleView .react-calendar__viewContainer': {
     display: 'flex',
     margin: '-0.5em',

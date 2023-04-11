@@ -13,7 +13,7 @@ import RecentRetros from '@/components/Dashboard/RecentRetros';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import { ROUTES } from '@/utils/routes';
 import MainPageHeader from '@/components/layouts/Layout/MainPageHeader/MainPageHeader';
-import Calendar from '@/components/Primitives/DatePicker/Calendar';
+import CalendarBar from '@/components/Dashboard/Calendar/Calendar';
 
 export const getServerSideProps: GetServerSideProps = requireAuthentication(async () => ({
   props: {},
@@ -45,7 +45,8 @@ const Dashboard = () => {
           label: 'Add new board',
         }}
       />
-      <Calendar selectedDate={startDate} onChangeDate={setStartDate} />
+      {/* <Calendar selectedDate={startDate} onChangeDate={setStartDate} /> */}
+      <CalendarBar />
       <Flex direction="column" css={{ mt: '$40' }}>
         <Suspense fallback={<LoadingPage />}>
           <QueryError>
