@@ -14,7 +14,7 @@ export type SearchInputProps = {
   placeholder: string;
   disabled?: boolean;
   currentValue?: string;
-  handleChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  handleChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   handleClear?: () => void;
 };
 

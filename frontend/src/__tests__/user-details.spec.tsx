@@ -8,9 +8,10 @@ import { User } from '@/types/user/user';
 import useUserTeams from '@/hooks/teams/useUserTeams';
 import { Team } from '@/types/team/team';
 import { UserFactory } from '@/utils/factories/user';
-import { TeamFactory } from '@/utils/factories/team';
+import { TeamCheckedFactory, TeamFactory } from '@/utils/factories/team';
 import { waitFor } from '@testing-library/react';
 import { ROUTES } from '@/utils/routes';
+import useTeamsWithoutUser from '@/hooks/teams/useTeamsWithoutUser';
 
 const randomUser = UserFactory.create();
 const mockUseUser = useUser as jest.Mock<UseQueryResult<User>>;
@@ -18,6 +19,9 @@ jest.mock('@/hooks/users/useUser');
 
 const mockUseUserTeams = useUserTeams as jest.Mock<UseQueryResult<Team[]>>;
 jest.mock('@/hooks/teams/useUserTeams');
+
+const mockUseTeamsWithoutUser = useTeamsWithoutUser as jest.Mock<Partial<UseQueryResult>>;
+jest.mock('@/hooks/teams/useTeamsWithoutUser');
 
 const { mockRouter } = libraryMocks.mockNextRouter({
   pathname: `/users/${randomUser._id}`,
@@ -27,6 +31,12 @@ const { mockRouter } = libraryMocks.mockNextRouter({
 const render = () => renderWithProviders(<UserDetails />, { routerOptions: mockRouter });
 
 describe('Pages/Users/[userId]', () => {
+  beforeEach(() => {
+    mockUseTeamsWithoutUser.mockReturnValue({
+      data: TeamCheckedFactory.createMany(3),
+    } as Partial<UseQueryResult>);
+  });
+
   it('should render correctly', () => {
     // Arrange
     mockUseUser.mockReturnValue({

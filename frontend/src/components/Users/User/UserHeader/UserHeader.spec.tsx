@@ -5,14 +5,27 @@ import { renderWithProviders } from '@/utils/testing/renderWithProviders';
 import { USERS_ROUTE } from '@/utils/routes';
 import { UserFactory } from '@/utils/factories/user';
 import UserHeader, { UserHeaderProps } from '@/components/Users/User/UserHeader/UserHeader';
+import { UseQueryResult } from '@tanstack/react-query';
+import useTeamsWithoutUser from '@/hooks/teams/useTeamsWithoutUser';
+import { TeamCheckedFactory } from '@/utils/factories/team';
 
 const { mockRouter } = libraryMocks.mockNextRouter({ pathname: '/users' });
+
+const mockUseTeamsWithoutUser = useTeamsWithoutUser as jest.Mock<Partial<UseQueryResult>>;
+jest.mock('@/hooks/teams/useTeamsWithoutUser');
+
 const render = (props: Partial<UserHeaderProps> = {}) =>
   renderWithProviders(<UserHeader user={UserFactory.create()} {...props} />, {
     routerOptions: mockRouter,
   });
 
 describe('Components/Users/User/Header', () => {
+  beforeEach(() => {
+    mockUseTeamsWithoutUser.mockReturnValue({
+      data: TeamCheckedFactory.createMany(3),
+    } as Partial<UseQueryResult>);
+  });
+
   it('should render correctly', () => {
     // Arrange
     const user = UserFactory.create();

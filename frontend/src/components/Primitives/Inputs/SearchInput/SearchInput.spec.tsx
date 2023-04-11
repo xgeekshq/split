@@ -6,7 +6,9 @@ import SearchInput, {
 import userEvent from '@testing-library/user-event';
 
 const render = (props: Partial<SearchInputProps> = {}) =>
-  renderWithProviders(<SearchInput placeholder="Placeholder" {...props} />);
+  renderWithProviders(
+    <SearchInput placeholder="Placeholder" handleChange={jest.fn()} {...props} />,
+  );
 
 describe('Components/Primitives/Inputs/SearchInput', () => {
   it('should render correctly', () => {
@@ -31,7 +33,7 @@ describe('Components/Primitives/Inputs/SearchInput', () => {
     const { getByLabelText } = render({ handleChange });
 
     const searchInput = getByLabelText('Placeholder');
-    userEvent.type(searchInput, 'My Other Board');
+    await userEvent.type(searchInput, 'My Other Board');
 
     // Assert
     await waitFor(() => {
