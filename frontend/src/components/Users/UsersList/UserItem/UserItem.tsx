@@ -11,28 +11,28 @@ import useCurrentSession from '@/hooks/useCurrentSession';
 import { InnerContainer } from '@/styles/pages/pages.styles';
 import { UserWithTeams } from '@/types/user/user';
 
-type UserItemProps = {
+export type UserItemProps = {
   userWithTeams: UserWithTeams;
+};
+
+export const getTeamsCountText = (teamNames: string[]) => {
+  if (teamNames.length === 1) {
+    return 'in 1 team';
+  }
+  if (teamNames && teamNames.length > 1) {
+    return `in ${teamNames.length} teams`;
+  }
+  return 'no teams';
 };
 
 const UserItem = React.memo<UserItemProps>(({ userWithTeams }) => {
   const { isSAdmin } = useCurrentSession();
   const { teamsNames, user } = userWithTeams;
 
-  const getTeamsCountText = () => {
-    if (teamsNames?.length === 1) {
-      return 'in 1 team';
-    }
-    if (teamsNames && teamsNames?.length > 1) {
-      return `in ${teamsNames.length} teams`;
-    }
-    return 'no teams';
-  };
-
   const teamsSeparatedByComma = teamsNames?.join(', ') || '';
 
   return (
-    <Flex direction="column">
+    <Flex data-testid="userItem" direction="column">
       <InnerContainer align="center" elevation="1" gap="40">
         <Flex align="center" css={{ flex: '2' }} gap="8">
           <Icon
@@ -43,7 +43,6 @@ const UserItem = React.memo<UserItemProps>(({ userWithTeams }) => {
               flexShrink: '0',
             }}
           />
-
           <UserTitle hasPermissions={isSAdmin!} user={user} />
         </Flex>
 
@@ -52,7 +51,6 @@ const UserItem = React.memo<UserItemProps>(({ userWithTeams }) => {
             {user.email}
           </Text>
         </Flex>
-
         <Flex align="center" css={{ flex: '1' }}>
           {!isSAdmin && user.isSAdmin && (
             <Badge pill size="sm" variant="success">
@@ -60,15 +58,15 @@ const UserItem = React.memo<UserItemProps>(({ userWithTeams }) => {
             </Badge>
           )}
         </Flex>
-
-        <Flex align="center" css={{ flex: '1' }} justify="end">
-          <Tooltip content={teamsSeparatedByComma}>
-            <Text css={{ cursor: 'default' }} fontWeight="bold" size="sm">
-              {getTeamsCountText()}
-            </Text>
-          </Tooltip>
-        </Flex>
-
+        {teamsNames && (
+          <Flex align="center" css={{ flex: '1' }} justify="end">
+            <Tooltip content={teamsSeparatedByComma}>
+              <Text css={{ cursor: 'default' }} fontWeight="bold" size="sm">
+                {getTeamsCountText(teamsNames)}
+              </Text>
+            </Tooltip>
+          </Flex>
+        )}
         {isSAdmin && (
           <Flex align="center" css={{ flex: '2' }} justify="end">
             <UserItemActions user={user} />

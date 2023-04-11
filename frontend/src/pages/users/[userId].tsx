@@ -12,7 +12,7 @@ import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Dots from '@/components/Primitives/Loading/Dots/Dots';
 import LoadingPage from '@/components/Primitives/Loading/Page/Page';
 import TeamsList from '@/components/Teams/TeamsList/TeamList';
-import UserHeader from '@/components/Users/User/Header/Header';
+import UserHeader from '@/components/Users/User/UserHeader/UserHeader';
 import useUserTeams from '@/hooks/teams/useUserTeams';
 import useUser from '@/hooks/users/useUser';
 import { TEAMS_KEY, USERS_KEY } from '@/utils/constants/reactQueryKeys';

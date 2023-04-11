@@ -5,7 +5,7 @@ import Text from '@/components/Primitives/Text/Text';
 import { User } from '@/types/user/user';
 import { ROUTES } from '@/utils/routes';
 
-type UserTitleProps = {
+export type UserTitleProps = {
   user: User;
   hasPermissions: boolean;
 };

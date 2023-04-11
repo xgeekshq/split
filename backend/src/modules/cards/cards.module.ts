@@ -11,8 +11,9 @@ import {
 	getCardService,
 	mergeCardUseCase,
 	unmergeCardUseCase,
-	updateCardApplication,
-	updateCardService
+	updateCardGroupTextUseCase,
+	updateCardPositionUseCase,
+	updateCardTextUseCase
 } from './cards.providers';
 import CardsController from './controller/cards.controller';
 
@@ -25,16 +26,16 @@ import CardsController from './controller/cards.controller';
 	],
 	controllers: [CardsController],
 	providers: [
-		updateCardService,
 		getCardService,
-		updateCardService,
-		updateCardApplication,
 		cardRepository,
 		createCardUseCase,
+		unmergeCardUseCase,
 		mergeCardUseCase,
+		updateCardPositionUseCase,
+		updateCardTextUseCase,
+		updateCardGroupTextUseCase,
 		deleteCardUseCase,
-		deleteFromCardGroupUseCase,
-		unmergeCardUseCase
+		deleteFromCardGroupUseCase
 	],
 	exports: [getCardService]
 })

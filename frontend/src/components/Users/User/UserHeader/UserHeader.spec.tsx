@@ -1,7 +1,7 @@
 import React from 'react';
 import { fireEvent, waitFor } from '@testing-library/react';
 
-import UserHeader, { UserHeaderProps } from '@/components/Users/User/Header/Header';
+import UserHeader, { UserHeaderProps } from '@/components/Users/User/UserHeader/UserHeader';
 import { UserFactory } from '@/utils/factories/user';
 import { USERS_ROUTE } from '@/utils/routes';
 import { libraryMocks } from '@/utils/testing/mocks';

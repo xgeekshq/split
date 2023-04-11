@@ -15,7 +15,7 @@ const UsersSubHeader = ({
   handleSearchUser,
   handleClearSearch,
 }: UsersSubHeaderProps) => (
-  <Flex align="end" css={{ mt: '$16' }} justify="between">
+  <Flex align="end" css={{ mt: '$16' }} data-testid="usersSubHeader" justify="between">
     <Text fontWeight="bold">{userAmount} registered users</Text>
     <Flex css={{ width: '$455' }}>
       <SearchInput

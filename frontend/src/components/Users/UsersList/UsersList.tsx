@@ -53,6 +53,7 @@ const UsersList = () => {
         userAmount={userAmount}
       />
       <Flex
+        data-testid="usersList"
         direction="column"
         onScroll={onScroll}
         ref={scrollRef}
