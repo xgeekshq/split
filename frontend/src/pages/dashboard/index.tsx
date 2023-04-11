@@ -1,4 +1,4 @@
-import React, { ReactElement, Suspense } from 'react';
+import React, { ReactElement, Suspense, useCallback, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { GetServerSideProps } from 'next';
 import { useSession } from 'next-auth/react';
@@ -13,12 +13,19 @@ import RecentRetros from '@/components/Dashboard/RecentRetros';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import { ROUTES } from '@/utils/routes';
 import MainPageHeader from '@/components/layouts/Layout/MainPageHeader/MainPageHeader';
+import Calendar from '@/components/Primitives/DatePicker/Calendar';
 
 export const getServerSideProps: GetServerSideProps = requireAuthentication(async () => ({
   props: {},
 }));
 
 const Dashboard = () => {
+  const [startDate, setStartDate] = useState(new Date());
+
+  useCallback(() => {
+    setStartDate(startDate);
+  }, [startDate]);
+
   const { data: session } = useSession();
 
   const { data, isLoading } = useQuery(['dashboardInfo'], () => getDashboardHeaderInfo(), {
@@ -38,6 +45,7 @@ const Dashboard = () => {
           label: 'Add new board',
         }}
       />
+      <Calendar selectedDate={startDate} onChangeDate={setStartDate} />
       <Flex direction="column" css={{ mt: '$40' }}>
         <Suspense fallback={<LoadingPage />}>
           <QueryError>
