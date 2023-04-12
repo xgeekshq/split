@@ -1,15 +1,15 @@
 import { LeanDocument } from 'mongoose';
-import { UserDocument } from '../../entities/user.schema';
+import User, { UserDocument } from 'src/modules/users/entities/user.schema';
 
 export interface GetUserServiceInterface {
-	getByEmail(email: string): Promise<LeanDocument<UserDocument> | null>;
-
-	getById(id: string): Promise<LeanDocument<UserDocument> | null>;
-
 	getUserIfRefreshTokenMatches(
 		refreshToken: string,
 		userId: string
 	): Promise<LeanDocument<UserDocument> | false>;
+
+	getByEmail(email: string): Promise<User>;
+
+	getById(id: string): Promise<User>;
 
 	countUsers(): Promise<number>;
 }
