@@ -5,53 +5,57 @@ import { styled } from '@/styles/stitches/stitches.config';
 const StyledCalendar = styled(Calendar, {
   '.react-calendar': {
     maxWidth: '100%',
-    backgroundColor: 'white',
+    backgroundColor: '#FFFFFF',
     fontFamily: '$body',
-    border: 'none',
   },
   '.react-calendar__navigation': {
     display: 'flex',
-    height: '56px',
-    mb: '$8',
+    height: 'fit-content',
+    mb: '$20',
     border: 'none',
+    paddingBottom: '$5',
   },
   '.react-calendar__navigation__label': {
-    position: 'absolute',
+    display: 'flex',
     '&:hover': {
       cursor: 'pointer',
     },
     '&:disabled': {
       cursor: 'default',
     },
-    top: '158px',
-    ml: '$6',
+    paddingLeft: '$10',
   },
   '.react-calendar__navigation__label__labelText--from': {
+    order: 1,
     fontWeight: '$bold',
     fontSize: '$20',
     lineHeight: '$24',
     letterSpacing: '$0-25',
     fontFamily: '$body',
   },
-  '.react-calendar__navigation__next-button': {
-    position: 'absolute',
-    '&:hover': {
-      cursor: 'pointer',
-    },
-    top: '158px',
-    right: '42px',
-  },
   '.react-calendar__navigation__prev-button': {
-    position: 'absolute',
+    display: 'flex',
+    marginLeft: 'auto',
+    order: 2,
     '&:hover': {
       cursor: 'pointer',
     },
     '&:disabled': {
       cursor: 'default',
     },
-    top: '158px',
-    right: '66.2px',
+    lineHeight: '$24',
   },
+  '.react-calendar__navigation__next-button': {
+    display: 'flex',
+
+    order: 3,
+
+    '&:hover': {
+      cursor: 'pointer',
+    },
+    lineHeight: '$24',
+  },
+
   '.react-calendar--doubleView .react-calendar__viewContainer': {
     display: 'flex',
     margin: '-0.5em',
@@ -82,7 +86,7 @@ const StyledCalendar = styled(Calendar, {
 
   '.react-calendar__navigation button': {
     border: 'none',
-    minWidth: '24px',
+    minWidth: '$24',
     background: '$white',
     '& hover': {
       cursor: 'pointer',
@@ -104,7 +108,7 @@ const StyledCalendar = styled(Calendar, {
       backgroundColor: '#e6e6e6',
     },
   '.react-calendar__month-view__weekdays': {
-    px: '2px',
+    px: '$2',
     textAlign: 'center',
     fontWeight: '$bold',
     fontSize: '$16',
@@ -140,10 +144,10 @@ const StyledCalendar = styled(Calendar, {
   },
   '.react-calendar__tile': {
     reset: 'all',
-    maxWidth: '100%',
+    maxWidth: '$42',
     display: 'grid',
     gridTemplateRows: '1fr 1fr 1fr',
-    size: '42px',
+    size: '$42',
     background: 'none',
     textAlign: 'center',
     padding: 0,
@@ -176,7 +180,7 @@ const StyledCalendar = styled(Calendar, {
   },
   '.react-calendar__tile--now': {
     backgroundColor: 'transparent',
-    border: '1px solid $colors$highlight2Lighter',
+    border: '$1 solid $colors$highlight2Lighter',
   },
   '.react-calendar__tile--now:enabled:hover .react-calendar__tile--now:enabled:focus': {
     backgroundColor: '#ffffa9',

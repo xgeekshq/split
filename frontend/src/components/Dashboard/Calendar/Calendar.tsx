@@ -5,26 +5,24 @@ import { CalendarTileProperties } from 'react-calendar';
 import { styled } from '@/styles/stitches/stitches.config';
 
 import Icon from '@/components/Primitives/Icons/Icon/Icon';
-// import NoMeetingsImage from '@/components/images/NoMeetings';
+import NoMeetingsImage from '@/components/images/NoMeetings';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
+import Text from '@/components/Primitives/Text/Text';
 import StyledCalendar from '@/components/Dashboard/Calendar/StyledCalendar';
 
 const StyledContainer = styled(Flex, {
   height: '100%',
-  maxWidth: '$364',
+  maxWidth: '364px',
   backgroundColor: '$white',
-  px: '$40',
-  pt: '$24',
-  width: '$400',
-  position: 'relative',
-  borderRadius: '$12',
+  px: '$32',
+  pt: '$76',
 });
 
-// const StyledNoMeetings = styled(NoMeetingsImage, { mx: '78px' });
+const StyledNoMeetings = styled(NoMeetingsImage, { mx: '78px' });
 
 const CalendarBar = () => {
   const [currentValue, setOnChange] = useState<Date | null>(new Date());
-  //  const hasMeetings = true;
+  const hasMeetings = true;
   const handleOnChange = (date: Date) => {
     if (date.getTime() !== currentValue?.getTime()) {
       setOnChange(date);
@@ -49,9 +47,25 @@ const CalendarBar = () => {
   }
 
   return (
-    <>
-      <input value={currentValue?.toDateString()} />
-      <StyledContainer direction="column">
+    <StyledContainer direction="column">
+      <Text css={{ mb: '$40' }} heading="4">
+        Upcoming
+      </Text>
+      {!hasMeetings && (
+        <Flex
+          align="center"
+          css={{ mt: '$40', textAlign: 'center' }}
+          direction="column"
+          gap="24"
+          justify="center"
+        >
+          <StyledNoMeetings />
+          <Text color="primary400" css={{ mx: '$41' }} size="md">
+            Your have no upcoming <br /> retrospectives any time soon.
+          </Text>
+        </Flex>
+      )}
+      {hasMeetings && (
         <StyledCalendar
           minDate={new Date(new Date().getFullYear(), new Date().getMonth(), 1)}
           minDetail="year"
@@ -64,8 +78,8 @@ const CalendarBar = () => {
           }
           onChange={handleOnChange}
         />
-      </StyledContainer>
-    </>
+      )}
+    </StyledContainer>
   );
 };
 export default CalendarBar;
