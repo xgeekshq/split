@@ -5,7 +5,7 @@ import { UserWithTeams } from '../interfaces/type-user-with-teams';
 import { TYPES } from '../interfaces/types';
 import * as TeamUsers from 'src/modules/teamUsers/interfaces/types';
 import { UserRepositoryInterface } from '../repository/user.repository.interface';
-import { sortAlphabetically } from '../utils/sortings';
+import { sortTeamUserListAlphabetically } from '../utils/sortings';
 import { GetUserServiceInterface } from '../interfaces/services/get.user.service.interface';
 
 @Injectable()
@@ -48,7 +48,7 @@ export default class GetAllUsersWithTeamsUseCase implements GetAllUsersWithTeams
 			page
 		};
 
-		results.userWithTeams.sort((a, b) => sortAlphabetically(a.user, b.user));
+		results.userWithTeams = sortTeamUserListAlphabetically(results.userWithTeams);
 
 		return results;
 	}

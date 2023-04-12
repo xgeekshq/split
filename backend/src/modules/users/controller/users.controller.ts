@@ -43,6 +43,7 @@ import { GetAllUsersWithTeamsUseCaseInterface } from '../interfaces/applications
 import { GetUserUseCaseInterface } from '../interfaces/applications/get-user.use-case.interface';
 import { UpdateSAdminUseCaseInterface } from '../interfaces/applications/update-sadmin.use-case.interface';
 import { DeleteUserUseCaseInterface } from '../interfaces/applications/delete-user.use-case.interface';
+import { DeleteUserGuard } from 'src/libs/guards/deleteUser.guard';
 
 @ApiBearerAuth('access-token')
 @ApiTags('Users')
@@ -193,9 +194,9 @@ export default class UsersController {
 		description: 'Internal Server Error',
 		type: InternalServerErrorResponse
 	})
-	@UseGuards(SuperAdminGuard)
+	@UseGuards(SuperAdminGuard, DeleteUserGuard)
 	@Delete(':userId')
 	deleteUser(@Req() request: RequestWithUser, @Param() { userId }: UserParams) {
-		return this.deleteUserApp.execute(request.user, userId);
+		return this.deleteUserApp.execute(userId);
 	}
 }
