@@ -1,8 +1,7 @@
-import Calendar from 'react-calendar';
-
 import { styled } from '@/styles/stitches/stitches.config';
+import ReactCalendar from 'react-calendar';
 
-const StyledCalendar = styled(Calendar, {
+const StyledCalendar = styled(ReactCalendar, {
   '.react-calendar': {
     maxWidth: '100%',
     backgroundColor: '#FFFFFF',

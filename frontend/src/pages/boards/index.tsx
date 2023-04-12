@@ -13,7 +13,7 @@ import MainPageHeader from '@/components/layouts/Layout/MainPageHeader/MainPageH
 import { ROUTES } from '@/utils/routes';
 import { getAllTeams, getUserTeams } from '@/api/teamService';
 import useCurrentSession from '@/hooks/useCurrentSession';
-import CalendarBar from '@/components/Primitives/Calendar/Calendar';
+import DatePicker from '@/components/Primitives/DatePicker/DatePicker';
 
 const Boards = () => {
   const { session, userId, isSAdmin } = useCurrentSession({ required: true });
@@ -22,7 +22,7 @@ const Boards = () => {
 
   return (
     <Flex css={{ width: '100%' }} direction="column" gap="40">
-      <CalendarBar currentDate={currentDate} setDate={setDate} />
+      <DatePicker currentDate={currentDate} setDate={setDate} />
 
       <MainPageHeader
         title="Boards"
