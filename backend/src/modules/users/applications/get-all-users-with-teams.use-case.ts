@@ -33,6 +33,7 @@ export default class GetAllUsersWithTeamsUseCase implements GetAllUsersWithTeams
 				teamsNames: []
 			};
 		});
+
 		const usersOnlyWithTeams = await this.getTeamUserService.getUsersOnlyWithTeams(users);
 
 		const ids = new Set(usersOnlyWithTeams.map((userWithTeams) => String(userWithTeams.user._id)));

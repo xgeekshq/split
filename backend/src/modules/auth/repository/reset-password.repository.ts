@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { MongoGenericRepository } from 'src/libs/repositories/mongo/mongo-generic.repository';
-import ResetPassword, { ResetPasswordDocument } from '../entities/reset-password.schema';
+import ResetPassword from '../entities/reset-password.schema';
 import { ResetPasswordRepositoryInterface } from './reset-password.repository.interface';
 
 @Injectable()
@@ -10,7 +10,7 @@ export class ResetPasswordRepository
 	extends MongoGenericRepository<ResetPassword>
 	implements ResetPasswordRepositoryInterface
 {
-	constructor(@InjectModel(ResetPassword.name) private model: Model<ResetPasswordDocument>) {
+	constructor(@InjectModel(ResetPassword.name) private readonly model: Model<ResetPassword>) {
 		super(model);
 	}
 	updateToken(
