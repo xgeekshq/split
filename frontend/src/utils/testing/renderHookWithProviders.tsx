@@ -44,6 +44,11 @@ export function renderHookWithProviders(options?: Partial<RenderHookWithProvider
     defaultOptions: {
       queries: { retry: false },
     },
+    logger: {
+      log: () => {},
+      warn: () => {},
+      error: () => {},
+    },
   };
   const queryClient = options?.queryClient ?? new QueryClient(defaultQueryOptions);
   const recoilHandler = options?.recoilOptions?.recoilHandler;
