@@ -37,7 +37,8 @@ import {
 	stopBoardTimerService,
 	updateBoardApplication,
 	updateBoardService,
-	updateBoardTimerDurationService
+	updateBoardTimerDurationService,
+	updateBoardUseCase
 } from './boards.providers';
 import BoardsController from './controller/boards.controller';
 import TeamUsersModule from 'src/modules/teamUsers/teamusers.module';
@@ -71,6 +72,7 @@ import { VotesModule } from '../votes/votes.module';
 		getBoardUseCase,
 		createBoardUseCase,
 		isBoardPublicUseCase,
+		updateBoardUseCase,
 		updateBoardApplication,
 		deleteBoardUseCase,
 		boardTimerRepository,

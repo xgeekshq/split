@@ -25,6 +25,7 @@ import CreateBoardService from './services/create.board.service';
 import DeleteBoardService from './services/delete.board.service';
 import GetBoardService from './services/get.board.service';
 import UpdateBoardService from './services/update.board.service';
+import { UpdateBoardUseCase } from './applications/update-board.use-case';
 
 export const createBoardService = {
 	provide: TYPES.services.CreateBoardService,
@@ -74,6 +75,11 @@ export const getBoardUseCase = {
 export const isBoardPublicUseCase = {
 	provide: TYPES.applications.IsBoardPublicUseCase,
 	useClass: IsBoardPublicUseCase
+};
+
+export const updateBoardUseCase = {
+	provide: TYPES.applications.UpdateBoardUseCase,
+	useClass: UpdateBoardUseCase
 };
 
 export const updateBoardApplication = {

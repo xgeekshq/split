@@ -18,6 +18,7 @@ import GetBoardUseCaseDto from '../dto/useCase/get-board.use-case.dto';
 import BoardUseCasePresenter from '../presenter/board.use-case.presenter';
 import GetBoardsUseCaseDto from '../dto/useCase/get-boards.use-case.dto';
 import { GetBoardServiceInterface } from '../interfaces/services/get.board.service.interface';
+import { UpdateBoardDto } from '../dto/update-board.dto';
 
 describe('BoardsController', () => {
 	let controller: BoardsController;
@@ -63,6 +64,10 @@ describe('BoardsController', () => {
 				{
 					provide: Boards.TYPES.applications.GetBoardUseCase,
 					useValue: createMock<UseCase<GetBoardUseCaseDto, BoardUseCasePresenter>>()
+				},
+				{
+					provide: Boards.TYPES.applications.UpdateBoardUseCase,
+					useValue: createMock<UseCase<UpdateBoardDto, Board>>()
 				},
 				{
 					provide: Boards.TYPES.services.GetBoardService,

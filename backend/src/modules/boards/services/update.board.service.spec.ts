@@ -13,7 +13,6 @@ import { BoardRepositoryInterface } from '../repositories/board.repository.inter
 import { CommunicationServiceInterface } from 'src/modules/communication/interfaces/slack-communication.service.interface';
 import { SendMessageServiceInterface } from 'src/modules/communication/interfaces/send-message.service.interface';
 import { BoardFactory } from 'src/libs/test-utils/mocks/factories/board-factory.mock';
-import { UpdateBoardDtoFactory } from 'src/libs/test-utils/mocks/factories/dto/updateBoardDto-factory.mock';
 import { BoardUserFactory } from 'src/libs/test-utils/mocks/factories/boardUser-factory.mock';
 import { NotFoundException } from '@nestjs/common';
 import {
@@ -30,25 +29,18 @@ import { BoardPhases } from 'src/libs/enum/board.phases';
 import { TeamFactory } from 'src/libs/test-utils/mocks/factories/team-factory.mock';
 import { SLACK_ENABLE, SLACK_MASTER_CHANNEL_ID } from 'src/libs/constants/slack';
 import { FRONTEND_URL } from 'src/libs/constants/frontend';
-import ColumnDto from 'src/modules/columns/dto/column.dto';
 import faker from '@faker-js/faker';
 import { BoardRoles } from 'src/libs/enum/board.roles';
 import { BoardUserDtoFactory } from 'src/libs/test-utils/mocks/factories/dto/boardUserDto-factory.mock';
-import { UserFactory } from 'src/libs/test-utils/mocks/factories/user-factory';
-import User from 'src/modules/users/entities/user.schema';
 import { generateNewSubColumns } from '../utils/generate-subcolumns';
 import { mergeCardsFromSubBoardColumnsIntoMainBoard } from '../utils/merge-cards-from-subboard';
 import { TeamCommunicationDtoFactory } from 'src/libs/test-utils/mocks/factories/dto/teamDto-factory';
 import { UpdateFailedException } from 'src/libs/exceptions/updateFailedBadRequestException';
 import { DeepMocked, createMock } from '@golevelup/ts-jest';
-import DeleteVoteService from 'src/modules/votes/services/delete.vote.service';
 import { DeleteVoteServiceInterface } from 'src/modules/votes/interfaces/services/delete.vote.service.interface';
 import Board from '../entities/board.schema';
-import { UpdateBoardDto } from '../dto/update-board.dto';
 
-const regularBoard = BoardFactory.create({ isSubBoard: false, dividedBoards: [] });
 const userId = faker.datatype.uuid();
-const updateBoardDto = UpdateBoardDtoFactory.create({ maxVotes: null });
 const subBoards = BoardFactory.createMany(2, [
 	{ isSubBoard: true, boardNumber: 1, submitedByUser: userId, submitedAt: new Date() },
 	{ isSubBoard: true, boardNumber: 2 }
@@ -59,34 +51,6 @@ const splitBoardWithSlack: Board = BoardFactory.create({
 	slackEnable: true,
 	slackChannelId: faker.datatype.uuid(),
 	dividedBoards: subBoards
-});
-const currentResponsible = BoardUserFactory.create({
-	role: BoardRoles.RESPONSIBLE,
-	board: splitBoardWithSlack._id
-});
-const boardUsersDto = BoardUserDtoFactory.createMany(3, [
-	{ board: splitBoardWithSlack._id, role: BoardRoles.RESPONSIBLE },
-	{
-		board: splitBoardWithSlack._id,
-		role: BoardRoles.MEMBER,
-		user: currentResponsible.user as User,
-		_id: String(currentResponsible._id)
-	},
-	{ board: splitBoardWithSlack._id, role: BoardRoles.MEMBER }
-]);
-const newResponsible = BoardUserFactory.create({
-	board: splitBoardWithSlack._id,
-	role: BoardRoles.RESPONSIBLE,
-	user: UserFactory.create({ _id: (boardUsersDto[0].user as User)._id }),
-	_id: String(boardUsersDto[0]._id)
-});
-const updateBoardDtoWithResponsible = UpdateBoardDtoFactory.create({
-	responsible: newResponsible,
-	mainBoardId: splitBoard._id,
-	users: boardUsersDto,
-	maxVotes: null,
-	_id: splitBoardWithSlack._id,
-	isSubBoard: true
 });
 const subBoardUpdated = { ...subBoards[1], submitedByUser: userId, submitedAt: new Date() };
 const newSubColumnsSubBoard_1 = generateNewSubColumns(subBoards[0]);
@@ -118,11 +82,9 @@ describe('UpdateBoardService', () => {
 	let updateBoardUserServiceMock: DeepMocked<UpdateBoardUserServiceInterface>;
 	let boardRepositoryMock: DeepMocked<BoardRepositoryInterface>;
 	let eventEmitterMock: DeepMocked<EventEmitter2>;
-	let getBoardUserServiceMock: DeepMocked<GetBoardUserServiceInterface>;
 	let configServiceMock: DeepMocked<ConfigService>;
 	let slackSendMessageServiceMock: DeepMocked<SendMessageServiceInterface>;
 	let slackCommunicationServiceMock: DeepMocked<CommunicationServiceInterface>;
-	let deleteVoteServiceMock: DeepMocked<DeleteVoteService>;
 	let createBoardUserServiceMock: DeepMocked<CreateBoardUserServiceInterface>;
 	let deleteBoardUserServiceMock: DeepMocked<DeleteBoardUserServiceInterface>;
 
@@ -182,8 +144,6 @@ describe('UpdateBoardService', () => {
 		boardService = module.get<UpdateBoardServiceInterface>(updateBoardService.provide);
 		boardRepositoryMock = module.get(Boards.TYPES.repositories.BoardRepository);
 		updateBoardUserServiceMock = module.get(BoardUsers.TYPES.services.UpdateBoardUserService);
-		getBoardUserServiceMock = module.get(BoardUsers.TYPES.services.GetBoardUserService);
-		deleteVoteServiceMock = module.get(Votes.TYPES.services.DeleteVoteService);
 		eventEmitterMock = module.get(EventEmitter2);
 		configServiceMock = module.get(ConfigService);
 		slackSendMessageServiceMock = module.get(
@@ -209,125 +169,6 @@ describe('UpdateBoardService', () => {
 
 	it('should be defined', () => {
 		expect(boardService).toBeDefined();
-	});
-
-	describe('update', () => {
-		it('should throw an error if max votes is less than the highest votes on board', async () => {
-			const updateBoardDto_1: UpdateBoardDto = { ...updateBoardDto, maxVotes: 2 };
-			const boardUsers = BoardUserFactory.createMany(2, [{ votesCount: 3 }, { votesCount: 1 }]);
-
-			jest.spyOn(getBoardUserServiceMock, 'getVotesCount').mockResolvedValue(boardUsers);
-
-			expect(async () => await boardService.update('1', updateBoardDto_1)).rejects.toThrow(
-				UpdateFailedException
-			);
-		});
-
-		it('should throw an error if board not found', async () => {
-			boardRepositoryMock.getBoard.mockResolvedValue(null);
-			expect(async () => await boardService.update('-1', updateBoardDto)).rejects.toThrow(
-				NotFoundException
-			);
-		});
-
-		it('should call the changeResponsibleOnBoard method if the current responsible is not equal to the new responsible', async () => {
-			//gets the current responsible from the board
-			getBoardUserServiceMock.getBoardResponsible.mockResolvedValue(currentResponsible);
-
-			await boardService.update(subBoards[1]._id, updateBoardDtoWithResponsible);
-			//update the changeResponsibleOnBoard
-			expect(updateBoardUserServiceMock.updateBoardUserRole).toBeCalled();
-		});
-
-		it('should throw an error when update fails', async () => {
-			boardRepositoryMock.updateBoard.mockResolvedValue(null);
-
-			expect(async () => await boardService.update('1', updateBoardDto)).rejects.toThrow(
-				UpdateFailedException
-			);
-		});
-
-		it('should call the socketService.sendUpdatedBoard if the socketId exists', async () => {
-			const updateBoardDto_1 = UpdateBoardDtoFactory.create({
-				maxVotes: null,
-				title: 'Mock 2.0',
-				_id: subBoards[1]._id,
-				socketId: faker.datatype.uuid()
-			});
-			const boardResult = { ...subBoards[1], title: updateBoardDto_1.title };
-
-			boardRepositoryMock.updateBoard.mockResolvedValue(boardResult);
-
-			await boardService.update(subBoards[1]._id, updateBoardDto_1);
-
-			expect(socketServiceMock.sendUpdatedBoard).toBeCalledTimes(1);
-		});
-
-		it('should call the slackCommunicationService.executeResponsibleChange if the board has a newResponsible and slack enable', async () => {
-			const board_1: Board = {
-				...subBoards[1],
-				slackEnable: true,
-				slackChannelId: faker.datatype.uuid()
-			};
-
-			boardRepositoryMock.getBoard.mockResolvedValue(board_1);
-			boardRepositoryMock.updateBoard.mockResolvedValue(board_1);
-
-			jest
-				.spyOn(getBoardUserServiceMock, 'getBoardResponsible')
-				.mockResolvedValue(currentResponsible);
-
-			await boardService.update(board_1._id, updateBoardDtoWithResponsible);
-
-			expect(slackCommunicationServiceMock.executeResponsibleChange).toBeCalledTimes(1);
-		});
-
-		it('should update a split board', async () => {
-			const board_1: Board = { ...subBoards[1], addCards: false };
-
-			const updateBoardDto_1 = UpdateBoardDtoFactory.create({
-				maxVotes: null,
-				title: 'Mock 2.0',
-				_id: board_1._id,
-				addCards: true
-			});
-			const boardResult = { ...board_1, title: updateBoardDto_1.title };
-
-			boardRepositoryMock.getBoard.mockResolvedValue(board_1);
-			boardRepositoryMock.updateBoard.mockResolvedValue(boardResult);
-
-			const result = await boardService.update(board_1._id, updateBoardDto_1);
-
-			expect(result).toEqual(boardResult);
-		});
-
-		it('should update a regular board', async () => {
-			const board_1: Board = { ...regularBoard };
-
-			board_1.columns[1].title = 'Make things';
-			board_1.columns[1].color = '#FEB9A9';
-
-			const updateBoardDto_1 = UpdateBoardDtoFactory.create({
-				maxVotes: null,
-				_id: board_1._id,
-				isSubBoard: false,
-				dividedBoards: [],
-				columns: board_1.columns as ColumnDto[],
-				deletedColumns: [board_1.columns[0]._id]
-			});
-
-			boardRepositoryMock.getBoard.mockResolvedValue(board_1);
-			getBoardUserServiceMock.getBoardResponsible.mockResolvedValue(null);
-			deleteVoteServiceMock.deleteCardVotesFromColumn.mockResolvedValue(null);
-
-			const boardResult = { ...board_1, columns: board_1.columns.slice(1) };
-
-			boardRepositoryMock.updateBoard.mockResolvedValue(boardResult);
-
-			const result = await boardService.update(board_1._id, updateBoardDto_1);
-
-			expect(result).toEqual(boardResult);
-		});
 	});
 
 	describe('mergeBoards', () => {
