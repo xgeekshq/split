@@ -1,20 +1,23 @@
 import SidebarContent from '@/components/Sidebar/Content/Content';
 import Header from '@/components/Sidebar/Header/Header';
 import { StyledSidebar } from '@/components/Sidebar/styles';
+import { SidebarProps, CollapsibleProps } from '@/components/Sidebar/types';
+import { useState } from 'react';
 
-export type SidebarProps = {
-  firstName: string;
-  lastName: string;
-  email: string;
-  // collapsed?: boolean;
-  strategy: string;
+const Sidebar = ({ firstName, lastName, email, strategy }: SidebarProps) => {
+  const [isCollapsed, setIsCollapsed] = useState(false);
+
+  const collapsibleProps: CollapsibleProps = {
+    isCollapsed,
+    handleCollapse: setIsCollapsed,
+  };
+
+  return (
+    <StyledSidebar collapsed={{ '@initial': isCollapsed, '@md': false }}>
+      <Header email={email} firstName={firstName} lastName={lastName} {...collapsibleProps} />
+      <SidebarContent strategy={strategy} {...collapsibleProps} />
+    </StyledSidebar>
+  );
 };
-
-const Sidebar = ({ firstName, lastName, email, strategy }: SidebarProps) => (
-  <StyledSidebar>
-    <Header email={email} firstName={firstName} lastName={lastName} />
-    <SidebarContent strategy={strategy} />
-  </StyledSidebar>
-);
 
 export default Sidebar;

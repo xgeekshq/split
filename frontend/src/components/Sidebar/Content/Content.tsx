@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { signOut } from 'next-auth/react';
 
-import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Separator from '@/components/Primitives/Separator/Separator';
 import {
   ACCOUNT_ROUTE,
@@ -15,10 +14,12 @@ import {
   AZURE_LOGOUT_ROUTE,
 } from '@/utils/routes';
 import SidebarItem from '@/components/Sidebar/Item/Item';
+import { CollapsibleContent } from '@/components/Sidebar/styles';
+import { CollapsibleProps } from '@/components/Sidebar/types';
 
-export type SidebarContentProps = {
+export interface SidebarContentProps extends CollapsibleProps {
   strategy: string;
-};
+}
 
 const sidebarItems = [
   { link: DASHBOARD_ROUTE, iconName: 'dashboard', label: 'Dashboard' },
@@ -27,7 +28,7 @@ const sidebarItems = [
   { link: TEAMS_ROUTE, iconName: 'team', label: 'Teams' },
 ];
 
-const SidebarContent = ({ strategy }: SidebarContentProps) => {
+const SidebarContent = ({ strategy, isCollapsed, handleCollapse }: SidebarContentProps) => {
   const router = useRouter();
   const [active, setActive] = useState(router.asPath);
   const isStrategyLocal = strategy === 'local';
@@ -44,10 +45,15 @@ const SidebarContent = ({ strategy }: SidebarContentProps) => {
 
   useEffect(() => {
     setActive(router.asPath);
+    handleCollapse(true); // Collapses sidebar when route changes
   }, [router.asPath]);
 
   return (
-    <Flex direction="column" css={{ mt: '$16' }} data-testid="sidebarContent">
+    <CollapsibleContent
+      direction="column"
+      data-testid="sidebarContent"
+      collapsed={{ '@initial': isCollapsed, '@md': false }}
+    >
       {sidebarItems.map((item) => (
         <SidebarItem {...item} active={active} key={item.label} />
       ))}
@@ -72,7 +78,7 @@ const SidebarContent = ({ strategy }: SidebarContentProps) => {
       <Separator css={{ my: '$16', backgroundColor: '$primary600' }} />
 
       <SidebarItem iconName="log-out" label="Log out" active={active} onClick={handleSignOut} />
-    </Flex>
+    </CollapsibleContent>
   );
 };
 
