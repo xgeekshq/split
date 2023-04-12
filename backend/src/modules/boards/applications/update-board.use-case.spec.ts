@@ -76,21 +76,21 @@ const updateBoardDtoWithResponsible = UpdateBoardDtoFactory.create({
 	isSubBoard: true
 });
 const subBoardUpdated = { ...subBoards[1], submitedByUser: userId, submitedAt: new Date() };
-const newSubColumnsSubBoard_1 = generateNewSubColumns(subBoards[0]);
-const newSubColumnsSubBoard_2 = generateNewSubColumns(subBoardUpdated);
-const mergeSubBoard_1 = {
+const newSubColumnsSubBoardNumberOne = generateNewSubColumns(subBoards[0]);
+const newSubColumnsSubBoardNumberTwo = generateNewSubColumns(subBoardUpdated);
+const mergeSubBoard = {
 	...splitBoardWithSlack,
 	columns: mergeCardsFromSubBoardColumnsIntoMainBoard(
 		[...splitBoardWithSlack.columns],
-		newSubColumnsSubBoard_1
+		newSubColumnsSubBoardNumberOne
 	)
 };
 
 const boardResult = {
-	...mergeSubBoard_1,
+	...mergeSubBoard,
 	columns: mergeCardsFromSubBoardColumnsIntoMainBoard(
 		[...splitBoardWithSlack.columns],
-		newSubColumnsSubBoard_2
+		newSubColumnsSubBoardNumberTwo
 	),
 	dividedBoards: [subBoards[0], subBoardUpdated]
 };
@@ -154,7 +154,7 @@ describe('UpdateBoardUseCase', () => {
 		expect(useCase).toBeDefined();
 	});
 
-	describe('update', () => {
+	describe('execute', () => {
 		it('should throw an error if max votes is less than the highest votes on board', async () => {
 			const updateBoardDtoWithMaxVotes: UpdateBoardDto = { ...updateBoardDto, maxVotes: 2 };
 			const boardUsers = BoardUserFactory.createMany(2, [{ votesCount: 3 }, { votesCount: 1 }]);

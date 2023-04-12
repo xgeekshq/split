@@ -19,7 +19,6 @@ import { BoardPhaseDto } from 'src/libs/dto/board-phase.dto';
 
 describe('UpdateBoardPhaseUseCase', () => {
 	let useCase: UseCase<BoardPhaseDto, void>;
-
 	let boardRepositoryMock: DeepMocked<BoardRepositoryInterface>;
 	let eventEmitterMock: DeepMocked<EventEmitter2>;
 	let configServiceMock: DeepMocked<ConfigService>;
@@ -66,7 +65,7 @@ describe('UpdateBoardPhaseUseCase', () => {
 		expect(useCase).toBeDefined();
 	});
 
-	describe('updatePhase', () => {
+	describe('execute', () => {
 		it('should call the boardRepository ', async () => {
 			const boardPhaseDto = { boardId: '6405f9a04633b1668f71c068', phase: BoardPhases.ADDCARDS };
 			await useCase.execute(boardPhaseDto);
