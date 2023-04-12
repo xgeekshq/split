@@ -22,7 +22,8 @@ export const TYPES = {
 		CreateBoardUseCase: 'CreateBoardUseCase',
 		IsBoardPublicUseCase: 'IsBoardPublicUseCase',
 		DeleteBoardUseCase: 'DeleteBoardUseCase',
-		UpdateBoardUseCase: 'UpdateBoardUseCase'
+		UpdateBoardUseCase: 'UpdateBoardUseCase',
+		UpdateBoardParticipantsUseCase: 'UpdateBoardParticipantsUseCase'
 	},
 	repositories: {
 		BoardTimerRepository: 'BoardTimerRepository',

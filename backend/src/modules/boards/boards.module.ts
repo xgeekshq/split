@@ -36,6 +36,7 @@ import {
 	startBoardTimerService,
 	stopBoardTimerService,
 	updateBoardApplication,
+	updateBoardParticipantsUseCase,
 	updateBoardService,
 	updateBoardTimerDurationService,
 	updateBoardUseCase
@@ -73,6 +74,7 @@ import { VotesModule } from '../votes/votes.module';
 		createBoardUseCase,
 		isBoardPublicUseCase,
 		updateBoardUseCase,
+		updateBoardParticipantsUseCase,
 		updateBoardApplication,
 		deleteBoardUseCase,
 		boardTimerRepository,

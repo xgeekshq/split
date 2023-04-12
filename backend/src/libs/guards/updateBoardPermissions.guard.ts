@@ -23,7 +23,10 @@ export class UpdateBoardPermissionsGuard implements CanActivate {
 
 		const boardId: string = request.params.boardId;
 		const userToUpdate: User = (request.body as UpdateBoardUserDto).boardUserToUpdateRole
-			.user as User;
+			?.user as User;
+		const hasMembersToAddOrRemove =
+			(request.body as UpdateBoardUserDto).addBoardUsers.length > 0 ||
+			(request.body as UpdateBoardUserDto).removeBoardUsers.length > 0;
 
 		try {
 			const board = await this.getBoardService.getBoardOwner(boardId);
@@ -32,7 +35,7 @@ export class UpdateBoardPermissionsGuard implements CanActivate {
 				throw new NotFoundException();
 			}
 
-			return userToUpdate && String(board.createdBy) !== userToUpdate._id;
+			return userToUpdate ? String(board.createdBy) !== userToUpdate._id : hasMembersToAddOrRemove;
 		} catch (error) {
 			throw new ForbiddenException();
 		}

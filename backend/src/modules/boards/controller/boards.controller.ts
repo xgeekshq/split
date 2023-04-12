@@ -63,6 +63,7 @@ import GetBoardUseCaseDto from '../dto/useCase/get-board.use-case.dto';
 import BoardUseCasePresenter from '../presenter/board.use-case.presenter';
 import BoardGuestUserDto from 'src/modules/boardUsers/dto/board.guest.user.dto';
 import { UpdateBoardPermissionsGuard } from 'src/libs/guards/updateBoardPermissions.guard';
+import { BoardParticipantsPresenter } from '../applications/update-board-participants.use-case';
 
 const BoardUser = (permissions: string[]) => SetMetadata('permissions', permissions);
 
@@ -84,6 +85,10 @@ export default class BoardsController {
 		private getPersonalBoardsUseCase: UseCase<GetBoardsUseCaseDto, BoardsPaginatedPresenter>,
 		@Inject(TYPES.applications.GetBoardUseCase)
 		private getBoardUseCase: UseCase<GetBoardUseCaseDto, BoardUseCasePresenter>,
+		@Inject(TYPES.applications.UpdateBoardUseCase)
+		private updateBoardUseCase: UseCase<UpdateBoardDto, Board>,
+		@Inject(TYPES.applications.UpdateBoardParticipantsUseCase)
+		private updateBoardParticipantsUseCase: UseCase<UpdateBoardUserDto, BoardParticipantsPresenter>,
 		@Inject(TYPES.applications.UpdateBoardApplication)
 		private updateBoardApp: UpdateBoardApplicationInterface,
 		@Inject(TYPES.applications.DeleteBoardUseCase)
@@ -271,7 +276,11 @@ export default class BoardsController {
 	@UseGuards(BoardUserGuard)
 	@Put(':boardId')
 	updateBoard(@Param() { boardId }: BaseParam, @Body() boardData: UpdateBoardDto) {
-		return this.updateBoardApp.update(boardId, boardData);
+		const completionHandler = () => {
+			this.socketService.sendUpdatedBoard(boardId, boardData.socketId);
+		};
+
+		return this.updateBoardUseCase.execute({ ...boardData, boardId, completionHandler });
 	}
 
 	@ApiOperation({ summary: 'Update participants of a specific board' })
@@ -305,7 +314,7 @@ export default class BoardsController {
 	@UseGuards(UpdateBoardPermissionsGuard, BoardUserGuard)
 	@Put(':boardId/participants')
 	updateBoardParticipants(@Body() boardData: UpdateBoardUserDto) {
-		return this.updateBoardApp.updateBoardParticipants(boardData);
+		return this.updateBoardParticipantsUseCase.execute(boardData);
 	}
 
 	@ApiOperation({ summary: 'Delete a specific board' })
