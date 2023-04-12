@@ -4,25 +4,23 @@ import {
   renderHookWithProviders,
 } from '@/utils/testing/renderHookWithProviders';
 import { TeamFactory } from '@/utils/factories/team';
-import { getAllTeams, getUserTeams } from '@/api/teamService';
+import { getUserTeams } from '@/api/teamService';
 import { Team } from '@/types/team/team';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
 import { toastState } from '@/store/toast/atom/toast.atom';
-import useTeams from '@/hooks/teams/useTeams';
+import useUserTeams from '@/hooks/teams/useUserTeams';
 
 const DUMMY_TEAMS = TeamFactory.createMany(3);
 
-const mockGetAllTeams = getAllTeams as jest.Mock<Promise<Team[]>>;
 const mockGetUserTeams = getUserTeams as jest.Mock<Promise<Team[]>>;
 
 jest.mock('@/api/teamService');
 
-const render = (isSAdmin: boolean, options?: Partial<RenderHookWithProvidersOptions>) =>
-  renderHook(() => useTeams(isSAdmin), { wrapper: renderHookWithProviders(options) });
+const render = (userId: string, options?: Partial<RenderHookWithProvidersOptions>) =>
+  renderHook(() => useUserTeams(userId), { wrapper: renderHookWithProviders(options) });
 
-describe('Hooks/Teams/useTeams', () => {
+describe('Hooks/Teams/useUserTeams', () => {
   beforeEach(() => {
-    mockGetAllTeams.mockReturnValue(Promise.resolve(DUMMY_TEAMS));
     mockGetUserTeams.mockReturnValue(Promise.resolve(DUMMY_TEAMS));
   });
 
@@ -30,30 +28,22 @@ describe('Hooks/Teams/useTeams', () => {
     jest.clearAllMocks();
   });
 
-  it('should fetch all the teams as Super Admin', async () => {
-    const { result } = render(true);
-
-    await waitFor(() => expect(result.current.isSuccess).toBeTruthy());
-    expect(mockGetAllTeams).toBeCalled();
-    expect(mockGetUserTeams).not.toBeCalled();
-    expect(result.current.data).toBe(DUMMY_TEAMS);
-  });
-
-  it('should fetch user the teams', async () => {
-    const { result } = render(false);
+  it('should fetch user teams', async () => {
+    const { result } = render('thisIsTheUserId');
 
     await waitFor(() => expect(result.current.isSuccess).toBeTruthy());
     expect(mockGetUserTeams).toBeCalled();
-    expect(mockGetAllTeams).not.toBeCalled();
     expect(result.current.data).toBe(DUMMY_TEAMS);
   });
 
   it('should set toast error', async () => {
-    mockGetAllTeams.mockReturnValueOnce(Promise.reject(new Error('Failed to fetch teams')));
+    mockGetUserTeams.mockReturnValueOnce(Promise.reject(new Error('Failed to fetch teams')));
     const recoilHandler = jest.fn();
 
     // Act
-    const { result } = render(true, { recoilOptions: { recoilState: toastState, recoilHandler } });
+    const { result } = render('thisIsTheUserId', {
+      recoilOptions: { recoilState: toastState, recoilHandler },
+    });
 
     // Assert
     await waitFor(() => {
