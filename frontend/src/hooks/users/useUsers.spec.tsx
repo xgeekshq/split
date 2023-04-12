@@ -18,7 +18,7 @@ jest.mock('@/api/userService');
 const render = (options?: Partial<RenderHookWithProvidersOptions>) =>
   renderHook(() => useUsers(), { wrapper: renderHookWithProviders(options) });
 
-describe('api/useUsers', () => {
+describe('hooks/users/useUsers', () => {
   beforeEach(() => {
     mockGetAllUsers.mockReturnValue(Promise.resolve(DUMMY_USERS));
   });
@@ -36,7 +36,7 @@ describe('api/useUsers', () => {
     expect(result.current.data).toBe(DUMMY_USERS);
   });
 
-  it('should get error', async () => {
+  it('should set toast error', async () => {
     // Arrange
     mockGetAllUsers.mockReturnValueOnce(Promise.reject(new Error('failed to fetch users')));
     const recoilHandler = jest.fn();
