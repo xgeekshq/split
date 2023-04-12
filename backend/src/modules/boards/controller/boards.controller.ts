@@ -64,6 +64,7 @@ import BoardUseCasePresenter from '../presenter/board.use-case.presenter';
 import BoardGuestUserDto from 'src/modules/boardUsers/dto/board.guest.user.dto';
 import { UpdateBoardPermissionsGuard } from 'src/libs/guards/updateBoardPermissions.guard';
 import { BoardParticipantsPresenter } from '../applications/update-board-participants.use-case';
+import MergeBoardUseCaseDto from '../dto/useCase/merge-board.use-case.dto';
 
 const BoardUser = (permissions: string[]) => SetMetadata('permissions', permissions);
 
@@ -89,6 +90,8 @@ export default class BoardsController {
 		private updateBoardUseCase: UseCase<UpdateBoardDto, Board>,
 		@Inject(TYPES.applications.UpdateBoardParticipantsUseCase)
 		private updateBoardParticipantsUseCase: UseCase<UpdateBoardUserDto, BoardParticipantsPresenter>,
+		@Inject(TYPES.applications.MergeBoardUseCase)
+		private mergeBoardUseCase: UseCase<MergeBoardUseCaseDto, Board>,
 		@Inject(TYPES.applications.UpdateBoardApplication)
 		private updateBoardApp: UpdateBoardApplicationInterface,
 		@Inject(TYPES.applications.DeleteBoardUseCase)
@@ -373,7 +376,16 @@ export default class BoardsController {
 		@Query() { socketId }: BaseParamWSocket,
 		@Req() request: RequestWithUser
 	) {
-		return this.updateBoardApp.mergeBoards(boardId, request.user._id, socketId);
+		const completionHandler = () => {
+			this.socketService.sendUpdatedAllBoard(boardId, socketId);
+		};
+
+		return this.mergeBoardUseCase.execute({
+			subBoardId: boardId,
+			userId: request.user._id,
+			socketId: socketId,
+			completionHandler
+		});
 	}
 
 	@ApiOperation({ summary: 'Update board phase' })

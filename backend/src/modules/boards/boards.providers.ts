@@ -27,6 +27,7 @@ import GetBoardService from './services/get.board.service';
 import UpdateBoardService from './services/update.board.service';
 import { UpdateBoardUseCase } from './applications/update-board.use-case';
 import { UpdateBoardParticipantsUseCase } from './applications/update-board-participants.use-case';
+import { MergeBoardUseCase } from './applications/merge-board.use-case';
 
 export const createBoardService = {
 	provide: TYPES.services.CreateBoardService,
@@ -86,6 +87,11 @@ export const updateBoardUseCase = {
 export const updateBoardParticipantsUseCase = {
 	provide: TYPES.applications.UpdateBoardParticipantsUseCase,
 	useClass: UpdateBoardParticipantsUseCase
+};
+
+export const mergeBoardUseCase = {
+	provide: TYPES.applications.MergeBoardUseCase,
+	useClass: MergeBoardUseCase
 };
 
 export const updateBoardApplication = {

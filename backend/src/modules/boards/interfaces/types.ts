@@ -23,7 +23,8 @@ export const TYPES = {
 		IsBoardPublicUseCase: 'IsBoardPublicUseCase',
 		DeleteBoardUseCase: 'DeleteBoardUseCase',
 		UpdateBoardUseCase: 'UpdateBoardUseCase',
-		UpdateBoardParticipantsUseCase: 'UpdateBoardParticipantsUseCase'
+		UpdateBoardParticipantsUseCase: 'UpdateBoardParticipantsUseCase',
+		MergeBoardUseCase: 'MergeBoardUseCase'
 	},
 	repositories: {
 		BoardTimerRepository: 'BoardTimerRepository',

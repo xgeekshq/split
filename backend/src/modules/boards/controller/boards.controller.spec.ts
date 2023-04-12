@@ -19,6 +19,9 @@ import BoardUseCasePresenter from '../presenter/board.use-case.presenter';
 import GetBoardsUseCaseDto from '../dto/useCase/get-boards.use-case.dto';
 import { GetBoardServiceInterface } from '../interfaces/services/get.board.service.interface';
 import { UpdateBoardDto } from '../dto/update-board.dto';
+import UpdateBoardUserDto from 'src/modules/boardUsers/dto/update-board-user.dto';
+import { BoardParticipantsPresenter } from '../applications/update-board-participants.use-case';
+import MergeBoardUseCaseDto from '../dto/useCase/merge-board.use-case.dto';
 
 describe('BoardsController', () => {
 	let controller: BoardsController;
@@ -68,6 +71,14 @@ describe('BoardsController', () => {
 				{
 					provide: Boards.TYPES.applications.UpdateBoardUseCase,
 					useValue: createMock<UseCase<UpdateBoardDto, Board>>()
+				},
+				{
+					provide: Boards.TYPES.applications.UpdateBoardParticipantsUseCase,
+					useValue: createMock<UseCase<UpdateBoardUserDto, BoardParticipantsPresenter>>()
+				},
+				{
+					provide: Boards.TYPES.applications.MergeBoardUseCase,
+					useValue: createMock<UseCase<MergeBoardUseCaseDto, Board>>()
 				},
 				{
 					provide: Boards.TYPES.services.GetBoardService,
