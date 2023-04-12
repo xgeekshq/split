@@ -52,7 +52,6 @@ import BoardDto from '../dto/board.dto';
 import UpdateBoardUserDto from 'src/modules/boardUsers/dto/update-board-user.dto';
 import { UpdateBoardDto } from 'src/modules/boards/dto/update-board.dto';
 import Board from '../entities/board.schema';
-import { UpdateBoardApplicationInterface } from '../interfaces/applications/update.board.application.interface';
 import { TYPES } from '../interfaces/types';
 import { DuplicateBoardDto } from '../applications/duplicate-board.use-case';
 import CreateBoardUseCaseDto from '../dto/useCase/create-board.use-case.dto';
@@ -92,8 +91,8 @@ export default class BoardsController {
 		private updateBoardParticipantsUseCase: UseCase<UpdateBoardUserDto, BoardParticipantsPresenter>,
 		@Inject(TYPES.applications.MergeBoardUseCase)
 		private mergeBoardUseCase: UseCase<MergeBoardUseCaseDto, Board>,
-		@Inject(TYPES.applications.UpdateBoardApplication)
-		private updateBoardApp: UpdateBoardApplicationInterface,
+		@Inject(TYPES.applications.UpdateBoardPhaseUseCase)
+		private updateBoardPhaseUseCase: UseCase<BoardPhaseDto, void>,
 		@Inject(TYPES.applications.DeleteBoardUseCase)
 		private deleteBoardUseCase: UseCase<string, boolean>,
 		private socketService: SocketGateway
@@ -414,6 +413,6 @@ export default class BoardsController {
 	})
 	@Put(':boardId/phase')
 	updateBoardPhase(@Body() boardPhaseDto: BoardPhaseDto) {
-		this.updateBoardApp.updatePhase(boardPhaseDto);
+		this.updateBoardPhaseUseCase.execute(boardPhaseDto);
 	}
 }

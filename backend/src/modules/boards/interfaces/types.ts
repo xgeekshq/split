@@ -13,8 +13,6 @@ export const TYPES = {
 	},
 	applications: {
 		DuplicateBoardUseCase: 'DuplicateBoardUseCase',
-		DeleteBoardApplication: 'DeleteBoardApplication',
-		UpdateBoardApplication: 'UpdateBoardApplication',
 		GetBoardsForDashboardUseCase: 'GetBoardsForDashboardUseCase',
 		GetAllBoardsUseCase: 'GetAllBoardUseCase',
 		GetPersonalBoardsUseCase: 'GetPersonalBoardsUseCase',
@@ -24,7 +22,8 @@ export const TYPES = {
 		DeleteBoardUseCase: 'DeleteBoardUseCase',
 		UpdateBoardUseCase: 'UpdateBoardUseCase',
 		UpdateBoardParticipantsUseCase: 'UpdateBoardParticipantsUseCase',
-		MergeBoardUseCase: 'MergeBoardUseCase'
+		MergeBoardUseCase: 'MergeBoardUseCase',
+		UpdateBoardPhaseUseCase: 'UpdateBoardPhaseUseCase'
 	},
 	repositories: {
 		BoardTimerRepository: 'BoardTimerRepository',
