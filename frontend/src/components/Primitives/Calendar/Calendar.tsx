@@ -17,6 +17,7 @@ const StyledContainer = styled(Flex, {
   position: 'relative',
   borderRadius: '$12',
   boxShadow: '$1 $1 $5 #aaaaaa',
+  mt: '$5',
 });
 
 const CalendarBar = () => {
@@ -33,9 +34,7 @@ const CalendarBar = () => {
   return (
     <DropdownMenu.Root>
       <DropdownMenu.Trigger asChild>
-        <Button
-          style={{ marginTop: '$5', padding: '0', backgroundColor: 'transparent', border: 'none' }}
-        >
+        <Button style={{ padding: '0', backgroundColor: 'transparent', border: 'none' }}>
           <SelectDate
             placeholder="Select date"
             currentValue={currentValue?.toLocaleDateString() || ''}
