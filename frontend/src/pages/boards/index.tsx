@@ -1,4 +1,4 @@
-import { ReactElement, Suspense } from 'react';
+import { ReactElement, Suspense, useState } from 'react';
 import { GetServerSideProps, GetServerSidePropsContext } from 'next';
 import { getSession } from 'next-auth/react';
 import MyBoards from '@/components/Boards/MyBoards';
@@ -17,12 +17,12 @@ import CalendarBar from '@/components/Primitives/Calendar/Calendar';
 
 const Boards = () => {
   const { session, userId, isSAdmin } = useCurrentSession({ required: true });
-
+  const [currentDate, setDate] = useState<Date>();
   if (!session) return null;
 
   return (
     <Flex css={{ width: '100%' }} direction="column" gap="40">
-      <CalendarBar />
+      <CalendarBar currentDate={currentDate} setDate={setDate} />
 
       <MainPageHeader
         title="Boards"
