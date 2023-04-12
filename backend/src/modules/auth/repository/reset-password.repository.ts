@@ -10,7 +10,7 @@ export class ResetPasswordRepository
 	extends MongoGenericRepository<ResetPassword>
 	implements ResetPasswordRepositoryInterface
 {
-	constructor(@InjectModel(ResetPassword.name) private model: Model<ResetPassword>) {
+	constructor(@InjectModel(ResetPassword.name) private readonly model: Model<ResetPassword>) {
 		super(model);
 	}
 	updateToken(

@@ -63,8 +63,17 @@ describe('CreateUserService', () => {
 	describe('createGuest', () => {
 		it('should create guest user', async () => {
 			userRepositoryMock.create.mockResolvedValue(createdUser);
+			userRepositoryMock.countDocumentsWithQuery.mockResolvedValue(0);
 			await expect(userService.createGuest(createGuestUserDto)).resolves.toEqual(createdUser);
 		});
+
+		it('should create guest user when user is created with an existing email', async () => {
+			userRepositoryMock.create.mockResolvedValue(createdUser);
+			userRepositoryMock.countDocumentsWithQuery.mockResolvedValueOnce(1);
+			userRepositoryMock.countDocumentsWithQuery.mockResolvedValueOnce(0);
+			await expect(userService.createGuest(createGuestUserDto)).resolves.toEqual(createdUser);
+		});
+
 		it('should throw error when user is not created', async () => {
 			userRepositoryMock.create.mockResolvedValue(null);
 			await expect(userService.createGuest(createGuestUserDto)).rejects.toThrowError(

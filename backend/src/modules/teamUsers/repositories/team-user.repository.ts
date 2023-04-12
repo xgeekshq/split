@@ -14,7 +14,7 @@ export class TeamUserRepository
 	extends MongoGenericRepository<TeamUser>
 	implements TeamUserRepositoryInterface
 {
-	constructor(@InjectModel(TeamUser.name) private model: Model<TeamUser>) {
+	constructor(@InjectModel(TeamUser.name) private readonly model: Model<TeamUser>) {
 		super(model);
 	}
 
