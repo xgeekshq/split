@@ -1,48 +1,50 @@
 import { renderHook, waitFor } from '@testing-library/react';
-import useUsers from '@/hooks/users/useUsers';
 import {
   RenderHookWithProvidersOptions,
   renderHookWithProviders,
 } from '@/utils/testing/renderHookWithProviders';
 import { UserFactory } from '@/utils/factories/user';
-import { getAllUsers } from '@/api/userService';
+import { getUser } from '@/api/userService';
 import { User } from '@/types/user/user';
 import { toastState } from '@/store/toast/atom/toast.atom';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
+import useUser from '@/hooks/users/useUser';
 
-const DUMMY_USERS = UserFactory.createMany(3);
+const DUMMY_USER = UserFactory.create();
 
-const mockGetAllUsers = getAllUsers as jest.Mock<Promise<User[]>>;
+const mockGetUser = getUser as jest.Mock<Promise<User>>;
 jest.mock('@/api/userService');
 
-const render = (options?: Partial<RenderHookWithProvidersOptions>) =>
-  renderHook(() => useUsers(), { wrapper: renderHookWithProviders(options) });
+const render = (userId: string, options?: Partial<RenderHookWithProvidersOptions>) =>
+  renderHook(() => useUser(userId), { wrapper: renderHookWithProviders(options) });
 
-describe('hooks/users/useUsers', () => {
+describe('hooks/users/useUser', () => {
   beforeEach(() => {
-    mockGetAllUsers.mockReturnValue(Promise.resolve(DUMMY_USERS));
+    mockGetUser.mockReturnValue(Promise.resolve(DUMMY_USER));
   });
 
   afterEach(() => {
     jest.clearAllMocks();
   });
 
-  it('should fetch the users', async () => {
+  it('should fetch the user', async () => {
     // Act
-    const { result } = render();
+    const { result } = render(DUMMY_USER._id);
 
     // Assert
     await waitFor(() => expect(result.current.isSuccess).toBeTruthy());
-    expect(result.current.data).toBe(DUMMY_USERS);
+    expect(result.current.data).toBe(DUMMY_USER);
   });
 
   it('should set toast error', async () => {
     // Arrange
-    mockGetAllUsers.mockReturnValueOnce(Promise.reject(new Error('Failed to fetch users')));
+    mockGetUser.mockReturnValueOnce(Promise.reject(new Error('Failed to fetch user')));
     const recoilHandler = jest.fn();
 
     // Act
-    const { result } = render({ recoilOptions: { recoilState: toastState, recoilHandler } });
+    const { result } = render(DUMMY_USER._id, {
+      recoilOptions: { recoilState: toastState, recoilHandler },
+    });
 
     // Assert
     await waitFor(() => {
@@ -50,7 +52,7 @@ describe('hooks/users/useUsers', () => {
       expect(result.current.data).not.toBeDefined();
       expect(recoilHandler).toHaveBeenCalledWith({
         open: true,
-        content: 'Error getting the users',
+        content: 'Error getting the user',
         type: ToastStateEnum.ERROR,
       });
     });

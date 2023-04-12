@@ -9,7 +9,7 @@ import {
 import { waitFor } from '@testing-library/dom';
 import { renderHook } from '@testing-library/react';
 import { InfiniteUsersWithTeams } from '@/types/user/user';
-import useUsersWithTeams from './useUsersWithTeams';
+import useUsersWithTeams from '@/hooks/users/useUsersWithTeams';
 
 const DUMMY_USERS = {
   hasNextPage: false,
@@ -47,7 +47,7 @@ describe('hooks/users/useUsersWithTeams', () => {
 
   it('should set toast error', async () => {
     // Arrange
-    mockGetUsersWithTeams.mockReturnValueOnce(Promise.reject(new Error('failed to fetch users')));
+    mockGetUsersWithTeams.mockReturnValueOnce(Promise.reject(new Error('Failed to fetch users')));
     const recoilHandler = jest.fn();
 
     // Act
