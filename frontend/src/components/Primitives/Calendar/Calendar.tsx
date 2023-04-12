@@ -3,8 +3,7 @@ import Icon from '@/components/Primitives/Icons/Icon/Icon';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import StyledCalendar from '@/components/Primitives/Calendar/StyledCalendar';
-import SelectDate from '../Inputs/SelectDate/SelectDate';
-import Button from '../Inputs/Button/Button';
+import SelectDate from '@/components/Primitives/Inputs/SelectDate/SelectDate';
 
 const StyledContainer = styled(Flex, {
   height: '100%',
@@ -27,13 +26,16 @@ export type CalendarProps = {
 const CalendarBar = ({ currentDate, setDate }: CalendarProps) => (
   <DropdownMenu.Root>
     <DropdownMenu.Trigger asChild>
-      <Button style={{ padding: '0', backgroundColor: 'transparent', border: 'none' }}>
+      <button
+        type="button"
+        style={{ padding: '0', backgroundColor: 'transparent', border: 'none' }}
+      >
         <SelectDate
           placeholder="Select date"
           currentValue={currentDate?.toLocaleDateString() || ''}
           disabled
         />
-      </Button>
+      </button>
     </DropdownMenu.Trigger>
     <DropdownMenu.Portal>
       <DropdownMenu.Content align="start">
