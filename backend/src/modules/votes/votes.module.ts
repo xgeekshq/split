@@ -11,7 +11,6 @@ import {
 	cardGroupVoteUseCase,
 	cardItemVoteUseCase,
 	createVoteService,
-	deleteVoteApplication,
 	deleteVoteService,
 	voteRepository
 } from './votes.providers';
@@ -31,7 +30,6 @@ import BoardUsersModule from '../boardUsers/boardusers.module';
 		cardItemVoteUseCase,
 		cardGroupVoteUseCase,
 		createVoteService,
-		deleteVoteApplication,
 		deleteVoteService,
 		voteRepository
 	],
