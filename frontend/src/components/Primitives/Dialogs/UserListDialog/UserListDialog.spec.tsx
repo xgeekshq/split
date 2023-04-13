@@ -32,7 +32,7 @@ describe('Components/Primitives/Dialogs/UserListDialog', () => {
 
     // Assert
     expect(getAllByTestId('checkboxUserItem')).toHaveLength(usersList.length);
-    expect(getByTestId('searchInput')).toBeInTheDocument();
+    expect(getByTestId('uncontrolledInput')).toBeInTheDocument();
   });
 
   it('should call confirmationHandler function', async () => {
