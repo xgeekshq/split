@@ -1,18 +1,16 @@
 import React, { Dispatch, SetStateAction, useState, useMemo, useEffect } from 'react';
-
 import Text from '@/components/Primitives/Text/Text';
 import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Checkbox from '@/components/Primitives/Inputs/Checkboxes/Checkbox/Checkbox';
 import { useRouter } from 'next/router';
-
 import { verifyIfIsNewJoiner } from '@/utils/verifyIfIsNewJoiner';
 import { TeamChecked } from '@/types/team/team';
 import isEmpty from '@/utils/isEmpty';
 import Dialog from '@/components/Primitives/Dialogs/Dialog/Dialog';
-import SearchInput from '@/components/Primitives/Inputs/SearchInput/SearchInput';
 import Separator from '@/components/Primitives/Separator/Separator';
 import useUpdateUserTeams from '@/hooks/teams/useUpdateUserTeams';
+import UncontrolledInput from '@/components/Primitives/Inputs/UncontrolledInput/UncontrolledInput';
 
 type TeamsDialogProps = {
   teamsList: TeamChecked[];
@@ -93,7 +91,7 @@ const TeamsDialog = ({
     <Dialog isOpen={isOpen} setIsOpen={setIsOpen}>
       <Dialog.Header title={confirmationLabel} />
       <Flex css={{ p: '$32' }} direction="column">
-        <SearchInput
+        <UncontrolledInput
           currentValue={searchTeam}
           handleChange={(e) => {
             setSearchTeam(e.target.value);
@@ -102,6 +100,7 @@ const TeamsDialog = ({
             setSearchTeam('');
           }}
           placeholder="Search team"
+          iconName="search"
         />
       </Flex>
       <Text css={{ display: 'block', px: '$32', pb: '$24' }} heading="4">
