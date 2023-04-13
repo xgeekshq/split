@@ -11,7 +11,7 @@ import { UserFactory } from '@/utils/factories/user';
 import { BoardFactory } from '@/utils/factories/board';
 import { setCookie } from 'cookies-next';
 import { GUEST_USER_COOKIE } from '@/utils/constants';
-import useRegisterGuestUser from './useRegisterGuestUser';
+import useRegisterGuestUser from '@/hooks/auth/useRegisterGuestUser';
 
 const DUMMY_USER = UserFactory.create();
 const DUMMY_CREATE_GUEST_USER = {
@@ -27,21 +27,21 @@ const DUMMY_GUEST_USER = {
   user: DUMMY_USER._id,
 };
 
-const mockUseRegisterGuestUser = registerGuest as jest.Mock;
+const mockUseRegisterGuestUser = registerGuest as jest.Mock<Promise<GuestUser>>;
 jest.mock('@/api/authService');
 
-const mockSetCookie = setCookie as jest.Mock<Promise<GuestUser>>;
+const mockSetCookie = setCookie as jest.Mock;
 jest.mock('cookies-next');
 
 const render = (options?: Partial<RenderHookWithProvidersOptions>) =>
   renderHook(() => useRegisterGuestUser(), { wrapper: renderHookWithProviders(options) });
 
-describe('hooks/auth/useResetPassword', () => {
+describe('hooks/auth/useRegisterGuestUser', () => {
   afterEach(() => {
     jest.clearAllMocks();
   });
 
-  it("should reset the user's password", async () => {
+  it('should register a guest user', async () => {
     // Arrange
     mockUseRegisterGuestUser.mockReturnValueOnce(Promise.resolve(DUMMY_GUEST_USER));
     mockSetCookie.mockImplementationOnce(jest.fn());
