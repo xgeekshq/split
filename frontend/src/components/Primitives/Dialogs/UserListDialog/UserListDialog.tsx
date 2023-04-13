@@ -6,8 +6,8 @@ import Checkbox from '@/components/Primitives/Inputs/Checkboxes/Checkbox/Checkbo
 import { UserList } from '@/types/team/userList';
 import Separator from '@/components/Primitives/Separator/Separator';
 import useCurrentSession from '@/hooks/useCurrentSession';
-import SearchInput from '@/components/Primitives/Inputs/SearchInput/SearchInput';
 import CheckboxUserItem from '@/components/Primitives/Inputs/Checkboxes/UserCheckbox/UserCheckbox';
+import UncontrolledInput from '../../Inputs/UncontrolledInput/UncontrolledInput';
 
 export type UserListDialogProps = {
   usersList: UserList[];
@@ -110,7 +110,7 @@ const UserListDialog = React.memo<UserListDialogProps>(
         <Flex direction="column" css={{ height: '100%' }} data-testid="userListDialog">
           <Dialog.Header title={confirmationLabel} />
           <Flex css={{ p: '$32' }} direction="column">
-            <SearchInput
+            <UncontrolledInput
               currentValue={searchMember}
               handleChange={(e) => {
                 setSearchMember(e.target.value);
@@ -119,6 +119,7 @@ const UserListDialog = React.memo<UserListDialogProps>(
                 setSearchMember('');
               }}
               placeholder="Search member"
+              iconName="search"
             />
           </Flex>
           <Text css={{ display: 'block', px: '$32', pb: '$24' }} heading="4">
