@@ -2,9 +2,20 @@ import { styled } from '@/styles/stitches/stitches.config';
 import Calendar from 'react-calendar';
 
 const StyledCalendar = styled(Calendar, {
+  height: '100%',
+  maxWidth: '$364',
+  backgroundColor: '$surface',
+  px: '$40',
+  pt: '$24',
+  width: '$400',
+  position: 'relative',
+  borderRadius: '$12',
+  boxShadow: '$1 $1 $5 #aaaaaa',
+  mt: '$5',
+
   '.react-calendar': {
     maxWidth: '100%',
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '$surface',
     fontFamily: '$body',
   },
   '.react-calendar__navigation': {
@@ -86,13 +97,13 @@ const StyledCalendar = styled(Calendar, {
   '.react-calendar__navigation button': {
     border: 'none',
     minWidth: '$24',
-    background: '$white',
+    background: '$surface',
     '& hover': {
       cursor: 'pointer',
     },
   },
   '.react-calendar__navigation button:disabled': {
-    backgroundColor: 'white',
+    backgroundColor: '$surface',
     '& svg': {
       color: '$primary100',
     },
@@ -134,8 +145,12 @@ const StyledCalendar = styled(Calendar, {
     justifyContent: 'center',
     fontFamily: '$body',
   },
+
   '.react-calendar__year-view__months__month': {
     fontFamily: '$body',
+  },
+  '.react-calendar__year-view__months button': {
+    maxWidth: '100%',
   },
   '.react-calendar__month-view__days__day--weekend': {},
   '.react-calendar__month-view__days__day--neighboringMonth': {
