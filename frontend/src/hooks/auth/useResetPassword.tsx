@@ -22,7 +22,7 @@ const useResetPassword = () => {
       setToastState({
         open: true,
         type: ToastStateEnum.ERROR,
-        content: 'Something went wrong,please try again.',
+        content: 'Something went wrong, please try again.',
       });
     },
   });
