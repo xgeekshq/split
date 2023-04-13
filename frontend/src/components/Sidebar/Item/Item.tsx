@@ -15,10 +15,12 @@ export type SidebarItemProps = {
 };
 
 const SidebarItem = ({ link, active, iconName, label, disabled, onClick }: SidebarItemProps) => {
+  const isActiveItem = link && active?.includes(link);
+
   const renderStyledMenuItem = () => (
     <StyledMenuItem
       align="center"
-      data-active={active === link}
+      data-active={isActiveItem}
       data-testid="sidebarItem"
       disabled={disabled}
       onClick={onClick}
