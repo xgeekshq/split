@@ -32,7 +32,7 @@ const useDeleteUser = () => {
     onSuccess: () => {
       setToastState({
         open: true,
-        content: 'The team user was successfully updated.',
+        content: 'The user was successfully updated.',
         type: ToastStateEnum.SUCCESS,
       });
     },
@@ -41,7 +41,7 @@ const useDeleteUser = () => {
 
       setToastState({
         open: true,
-        content: 'Error while updating the user',
+        content: 'Error while deleting the user',
         type: ToastStateEnum.ERROR,
       });
     },
