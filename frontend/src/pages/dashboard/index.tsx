@@ -1,4 +1,4 @@
-import React, { ReactElement, Suspense, useCallback, useState } from 'react';
+import React, { ReactElement, Suspense } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { GetServerSideProps } from 'next';
 import { useSession } from 'next-auth/react';
@@ -19,12 +19,6 @@ export const getServerSideProps: GetServerSideProps = requireAuthentication(asyn
 }));
 
 const Dashboard = () => {
-  const [startDate, setStartDate] = useState(new Date());
-
-  useCallback(() => {
-    setStartDate(startDate);
-  }, [startDate]);
-
   const { data: session } = useSession();
 
   const { data, isLoading } = useQuery(['dashboardInfo'], () => getDashboardHeaderInfo(), {

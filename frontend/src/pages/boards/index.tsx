@@ -16,6 +16,7 @@ import useCurrentSession from '@/hooks/useCurrentSession';
 
 const Boards = () => {
   const { session, userId, isSAdmin } = useCurrentSession({ required: true });
+
   if (!session) return null;
 
   return (
