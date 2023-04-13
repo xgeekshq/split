@@ -1,29 +1,41 @@
+import CardItem from 'src/modules/cards/entities/card.item.schema';
 import Card from 'src/modules/cards/entities/card.schema';
 
 export interface DeleteVoteServiceInterface {
-	deleteVoteFromCard(
-		boardId: string,
-		cardId: string,
-		userId: string,
-		cardItemId: string,
-		count: number,
-		retryCount?: number
-	): Promise<void>;
-
-	deleteVoteFromCardGroup(
-		boardId: string,
-		cardId: string,
-		userId: string,
-		count: number,
-		retryCount?: number
-	): Promise<void>;
-
 	decrementVoteUser(
 		boardId: string,
 		userId: string,
 		count?: number | undefined,
 		withSession?: boolean
 	): Promise<void>;
+
+	canUserDeleteVote(
+		boardId: string,
+		userId: string,
+		count: number,
+		cardId: string,
+		cardItemId?: string
+	): Promise<void>;
+
+	verifyIfUserCanDeleteVote(
+		boardId: string,
+		userId: string,
+		count: number,
+		cardId: string,
+		cardItemId?: string
+	): Promise<boolean>;
+
+	removeVotesFromCardItem(
+		boardId: string,
+		cardItemId: string,
+		votes: string[],
+		cardId: string,
+		withSession?: boolean
+	): Promise<void>;
+
+	getCardItemFromBoard(boardId: string, cardId: string, cardItemId?: string): Promise<CardItem>;
+
+	getCardFromBoard(boardId: string, cardId: string): Promise<Card>;
 
 	deleteCardVotesFromColumn(boardId: string, cardsArray: Card[]): Promise<void>;
 }
