@@ -7,7 +7,7 @@ import { UserFactory } from '@/utils/factories/user';
 import { deleteUserRequest } from '@/api/userService';
 import { toastState } from '@/store/toast/atom/toast.atom';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
-import useDeleteUser from './useDeleteUser';
+import useDeleteUser from '@/hooks/users/useDeleteUser';
 
 const DUMMY_USER = UserFactory.create();
 
@@ -17,12 +17,12 @@ jest.mock('@/api/userService');
 const render = (options?: Partial<RenderHookWithProvidersOptions>) =>
   renderHook(() => useDeleteUser(), { wrapper: renderHookWithProviders(options) });
 
-describe('hooks/users/useUpdateUser', () => {
+describe('hooks/users/useDeleteUser', () => {
   afterEach(() => {
     jest.clearAllMocks();
   });
 
-  it('should update the user', async () => {
+  it('should delete the user', async () => {
     // Arrange
     mockDeleteUserRequest.mockReturnValueOnce(Promise.resolve(true));
 
