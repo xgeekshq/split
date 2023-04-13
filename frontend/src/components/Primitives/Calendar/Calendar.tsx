@@ -2,13 +2,18 @@ import Icon from '@/components/Primitives/Icons/Icon/Icon';
 import StyledCalendar from '@/components/Primitives/Calendar/StyledCalendar';
 
 export type CalendarProps = {
+  minDate?: Date;
+  maxDate?: Date;
+  tileContent?: any;
   currentDate?: Date;
   setDate: (date: Date) => void;
 };
 
-const Calendar = ({ currentDate, setDate }: CalendarProps) => (
+const Calendar = ({ minDate, maxDate, tileContent, currentDate, setDate }: CalendarProps) => (
   <StyledCalendar
-    minDate={new Date(new Date().getFullYear(), new Date().getMonth(), 1)}
+    minDate={minDate}
+    maxDate={maxDate}
+    tileContent={tileContent}
     minDetail="year"
     nextLabel={<Icon name="arrow-right" />}
     prevLabel={<Icon name="arrow-left" />}

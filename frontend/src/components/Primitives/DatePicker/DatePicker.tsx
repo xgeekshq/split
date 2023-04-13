@@ -1,21 +1,7 @@
 import { styled } from '@/styles/stitches/stitches.config';
-import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import Calendar from '@/components/Primitives/Calendar/Calendar';
-import SelectDate from '@/components/Primitives/Inputs/SelectDate/SelectDate';
-
-const StyledContainer = styled(Flex, {
-  height: '100%',
-  maxWidth: '$364',
-  backgroundColor: '$white',
-  px: '$40',
-  pt: '$24',
-  width: '$400',
-  position: 'relative',
-  borderRadius: '$12',
-  boxShadow: '$1 $1 $5 #aaaaaa',
-  mt: '$5',
-});
+import UncontrolledInput from '../Inputs/UncontrolledInput/UncontrolledInput';
 
 // TODO: Styled dropdown trigger
 const StyledDropDownTrigger = styled(DropdownMenu.Trigger, {
@@ -32,17 +18,21 @@ export type DatePickerProps = {
 const DatePicker = ({ currentDate, setDate }: DatePickerProps) => (
   <DropdownMenu.Root>
     <StyledDropDownTrigger>
-      <SelectDate
+      <UncontrolledInput
         placeholder="Select date"
+        IconPositionRight
+        cursorType="pointer"
+        iconName="calendar-alt"
         currentValue={currentDate?.toLocaleDateString() || ''}
-        disabled
       />
     </StyledDropDownTrigger>
     <DropdownMenu.Portal>
       <DropdownMenu.Content align="start">
-        <StyledContainer direction="column" onClick={(event) => event.stopPropagation()}>
-          <Calendar currentDate={currentDate} setDate={setDate} />
-        </StyledContainer>
+        <Calendar
+          currentDate={currentDate}
+          setDate={setDate}
+          minDate={new Date(new Date().getFullYear(), new Date().getMonth(), 1)}
+        />
       </DropdownMenu.Content>
     </DropdownMenu.Portal>
   </DropdownMenu.Root>

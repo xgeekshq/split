@@ -1,4 +1,4 @@
-import { ReactElement, Suspense, useState } from 'react';
+import { ReactElement, Suspense } from 'react';
 import { GetServerSideProps, GetServerSidePropsContext } from 'next';
 import { getSession } from 'next-auth/react';
 import MyBoards from '@/components/Boards/MyBoards';
@@ -13,17 +13,13 @@ import MainPageHeader from '@/components/layouts/Layout/MainPageHeader/MainPageH
 import { ROUTES } from '@/utils/routes';
 import { getAllTeams, getUserTeams } from '@/api/teamService';
 import useCurrentSession from '@/hooks/useCurrentSession';
-import DatePicker from '@/components/Primitives/DatePicker/DatePicker';
 
 const Boards = () => {
   const { session, userId, isSAdmin } = useCurrentSession({ required: true });
-  const [currentDate, setDate] = useState<Date>();
   if (!session) return null;
 
   return (
     <Flex css={{ width: '100%' }} direction="column" gap="40">
-      <DatePicker currentDate={currentDate} setDate={setDate} />
-
       <MainPageHeader
         title="Boards"
         button={{
