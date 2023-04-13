@@ -2,15 +2,15 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { FilterQuery, Model } from 'mongoose';
 import { MongoGenericRepository } from 'src/libs/repositories/mongo/mongo-generic.repository';
-import User, { UserDocument } from '../entities/user.schema';
+import User from 'src/modules/users/entities/user.schema';
 import { UserRepositoryInterface } from './user.repository.interface';
 
 @Injectable()
 export class UserRepository
-	extends MongoGenericRepository<UserDocument>
+	extends MongoGenericRepository<User>
 	implements UserRepositoryInterface
 {
-	constructor(@InjectModel(User.name) private model: Model<UserDocument>) {
+	constructor(@InjectModel(User.name) private readonly model: Model<User>) {
 		super(model);
 	}
 
@@ -54,7 +54,7 @@ export class UserRepository
 	}
 
 	getAllWithPagination(page: number, size: number, searchUser?: string) {
-		let query: FilterQuery<UserDocument> = {
+		let query: FilterQuery<User> = {
 			$or: [{ isAnonymous: false }, { isAnonymous: undefined }]
 		};
 
@@ -75,6 +75,7 @@ export class UserRepository
 
 		return this.model
 			.find(query)
+			.select('-password -__v -currentHashedRefreshToken -strategy -updatedAt -isDeleted')
 			.skip(page * size)
 			.limit(size)
 			.sort({ firstName: 1, lastName: 1 })
@@ -84,6 +85,7 @@ export class UserRepository
 	getAllSignedUpUsers() {
 		return this.model
 			.find({ $or: [{ isAnonymous: false }, { isAnonymous: undefined }] })
+			.select('-password')
 			.sort({ firstName: 1, lastName: 1 })
 			.exec();
 	}

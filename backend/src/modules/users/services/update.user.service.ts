@@ -1,4 +1,5 @@
-import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
+import { UPDATE_FAILED } from 'src/libs/exceptions/messages';
+import { BadRequestException, HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { encrypt } from 'src/libs/utils/bcrypt';
 import * as ResetPassword from '../../auth/interfaces/types';
 import { UpdateUserServiceInterface } from '../interfaces/services/update.user.service.interface';
@@ -18,25 +19,15 @@ export default class UpdateUserService implements UpdateUserServiceInterface {
 		private readonly resetPasswordRepository: ResetPasswordRepositoryInterface
 	) {}
 
-	async setCurrentRefreshToken(refreshToken: string, userId: string) {
-		const currentHashedRefreshToken = await encrypt(refreshToken);
-
-		return this.userRepository.updateUserWithRefreshToken(
-			currentHashedRefreshToken,
-			String(userId)
-		);
-	}
-
 	async setPassword(userEmail: string, newPassword: string, newPasswordConf: string) {
-		const password = await encrypt(newPassword);
-
 		if (newPassword !== newPasswordConf) {
 			throw new PasswordsDontMatchException();
 		}
 
+		const password = await encrypt(newPassword);
 		const user = await this.userRepository.updateUserPassword(userEmail, password);
 
-		if (!user) throw new UserNotFoundException();
+		if (!user) throw new BadRequestException(UPDATE_FAILED);
 
 		return user;
 	}
@@ -55,14 +46,6 @@ export default class UpdateUserService implements UpdateUserServiceInterface {
 		return user.email;
 	}
 
-	public tokenValidator(updatedAt: Date) {
-		const isTokenValid = (new Date().getTime() - updatedAt.getTime()) / 1000 / 60 < 15;
-
-		if (!isTokenValid) {
-			throw new HttpException('EXPIRED_TOKEN', HttpStatus.BAD_REQUEST);
-		}
-	}
-
 	async updateUserAvatar(userId: string, avatarUrl: string) {
 		const user = await this.userRepository.updateUserAvatar(userId, avatarUrl);
 
@@ -73,7 +56,28 @@ export default class UpdateUserService implements UpdateUserServiceInterface {
 		return user;
 	}
 
+	/* this block of functions won't be tested since they make direct queries to the database */
+	async setCurrentRefreshToken(refreshToken: string, userId: string) {
+		const currentHashedRefreshToken = await encrypt(refreshToken);
+
+		return this.userRepository.updateUserWithRefreshToken(
+			currentHashedRefreshToken,
+			String(userId)
+		);
+	}
+
 	async updateUserUpdatedAtField(user: string) {
 		return await this.userRepository.updateUserUpdatedAt(user);
+	}
+	/* block ends here */
+
+	/* --------- HELPERS --------- */
+
+	private tokenValidator(updatedAt: Date) {
+		const isTokenValid = (new Date().getTime() - updatedAt.getTime()) / 1000 / 60 < 15;
+
+		if (!isTokenValid) {
+			throw new HttpException('EXPIRED_TOKEN', HttpStatus.BAD_REQUEST);
+		}
 	}
 }
