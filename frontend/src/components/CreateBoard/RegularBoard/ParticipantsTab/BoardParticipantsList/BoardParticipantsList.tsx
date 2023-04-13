@@ -12,6 +12,8 @@ import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 
 import { usersListState } from '@/store/team/atom/team.atom';
 import ListParticipants from '@/components/CreateBoard/RegularBoard/ParticipantsTab/ListParticipants/ListParticipants';
+import isEmpty from '@/utils/isEmpty';
+import Text from '@/components/Primitives/Text/Text';
 
 const BoardParticipantsList = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -63,13 +65,27 @@ const BoardParticipantsList = () => {
     }));
   };
 
+  const responsibles = createBoardData.users.filter(
+    (user) => user.role === BoardUserRoles.RESPONSIBLE,
+  );
+
   return (
     <Flex direction="column" gap={16} css={{ width: '100%' }}>
-      <Flex justify="end" css={{ mt: '$10' }}>
-        <Button variant="link" size="sm" onClick={handleOpen}>
-          <Icon name="plus" />
-          Add/remove participants
-        </Button>
+      <Flex direction="row" justify="between" align="center">
+        {isEmpty(responsibles) && (
+          <Flex css={{ mt: '$10' }}>
+            <Icon name="error" size={20} css={{ color: '$dangerBase' }} />
+            <Text size="sm" fontWeight="medium" color="dangerBase" css={{ marginLeft: '5px' }}>
+              You must select a responsible
+            </Text>
+          </Flex>
+        )}
+        <Flex justify="end" css={{ mt: '$10' }}>
+          <Button variant="link" size="sm" onClick={handleOpen}>
+            <Icon name="plus" />
+            Add/remove participants
+          </Button>
+        </Flex>
       </Flex>
       <Flex direction="column" gap="8">
         {createBoardData.users.map((participant) => (

@@ -27,7 +27,7 @@ import { createBoardDataState, createBoardTeam } from '@/store/createBoard/atoms
 import { usersListState } from '@/store/team/atom/team.atom';
 import { toastState } from '@/store/toast/atom/toast.atom';
 import { StyledForm } from '@/styles/pages/pages.styles';
-import { BoardUserDto } from '@/types/board/board.user';
+import { BoardUser, BoardUserDto } from '@/types/board/board.user';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
 import isEmpty from '@/utils/isEmpty';
@@ -159,21 +159,24 @@ const NewRegularBoard: NextPage = () => {
     router.push(DASHBOARD_ROUTE);
   };
 
-  const saveBoard = (title?: string, maxVotes?: number, slackEnable?: boolean) => {
-    const users: BoardUserDto[] = [];
-
-    let responsibles: string[] = [];
-    const filterResponsibles = boardState.users.flatMap((member) => {
+  const filterResponsibles = (users: BoardUser[]) =>
+    users.flatMap((member) => {
       if (member.role === BoardUserRoles.RESPONSIBLE) {
         return [member.user._id];
       }
       return [];
     });
 
+  const saveBoard = (title?: string, maxVotes?: number, slackEnable?: boolean) => {
+    const users: BoardUserDto[] = [];
+
+    let responsibles: string[] = [];
+
+    const responsiblesFiltered = filterResponsibles(boardState.users);
     if (!session) return;
 
-    if (!isEmpty(filterResponsibles)) {
-      responsibles = [...filterResponsibles];
+    if (!isEmpty(responsiblesFiltered)) {
+      responsibles = [...responsiblesFiltered];
     }
 
     if (isEmpty(boardState.users)) {
@@ -216,6 +219,8 @@ const NewRegularBoard: NextPage = () => {
       responsibles: [userId],
     });
   };
+
+  const hasResponsibles = !isEmpty(filterResponsibles(boardState.users));
 
   useEffect(() => {
     if (status === 'success') {
@@ -279,7 +284,7 @@ const NewRegularBoard: NextPage = () => {
                 </Flex>
               </Flex>
               <CreateFooter
-                disableButton={isBackButtonDisable}
+                disableButton={isBackButtonDisable || !hasResponsibles}
                 handleBack={handleCancelBtn}
                 formId="hook-form"
                 confirmationLabel="Create board"
