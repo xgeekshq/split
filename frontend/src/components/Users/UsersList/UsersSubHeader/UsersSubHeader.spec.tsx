@@ -30,7 +30,7 @@ describe('Users/UsersList/UsersSubHeader', () => {
 
     // Act
     const { getByTestId } = render({ handleClearSearch: mockClearSearch });
-    const clearBtn = getByTestId('searchInput').querySelector('div[data-type="clear"]')!;
+    const clearBtn = getByTestId('uncontrolledInput').querySelector('div[data-type="clear"]')!;
     fireEvent.click(clearBtn);
 
     // Assert

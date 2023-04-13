@@ -1,4 +1,4 @@
-import SearchInput from '@/components/Primitives/Inputs/SearchInput/SearchInput';
+import UncontrolledInput from '@/components/Primitives/Inputs/UncontrolledInput/UncontrolledInput';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Text from '@/components/Primitives/Text/Text';
 
@@ -18,11 +18,12 @@ const UsersSubHeader = ({
   <Flex css={{ mt: '$16' }} justify="between" align="end">
     <Text fontWeight="bold">{userAmount} registered users</Text>
     <Flex css={{ width: '$455' }}>
-      <SearchInput
+      <UncontrolledInput
         placeholder="Search user"
         currentValue={search}
         handleChange={handleSearchUser}
         handleClear={handleClearSearch}
+        iconName="search"
       />
     </Flex>
   </Flex>
