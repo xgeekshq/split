@@ -1,7 +1,7 @@
 import { styled } from '@/styles/stitches/stitches.config';
-import ReactCalendar from 'react-calendar';
+import Calendar from 'react-calendar';
 
-const StyledCalendar = styled(ReactCalendar, {
+const StyledCalendar = styled(Calendar, {
   '.react-calendar': {
     maxWidth: '100%',
     backgroundColor: '#FFFFFF',
@@ -179,7 +179,7 @@ const StyledCalendar = styled(ReactCalendar, {
   },
   '.react-calendar__tile--now': {
     backgroundColor: 'transparent',
-    border: '$1 solid $colors$highlight2Lighter',
+    border: '1px solid $colors$highlight2Lighter',
   },
   '.react-calendar__tile--now:enabled:hover .react-calendar__tile--now:enabled:focus': {
     backgroundColor: '#ffffa9',
