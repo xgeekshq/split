@@ -63,6 +63,7 @@ import GetBoardUseCaseDto from '../dto/useCase/get-board.use-case.dto';
 import BoardUseCasePresenter from '../presenter/board.use-case.presenter';
 import BoardGuestUserDto from 'src/modules/boardUsers/dto/board.guest.user.dto';
 import { UpdateBoardPermissionsGuard } from 'src/libs/guards/updateBoardPermissions.guard';
+import { CreateRegularBoardGuard } from 'src/libs/guards/createRegularBoard.guard';
 
 const BoardUser = (permissions: string[]) => SetMetadata('permissions', permissions);
 
@@ -112,6 +113,7 @@ export default class BoardsController {
 		description: 'Internal Server Error',
 		type: InternalServerErrorResponse
 	})
+	@UseGuards(CreateRegularBoardGuard)
 	@Post()
 	createBoard(@Req() request: RequestWithUser, @Body() boardData: BoardDto) {
 		return this.createBoardUseCase.execute({ userId: request.user._id, boardData });

@@ -32,12 +32,19 @@ const BoardParticipantsList = () => {
 
     setUsersList((prev) =>
       prev.map((user) => {
-        if (user._id !== userId) return user;
+        if (user._id === userId)
+          return {
+            ...user,
+            isChecked: true,
+          };
 
-        return {
-          ...user,
-          isChecked: false,
-        };
+        if (user._id === participantId)
+          return {
+            ...user,
+            isChecked: false,
+          };
+
+        return user;
       }),
     );
   };

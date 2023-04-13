@@ -161,13 +161,19 @@ const NewRegularBoard: NextPage = () => {
 
   const saveBoard = (title?: string, maxVotes?: number, slackEnable?: boolean) => {
     const users: BoardUserDto[] = [];
-    const responsibles: string[] = [];
-    const responsible = boardState.users.find((user) => user.role === BoardUserRoles.RESPONSIBLE);
+
+    let responsibles: string[] = [];
+    const filterResponsibles = boardState.users.flatMap((member) => {
+      if (member.role === BoardUserRoles.RESPONSIBLE) {
+        return [member.user._id];
+      }
+      return [];
+    });
 
     if (!session) return;
 
-    if (!isEmpty(responsible)) {
-      responsibles.push(responsible.user._id);
+    if (!isEmpty(filterResponsibles)) {
+      responsibles = [...filterResponsibles];
     }
 
     if (isEmpty(boardState.users)) {
@@ -207,6 +213,7 @@ const NewRegularBoard: NextPage = () => {
       dividedBoards: [],
       maxUsers: boardState.count.maxUsersCount,
       recurrent: false,
+      responsibles: [userId],
     });
   };
 
