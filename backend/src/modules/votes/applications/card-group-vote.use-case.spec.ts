@@ -210,12 +210,6 @@ describe('CardGroupVoteUseCase', () => {
 			});
 
 			it('should throw an error when the deleteCardGroupAndUserVotes function fails on voteRepositoryMock.removeVotesFromCard', async () => {
-				// const cardWithVotes: Card = CardFactory.create({ votes: [userId, userId] });
-				// const cardItemWithVotes: CardItem = cardWithVotes.items[0];
-				// cardItemWithVotes.votes = [userId, userId];
-
-				// deleteVoteServiceMock.getCardFromBoard.mockResolvedValue(cardWithVotes);
-
 				voteRepositoryMock.removeVotesFromCard.mockRejectedValue({
 					code: WRITE_LOCK_ERROR
 				});
@@ -295,33 +289,6 @@ describe('CardGroupVoteUseCase', () => {
 						})
 				).rejects.toThrowError(DeleteFailedException);
 			});
-
-			// it('should throw an error when the deleteVoteFromCardItemOnCardGroup (voteRepositoryMock.removeVotesFromCardItem) fails', async () => {
-			// 	console.log('TESTAR');
-			// 	const cardWithoutVotes: Card = CardFactory.create({ votes: [] });
-			// 	const cardItemWithVotes: CardItem = cardWithoutVotes.items[0];
-			// 	cardItemWithVotes.votes = [userId];
-
-			// 	deleteVoteServiceMock.getCardFromBoard.mockResolvedValue(cardWithoutVotes);
-			// 	voteRepositoryMock.removeVotesFromCard.mockResolvedValue(board);
-			// 	deleteVoteServiceMock.getCardItemFromBoard.mockResolvedValue(cardItemWithVotes);
-
-			// 	//if the error code is WRITE_ERROR_LOCK and the retryCount is less than 5
-
-			// 	voteRepositoryMock.removeVotesFromCardItem.mockRejectedValueOnce({
-			// 		code: WRITE_LOCK_ERROR
-			// 	});
-			// 	expect(
-			// 		async () =>
-			// 			await useCase.execute({
-			// 				boardId: board._id,
-			// 				cardId: card._id,
-			// 				userId,
-			// 				count: -1,
-			// 				completionHandler
-			// 			})
-			// 	).rejects.toThrowError(DeleteFailedException);
-			// });
 
 			it('should throw an error when the deleteVoteFromCardItemOnCardGroup fails', async () => {
 				const cardWithoutVotes: Card = CardFactory.create({ votes: [] });
