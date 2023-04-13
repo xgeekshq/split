@@ -13,7 +13,7 @@ export type RenderHookWithProvidersOptions = Omit<RenderOptions, 'queries'> & {
   recoilOptions?: RecoilOptions;
 };
 
-export type WrapperProps = {
+type WrapperProps = {
   children: ReactNode;
   queryClient: QueryClient;
   recoilHandler?: (value: any) => void;
@@ -26,7 +26,7 @@ const RecoilObserver = ({ recoilState, recoilHandler }: RecoilOptions) => {
   return null;
 };
 
-export function createWrapper({ children, queryClient, recoilHandler, recoilState }: WrapperProps) {
+function createWrapper({ children, queryClient, recoilHandler, recoilState }: WrapperProps) {
   return (
     <QueryClientProvider client={queryClient}>
       <RecoilRoot>
