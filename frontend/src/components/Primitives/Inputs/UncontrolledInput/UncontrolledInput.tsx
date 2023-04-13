@@ -1,8 +1,6 @@
 import React from 'react';
-
 import Icon from '@/components/Primitives/Icons/Icon/Icon';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
-
 import {
   IconWrapper,
   PlaceholderText,
@@ -10,7 +8,7 @@ import {
   StyledInputWrapper,
 } from '@/components/Primitives/Inputs/Input/styles';
 
-export type SearchInputProps = {
+export type UncontrolledInputProps = {
   placeholder: string;
   iconName?: string;
   cursorType?: string;
@@ -24,17 +22,17 @@ export type SearchInputProps = {
 const UncontrolledInput = ({
   placeholder,
   IconPositionRight = false,
-  cursorType,
+  cursorType = 'default',
   iconName = '',
   disabled = false,
   currentValue,
   handleChange,
   handleClear,
-}: SearchInputProps) => (
+}: UncontrolledInputProps) => (
   <Flex
     css={{ position: 'relative', width: '100%', mb: '$16', height: 'auto' }}
     direction="column"
-    data-testid="searchInput"
+    data-testid="uncontrolledInput"
   >
     <StyledInputWrapper gap="8" disabled={disabled}>
       <Flex style={{ order: IconPositionRight ? 2 : 1 }}>
@@ -50,7 +48,7 @@ const UncontrolledInput = ({
 
       <Flex css={{ flexGrow: '1' }} style={{ order: IconPositionRight ? 1 : 2 }}>
         <StyledInput
-          id="searchInput"
+          id="uncontrolledInput"
           disabled={disabled}
           placeholder=" "
           value={currentValue}
@@ -58,7 +56,7 @@ const UncontrolledInput = ({
           css={{ pt: '$28', pb: '$8' }}
           style={{ cursor: cursorType || '' }}
         />
-        <PlaceholderText as="label" htmlFor="searchInput">
+        <PlaceholderText as="label" htmlFor="uncontrolledInput">
           {placeholder}
         </PlaceholderText>
       </Flex>
@@ -73,7 +71,7 @@ const UncontrolledInput = ({
             order: 3,
           }}
           onClick={handleClear}
-          data-testid="searchInputClear"
+          data-testid="uncontrolledInputClear"
         >
           <Icon
             name="close"
