@@ -35,7 +35,11 @@ export class UpdateBoardPermissionsGuard implements CanActivate {
 				throw new NotFoundException();
 			}
 
-			return userToUpdate ? String(board.createdBy) !== userToUpdate._id : hasMembersToAddOrRemove;
+			const canUserUpdateRole = userToUpdate
+				? String(board.createdBy) !== userToUpdate._id
+				: hasMembersToAddOrRemove;
+
+			return canUserUpdateRole;
 		} catch (error) {
 			throw new ForbiddenException();
 		}

@@ -33,13 +33,16 @@ export class UpdateBoardPhaseUseCase implements UseCase<BoardPhaseDto, void> {
 
 			this.eventEmitter.emit(BOARD_PHASE_SERVER_UPDATED, new PhaseChangeEvent(board));
 
+			const isTeamXgeeks = (board.team as Team).name === 'xgeeks';
+			const boardPhaseIsNotAddCards = board.phase !== BoardPhases.ADDCARDS;
+			const canSendMessage =
+				isTeamXgeeks &&
+				board.slackEnable &&
+				boardPhaseIsNotAddCards &&
+				this.configService.getOrThrow(SLACK_ENABLE);
+
 			//Sends message to SLACK
-			if (
-				(board.team as Team).name === 'xgeeks' &&
-				board.slackEnable === true &&
-				board.phase !== BoardPhases.ADDCARDS &&
-				this.configService.getOrThrow(SLACK_ENABLE)
-			) {
+			if (canSendMessage) {
 				const message = this.generateMessage(board.phase, boardId, board.createdAt, board.columns);
 				const slackMessageDto = new SlackMessageDto(
 					this.configService.getOrThrow(SLACK_MASTER_CHANNEL_ID),

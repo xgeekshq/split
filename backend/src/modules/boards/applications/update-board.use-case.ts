@@ -55,7 +55,7 @@ export class UpdateBoardUseCase implements UseCase<UpdateBoardDto, Board> {
 			}
 		}
 
-		const board = await this.boardRepository.getBoard(boardId);
+		let board = await this.boardRepository.getBoard(boardId);
 
 		if (!board) {
 			throw new BoardNotFoundException();
@@ -91,14 +91,16 @@ export class UpdateBoardUseCase implements UseCase<UpdateBoardDto, Board> {
 		 * Updates the board's settings fields
 		 *
 		 * */
-
-		board.title = boardData.title;
-		board.maxVotes = boardData.maxVotes;
-		board.hideCards = boardData.hideCards;
-		board.addCards = boardData.addCards;
-		board.hideVotes = boardData.hideVotes;
-		board.postAnonymously = boardData.postAnonymously;
-		board.isPublic = boardData.isPublic;
+		board = {
+			...board,
+			title: boardData.title,
+			maxVotes: boardData.maxVotes,
+			hideCards: boardData.hideCards,
+			addCards: boardData.addCards,
+			hideVotes: boardData.hideVotes,
+			postAnonymously: boardData.postAnonymously,
+			isPublic: boardData.isPublic
+		};
 
 		/**
 		 * If the board is a regular, then updates its columns
@@ -116,15 +118,15 @@ export class UpdateBoardUseCase implements UseCase<UpdateBoardDto, Board> {
 			completionHandler();
 		}
 
-		if (
-			updatedBoard &&
+		const hasNewResponsible =
 			newResponsible &&
 			currentResponsible &&
-			String(currentResponsible?.id) !== String(newResponsible?.id) &&
-			board.slackChannelId &&
-			updatedBoard.slackEnable &&
-			updatedBoard.isSubBoard
-		) {
+			String(currentResponsible?.id) !== String(newResponsible?.id);
+
+		const boardHasSlackEnableAndISSubBoard =
+			board.slackChannelId && updatedBoard.slackEnable && updatedBoard.isSubBoard;
+
+		if (hasNewResponsible && boardHasSlackEnableAndISSubBoard) {
 			this.handleResponsibleSlackMessage(
 				newResponsible,
 				currentResponsible,
