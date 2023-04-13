@@ -1,5 +1,5 @@
 import Icon from '@/components/Primitives/Icons/Icon/Icon';
-import StyledCalendar from '@/components/Primitives/Calendar/StyledCalendar';
+import StyledCalendar from '@/components/Primitives/Calendar/styles';
 
 export type CalendarProps = {
   minDate?: Date;
