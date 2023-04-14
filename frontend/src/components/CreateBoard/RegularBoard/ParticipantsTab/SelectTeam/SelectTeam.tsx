@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import React, { useCallback, useEffect, useMemo } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 
 import Icon from '@/components/Primitives/Icons/Icon/Icon';
@@ -12,15 +12,15 @@ import {
 } from '@/components/Primitives/Inputs/Select/Select';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Text from '@/components/Primitives/Text/Text';
+import useTeams from '@/hooks/teams/useTeams';
 import useCreateBoard from '@/hooks/useCreateBoard';
+import useCurrentSession from '@/hooks/useCurrentSession';
 import { createBoardTeam } from '@/store/createBoard/atoms/create-board.atom';
 import { usersListState } from '@/store/team/atom/team.atom';
+import { Team } from '@/types/team/team';
+import { UserList } from '@/types/team/userList';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import { TeamUserRoles } from '@/utils/enums/team.user.roles';
-import useCurrentSession from '@/hooks/useCurrentSession';
-import { UserList } from '@/types/team/userList';
-import useTeams from '@/hooks/teams/useTeams';
-import { Team } from '@/types/team/team';
 
 const SelectTeam = () => {
   const { userId, isSAdmin } = useCurrentSession();
@@ -57,7 +57,11 @@ const SelectTeam = () => {
     }
 
     const users = selectedTeam.users.flatMap((teamUser) => {
-      if (teamUser.role === TeamUserRoles.STAKEHOLDER || teamUser.user._id === userId)
+      if (
+        teamUser.role === TeamUserRoles.STAKEHOLDER ||
+        teamUser.user._id === userId ||
+        teamUser.role === TeamUserRoles.ADMIN
+      )
         return [
           {
             user: teamUser.user,

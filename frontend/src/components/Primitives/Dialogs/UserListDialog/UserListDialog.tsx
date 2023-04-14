@@ -1,13 +1,13 @@
-import React, { Dispatch, SetStateAction, useEffect, useMemo, useState } from 'react';
 import Dialog from '@/components/Primitives/Dialogs/Dialog/Dialog';
-import Text from '@/components/Primitives/Text/Text';
-import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Checkbox from '@/components/Primitives/Inputs/Checkboxes/Checkbox/Checkbox';
-import { UserList } from '@/types/team/userList';
-import Separator from '@/components/Primitives/Separator/Separator';
-import useCurrentSession from '@/hooks/useCurrentSession';
-import SearchInput from '@/components/Primitives/Inputs/SearchInput/SearchInput';
 import CheckboxUserItem from '@/components/Primitives/Inputs/Checkboxes/UserCheckbox/UserCheckbox';
+import SearchInput from '@/components/Primitives/Inputs/SearchInput/SearchInput';
+import Flex from '@/components/Primitives/Layout/Flex/Flex';
+import Separator from '@/components/Primitives/Separator/Separator';
+import Text from '@/components/Primitives/Text/Text';
+import useCurrentSession from '@/hooks/useCurrentSession';
+import { UserList } from '@/types/team/userList';
+import React, { Dispatch, SetStateAction, useEffect, useMemo, useState } from 'react';
 
 export type UserListDialogProps = {
   usersList: UserList[];

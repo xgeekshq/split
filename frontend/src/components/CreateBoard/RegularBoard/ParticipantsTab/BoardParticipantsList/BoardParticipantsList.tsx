@@ -10,12 +10,16 @@ import { createBoardDataState } from '@/store/createBoard/atoms/create-board.ato
 import { BoardUser } from '@/types/board/board.user';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 
-import { usersListState } from '@/store/team/atom/team.atom';
 import ListParticipants from '@/components/CreateBoard/RegularBoard/ParticipantsTab/ListParticipants/ListParticipants';
-import isEmpty from '@/utils/isEmpty';
 import Text from '@/components/Primitives/Text/Text';
+import { usersListState } from '@/store/team/atom/team.atom';
+import isEmpty from '@/utils/isEmpty';
 
-const BoardParticipantsList = () => {
+type BoardParticipantsListProps = {
+  isPageLoading: boolean;
+};
+
+const BoardParticipantsList = ({ isPageLoading }: BoardParticipantsListProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const { userId, isSAdmin } = useCurrentSession();
   const [createBoardData, setCreateBoardData] = useRecoilState(createBoardDataState);
@@ -34,7 +38,7 @@ const BoardParticipantsList = () => {
 
     setUsersList((prev) =>
       prev.map((user) => {
-        if (user._id === userId)
+        if (user._id === userId && !isSAdmin)
           return {
             ...user,
             isChecked: true,
@@ -72,7 +76,7 @@ const BoardParticipantsList = () => {
   return (
     <Flex direction="column" gap={16} css={{ width: '100%' }}>
       <Flex direction="row" justify="between" align="center">
-        {isEmpty(responsibles) && (
+        {isEmpty(responsibles) && !isPageLoading && (
           <Flex css={{ mt: '$10' }}>
             <Icon name="error" size={20} css={{ color: '$dangerBase' }} />
             <Text size="sm" fontWeight="medium" color="dangerBase" css={{ marginLeft: '5px' }}>

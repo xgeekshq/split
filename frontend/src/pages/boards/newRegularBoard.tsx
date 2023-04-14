@@ -18,7 +18,6 @@ import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import TipBar from '@/components/Primitives/Layout/TipBar/TipBar';
 import LoadingPage from '@/components/Primitives/Loading/Page/Page';
 import { defaultRegularColumns } from '@/helper/board/defaultColumns';
-import { TEAMS_KEY } from '@/utils/constants/reactQueryKeys';
 import useTeams from '@/hooks/teams/useTeams';
 import useBoard from '@/hooks/useBoard';
 import useCurrentSession from '@/hooks/useCurrentSession';
@@ -28,12 +27,13 @@ import { usersListState } from '@/store/team/atom/team.atom';
 import { toastState } from '@/store/toast/atom/toast.atom';
 import { StyledForm } from '@/styles/pages/pages.styles';
 import { BoardUser, BoardUserDto } from '@/types/board/board.user';
+import { TEAMS_KEY } from '@/utils/constants/reactQueryKeys';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
 import isEmpty from '@/utils/isEmpty';
 import { DASHBOARD_ROUTE } from '@/utils/routes';
 import { joiResolver } from '@hookform/resolvers/joi';
-import { dehydrate, QueryClient, useQuery } from '@tanstack/react-query';
+import { QueryClient, dehydrate, useQuery } from '@tanstack/react-query';
 
 const defaultBoard = {
   users: [],
@@ -66,7 +66,7 @@ const NewRegularBoard: NextPage = () => {
   const { session, userId, isSAdmin } = useCurrentSession({ required: true });
 
   const [isBackButtonDisable, setBackButtonState] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isPageLoading, setIsPageLoading] = useState(false);
   const [createBoard, setCreateBoard] = useState(false);
 
   const setToastState = useSetRecoilState(toastState);
@@ -147,7 +147,7 @@ const NewRegularBoard: NextPage = () => {
 
   // Handle back to boards list page
   const handleBack = useCallback(() => {
-    setIsLoading(true);
+    setIsPageLoading(true);
     resetListUsersState();
     setBackButtonState(true);
     router.back();
@@ -155,7 +155,7 @@ const NewRegularBoard: NextPage = () => {
 
   const handleCancelBtn = () => {
     resetListUsersState();
-    setIsLoading(true);
+    setIsPageLoading(true);
     router.push(DASHBOARD_ROUTE);
   };
 
@@ -224,7 +224,7 @@ const NewRegularBoard: NextPage = () => {
 
   useEffect(() => {
     if (status === 'success') {
-      setIsLoading(true);
+      setIsPageLoading(true);
       setToastState({
         open: true,
         content: 'Board created with success!',
@@ -248,7 +248,7 @@ const NewRegularBoard: NextPage = () => {
     <Suspense fallback={<LoadingPage />}>
       <QueryError>
         <Flex
-          css={{ height: '100vh', backgroundColor: '$primary50', opacity: isLoading ? 0.5 : 1 }}
+          css={{ height: '100vh', backgroundColor: '$primary50', opacity: isPageLoading ? 0.5 : 1 }}
           direction="column"
         >
           <CreateHeader
@@ -276,7 +276,7 @@ const NewRegularBoard: NextPage = () => {
                           title="Board Name"
                           description="Make it short and descriptive. It well help you to distinguish retrospectives from each other."
                         />
-                        <SettingsTabs />
+                        <SettingsTabs isPageLoading />
                       </FormProvider>
                     </Flex>
                   </StyledForm>
