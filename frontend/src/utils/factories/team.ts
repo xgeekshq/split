@@ -1,8 +1,8 @@
-import { Team, TeamChecked } from '@/types/team/team';
+import { CreateTeamDto, Team, TeamChecked } from '@/types/team/team';
 import { faker } from '@faker-js/faker';
 
 import { buildTestFactory } from '@/utils/testing';
-import { TeamUserFactory } from '@/utils/factories/user';
+import { CreateTeamUserFactory, TeamUserFactory } from '@/utils/factories/user';
 
 export const TeamFactory = buildTestFactory<Team>(() => {
   const id = faker.database.mongodbObjectId();
@@ -27,5 +27,15 @@ export const TeamCheckedFactory = buildTestFactory<TeamChecked>(() => {
     _id,
     name,
     isChecked,
+  };
+});
+
+export const CreateTeamFactory = buildTestFactory<CreateTeamDto>(() => {
+  const name = faker.company.name();
+  const users = CreateTeamUserFactory.createMany();
+
+  return {
+    name,
+    users,
   };
 });
