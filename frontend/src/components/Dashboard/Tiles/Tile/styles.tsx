@@ -35,16 +35,17 @@ const TileBlob = styled(Icon, {
   position: 'absolute',
   right: '$-1',
 
-  width: '100px !important',
-  height: '100px !important',
-  top: '0',
+  width: '$100 !important',
+  height: '$100 !important',
+
+  top: 0,
 
   variants: {
     color: {
       yellow: {
-        width: '127px !important',
-        height: '76px !important',
-        bottom: '0',
+        width: '$127 !important',
+        height: '$76 !important',
+        bottom: 0,
         top: 'unset',
       },
       purple: {},
