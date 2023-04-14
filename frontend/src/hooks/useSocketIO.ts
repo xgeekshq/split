@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
 import { useQueryClient } from '@tanstack/react-query';
 import { useRecoilValue } from 'recoil';
 import { io, Socket } from 'socket.io-client';
@@ -25,6 +26,7 @@ import { ListenEvent } from '@/types/events/listen-event.type';
 import VoteDto from '@/types/vote/vote.dto';
 import { BOARD_PHASE_SERVER_SENT, NEXT_PUBLIC_BACKEND_URL } from '@/utils/constants';
 import isEmpty from '@/utils/isEmpty';
+import { DELETED_BOARD_ROUTE } from '@utils/routes';
 
 enum BoardAction {
   UPDATECARDPOSITION,
