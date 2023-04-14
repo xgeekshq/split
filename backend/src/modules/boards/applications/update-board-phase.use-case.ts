@@ -31,7 +31,7 @@ export class UpdateBoardPhaseUseCase implements UseCase<BoardPhaseDto, void> {
 		try {
 			const updatedBoard = await this.boardRepository.updatePhase(boardId, phase);
 
-			if (updatedBoard.phase === phase) {
+			if (updatedBoard && updatedBoard.phase === phase) {
 				this.eventEmitter.emit(BOARD_PHASE_SERVER_UPDATED, new PhaseChangeEvent(updatedBoard));
 
 				const isTeamXgeeks = (updatedBoard.team as Team).name === 'xgeeks';
