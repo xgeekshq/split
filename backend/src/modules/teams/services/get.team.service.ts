@@ -3,7 +3,7 @@ import { TEAM_NOT_FOUND } from 'src/libs/exceptions/messages';
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { GetTeamServiceInterface } from '../interfaces/services/get.team.service.interface';
 import Team from '../entities/team.schema';
-import { TYPES } from '../interfaces/types';
+import { TEAM_REPOSITORY } from '../constants';
 import * as Boards from 'src/modules/boards/interfaces/types';
 import * as TeamUsers from 'src/modules/teamUsers/interfaces/types';
 import { TeamRepositoryInterface } from '../interfaces/repositories/team.repository.interface';
@@ -13,12 +13,12 @@ import { GetTeamUserServiceInterface } from 'src/modules/teamUsers/interfaces/se
 @Injectable()
 export default class GetTeamService implements GetTeamServiceInterface {
 	constructor(
-		@Inject(TYPES.repositories.TeamRepository)
+		@Inject(TEAM_REPOSITORY)
 		private readonly teamRepository: TeamRepositoryInterface,
 		@Inject(TeamUsers.TYPES.services.GetTeamUserService)
-		private getTeamUserService: GetTeamUserServiceInterface,
+		private readonly getTeamUserService: GetTeamUserServiceInterface,
 		@Inject(Boards.TYPES.services.GetBoardService)
-		private getBoardService: GetBoardServiceInterface
+		private readonly getBoardService: GetBoardServiceInterface
 	) {}
 
 	countAllTeams() {

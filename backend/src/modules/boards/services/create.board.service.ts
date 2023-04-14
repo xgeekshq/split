@@ -17,7 +17,6 @@ import * as SchedulesType from 'src/modules/schedules/interfaces/types';
 import * as Boards from 'src/modules/boards/interfaces/types';
 import * as BoardUsers from 'src/modules/boardUsers/interfaces/types';
 import { GetTeamServiceInterface } from 'src/modules/teams/interfaces/services/get.team.service.interface';
-import { TYPES as TeamType } from 'src/modules/teams/interfaces/types';
 import * as TeamUsers from 'src/modules/teamUsers/interfaces/types';
 import TeamUser from 'src/modules/teamUsers/entities/team.user.schema';
 import User from 'src/modules/users/entities/user.schema';
@@ -38,6 +37,7 @@ import {
 import { Configs } from '../dto/configs.dto';
 import { TEAM_NOT_FOUND, TEAM_USERS_NOT_FOUND } from 'src/libs/exceptions/messages';
 import { CreateFailedException } from 'src/libs/exceptions/createFailedBadRequestException';
+import { GET_TEAM_SERVICE } from 'src/modules/teams/constants';
 
 type CreateBoardAndUsers = {
 	boardData: BoardDto;
@@ -49,7 +49,7 @@ export default class CreateBoardService implements CreateBoardServiceInterface {
 	private logger = new Logger(CreateBoardService.name);
 
 	constructor(
-		@Inject(forwardRef(() => TeamType.services.GetTeamService))
+		@Inject(forwardRef(() => GET_TEAM_SERVICE))
 		private getTeamService: GetTeamServiceInterface,
 		@Inject(TeamUsers.TYPES.services.GetTeamUserService)
 		private getTeamUserService: GetTeamUserServiceInterface,

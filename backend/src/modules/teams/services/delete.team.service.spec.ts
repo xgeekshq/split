@@ -8,7 +8,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { DeepMocked, createMock } from '@golevelup/ts-jest';
 import { deleteTeamService } from 'src/modules/teams/providers';
 import * as Boards from 'src/modules/boards/interfaces/types';
-import * as Teams from 'src/modules/teams/interfaces/types';
+import * as Teams from 'src/modules/teams/constants';
 import * as TeamUsers from 'src/modules/teamUsers/interfaces/types';
 import { TeamUserFactory } from 'src/libs/test-utils/mocks/factories/teamUser-factory.mock';
 import { DeleteBoardServiceInterface } from 'src/modules/boards/interfaces/services/delete.board.service.interface';

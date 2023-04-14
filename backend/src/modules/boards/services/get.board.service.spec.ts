@@ -11,7 +11,7 @@ import SocketGateway from 'src/modules/socket/gateway/socket.gateway';
 import { DeepMocked, createMock } from '@golevelup/ts-jest';
 import * as Boards from 'src/modules/boards/interfaces/types';
 import * as BoardUsers from 'src/modules/boardUsers/interfaces/types';
-import * as Teams from 'src/modules/teams/interfaces/types';
+import * as Teams from 'src/modules/teams/constants';
 import faker from '@faker-js/faker';
 import { BoardUserFactory } from 'src/libs/test-utils/mocks/factories/boardUser-factory.mock';
 import { TeamFactory } from 'src/libs/test-utils/mocks/factories/team-factory.mock';

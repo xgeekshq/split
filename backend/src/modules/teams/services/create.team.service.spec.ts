@@ -6,7 +6,7 @@ import { DeepMocked, createMock } from '@golevelup/ts-jest';
 import { CreateTeamUserServiceInterface } from 'src/modules/teamUsers/interfaces/services/create.team.user.service.interface';
 import { createTeamService } from 'src/modules/teams/providers';
 import { CreateTeamServiceInterface } from '../interfaces/services/create.team.service.interface';
-import * as Teams from 'src/modules/teams/interfaces/types';
+import * as Teams from 'src/modules/teams/constants';
 import * as TeamUsers from 'src/modules/teamUsers/interfaces/types';
 import { CreateTeamDto } from '../dto/create-team.dto';
 import { TeamUserDtoFactory } from 'src/libs/test-utils/mocks/factories/dto/teamUserDto-factory.mock';
