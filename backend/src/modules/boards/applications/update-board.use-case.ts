@@ -1,25 +1,25 @@
-import { UseCase } from 'src/libs/interfaces/use-case.interface';
 import { Inject, Injectable } from '@nestjs/common';
-import { TYPES } from '../interfaces/types';
-import { BoardRepositoryInterface } from '../repositories/board.repository.interface';
-import { UpdateBoardDto } from '../dto/update-board.dto';
-import Board from '../entities/board.schema';
-import * as BoardUsers from 'src/modules/boardUsers/interfaces/types';
-import * as Votes from 'src/modules/votes/interfaces/types';
-import { UpdateFailedException } from 'src/libs/exceptions/updateFailedBadRequestException';
 import { BoardNotFoundException } from 'src/libs/exceptions/boardNotFoundException';
-import { ResponsibleType } from '../interfaces/responsible.interface';
-import User from 'src/modules/users/entities/user.schema';
+import { UpdateFailedException } from 'src/libs/exceptions/updateFailedBadRequestException';
+import { UseCase } from 'src/libs/interfaces/use-case.interface';
+import { getIdFromObjectId } from 'src/libs/utils/getIdFromObjectId';
 import isEmpty from 'src/libs/utils/isEmpty';
-import { GetBoardUserServiceInterface } from 'src/modules/boardUsers/interfaces/services/get.board.user.service.interface';
 import BoardUserDto from 'src/modules/boardUsers/dto/board.user.dto';
+import { GetBoardUserServiceInterface } from 'src/modules/boardUsers/interfaces/services/get.board.user.service.interface';
+import { UpdateBoardUserServiceInterface } from 'src/modules/boardUsers/interfaces/services/update.board.user.service.interface';
+import * as BoardUsers from 'src/modules/boardUsers/interfaces/types';
 import ColumnDto from 'src/modules/columns/dto/column.dto';
 import Column from 'src/modules/columns/entities/column.schema';
-import { getIdFromObjectId } from 'src/libs/utils/getIdFromObjectId';
-import { UpdateBoardUserServiceInterface } from 'src/modules/boardUsers/interfaces/services/update.board.user.service.interface';
-import { DeleteVoteServiceInterface } from 'src/modules/votes/interfaces/services/delete.vote.service.interface';
-import * as CommunicationsType from 'src/modules/communication/interfaces/types';
 import { CommunicationServiceInterface } from 'src/modules/communication/interfaces/slack-communication.service.interface';
+import * as CommunicationsType from 'src/modules/communication/interfaces/types';
+import User from 'src/modules/users/entities/user.schema';
+import { DeleteVoteServiceInterface } from 'src/modules/votes/interfaces/services/delete.vote.service.interface';
+import * as Votes from 'src/modules/votes/interfaces/types';
+import { UpdateBoardDto } from '../dto/update-board.dto';
+import Board from '../entities/board.schema';
+import { ResponsibleType } from '../interfaces/responsible.interface';
+import { TYPES } from '../interfaces/types';
+import { BoardRepositoryInterface } from '../repositories/board.repository.interface';
 
 @Injectable()
 export class UpdateBoardUseCase implements UseCase<UpdateBoardDto, Board> {
@@ -31,9 +31,9 @@ export class UpdateBoardUseCase implements UseCase<UpdateBoardDto, Board> {
 		@Inject(BoardUsers.TYPES.services.UpdateBoardUserService)
 		private readonly updateBoardUserService: UpdateBoardUserServiceInterface,
 		@Inject(Votes.TYPES.services.DeleteVoteService)
-		private deleteVoteService: DeleteVoteServiceInterface,
+		private readonly deleteVoteService: DeleteVoteServiceInterface,
 		@Inject(CommunicationsType.TYPES.services.SlackCommunicationService)
-		private slackCommunicationService: CommunicationServiceInterface
+		private readonly slackCommunicationService: CommunicationServiceInterface
 	) {}
 
 	async execute(boardData: UpdateBoardDto) {

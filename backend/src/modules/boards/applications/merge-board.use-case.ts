@@ -1,15 +1,15 @@
-import { UseCase } from 'src/libs/interfaces/use-case.interface';
 import { Inject, Injectable, Logger } from '@nestjs/common';
-import { TYPES } from '../interfaces/types';
-import * as CommunicationsType from 'src/modules/communication/interfaces/types';
-import { BoardRepositoryInterface } from '../repositories/board.repository.interface';
-import MergeBoardUseCaseDto from '../dto/useCase/merge-board.use-case.dto';
-import Board from '../entities/board.schema';
 import { BoardNotFoundException } from 'src/libs/exceptions/boardNotFoundException';
 import { UpdateFailedException } from 'src/libs/exceptions/updateFailedBadRequestException';
+import { UseCase } from 'src/libs/interfaces/use-case.interface';
+import { CommunicationServiceInterface } from 'src/modules/communication/interfaces/slack-communication.service.interface';
+import * as CommunicationsType from 'src/modules/communication/interfaces/types';
+import MergeBoardUseCaseDto from '../dto/useCase/merge-board.use-case.dto';
+import Board from '../entities/board.schema';
+import { TYPES } from '../interfaces/types';
+import { BoardRepositoryInterface } from '../repositories/board.repository.interface';
 import { generateNewSubColumns } from '../utils/generate-subcolumns';
 import { mergeCardsFromSubBoardColumnsIntoMainBoard } from '../utils/merge-cards-from-subboard';
-import { CommunicationServiceInterface } from 'src/modules/communication/interfaces/slack-communication.service.interface';
 
 @Injectable()
 export class MergeBoardUseCase implements UseCase<MergeBoardUseCaseDto, Board> {
@@ -19,7 +19,7 @@ export class MergeBoardUseCase implements UseCase<MergeBoardUseCaseDto, Board> {
 		@Inject(TYPES.repositories.BoardRepository)
 		private readonly boardRepository: BoardRepositoryInterface,
 		@Inject(CommunicationsType.TYPES.services.SlackCommunicationService)
-		private slackCommunicationService: CommunicationServiceInterface
+		private readonly slackCommunicationService: CommunicationServiceInterface
 	) {}
 
 	async execute({ subBoardId, userId, socketId, completionHandler }: MergeBoardUseCaseDto) {

@@ -1,20 +1,20 @@
-import { UseCase } from 'src/libs/interfaces/use-case.interface';
 import { Inject, Injectable } from '@nestjs/common';
-import { TYPES } from '../interfaces/types';
-import * as CommunicationsType from 'src/modules/communication/interfaces/types';
-import { BoardRepositoryInterface } from '../repositories/board.repository.interface';
-import { BoardPhaseDto } from 'src/libs/dto/board-phase.dto';
+import { ConfigService } from '@nestjs/config';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 import { Team } from '@slack/web-api/dist/response/AdminAppsRequestsListResponse';
+import { FRONTEND_URL } from 'src/libs/constants/frontend';
 import { BOARD_PHASE_SERVER_UPDATED } from 'src/libs/constants/phase';
 import { SLACK_ENABLE, SLACK_MASTER_CHANNEL_ID } from 'src/libs/constants/slack';
+import { BoardPhaseDto } from 'src/libs/dto/board-phase.dto';
 import { BoardPhases } from 'src/libs/enum/board.phases';
 import { UpdateFailedException } from 'src/libs/exceptions/updateFailedBadRequestException';
+import { UseCase } from 'src/libs/interfaces/use-case.interface';
 import { SlackMessageDto } from 'src/modules/communication/dto/slack.message.dto';
-import PhaseChangeEvent from 'src/modules/socket/events/user-updated-phase.event';
-import { EventEmitter2 } from '@nestjs/event-emitter';
-import { ConfigService } from '@nestjs/config';
-import { FRONTEND_URL } from 'src/libs/constants/frontend';
 import { SendMessageServiceInterface } from 'src/modules/communication/interfaces/send-message.service.interface';
+import * as CommunicationsType from 'src/modules/communication/interfaces/types';
+import PhaseChangeEvent from 'src/modules/socket/events/user-updated-phase.event';
+import { TYPES } from '../interfaces/types';
+import { BoardRepositoryInterface } from '../repositories/board.repository.interface';
 
 @Injectable()
 export class UpdateBoardPhaseUseCase implements UseCase<BoardPhaseDto, void> {
@@ -23,32 +23,41 @@ export class UpdateBoardPhaseUseCase implements UseCase<BoardPhaseDto, void> {
 		private readonly boardRepository: BoardRepositoryInterface,
 		@Inject(CommunicationsType.TYPES.services.SlackSendMessageService)
 		private slackSendMessageService: SendMessageServiceInterface,
-		private eventEmitter: EventEmitter2,
-		private configService: ConfigService
+		private readonly eventEmitter: EventEmitter2,
+		private readonly configService: ConfigService
 	) {}
 
 	async execute({ boardId, phase }: BoardPhaseDto) {
 		try {
-			const board = await this.boardRepository.updatePhase(boardId, phase);
+			const updatedBoard = await this.boardRepository.updatePhase(boardId, phase);
 
-			this.eventEmitter.emit(BOARD_PHASE_SERVER_UPDATED, new PhaseChangeEvent(board));
+			if (updatedBoard.phase === phase) {
+				this.eventEmitter.emit(BOARD_PHASE_SERVER_UPDATED, new PhaseChangeEvent(updatedBoard));
 
-			const isTeamXgeeks = (board.team as Team).name === 'xgeeks';
-			const boardPhaseIsNotAddCards = board.phase !== BoardPhases.ADDCARDS;
-			const canSendMessage =
-				isTeamXgeeks &&
-				board.slackEnable &&
-				boardPhaseIsNotAddCards &&
-				this.configService.getOrThrow(SLACK_ENABLE);
+				const isTeamXgeeks = (updatedBoard.team as Team).name === 'xgeeks';
+				const boardPhaseIsNotAddCards = updatedBoard.phase !== BoardPhases.ADDCARDS;
+				const canSendMessage =
+					isTeamXgeeks &&
+					updatedBoard.slackEnable &&
+					boardPhaseIsNotAddCards &&
+					this.configService.getOrThrow(SLACK_ENABLE);
 
-			//Sends message to SLACK
-			if (canSendMessage) {
-				const message = this.generateMessage(board.phase, boardId, board.createdAt, board.columns);
-				const slackMessageDto = new SlackMessageDto(
-					this.configService.getOrThrow(SLACK_MASTER_CHANNEL_ID),
-					message
-				);
-				this.slackSendMessageService.execute(slackMessageDto);
+				//Sends message to SLACK
+				if (canSendMessage) {
+					const message = this.generateMessage(
+						updatedBoard.phase,
+						boardId,
+						updatedBoard.createdAt,
+						updatedBoard.columns
+					);
+					const slackMessageDto = new SlackMessageDto(
+						this.configService.getOrThrow(SLACK_MASTER_CHANNEL_ID),
+						message
+					);
+					this.slackSendMessageService.execute(slackMessageDto);
+				}
+			} else {
+				throw new UpdateFailedException();
 			}
 		} catch (err) {
 			throw new UpdateFailedException();

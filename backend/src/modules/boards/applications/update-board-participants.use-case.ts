@@ -1,14 +1,15 @@
-import { UseCase } from 'src/libs/interfaces/use-case.interface';
 import { Inject, Injectable } from '@nestjs/common';
-import * as BoardUsers from 'src/modules/boardUsers/interfaces/types';
-import { UpdateBoardUserServiceInterface } from 'src/modules/boardUsers/interfaces/services/update.board.user.service.interface';
-import UpdateBoardUserDto from 'src/modules/boardUsers/dto/update-board-user.dto';
-import BoardUserDto from 'src/modules/boardUsers/dto/board.user.dto';
-import BoardUser from 'src/modules/boardUsers/entities/board.user.schema';
 import { UpdateFailedException } from 'src/libs/exceptions/updateFailedBadRequestException';
-import User from 'src/modules/users/entities/user.schema';
+import { UseCase } from 'src/libs/interfaces/use-case.interface';
+import isEmpty from 'src/libs/utils/isEmpty';
+import BoardUserDto from 'src/modules/boardUsers/dto/board.user.dto';
+import UpdateBoardUserDto from 'src/modules/boardUsers/dto/update-board-user.dto';
+import BoardUser from 'src/modules/boardUsers/entities/board.user.schema';
 import { CreateBoardUserServiceInterface } from 'src/modules/boardUsers/interfaces/services/create.board.user.service.interface';
 import { DeleteBoardUserServiceInterface } from 'src/modules/boardUsers/interfaces/services/delete.board.user.service.interface';
+import { UpdateBoardUserServiceInterface } from 'src/modules/boardUsers/interfaces/services/update.board.user.service.interface';
+import * as BoardUsers from 'src/modules/boardUsers/interfaces/types';
+import User from 'src/modules/users/entities/user.schema';
 
 export type BoardParticipantsPresenter = BoardUser | BoardUser[];
 
@@ -39,10 +40,10 @@ export class UpdateBoardParticipantsUseCase
 		try {
 			let createdBoardUsers: BoardUser[] = [];
 
-			if (addUsers.length > 0)
+			if (!isEmpty(addUsers))
 				createdBoardUsers = await this.createBoardUserService.saveBoardUsers(addUsers);
 
-			if (removeUsers.length > 0) await this.deleteBoardUsers(removeUsers);
+			if (!isEmpty(removeUsers)) await this.deleteBoardUsers(removeUsers);
 
 			return createdBoardUsers;
 		} catch (error) {
