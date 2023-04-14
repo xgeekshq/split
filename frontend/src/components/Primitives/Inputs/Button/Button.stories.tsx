@@ -1,17 +1,16 @@
 import React from 'react';
 import { ComponentStory } from '@storybook/react';
-
 import dedent from 'ts-dedent';
 
-import Button from '@/components/Primitives/Inputs/Button/Button';
 import Icon from '@/components/Primitives/Icons/Icon/Icon';
+import Button from '@/components/Primitives/Inputs/Button/Button';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Text from '@/components/Primitives/Text/Text';
 import {
-  ButtonVariantType,
+  ButtonSize,
   ButtonSizeType,
   ButtonVariant,
-  ButtonSize,
+  ButtonVariantType,
 } from '@/stories/types/PrimitiveTypes';
 
 const VARIANT_OPTIONS: ButtonVariantType[] = [...ButtonVariant];
@@ -99,12 +98,12 @@ export const Default = Template.bind({});
 Default.storyName = 'Basic Usage';
 
 export const Variants: ComponentStory<typeof Button> = ({ children, disabled }) => (
-  <Flex justify="evenly" wrap="wrap" gap={32}>
+  <Flex gap={32} justify="evenly" wrap="wrap">
     {VARIANT_OPTIONS.map((variant) => (
-      <Flex direction="column" justify="center" align="center" gap={16} key={variant}>
+      <Flex key={variant} align="center" direction="column" gap={16} justify="center">
         <Text heading="5">Variant {variant}</Text>
         {SIZE_OPTIONS.map((size) => (
-          <Button variant={variant} size={size} disabled={disabled} key={size}>
+          <Button key={size} disabled={disabled} size={size} variant={variant}>
             {children}
           </Button>
         ))}
@@ -114,12 +113,12 @@ export const Variants: ComponentStory<typeof Button> = ({ children, disabled }) 
 );
 
 export const IconButton: ComponentStory<typeof Button> = ({ children, disabled }) => (
-  <Flex justify="evenly" wrap="wrap" gap={32}>
+  <Flex gap={32} justify="evenly" wrap="wrap">
     {VARIANT_OPTIONS.map((variant) => (
-      <Flex direction="column" justify="center" align="center" gap={16} key={variant}>
+      <Flex key={variant} align="center" direction="column" gap={16} justify="center">
         <Text heading="5">Variant {variant}</Text>
         {SIZE_OPTIONS.map((size) => (
-          <Button variant={variant} size={size} disabled={disabled} key={size}>
+          <Button key={size} disabled={disabled} size={size} variant={variant}>
             <Icon name="plus" />
             {children}
           </Button>
@@ -130,11 +129,11 @@ export const IconButton: ComponentStory<typeof Button> = ({ children, disabled }
 );
 
 export const Icons: ComponentStory<typeof Button> = ({ disabled }) => (
-  <Flex justify="evenly" wrap="wrap" gap={32}>
+  <Flex gap={32} justify="evenly" wrap="wrap">
     {SIZE_OPTIONS.map((size) => (
-      <Flex direction="column" justify="start" align="center" gap={16} key={size}>
+      <Flex key={size} align="center" direction="column" gap={16} justify="start">
         <Text heading="5">Size {size}</Text>
-        <Button isIcon size={size} disabled={disabled}>
+        <Button isIcon disabled={disabled} size={size}>
           <Icon name="close" />
         </Button>
       </Flex>

@@ -1,7 +1,6 @@
-import { renderWithProviders } from '@/utils/testing/renderWithProviders';
-
 import Users from '@/pages/users';
 import { libraryMocks } from '@/utils/testing/mocks';
+import { renderWithProviders } from '@/utils/testing/renderWithProviders';
 
 const { mockRouter } = libraryMocks.mockNextRouter({ pathname: '/users' });
 

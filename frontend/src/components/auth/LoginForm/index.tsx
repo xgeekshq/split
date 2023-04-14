@@ -3,16 +3,22 @@ import { FormProvider, useForm } from 'react-hook-form';
 import router from 'next/router';
 import { RedirectableProviderType } from 'next-auth/providers';
 import { signIn } from 'next-auth/react';
-import { useSetRecoilState } from 'recoil';
 import { joiResolver } from '@hookform/resolvers/joi';
+import { deleteCookie, getCookie } from 'cookies-next';
+import { useSetRecoilState } from 'recoil';
 
+import LoginSSO from '@/components/auth/LoginForm/LoginSSO';
 import Icon from '@/components/Primitives/Icons/Icon/Icon';
-import Dots from '@/components/Primitives/Loading/Dots/Dots';
-import Flex from '@/components/Primitives/Layout/Flex/Flex';
+import Button from '@/components/Primitives/Inputs/Button/Button';
 import Input from '@/components/Primitives/Inputs/Input/Input';
+import Flex from '@/components/Primitives/Layout/Flex/Flex';
+import Dots from '@/components/Primitives/Loading/Dots/Dots';
+import Separator from '@/components/Primitives/Separator/Separator';
 import Text from '@/components/Primitives/Text/Text';
+import loginWithAzure from '@/hooks/auth/loginWithAzure';
 import SchemaLoginForm from '@/schema/schemaLoginForm';
 import { toastState } from '@/store/toast/atom/toast.atom';
+import { FlexForm } from '@/styles/pages/pages.styles';
 import { LoginUser } from '@/types/user/user';
 import {
   AUTH_SSO,
@@ -24,13 +30,6 @@ import {
 } from '@/utils/constants';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
 import { DASHBOARD_ROUTE } from '@/utils/routes';
-import Button from '@/components/Primitives/Inputs/Button/Button';
-import { getCookie, deleteCookie } from 'cookies-next';
-import loginWithAzure from '@/hooks/auth/loginWithAzure';
-import Separator from '@/components/Primitives/Separator/Separator';
-import { FlexForm } from '@/styles/pages/pages.styles';
-
-import LoginSSO from '@/components/auth/LoginForm/LoginSSO';
 
 interface LoginFormProps {
   setShowTroubleLogin: Dispatch<SetStateAction<boolean>>;
@@ -103,7 +102,7 @@ const LoginForm = ({ setShowTroubleLogin }: LoginFormProps) => {
         <Text css={{ mt: '$24' }} heading="1">
           Welcome
         </Text>
-        <Text size="md" color="primary500" css={{ mt: '$8' }}>
+        <Text color="primary500" css={{ mt: '$8' }} size="md">
           Enter your email and password to log in.
         </Text>
         <Input css={{ mt: '$32' }} id="email" placeholder="Email address" type="text" />
@@ -120,11 +119,11 @@ const LoginForm = ({ setShowTroubleLogin }: LoginFormProps) => {
           {!loading.credentials && 'Log in'}
         </Button>
         <Button
-          data-testid="forgot-password-button"
-          variant="link"
-          size="sm"
           css={{ color: '$primary500', mt: '$16' }}
+          data-testid="forgot-password-button"
           onClick={handleShowTroubleLogginIn}
+          size="sm"
+          variant="link"
         >
           Forgot password
         </Button>
@@ -132,25 +131,25 @@ const LoginForm = ({ setShowTroubleLogin }: LoginFormProps) => {
           <Flex align="center" direction="column" justify="center">
             <Flex align="center" css={{ width: '100%', my: '$26' }} gap="16">
               <Separator />
-              <Text color="primary300" size="sm" fontWeight="medium">
+              <Text color="primary300" fontWeight="medium" size="sm">
                 OR
               </Text>
               <Separator />
             </Flex>
             <Flex gap="32">
               {NEXT_PUBLIC_ENABLE_GIT && (
-                <Button size="xl" isIcon>
-                  <Icon size={60} name="github" />
+                <Button isIcon size="xl">
+                  <Icon name="github" size={60} />
                 </Button>
               )}
               {NEXT_PUBLIC_ENABLE_GOOGLE && (
-                <Button size="xl" isIcon>
-                  <Icon size={60} name="google" />
+                <Button isIcon size="xl">
+                  <Icon name="google" size={60} />
                 </Button>
               )}
               {NEXT_PUBLIC_ENABLE_AZURE && (
-                <Button size="xl" isIcon data-loading={loading.sso} onClick={handleLoginAzure}>
-                  <Icon size={60} name="microsoft" />
+                <Button isIcon data-loading={loading.sso} onClick={handleLoginAzure} size="xl">
+                  <Icon name="microsoft" size={60} />
                 </Button>
               )}
             </Flex>

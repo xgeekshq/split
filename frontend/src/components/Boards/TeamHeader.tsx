@@ -1,10 +1,10 @@
+import AvatarGroup from '@/components/Primitives/Avatars/AvatarGroup/AvatarGroup';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Separator from '@/components/Primitives/Separator/Separator';
 import Text from '@/components/Primitives/Text/Text';
 import { BoardUser } from '@/types/board/board.user';
 import { Team } from '@/types/team/team';
 import { TeamUser } from '@/types/team/team.user';
-import AvatarGroup from '@/components/Primitives/Avatars/AvatarGroup/AvatarGroup';
 
 interface TeamHeaderProps {
   team?: Team;
@@ -18,13 +18,13 @@ const TeamHeader: React.FC<TeamHeaderProps> = ({ team, userId, users }) => {
     <Flex align="center" css={{ mb: '$16' }} justify="start">
       <Flex align="center">
         <Text
+          heading="5"
           css={{
             textOverflow: 'ellipsis',
             whiteSpace: 'nowrap',
             overflow: 'hidden',
             maxWidth: '$260',
           }}
-          heading="5"
         >
           {hasTeam ? team.name : 'My boards'}
         </Text>
@@ -40,7 +40,7 @@ const TeamHeader: React.FC<TeamHeaderProps> = ({ team, userId, users }) => {
             <Text color="primary300" size="sm">
               Team admin
             </Text>
-            <AvatarGroup teamAdmins stakeholders listUsers={team.users} userId={userId} />
+            <AvatarGroup stakeholders teamAdmins listUsers={team.users} userId={userId} />
           </Flex>
         )}
         {!hasTeam && users && (

@@ -1,9 +1,8 @@
-import { styled } from '@/styles/stitches/stitches.config';
-
+import Icon from '@/components/Primitives/Icons/Icon/Icon';
 import Button from '@/components/Primitives/Inputs/Button/Button';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
-import Icon from '@/components/Primitives/Icons/Icon/Icon';
 import Text from '@/components/Primitives/Text/Text';
+import { styled } from '@/styles/stitches/stitches.config';
 
 const Header = styled('header', Flex, {
   borderBottom: '1px solid $primary200',
@@ -18,11 +17,11 @@ export type CreateHeaderProps = {
 };
 
 const CreateHeader = ({ title, disableBack, handleBack }: CreateHeaderProps) => (
-  <Header align="center" justify="between" data-testid="createHeader">
-    <Text color="primary800" heading={3} fontWeight="bold">
+  <Header align="center" data-testid="createHeader" justify="between">
+    <Text color="primary800" fontWeight="bold" heading={3}>
       {title}
     </Text>
-    <Button isIcon size="lg" disabled={disableBack} onClick={handleBack}>
+    <Button isIcon disabled={disableBack} onClick={handleBack} size="lg">
       <Icon css={{ color: '$primaryBase' }} name="close" />
     </Button>
   </Header>

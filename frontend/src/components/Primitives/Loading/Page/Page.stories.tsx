@@ -1,8 +1,8 @@
 import React from 'react';
 import { ComponentStory } from '@storybook/react';
+import dedent from 'ts-dedent';
 
 import LoadingPage from '@/components/Primitives/Loading/Page/Page';
-import dedent from 'ts-dedent';
 import { SpinnerSizeType } from '@/stories/types/PrimitiveTypes';
 
 const SIZE_OPTIONS: SpinnerSizeType[] = [50, 80, 100, 150, 200];

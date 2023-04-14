@@ -1,15 +1,16 @@
 import * as React from 'react';
+import { useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { useRecoilState } from 'recoil';
 import * as ToastPrimitive from '@radix-ui/react-toast';
-import { keyframes, styled } from '@/styles/stitches/stitches.config';
+import { useRecoilState } from 'recoil';
+
 import Icon from '@/components/Primitives/Icons/Icon/Icon';
+import Button from '@/components/Primitives/Inputs/Button/Button';
+import Text from '@/components/Primitives/Text/Text';
 import { toastState } from '@/store/toast/atom/toast.atom';
+import { keyframes, styled } from '@/styles/stitches/stitches.config';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
 import { ROUTES } from '@/utils/routes';
-import { useEffect } from 'react';
-import Text from '@/components/Primitives/Text/Text';
-import Button from '@/components/Primitives/Inputs/Button/Button';
 
 const hide = keyframes({
   '0%': { opacity: 1 },
@@ -84,6 +85,7 @@ const Toast = () => {
   return (
     <StyledToast
       duration={7000}
+      onOpenChange={(e) => setToastState({ open: e, type, content })}
       open={open}
       type="foreground"
       css={{
@@ -106,17 +108,16 @@ const Toast = () => {
           },
         },
       }}
-      onOpenChange={(e) => setToastState({ open: e, type, content })}
     >
       <StyledDescription>
-        {type === ToastStateEnum.ERROR && <Icon size={32} name="blob-error" />}
-        {type === ToastStateEnum.SUCCESS && <Icon size={32} name="blob-success" />}
-        {type === ToastStateEnum.WARNING && <Icon size={32} name="blob-warning" />}
-        {type === ToastStateEnum.INFO && <Icon size={32} name="blob-info" />}
+        {type === ToastStateEnum.ERROR && <Icon name="blob-error" size={32} />}
+        {type === ToastStateEnum.SUCCESS && <Icon name="blob-success" size={32} />}
+        {type === ToastStateEnum.WARNING && <Icon name="blob-warning" size={32} />}
+        {type === ToastStateEnum.INFO && <Icon name="blob-info" size={32} />}
         <Text size="sm">{content}</Text>
       </StyledDescription>
-      <StyledClose aria-label="Close" size="sm" isIcon>
-        <Icon size={16} css={{ color: '$primary800' }} name="close" />
+      <StyledClose isIcon aria-label="Close" size="sm">
+        <Icon css={{ color: '$primary800' }} name="close" size={16} />
       </StyledClose>
     </StyledToast>
   );

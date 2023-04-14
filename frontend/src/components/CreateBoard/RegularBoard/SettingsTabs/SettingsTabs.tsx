@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 
+import BoardConfigurations from '@/components/CreateBoard/BoardConfigurations/BoardConfigurations';
+import ParticipantsTab from '@/components/CreateBoard/RegularBoard/ParticipantsTab/ParticipantsTab';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Tab, { TabList } from '@/components/Primitives/Tab/Tab';
 import Text from '@/components/Primitives/Text/Text';
@@ -14,9 +16,6 @@ import { usersListState } from '@/store/team/atom/team.atom';
 import { toastState } from '@/store/toast/atom/toast.atom';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
-
-import BoardConfigurations from '@/components/CreateBoard/BoardConfigurations/BoardConfigurations';
-import ParticipantsTab from '@/components/CreateBoard/RegularBoard/ParticipantsTab/ParticipantsTab';
 
 const SettingsTabs = () => {
   const { userId } = useCurrentSession();
@@ -98,14 +97,14 @@ const SettingsTabs = () => {
 
   return (
     <Flex direction="column" gap={16}>
-      <Text heading={3} css={{ mb: '$16' }}>
+      <Text css={{ mb: '$16' }} heading={3}>
         Settings
       </Text>
       <Tab
-        tabList={tabList}
-        defaultValue={initialTabValue}
         activeValue={activeTab}
+        defaultValue={initialTabValue}
         onChangeActiveValue={handleTabChange}
+        tabList={tabList}
       />
     </Flex>
   );

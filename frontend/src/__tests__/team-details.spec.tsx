@@ -1,16 +1,16 @@
-import { renderWithProviders } from '@/utils/testing/renderWithProviders';
-
-import TeamDetails from '@/pages/teams/[teamId]';
-import { libraryMocks } from '@/utils/testing/mocks';
-import { TeamFactory } from '@/utils/factories/team';
-import useTeam from '@/hooks/teams/useTeam';
 import { UseQueryResult } from '@tanstack/react-query';
-import { Team } from '@/types/team/team';
+import { waitFor } from '@testing-library/react';
+
+import useTeam from '@/hooks/teams/useTeam';
 import useUsers from '@/hooks/users/useUsers';
+import TeamDetails from '@/pages/teams/[teamId]';
+import { Team } from '@/types/team/team';
 import { User } from '@/types/user/user';
+import { TeamFactory } from '@/utils/factories/team';
 import { UserFactory } from '@/utils/factories/user';
 import { ROUTES } from '@/utils/routes';
-import { waitFor } from '@testing-library/react';
+import { libraryMocks } from '@/utils/testing/mocks';
+import { renderWithProviders } from '@/utils/testing/renderWithProviders';
 
 const randomTeam = TeamFactory.create();
 const mockUseTeam = useTeam as jest.Mock<UseQueryResult<Team>>;

@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 
-import Icon from '@/components/Primitives/Icons/Icon/Icon';
 import Avatar from '@/components/Primitives/Avatars/Avatar/Avatar';
+import Icon from '@/components/Primitives/Icons/Icon/Icon';
 import Button from '@/components/Primitives/Inputs/Button/Button';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Text from '@/components/Primitives/Text/Text';
@@ -11,8 +11,8 @@ import { BoardUser } from '@/types/board/board.user';
 import CardType from '@/types/card/card';
 import { CardItemType } from '@/types/card/cardItem';
 import CommentType from '@/types/comment/comment';
-import { getInitials } from '@/utils/getInitials';
 import { BoardPhases } from '@/utils/enums/board.phases';
+import { getInitials } from '@/utils/getInitials';
 
 interface FooterProps {
   boardId: string;
@@ -163,11 +163,11 @@ const CardFooter = ({
         >
           <Avatar
             isBoardPage
+            css={{ flexShrink: 0 }}
             fallbackText={getInitials(createdBy?.firstName ?? '-', createdBy?.lastName ?? '-')}
             id={createdBy?._id}
             isDefaultColor={createdBy?._id === userId}
             size={20}
-            css={{ flexShrink: 0 }}
           />
           <Text
             size="xs"
@@ -182,7 +182,7 @@ const CardFooter = ({
         </Flex>
       )}
       {createdByTeam && (
-        <Text size="xs" fontWeight="medium">
+        <Text fontWeight="medium" size="xs">
           {createdByTeam}
         </Text>
       )}
@@ -191,9 +191,10 @@ const CardFooter = ({
           <Flex align="center" gap="2">
             <Button
               isIcon
-              variant="light"
-              size="sm"
               css={{ color: '$primary500' }}
+              onClick={handleAddVote}
+              size="sm"
+              variant="light"
               disabled={
                 disableVotes ||
                 (maxVotes && user?.votesCount === maxVotes) ||
@@ -201,7 +202,6 @@ const CardFooter = ({
                 phase === BoardPhases.ADDCARDS ||
                 phase === BoardPhases.SUBMITTED
               }
-              onClick={handleAddVote}
             >
               <Icon name="thumbs-up" />
             </Button>
@@ -225,9 +225,10 @@ const CardFooter = ({
           >
             <Button
               isIcon
-              variant="light"
-              size="sm"
               css={{ color: '$primary500' }}
+              onClick={handleDeleteVote}
+              size="sm"
+              variant="light"
               disabled={
                 disableVotes ||
                 votesInThisCard.length === 0 ||
@@ -237,7 +238,6 @@ const CardFooter = ({
                 phase === BoardPhases.ADDCARDS ||
                 phase === BoardPhases.SUBMITTED
               }
-              onClick={handleDeleteVote}
             >
               <Icon name="thumbs-down" />
             </Button>
@@ -246,15 +246,15 @@ const CardFooter = ({
           <Flex align="center" gap="2">
             <Button
               isIcon
-              variant="light"
-              size="sm"
               css={{ color: '$primary500' }}
               disabled={hideCards && card.createdBy?._id !== userId}
               onClick={setOpenComments}
+              size="sm"
+              variant="light"
             >
               <Icon name={isCommentsOpened ? 'comment-filled' : 'comment'} />
             </Button>
-            <Text visible={comments.length > 0} size="xs">
+            <Text size="xs" visible={comments.length > 0}>
               {comments.length}
             </Text>
           </Flex>

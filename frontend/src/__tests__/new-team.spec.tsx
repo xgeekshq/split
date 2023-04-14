@@ -1,13 +1,13 @@
-import { renderWithProviders } from '@/utils/testing/renderWithProviders';
-
-import NewTeam from '@/pages/teams/new';
-import { libraryMocks } from '@/utils/testing/mocks';
 import { UseQueryResult } from '@tanstack/react-query';
+import { waitFor } from '@testing-library/react';
+
 import useUsers from '@/hooks/users/useUsers';
+import NewTeam from '@/pages/teams/new';
 import { User } from '@/types/user/user';
 import { UserFactory } from '@/utils/factories/user';
 import { ROUTES } from '@/utils/routes';
-import { waitFor } from '@testing-library/react';
+import { libraryMocks } from '@/utils/testing/mocks';
+import { renderWithProviders } from '@/utils/testing/renderWithProviders';
 
 const mockUseUsers = useUsers as jest.Mock<UseQueryResult<User[]>>;
 jest.mock('@/hooks/users/useUsers');

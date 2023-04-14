@@ -1,10 +1,9 @@
 import { useSession } from 'next-auth/react';
-
-import TeamItem from '@/components/Teams/TeamsList/TeamItem/TeamItem';
-import { TeamFactory } from '@/utils/factories/team';
 import { ComponentStory } from '@storybook/react';
 
+import TeamItem from '@/components/Teams/TeamsList/TeamItem/TeamItem';
 import { createTeamUser } from '@/stories/utils/createTeamUser';
+import { TeamFactory } from '@/utils/factories/team';
 
 export default {
   title: 'Teams/TeamItem',
@@ -37,13 +36,13 @@ export default {
 
 const Template: ComponentStory<typeof TeamItem> = ({ team }) => {
   const { data: session } = useSession();
-  const user: any = session?.user!;
+  const user: any = session?.user;
 
   if (user.isMember) {
     createTeamUser(user, team);
   }
 
-  return <TeamItem team={team} userId={user.id} isSAdmin={user.isSAdmin} />;
+  return <TeamItem isSAdmin={user.isSAdmin} team={team} userId={user.id} />;
 };
 
 export const Default = Template.bind({});

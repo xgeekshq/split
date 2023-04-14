@@ -1,9 +1,10 @@
 import React from 'react';
 import { ComponentStory } from '@storybook/react';
 import dedent from 'ts-dedent';
-import Tooltip from '@/components/Primitives/Tooltips/Tooltip/Tooltip';
-import Button from '@/components/Primitives/Inputs/Button/Button';
+
 import Icon from '@/components/Primitives/Icons/Icon/Icon';
+import Button from '@/components/Primitives/Inputs/Button/Button';
+import Tooltip from '@/components/Primitives/Tooltips/Tooltip/Tooltip';
 
 export default {
   title: 'Primitives/Tooltips/Tooltip',
@@ -43,7 +44,7 @@ export default {
 };
 
 const Template: ComponentStory<typeof Tooltip> = ({ content, color }) => (
-  <Tooltip content={content} color={color}>
+  <Tooltip color={color} content={content}>
     <Button isIcon>
       <Icon
         name="info"

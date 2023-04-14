@@ -1,18 +1,17 @@
 import React, { useState } from 'react';
 import { ComponentStory } from '@storybook/react';
-
 import dedent from 'ts-dedent';
 
+import Icon from '@/components/Primitives/Icons/Icon/Icon';
 import {
   Popover,
-  PopoverContent,
-  PopoverTrigger,
-  PopoverItem,
   PopoverClose,
+  PopoverContent,
+  PopoverItem,
+  PopoverTrigger,
 } from '@/components/Primitives/Popovers/Popover/Popover';
-import Icon from '@/components/Primitives/Icons/Icon/Icon';
 import Text from '@/components/Primitives/Text/Text';
-import { PopoverVariantType, PopoverSizeType } from '@/stories/types/PrimitiveTypes';
+import { PopoverSizeType, PopoverVariantType } from '@/stories/types/PrimitiveTypes';
 
 const VARIANT_OPTIONS: PopoverVariantType[] = ['dark', 'light'];
 const SIZE_OPTIONS: PopoverSizeType[] = ['sm', 'md'];
@@ -82,7 +81,7 @@ const Template: ComponentStory<typeof Popover> = ({ variant, size, disabled }: a
   return (
     <>
       <Popover>
-        <PopoverTrigger variant={variant} size={size} disabled={disabled}>
+        <PopoverTrigger disabled={disabled} size={size} variant={variant}>
           <Icon name="menu-dots" />
         </PopoverTrigger>
         <PopoverContent>

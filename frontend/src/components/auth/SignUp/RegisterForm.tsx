@@ -1,25 +1,25 @@
 import React, { Dispatch, useEffect } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
-import { useMutation } from '@tanstack/react-query';
 import router from 'next/router';
 import { RedirectableProviderType } from 'next-auth/providers';
 import { signIn } from 'next-auth/react';
-import { useSetRecoilState } from 'recoil';
 import { joiResolver } from '@hookform/resolvers/joi';
+import { useMutation } from '@tanstack/react-query';
+import { useSetRecoilState } from 'recoil';
 
 import { registerNewUser } from '@/api/authService';
 import Icon from '@/components/Primitives/Icons/Icon/Icon';
 import Button from '@/components/Primitives/Inputs/Button/Button';
-import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Input from '@/components/Primitives/Inputs/Input/Input';
+import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Text from '@/components/Primitives/Text/Text';
 import SchemaRegisterForm from '@/schema/schemaRegisterForm';
 import { toastState } from '@/store/toast/atom/toast.atom';
+import { FlexForm } from '@/styles/pages/pages.styles';
 import { RegisterUser } from '@/types/user/user';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
 import { DASHBOARD_ROUTE } from '@/utils/routes';
 import { SignUpEnum } from '@/utils/signUp.enum';
-import { FlexForm } from '@/styles/pages/pages.styles';
 
 interface RegisterFormProps {
   emailName: { email: string; goback: boolean };
@@ -105,7 +105,7 @@ const RegisterForm = ({
         <Text css={{ mt: '$24' }} heading="1">
           Sign up
         </Text>
-        <Text size="md" color="primary500" css={{ mt: '$8', mb: '$16' }}>
+        <Text color="primary500" css={{ mt: '$8', mb: '$16' }} size="md">
           Put in your credentials or ask your admin to add your email to the company’s azure
           database.
         </Text>
@@ -138,9 +138,9 @@ const RegisterForm = ({
         </Button>
         <Flex>
           <Button
-            variant="link"
             css={{ pl: '0', mt: '$24', color: '$primary500' }}
             onClick={handleShowSignUp}
+            variant="link"
           >
             <Icon name="arrow-long-left" />
             Go Back

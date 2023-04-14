@@ -76,12 +76,12 @@ const ListParticipants = ({ isOpen, setIsOpen }: ListParticipantsProps) => {
 
   return (
     <UserListDialog
-      usersList={usersList}
+      confirmationHandler={saveParticipants}
+      confirmationLabel="Add/remove participants"
       isOpen={isOpen}
       setIsOpen={setIsOpen}
-      confirmationHandler={saveParticipants}
       title="Board Participants"
-      confirmationLabel="Add/remove participants"
+      usersList={usersList}
     />
   );
 };

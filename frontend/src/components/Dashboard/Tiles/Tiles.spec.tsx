@@ -1,4 +1,5 @@
 import { render as rtlRender } from '@testing-library/react';
+
 import Tiles, { TilesProps } from '@/components/Dashboard/Tiles/Tiles';
 
 const DEFAULT_PROPS: TilesProps = {
