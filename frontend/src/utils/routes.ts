@@ -1,6 +1,7 @@
 export const DASHBOARD_ROUTE = '/dashboard';
 export const START_PAGE_ROUTE = '/';
 export const BOARDS_ROUTE = '/boards';
+export const DELETED_BOARD_ROUTE = '/board-deleted';
 export const USERS_ROUTE = '/users';
 export const TEAMS_ROUTE = '/teams';
 export const RESET_PASSWORD_ROUTE = '/reset-password';

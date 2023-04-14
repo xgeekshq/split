@@ -27,6 +27,8 @@ import { useRecoilValue } from 'recoil';
 import useBoard from '@/hooks/useBoard';
 import useComments from '@/hooks/useComments';
 import useVotes from '@/hooks/useVotes';
+import { useRouter } from 'next/router';
+import { DELETED_BOARD_ROUTE } from '@/utils/routes';
 
 enum BoardAction {
   UPDATECARDPOSITION,
@@ -51,6 +53,7 @@ interface SocketInterface {
 
 export const useSocketIO = (boardId: string): SocketInterface => {
   const queryClient = useQueryClient();
+  const router = useRouter();
   const [socket, setSocket] = useState<Socket | null>(null);
   const { updateBoardPhase } = useBoard({ autoFetchBoard: true });
   const {
@@ -88,6 +91,10 @@ export const useSocketIO = (boardId: string): SocketInterface => {
   useEffect(() => {
     socket?.on('updateAllBoard', () => {
       queryClient.invalidateQueries(['board', { id: boardId }]);
+    });
+
+    socket?.on('deleteBoard', () => {
+      router.replace(DELETED_BOARD_ROUTE);
     });
 
     socket?.on('board', (board: BoardType) => {
@@ -146,7 +153,7 @@ export const useSocketIO = (boardId: string): SocketInterface => {
     socket?.on(BOARD_PHASE_SERVER_SENT, (updateBoardPhaseDto: PhaseChangeEventType) => {
       setQueue((prev) => [...prev, { action: BoardAction.UPDATEPHASE, dto: updateBoardPhaseDto }]);
     });
-  }, [queryClient, socket, boardId]);
+  }, [queryClient, socket, boardId, router]);
 
   useEffect(() => {
     if (!isEmpty(queue) && ready) {

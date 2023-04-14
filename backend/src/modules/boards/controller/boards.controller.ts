@@ -63,6 +63,7 @@ import GetBoardUseCaseDto from '../dto/useCase/get-board.use-case.dto';
 import BoardUseCasePresenter from '../presenter/board.use-case.presenter';
 import BoardGuestUserDto from 'src/modules/boardUsers/dto/board.guest.user.dto';
 import { UpdateBoardPermissionsGuard } from 'src/libs/guards/updateBoardPermissions.guard';
+import DeleteBoardUseCaseDto from 'src/modules/boards/dto/useCase/delete-board.use-case';
 
 const BoardUser = (permissions: string[]) => SetMetadata('permissions', permissions);
 
@@ -87,7 +88,7 @@ export default class BoardsController {
 		@Inject(TYPES.applications.UpdateBoardApplication)
 		private updateBoardApp: UpdateBoardApplicationInterface,
 		@Inject(TYPES.applications.DeleteBoardUseCase)
-		private deleteBoardUseCase: UseCase<string, boolean>,
+		private deleteBoardUseCase: UseCase<DeleteBoardUseCaseDto, boolean>,
 		private socketService: SocketGateway
 	) {}
 
@@ -331,7 +332,11 @@ export default class BoardsController {
 		@Query() { teamId }: TeamParamOptional,
 		@Query() { socketId }: BaseParamWSocket
 	) {
-		const result = await this.deleteBoardUseCase.execute(boardId);
+		const completionHandler = (deletedBoards: string[]) => {
+			this.socketService.sendDeleteBoard(socketId, deletedBoards);
+		};
+
+		const result = await this.deleteBoardUseCase.execute({ boardId, completionHandler });
 
 		if (socketId && teamId) {
 			this.socketService.sendUpdatedBoards(socketId, teamId);
