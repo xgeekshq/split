@@ -1,21 +1,22 @@
 import React from 'react';
-import { libraryMocks } from '@/utils/testing/mocks';
-import { TeamFactory } from '@/utils/factories/team';
-import { renderWithProviders } from '@/utils/testing/renderWithProviders';
-import { getFormattedTeamUserRole } from '@/utils/getFormattedTeamUserRole';
-import { TeamUserRoles } from '@/utils/enums/team.user.roles';
+
 import RoleSelector, {
   RoleSelectorProps,
 } from '@/components/Teams/Team/TeamMemberItem/RoleSelector/RoleSelector';
+import { TeamUserRoles } from '@/utils/enums/team.user.roles';
+import { TeamFactory } from '@/utils/factories/team';
+import { getFormattedTeamUserRole } from '@/utils/getFormattedTeamUserRole';
+import { libraryMocks } from '@/utils/testing/mocks';
+import { renderWithProviders } from '@/utils/testing/renderWithProviders';
 
 const { mockRouter } = libraryMocks.mockNextRouter({ pathname: '/teams' });
 
 const render = (props: Partial<RoleSelectorProps> = {}) =>
   renderWithProviders(
     <RoleSelector
-      role={TeamUserRoles.MEMBER}
-      handleRoleChange={jest.fn()}
       canChangeRole={false}
+      handleRoleChange={jest.fn()}
+      role={TeamUserRoles.MEMBER}
       {...props}
     />,
     { routerOptions: mockRouter },

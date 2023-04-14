@@ -1,4 +1,5 @@
-import { Root, Item, Indicator } from '@radix-ui/react-radio-group';
+import { Indicator, Item, Root } from '@radix-ui/react-radio-group';
+
 import { styled } from '@/styles/stitches/stitches.config';
 
 const RadioGroup = styled(Root, {
@@ -88,4 +89,4 @@ const Label = styled('label', {
   },
 });
 
-export { RadioGroup, RadioGroupItem, RadioGroupIndicator, Label };
+export { Label, RadioGroup, RadioGroupIndicator, RadioGroupItem };

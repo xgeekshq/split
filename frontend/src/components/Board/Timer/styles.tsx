@@ -87,4 +87,4 @@ const TimePanelText = styled('div', {
   marginBottom: '$2',
 });
 
-export { TimerContainer, ClockPanel, TimePanel, TimeButtonTitle, TimePanelText, ControlPanel };
+export { ClockPanel, ControlPanel, TimeButtonTitle, TimePanel, TimePanelText, TimerContainer };

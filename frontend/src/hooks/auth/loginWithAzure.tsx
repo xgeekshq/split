@@ -1,6 +1,6 @@
+import { RedirectableProviderType } from 'next-auth/providers';
 import { signIn } from 'next-auth/react';
 
-import { RedirectableProviderType } from 'next-auth/providers';
 import { DASHBOARD_ROUTE } from '@/utils/routes';
 
 const loginWithAzure = async () => {

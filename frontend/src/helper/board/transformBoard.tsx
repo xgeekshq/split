@@ -1,7 +1,9 @@
 import { User } from 'next-auth';
 
 import BoardType from '@/types/board/board';
+import { BoardUser } from '@/types/board/board.user';
 import MergeCardsDto from '@/types/board/mergeCard.dto';
+import AddCardDto from '@/types/card/addCard.dto';
 import CardType from '@/types/card/card';
 import DeleteCardDto from '@/types/card/deleteCard.dto';
 import RemoveFromCardGroupDto from '@/types/card/removeFromCardGroup.dto';
@@ -11,8 +13,6 @@ import AddCommentDto from '@/types/comment/addComment.dto';
 import DeleteCommentDto from '@/types/comment/deleteComment.dto';
 import UpdateCommentDto from '@/types/comment/updateComment.dto';
 import { addElementAtIndex, removeElementAtIndex } from '@/utils/array';
-import AddCardDto from '@/types/card/addCard.dto';
-import { BoardUser } from '@/types/board/board.user';
 
 // avoid read only error
 export const removeReadOnly = (board: BoardType): BoardType => JSON.parse(JSON.stringify(board));

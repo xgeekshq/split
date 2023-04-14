@@ -1,8 +1,5 @@
 // TODO: Test Select Options
 
-import { renderWithProviders } from '@/utils/testing/renderWithProviders';
-import Flex from '@/components/Primitives/Layout/Flex/Flex';
-import Text from '@/components/Primitives/Text/Text';
 import Icon from '@/components/Primitives/Icons/Icon/Icon';
 import {
   Select,
@@ -11,6 +8,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/Primitives/Inputs/Select/Select';
+import Flex from '@/components/Primitives/Layout/Flex/Flex';
+import Text from '@/components/Primitives/Text/Text';
+import { renderWithProviders } from '@/utils/testing/renderWithProviders';
 
 const DUMMY_OPTIONS = [
   { label: 'Apple', value: 'Apple' },
@@ -20,12 +20,12 @@ const DUMMY_OPTIONS = [
   { label: 'Pineapple', value: 'Pineapple' },
 ];
 
-const render = (disabled: boolean = false) =>
+const render = (disabled = false) =>
   renderWithProviders(
     <Select disabled={disabled}>
       <SelectTrigger css={{ padding: '$24' }}>
         <Flex direction="column">
-          <Text size="md" color="primary300">
+          <Text color="primary300" size="md">
             Choose a fruit
           </Text>
           <SelectValue />

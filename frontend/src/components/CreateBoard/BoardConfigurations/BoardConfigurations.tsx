@@ -12,7 +12,7 @@ const DEFAULT_MAX_VOTES = 6;
 type BoardConfigurationOptions = 'hideCards' | 'hideVotes' | 'postAnonymously' | 'isPublic';
 
 type BoardConfigurationsProps = {
-  isRegularBoard?: Boolean;
+  isRegularBoard?: boolean;
 };
 
 const BoardConfigurations = ({ isRegularBoard }: BoardConfigurationsProps) => {
@@ -55,28 +55,28 @@ const BoardConfigurations = ({ isRegularBoard }: BoardConfigurationsProps) => {
         You can change the board configurations still later inside your retro board.
       </Text>
       <ConfigurationSwitch
-        title="Hide cards from others"
-        text="Participants can not see the cards from other participants of this retrospective."
-        isChecked={board.hideCards}
         handleCheckedChange={(checked) => handleCheckedChange(checked, 'hideCards')}
+        isChecked={board.hideCards}
+        text="Participants can not see the cards from other participants of this retrospective."
+        title="Hide cards from others"
       />
       <ConfigurationSwitch
-        title="Hide votes from others"
-        text="Participants can not see the votes from other participants of this retrospective."
-        isChecked={board.hideVotes}
         handleCheckedChange={(checked) => handleCheckedChange(checked, 'hideVotes')}
+        isChecked={board.hideVotes}
+        text="Participants can not see the votes from other participants of this retrospective."
+        title="Hide votes from others"
       />
       <ConfigurationSwitch
-        title="Post anonymously"
-        text="The option to post anonymously is checked by default."
-        isChecked={board.postAnonymously}
         handleCheckedChange={(checked) => handleCheckedChange(checked, 'postAnonymously')}
+        isChecked={board.postAnonymously}
+        text="The option to post anonymously is checked by default."
+        title="Post anonymously"
       />
       <ConfigurationSwitch
-        title="Limit votes"
-        text=" Make votes more significant by limiting them."
-        isChecked={!!board.maxVotes}
         handleCheckedChange={handleLimitVotesChange}
+        isChecked={!!board.maxVotes}
+        text=" Make votes more significant by limiting them."
+        title="Limit votes"
       >
         <Input
           css={{ mt: '$8', mb: 0 }}
@@ -88,11 +88,11 @@ const BoardConfigurations = ({ isRegularBoard }: BoardConfigurationsProps) => {
       </ConfigurationSwitch>
       {isRegularBoard && (
         <ConfigurationSwitch
+          handleCheckedChange={(checked) => handleCheckedChange(checked, 'isPublic')}
+          isChecked={board.isPublic}
           title="Make board public"
           text=" If you make this board public anyone with the link to the board can access it. Where
           to find the link? Just copy the URL of the board itself and share it."
-          isChecked={board.isPublic}
-          handleCheckedChange={(checked) => handleCheckedChange(checked, 'isPublic')}
         />
       )}
     </Flex>

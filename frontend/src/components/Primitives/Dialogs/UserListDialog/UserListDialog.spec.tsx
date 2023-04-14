@@ -1,22 +1,27 @@
-import { createMockRouter } from '@/utils/testing/mocks';
-import { renderWithProviders } from '@/utils/testing/renderWithProviders';
-import { UserListFactory } from '@/utils/factories/user';
 import { fireEvent, waitFor } from '@testing-library/react';
+
 import UserListDialog, {
   UserListDialogProps,
 } from '@/components/Primitives/Dialogs/UserListDialog/UserListDialog';
+import { UserListFactory } from '@/utils/factories/user';
+import { createMockRouter } from '@/utils/testing/mocks';
+import { renderWithProviders } from '@/utils/testing/renderWithProviders';
 
 const router = createMockRouter({});
 
 const render = (props: Partial<UserListDialogProps> = {}) =>
   renderWithProviders(
     <UserListDialog
-      usersList={UserListFactory.createMany(3)}
-      setIsOpen={jest.fn()}
       isOpen
       confirmationHandler={jest.fn()}
       confirmationLabel="confirm"
+      setIsOpen={jest.fn()}
       title="Title"
+      usersList={UserListFactory.createMany(3, [
+        { isChecked: false },
+        { isChecked: true },
+        { isChecked: false },
+      ])}
       {...props}
     />,
     { routerOptions: router },

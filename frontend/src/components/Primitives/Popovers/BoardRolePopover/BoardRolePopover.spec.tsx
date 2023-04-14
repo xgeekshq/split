@@ -1,17 +1,18 @@
 import React from 'react';
 import { fireEvent, waitFor } from '@testing-library/react';
-import { renderWithProviders } from '@/utils/testing/renderWithProviders';
+
 import BoardRolePopover, {
   BoardRolePopoverProps,
 } from '@/components/Primitives/Popovers/BoardRolePopover/BoardRolePopover';
+import { renderWithProviders } from '@/utils/testing/renderWithProviders';
 
 const render = (props: Partial<BoardRolePopoverProps> = {}) =>
   renderWithProviders(
     <BoardRolePopover
-      isNewJoinerHandler={jest.fn()}
-      isNewJoiner={false}
-      canBeResponsibleHandler={jest.fn()}
       canBeResponsible={false}
+      canBeResponsibleHandler={jest.fn()}
+      isNewJoiner={false}
+      isNewJoinerHandler={jest.fn()}
       {...props}
     />,
   );

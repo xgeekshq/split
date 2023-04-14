@@ -1,6 +1,7 @@
-import { useRouter } from 'next/router';
 import { useCallback, useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
+import { useRouter } from 'next/router';
+import { joiResolver } from '@hookform/resolvers/joi';
 import { useRecoilState, useRecoilValue } from 'recoil';
 
 import Icon from '@/components/Primitives/Icons/Icon/Icon';
@@ -11,18 +12,16 @@ import CreateHeader from '@/components/Primitives/Layout/CreateHeader/CreateHead
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import TipBar from '@/components/Primitives/Layout/TipBar/TipBar';
 import Text from '@/components/Primitives/Text/Text';
+import ListMembers from '@/components/Teams/Team/ListMembers/ListMembers';
 import TeamMembersList from '@/components/Teams/Team/TeamMembersList';
+import useCreateTeam from '@/hooks/teams/useCreateTeam';
 import useCurrentSession from '@/hooks/useCurrentSession';
 import SchemaCreateTeam from '@/schema/schemaCreateTeamForm';
 import { createTeamState, usersListState } from '@/store/team/atom/team.atom';
 import { StyledForm } from '@/styles/pages/pages.styles';
 import { CreateTeamUser } from '@/types/team/team.user';
-import { CREATE_TEAM_TIPS } from '@/utils/tips';
-import { joiResolver } from '@hookform/resolvers/joi';
-
-import useCreateTeam from '@/hooks/teams/useCreateTeam';
 import { ROUTES } from '@/utils/routes';
-import ListMembers from '@/components/Teams/Team/ListMembers/ListMembers';
+import { CREATE_TEAM_TIPS } from '@/utils/tips';
 
 const CreateTeam = () => {
   const { userId } = useCurrentSession();
@@ -85,13 +84,17 @@ const CreateTeam = () => {
   }, [status]);
 
   return (
-    <Flex css={{ height: '100vh', backgroundColor: '$primary50' }} direction="column">
-      <CreateHeader title="Create New Team" disableBack={disableButtons} handleBack={handleBack} />
+    <Flex
+      css={{ height: '100vh', backgroundColor: '$primary50' }}
+      data-testid="createTeam"
+      direction="column"
+    >
+      <CreateHeader disableBack={disableButtons} handleBack={handleBack} title="Create New Team" />
       <Flex css={{ height: '100%', position: 'relative', overflowY: 'auto' }} direction="column">
         <Flex css={{ flex: '1' }}>
           <StyledForm
-            id="hook-form"
             direction="column"
+            id="hook-form"
             onSubmit={methods.handleSubmit(({ text }) => {
               saveTeam(text);
               setDisableButtons(true);
@@ -108,17 +111,17 @@ const CreateTeam = () => {
                     Team Members
                   </Text>
                   <Button
-                    variant="link"
-                    size="sm"
-                    onClick={handleOpen}
                     data-testid="addRemoveMembersTrigger"
+                    onClick={handleOpen}
+                    size="sm"
+                    variant="link"
                   >
                     <Icon name="plus" />
                     Add/remove members
                   </Button>
                 </Flex>
               </Flex>
-              <TeamMembersList teamUsers={createTeamMembers} hasPermissions />
+              <TeamMembersList hasPermissions teamUsers={createTeamMembers} />
               <ListMembers isOpen={isOpen} setIsOpen={setIsOpen} />
             </FormProvider>
           </StyledForm>
@@ -126,10 +129,10 @@ const CreateTeam = () => {
         </Flex>
       </Flex>
       <CreateFooter
-        disableButton={disableButtons}
-        handleBack={handleBack}
-        formId="hook-form"
         confirmationLabel="Create team"
+        disableButton={disableButtons}
+        formId="hook-form"
+        handleBack={handleBack}
       />
     </Flex>
   );

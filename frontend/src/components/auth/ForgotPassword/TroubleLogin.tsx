@@ -2,17 +2,16 @@ import { Dispatch, SetStateAction, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { joiResolver } from '@hookform/resolvers/joi';
 
+import EmailSent from '@/components/auth/ForgotPassword/EmailSent';
 import Icon from '@/components/Primitives/Icons/Icon/Icon';
 import Button from '@/components/Primitives/Inputs/Button/Button';
-import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Input from '@/components/Primitives/Inputs/Input/Input';
+import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Text from '@/components/Primitives/Text/Text';
-import SchemaEmail from '@/schema/schemaEmail';
-import { EmailUser } from '@/types/user/user';
-
 import useResetToken from '@/hooks/auth/useResetToken';
-import EmailSent from '@/components/auth/ForgotPassword/EmailSent';
+import SchemaEmail from '@/schema/schemaEmail';
 import { FlexForm } from '@/styles/pages/pages.styles';
+import { EmailUser } from '@/types/user/user';
 
 interface TroubleLoginProps {
   setShowTroubleLogin: Dispatch<SetStateAction<boolean>>;
@@ -52,11 +51,11 @@ const TroubleLogin = ({ setShowTroubleLogin }: TroubleLoginProps) => {
   if (showEmailSent)
     return (
       <EmailSent
+        goBack={handleShowTroubleLogginIn}
         userEmail={currentEmail}
         resendEmail={() => {
           handleRecoverPassword(currentEmail);
         }}
-        goBack={handleShowTroubleLogginIn}
       />
     );
 
@@ -71,7 +70,7 @@ const TroubleLogin = ({ setShowTroubleLogin }: TroubleLoginProps) => {
         <Text css={{ mt: '$24' }} heading="1">
           Trouble logging in?
         </Text>
-        <Text size="md" color="primary500" css={{ mt: '$8' }}>
+        <Text color="primary500" css={{ mt: '$8' }} size="md">
           Enter your email address below, well email you instructions on how to change your
           password.
         </Text>
@@ -81,9 +80,9 @@ const TroubleLogin = ({ setShowTroubleLogin }: TroubleLoginProps) => {
         </Button>
         <Flex>
           <Button
-            variant="link"
             css={{ pl: '0', mt: '$24', color: '$primary500' }}
             onClick={handleShowTroubleLogginIn}
+            variant="link"
           >
             <Icon name="arrow-long-left" />
             Go Back

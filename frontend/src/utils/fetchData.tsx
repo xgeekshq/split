@@ -1,8 +1,7 @@
 import { GetServerSidePropsContext } from 'next';
-
+import { getSession } from 'next-auth/react';
 import axios, { AxiosRequestConfig } from 'axios';
 
-import { getSession } from 'next-auth/react';
 import { GuestUser } from '@/types/user/user';
 import { NEXT_PUBLIC_BACKEND_URL } from '@/utils/constants';
 import { getGuestUserCookies } from '@/utils/getGuestUserCookies';

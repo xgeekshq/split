@@ -1,18 +1,19 @@
-import React, { Dispatch, SetStateAction, useState, useMemo, useEffect } from 'react';
-import Text from '@/components/Primitives/Text/Text';
-import { TeamUserRoles } from '@/utils/enums/team.user.roles';
-import Flex from '@/components/Primitives/Layout/Flex/Flex';
-import Checkbox from '@/components/Primitives/Inputs/Checkboxes/Checkbox/Checkbox';
+import React, { Dispatch, SetStateAction, useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/router';
-import { verifyIfIsNewJoiner } from '@/utils/verifyIfIsNewJoiner';
-import { TeamChecked } from '@/types/team/team';
-import isEmpty from '@/utils/isEmpty';
-import Dialog from '@/components/Primitives/Dialogs/Dialog/Dialog';
-import Separator from '@/components/Primitives/Separator/Separator';
-import useUpdateUserTeams from '@/hooks/teams/useUpdateUserTeams';
-import UncontrolledInput from '@/components/Primitives/Inputs/UncontrolledInput/UncontrolledInput';
 
-type TeamsDialogProps = {
+import Dialog from '@/components/Primitives/Dialogs/Dialog/Dialog';
+import Checkbox from '@/components/Primitives/Inputs/Checkboxes/Checkbox/Checkbox';
+import UncontrolledInput from '@/components/Primitives/Inputs/UncontrolledInput/UncontrolledInput';
+import Flex from '@/components/Primitives/Layout/Flex/Flex';
+import Separator from '@/components/Primitives/Separator/Separator';
+import Text from '@/components/Primitives/Text/Text';
+import useUpdateUserTeams from '@/hooks/teams/useUpdateUserTeams';
+import { TeamChecked } from '@/types/team/team';
+import { TeamUserRoles } from '@/utils/enums/team.user.roles';
+import isEmpty from '@/utils/isEmpty';
+import { verifyIfIsNewJoiner } from '@/utils/verifyIfIsNewJoiner';
+
+export type TeamsDialogProps = {
   teamsList: TeamChecked[];
   setIsOpen: Dispatch<SetStateAction<boolean>>;
   isOpen: boolean;
@@ -93,14 +94,14 @@ const TeamsDialog = ({
       <Flex css={{ p: '$32' }} direction="column">
         <UncontrolledInput
           currentValue={searchTeam}
+          iconName="search"
+          placeholder="Search team"
           handleChange={(e) => {
             setSearchTeam(e.target.value);
           }}
           handleClear={() => {
             setSearchTeam('');
           }}
-          placeholder="Search team"
-          iconName="search"
         />
       </Flex>
       <Text css={{ display: 'block', px: '$32', pb: '$24' }} heading="4">
@@ -110,7 +111,7 @@ const TeamsDialog = ({
         <Flex align="center" css={{ px: '$32' }}>
           <Flex css={{ flex: 1 }}>
             <Flex align="center" gap={8}>
-              <Checkbox id="selectAll" size="md" disabled />
+              <Checkbox disabled id="selectAll" size="md" />
               <Text heading={5}>Name</Text>
             </Flex>
           </Flex>
@@ -118,22 +119,22 @@ const TeamsDialog = ({
         <Separator orientation="horizontal" />
       </Flex>
       <Flex
+        css={{ height: '100%', overflowY: 'auto', py: '$16' }}
         direction="column"
         justify="start"
-        css={{ height: '100%', overflowY: 'auto', py: '$16' }}
       >
         <Flex css={{ px: '$32' }} direction="column" gap={20}>
           {filteredTeams?.map((team) => (
-            <Flex key={team._id} align="center">
+            <Flex key={team._id} align="center" data-testid="checkboxTeamItem">
               <Flex css={{ flex: 1 }}>
                 <Checkbox
                   checked={team.isChecked}
-                  handleChange={() => {
-                    handleChecked(team._id);
-                  }}
                   id={team._id}
                   label={team.name}
                   size="md"
+                  handleChange={() => {
+                    handleChecked(team._id);
+                  }}
                 />
               </Flex>
             </Flex>
@@ -141,9 +142,9 @@ const TeamsDialog = ({
         </Flex>
       </Flex>
       <Dialog.Footer
+        affirmativeLabel="Add"
         handleAffirmative={handleAddTeams}
         handleClose={handleClose}
-        affirmativeLabel="Add"
       />
     </Dialog>
   );

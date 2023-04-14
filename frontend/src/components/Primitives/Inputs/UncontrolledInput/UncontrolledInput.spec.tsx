@@ -1,9 +1,10 @@
-import { renderWithProviders } from '@/utils/testing/renderWithProviders';
 import { fireEvent, waitFor } from '@testing-library/dom';
+import userEvent from '@testing-library/user-event';
+
 import UncontrolledInput, {
   UncontrolledInputProps,
 } from '@/components/Primitives/Inputs/UncontrolledInput/UncontrolledInput';
-import userEvent from '@testing-library/user-event';
+import { renderWithProviders } from '@/utils/testing/renderWithProviders';
 
 const render = (props: Partial<UncontrolledInputProps> = {}) =>
   renderWithProviders(<UncontrolledInput placeholder="Placeholder" {...props} />);

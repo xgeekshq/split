@@ -1,9 +1,10 @@
-import { dehydrate, QueryClient } from '@tanstack/react-query';
-import { GetServerSideProps, NextPage } from 'next';
-import { getSession, useSession } from 'next-auth/react';
-import { useRouter } from 'next/router';
 import { useEffect, useMemo, useState } from 'react';
+import { GetServerSideProps, NextPage } from 'next';
+import { useRouter } from 'next/router';
+import { getSession, useSession } from 'next-auth/react';
+import { dehydrate, QueryClient } from '@tanstack/react-query';
 import { useRecoilState, useSetRecoilState } from 'recoil';
+
 import { getBoardRequest, getPublicStatusRequest } from '@/api/boardService';
 import DragDropArea from '@/components/Board/DragDropArea';
 import RegularBoard from '@/components/Board/RegularBoard';
@@ -11,13 +12,16 @@ import { BoardSettings } from '@/components/Board/Settings';
 import AlertGoToMainBoard from '@/components/Board/SplitBoard/AlertGoToMainBoard';
 import BoardHeader from '@/components/Board/SplitBoard/Header';
 import Timer from '@/components/Board/Timer';
-import Icon from '@/components/Primitives/Icons/Icon/Icon';
-import LoadingPage from '@/components/Primitives/Loading/Page/Page';
 import AlertBox from '@/components/Primitives/Alerts/AlertBox/AlertBox';
+import ConfirmationDialog from '@/components/Primitives/Alerts/ConfirmationDialog/ConfirmationDialog';
+import Icon from '@/components/Primitives/Icons/Icon/Icon';
 import Button from '@/components/Primitives/Inputs/Button/Button';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
+import LoadingPage from '@/components/Primitives/Loading/Page/Page';
 import useBoard from '@/hooks/useBoard';
+import useCards from '@/hooks/useCards';
 import { useSocketIO } from '@/hooks/useSocketIO';
+import { sortParticipantsList } from '@/pages/boards/[boardId]/participants';
 import {
   boardInfoState,
   boardParticipantsState,
@@ -25,17 +29,14 @@ import {
   editColumnsState,
   newBoardState,
 } from '@/store/board/atoms/board.atom';
+import { UpdateBoardPhaseType } from '@/types/board/board';
+import { GuestUser } from '@/types/user/user';
+import { BoardPhases } from '@/utils/enums/board.phases';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import { TeamUserRoles } from '@/utils/enums/team.user.roles';
-import isEmpty from '@/utils/isEmpty';
-import { GuestUser } from '@/types/user/user';
-import { BOARDS_ROUTE } from '@/utils/routes';
 import { getGuestUserCookies } from '@/utils/getGuestUserCookies';
-import { BoardPhases } from '@/utils/enums/board.phases';
-import ConfirmationDialog from '@/components/Primitives/Alerts/ConfirmationDialog/ConfirmationDialog';
-import useCards from '@/hooks/useCards';
-import { UpdateBoardPhaseType } from '@/types/board/board';
-import { sortParticipantsList } from '@/pages/boards/[boardId]/participants';
+import isEmpty from '@/utils/isEmpty';
+import { BOARDS_ROUTE } from '@/utils/routes';
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const boardId = String(context.query.boardId);
@@ -253,9 +254,9 @@ const Board: NextPage<Props> = ({ boardId }) => {
   if (isRegularOrPersonalBoard)
     return (
       <RegularBoard
-        socketId={socketId}
         emitEvent={emitEvent}
         listenEvent={listenEvent}
+        socketId={socketId}
         userId={userId}
         userSAdmin={session?.user.isSAdmin}
       />
@@ -264,19 +265,19 @@ const Board: NextPage<Props> = ({ boardId }) => {
   return (
     <>
       <BoardHeader />
-      <Flex direction="column" align="start" justify="center" css={{ px: '$36' }}>
-        <Flex gap={40} align="center" css={{ py: '$32', width: '100%' }} justify="center">
+      <Flex align="start" css={{ px: '$36' }} direction="column" justify="center">
+        <Flex align="center" css={{ py: '$32', width: '100%' }} gap={40} justify="center">
           {shouldShowLeftSection && (
-            <Flex gap={40} css={{ flex: 1 }}>
+            <Flex css={{ flex: 1 }} gap={40}>
               {showButtonToMerge && (
                 <ConfirmationDialog
+                  confirmationHandler={handleMergeBoard}
+                  confirmationLabel="Merge into main board"
                   title="Merge board into main board"
                   description="If you merge your sub-team's board into the main board it can not be edited anymore
                 afterwards. Are you sure you want to merge it?"
-                  confirmationLabel="Merge into main board"
-                  confirmationHandler={handleMergeBoard}
                 >
-                  <Button variant="primaryOutline" size="sm">
+                  <Button size="sm" variant="primaryOutline">
                     Merge into main board
                     <Icon name="merge" />
                   </Button>
@@ -292,14 +293,14 @@ const Board: NextPage<Props> = ({ boardId }) => {
               )}
               {showButtonToVote && (
                 <ConfirmationDialog
-                  title="Start voting phase"
+                  confirmationLabel="Start Voting"
                   description="Are you sure you want to start the voting phase?"
+                  title="Start voting phase"
                   confirmationHandler={() => {
                     handleChangePhase(BoardPhases.VOTINGPHASE);
                   }}
-                  confirmationLabel="Start Voting"
                 >
-                  <Button variant="primaryOutline" size="sm">
+                  <Button size="sm" variant="primaryOutline">
                     Start voting
                     <Icon name="check" />
                   </Button>
@@ -307,15 +308,15 @@ const Board: NextPage<Props> = ({ boardId }) => {
               )}
               {showButtonToSubmit && (
                 <ConfirmationDialog
+                  confirmationLabel="Submit"
                   title="Submit"
-                  description="If you submit your board it will block the users from voting and it can not be edited
-                anymore afterwards. Are you sure you want to submit it?"
                   confirmationHandler={() => {
                     handleChangePhase(BoardPhases.SUBMITTED);
                   }}
-                  confirmationLabel="Submit"
+                  description="If you submit your board it will block the users from voting and it can not be edited
+                anymore afterwards. Are you sure you want to submit it?"
                 >
-                  <Button variant="primaryOutline" size="sm">
+                  <Button size="sm" variant="primaryOutline">
                     Submit Board
                     <Icon name="check" />
                   </Button>
@@ -339,8 +340,8 @@ const Board: NextPage<Props> = ({ boardId }) => {
             >
               <Timer
                 boardId={boardId}
-                isAdmin={hasAdminRole}
                 emitEvent={emitEvent}
+                isAdmin={hasAdminRole}
                 listenEvent={listenEvent}
               />
             </Flex>
@@ -375,9 +376,9 @@ const Board: NextPage<Props> = ({ boardId }) => {
 
         <DragDropArea
           board={board}
+          hasAdminRole={hasAdminRole}
           socketId={socketId}
           userId={userId}
-          hasAdminRole={hasAdminRole}
         />
       </Flex>
     </>

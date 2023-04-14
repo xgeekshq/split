@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { ComponentStory } from '@storybook/react';
-
 import dedent from 'ts-dedent';
 
 import Checkbox from '@/components/Primitives/Inputs/Checkboxes/Checkbox/Checkbox';
@@ -65,15 +64,15 @@ const Template: ComponentStory<typeof Checkbox> = ({ size, variant, label, disab
   return (
     <Flex>
       <Checkbox
+        checked={state}
+        disabled={disabled}
         id="myCheckbox"
         label={label}
         size={size}
         variant={variant}
-        checked={state}
         handleChange={(checked) => {
           setState(checked);
         }}
-        disabled={disabled}
       />
     </Flex>
   );

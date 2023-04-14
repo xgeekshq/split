@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 
+import AddCardOrComment from '@/components/Board/AddCardOrComment';
+import Comment from '@/components/Board/Comment/Comment';
 import Icon from '@/components/Primitives/Icons/Icon/Icon';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Separator from '@/components/Primitives/Separator/Separator';
@@ -7,8 +9,6 @@ import Text from '@/components/Primitives/Text/Text';
 import { CardItemType } from '@/types/card/cardItem';
 import CommentType from '@/types/comment/comment';
 import { BoardPhases } from '@/utils/enums/board.phases';
-import AddCardOrComment from '@/components/Board/AddCardOrComment';
-import Comment from '@/components/Board/Comment/Comment';
 
 interface CommentsListProps {
   comments: CommentType[];
@@ -63,16 +63,17 @@ const Comments = React.memo(
               key={comment._id}
               boardId={boardId}
               cardId={cardId}
+              columnId={columnId}
               comment={comment}
+              hasAdminRole={hasAdminRole}
               hideCards={hideCards}
+              isDefaultText={isDefaultText}
+              isMainboard={isMainboard}
               isSubmited={isSubmited}
+              phase={phase}
+              postAnonymously={postAnonymously}
               socketId={socketId}
               userId={userId}
-              columnId={columnId}
-              isDefaultText={isDefaultText}
-              hasAdminRole={hasAdminRole}
-              isMainboard={isMainboard}
-              postAnonymously={postAnonymously}
               cardItemId={
                 cardItems.find((item) => {
                   if (item && item.comments)
@@ -80,7 +81,6 @@ const Comments = React.memo(
                   return null;
                 })?._id
               }
-              phase={phase}
             />
           ))}
         </Flex>
@@ -88,17 +88,17 @@ const Comments = React.memo(
           <Flex css={{ width: '100%', px: '$16' }}>
             <AddCardOrComment
               isEditing
+              anonymous={undefined}
               boardId={boardId}
               cancelUpdate={handleSetCreateComment}
               cardId={cardId}
               cardItemId={cardItems.length === 1 ? cardItems[0]._id : undefined}
               colId={columnId}
               isCard={false}
-              isUpdate={false}
-              socketId={socketId}
-              anonymous={undefined}
               isDefaultText={isDefaultText}
+              isUpdate={false}
               postAnonymously={postAnonymously}
+              socketId={socketId}
             />
           </Flex>
         )}

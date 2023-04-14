@@ -1,24 +1,25 @@
+import { useState } from 'react';
+import { useRecoilValue } from 'recoil';
+
+import ColorSquare from '@/components/Board/Column/partials/ColorSquare';
+import { SwitchDefaultText } from '@/components/Board/Column/partials/SwitchDefaultText';
+import ConfirmationDialog from '@/components/Primitives/Alerts/ConfirmationDialog/ConfirmationDialog';
 import Icon from '@/components/Primitives/Icons/Icon/Icon';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import {
   Popover,
   PopoverContent,
-  PopoverTrigger,
   PopoverItem,
+  PopoverTrigger,
 } from '@/components/Primitives/Popovers/Popover/Popover';
 import Separator from '@/components/Primitives/Separator/Separator';
 import Text from '@/components/Primitives/Text/Text';
-import useColumn from '@/hooks/useColumn';
-import CardType from '@/types/card/card';
-import { useState } from 'react';
-import ConfirmationDialog from '@/components/Primitives/Alerts/ConfirmationDialog/ConfirmationDialog';
 import useBoard from '@/hooks/useBoard';
-import { BoardUserRoles } from '@/utils/enums/board.user.roles';
-import { useRecoilValue } from 'recoil';
+import useColumn from '@/hooks/useColumn';
 import { boardInfoState } from '@/store/board/atoms/board.atom';
 import { UpdateBoardType } from '@/types/board/board';
-import { SwitchDefaultText } from '@/components/Board/Column/partials/SwitchDefaultText';
-import ColorSquare from '@/components/Board/Column/partials/ColorSquare';
+import CardType from '@/types/card/card';
+import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 
 type OptionsMenuProps = {
   disabled?: boolean;
@@ -165,8 +166,8 @@ const OptionsMenu = ({
 
   return (
     <>
-      <Popover open={openPopover} onOpenChange={handleOpenPopover}>
-        <PopoverTrigger variant="light" size="md" disabled={disabled} css={{ ml: '$8' }}>
+      <Popover onOpenChange={handleOpenPopover} open={openPopover}>
+        <PopoverTrigger css={{ ml: '$8' }} disabled={disabled} size="md" variant="light">
           <Icon name="menu-dots" />
         </PopoverTrigger>
         {!disabled && (
@@ -176,11 +177,11 @@ const OptionsMenu = ({
               <Text size="sm">Edit column name </Text>
             </PopoverItem>
             <ConfirmationDialog
-              title="Empty column of all cards"
-              description="Do you really want to remove all cards from this column?"
-              confirmationLabel="Empty Column"
-              variant="danger"
               confirmationHandler={handleEmptyColumn}
+              confirmationLabel="Empty Column"
+              description="Do you really want to remove all cards from this column?"
+              title="Empty column of all cards"
+              variant="danger"
             >
               <PopoverItem>
                 <Icon name="recurring" />
@@ -194,17 +195,17 @@ const OptionsMenu = ({
               </Text>
 
               <SwitchDefaultText
+                disabled={cardText === 'Write your comment here...'}
                 handleCheckedChange={handleDefaultTextCheck}
                 isChecked={!isDefaultText}
-                disabled={cardText === 'Write your comment here...'}
               />
             </PopoverItem>
             <ConfirmationDialog
-              title="Delete column"
-              description="Do you really want to delete this column?"
-              confirmationLabel="Delete Column"
-              variant="danger"
               confirmationHandler={handleDeleteColumn}
+              confirmationLabel="Delete Column"
+              description="Do you really want to delete this column?"
+              title="Delete column"
+              variant="danger"
             >
               <PopoverItem>
                 <Icon name="trash-alt" />
@@ -212,12 +213,12 @@ const OptionsMenu = ({
               </PopoverItem>
             </ConfirmationDialog>
             <Separator css={{ mt: '$5' }} />
-            <Flex gap={8} css={{ pb: '$8', pt: '$20', pl: '$18' }}>
-              <Text size="xs" color="primary800" fontWeight="medium">
+            <Flex css={{ pb: '$8', pt: '$20', pl: '$18' }} gap={8}>
+              <Text color="primary800" fontWeight="medium" size="xs">
                 Cards color
               </Text>
             </Flex>
-            <Flex direction="row" align="center" css={{ pb: '$10', pl: '$3' }}>
+            <Flex align="center" css={{ pb: '$10', pl: '$3' }} direction="row">
               {colors.map((square) => (
                 <ColorSquare key={square} color={square} handleColorChange={handleColorChange} />
               ))}

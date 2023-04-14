@@ -24,6 +24,7 @@ const CREATE_FAILED = 'CREATE_FAILED';
 const CARD_NOT_REMOVED = "Card wasn't removed";
 const CARD_NOT_INSERTED = "Card wasn't inserted";
 const CARD_NOT_FOUND = "Card wasn't found";
+const CARD_NOT_MOVED = "Card wasn't moved";
 const CARD_ITEM_NOT_FOUND = "Card item wasn't found";
 
 const TEAM_USERS_NOT_FOUND = 'TEAM_USERS_NOT_FOUND';
@@ -62,7 +63,8 @@ export {
 	INSERT_VOTE_FAILED,
 	COLUMN_NOT_FOUND,
 	TEAM_USERS_NOT_FOUND,
+	TEAM_USER_NOT_FOUND,
 	TEAM_NOT_FOUND,
-	CARD_ITEM_NOT_FOUND,
-	TEAM_USER_NOT_FOUND
+	CARD_NOT_MOVED,
+	CARD_ITEM_NOT_FOUND
 };

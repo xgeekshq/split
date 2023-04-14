@@ -1,4 +1,5 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { CREATE_FAILED } from 'src/libs/exceptions/messages';
+import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import CreateUserDto from '../dto/create.user.dto';
 import User from '../entities/user.schema';
 import { TYPES } from '../interfaces/types';
@@ -14,7 +15,7 @@ export default class CreateUserService implements CreateUserServiceInterface {
 		private readonly userRepository: UserRepositoryInterface
 	) {}
 
-	create(userData: CreateUserDto) {
+	async create(userData: CreateUserDto) {
 		const user: User = {
 			...userData,
 			strategy: '',
@@ -23,14 +24,28 @@ export default class CreateUserService implements CreateUserServiceInterface {
 			joinedAt: new Date(),
 			isAnonymous: false
 		};
+		const createdUser = await this.userRepository.create(user);
 
-		return this.userRepository.create(user);
+		if (!createdUser) throw new BadRequestException(CREATE_FAILED);
+
+		return createdUser;
 	}
 
-	createGuest(guestUserData: CreateGuestUserDto) {
+	async createGuest(guestUserData: CreateGuestUserDto) {
 		const { firstName, lastName } = guestUserData;
 
-		const email = faker.internet.email(firstName, lastName, '', { allowSpecialCharacters: true });
+		let email: string;
+		let maxCount = 0;
+		while (maxCount < 5) {
+			email = faker.internet.email(firstName, lastName, '', { allowSpecialCharacters: true });
+
+			const nUsersWithTheSameEmail = await this.userRepository.countDocumentsWithQuery({ email });
+			const emailAlreadyExists = nUsersWithTheSameEmail > 0;
+
+			if (!emailAlreadyExists) break;
+			maxCount++;
+		}
+
 		const user: User = {
 			firstName,
 			lastName: lastName ?? '',
@@ -43,7 +58,10 @@ export default class CreateUserService implements CreateUserServiceInterface {
 			isAnonymous: true,
 			updatedAt: new Date()
 		};
+		const createdUser = await this.userRepository.create(user);
 
-		return this.userRepository.create(user);
+		if (!createdUser) throw new BadRequestException(CREATE_FAILED);
+
+		return createdUser;
 	}
 }

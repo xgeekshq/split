@@ -15,15 +15,15 @@ const UsersSubHeader = ({
   handleSearchUser,
   handleClearSearch,
 }: UsersSubHeaderProps) => (
-  <Flex css={{ mt: '$16' }} justify="between" align="end">
+  <Flex align="end" css={{ mt: '$16' }} data-testid="usersSubHeader" justify="between">
     <Text fontWeight="bold">{userAmount} registered users</Text>
     <Flex css={{ width: '$455' }}>
       <UncontrolledInput
-        placeholder="Search user"
         currentValue={search}
         handleChange={handleSearchUser}
         handleClear={handleClearSearch}
         iconName="search"
+        placeholder="Search user"
       />
     </Flex>
   </Flex>

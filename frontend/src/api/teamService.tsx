@@ -1,13 +1,13 @@
 import { GetServerSidePropsContext } from 'next';
 
 import { CreateTeamDto, Team, TeamChecked } from '@/types/team/team';
-import fetchData from '@/utils/fetchData';
 import {
   CreatedTeamUser,
   TeamUser,
   TeamUserAddAndRemove,
   TeamUserUpdate,
 } from '@/types/team/team.user';
+import fetchData from '@/utils/fetchData';
 
 // #region GET
 export const getAllTeams = (context?: GetServerSidePropsContext): Promise<Team[]> =>

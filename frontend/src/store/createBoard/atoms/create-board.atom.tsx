@@ -1,8 +1,9 @@
 import { atom } from 'recoil';
+
+import { defaultSplitColumns } from '@/helper/board/defaultColumns';
 import { BoardToAdd } from '@/types/board/board';
 import { BoardUser } from '@/types/board/board.user';
 import { Team } from '@/types/team/team';
-import { defaultSplitColumns } from '@/helper/board/defaultColumns';
 
 export const createBoardError = atom({
   key: 'haveCreateBoardError',

@@ -1,5 +1,5 @@
-import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Switch from '@/components/Primitives/Inputs/Switches/Switch/Switch';
+import Flex from '@/components/Primitives/Layout/Flex/Flex';
 
 type SwitchDefaultTextProps = {
   isChecked: boolean;
@@ -15,9 +15,9 @@ const SwitchDefaultText = ({
   <Flex css={{ opacity: disabled ? '0.5' : '1' }}>
     <Switch
       checked={isChecked}
-      size="xs"
-      onCheckedChange={handleCheckedChange}
       disabled={disabled}
+      onCheckedChange={handleCheckedChange}
+      size="xs"
     />
   </Flex>
 );

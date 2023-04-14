@@ -1,7 +1,7 @@
 import { ReactNode } from 'react';
 
-import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Switch from '@/components/Primitives/Inputs/Switches/Switch/Switch';
+import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Text from '@/components/Primitives/Text/Text';
 import Tooltip from '@/components/Primitives/Tooltips/Tooltip/Tooltip';
 
@@ -26,28 +26,28 @@ const ConfigurationSwitch = ({
   disabled = false,
   disabledInfo,
 }: ConfigurationSwitchProps) => (
-  <Flex gap={20} data-testid="configurationSwitch">
+  <Flex data-testid="configurationSwitch" gap={20}>
     {disabledInfo && disabled ? (
       <Tooltip content={disabledInfo}>
         <Flex>
           <Switch
             checked={isChecked}
-            size="sm"
-            onCheckedChange={handleCheckedChange}
             disabled={disabled}
+            onCheckedChange={handleCheckedChange}
+            size="sm"
           />
         </Flex>
       </Tooltip>
     ) : (
       <Switch
         checked={isChecked}
-        size={size}
-        onCheckedChange={handleCheckedChange}
         disabled={disabled}
+        onCheckedChange={handleCheckedChange}
+        size={size}
       />
     )}
     <Flex direction="column">
-      <Text size={size} fontWeight="medium">
+      <Text fontWeight="medium" size={size}>
         {title}
       </Text>
       {text && (

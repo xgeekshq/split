@@ -1,8 +1,9 @@
 import { fireEvent, waitFor } from '@testing-library/react';
-import { libraryMocks } from '@/utils/testing/mocks';
-import { BOARDS_ROUTE } from '@/utils/routes';
-import { renderWithProviders } from '@/utils/testing/renderWithProviders';
+
 import Item, { SidebarItemProps } from '@/components/Sidebar/Item/Item';
+import { BOARDS_ROUTE } from '@/utils/routes';
+import { libraryMocks } from '@/utils/testing/mocks';
+import { renderWithProviders } from '@/utils/testing/renderWithProviders';
 
 const DEFAULT_PROPS = { iconName: 'user', label: 'Users' };
 
