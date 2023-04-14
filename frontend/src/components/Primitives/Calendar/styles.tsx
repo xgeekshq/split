@@ -11,7 +11,7 @@ const StyledCalendar = styled(Calendar, {
   width: '$400',
   position: 'relative',
   borderRadius: '$12',
-  boxShadow: '$1 $1 $5 #aaaaaa',
+  boxShadow: '1px 1px 5px #aaaaaa',
   mt: '$5',
 
   '.react-calendar': {

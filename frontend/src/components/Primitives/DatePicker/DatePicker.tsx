@@ -30,7 +30,7 @@ const DatePicker = ({ currentDate, minDate, maxDate, setDate }: DatePickerProps)
       />
     </StyledDropDownTrigger>
     <DropdownMenu.Portal>
-      <DropdownMenu.Content align="start">
+      <DropdownMenu.Content align="start" style={{ zIndex: '9999' }}>
         <Calendar currentDate={currentDate} maxDate={maxDate} minDate={minDate} setDate={setDate} />
       </DropdownMenu.Content>
     </DropdownMenu.Portal>
