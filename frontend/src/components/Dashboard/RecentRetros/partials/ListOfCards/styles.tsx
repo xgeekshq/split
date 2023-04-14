@@ -1,6 +1,5 @@
-import { styled } from '@/styles/stitches/stitches.config';
-
 import Text from '@/components/Primitives/Text/Text';
+import { styled } from '@/styles/stitches/stitches.config';
 
 const LastUpdatedText = styled(Text, {
   position: 'sticky',

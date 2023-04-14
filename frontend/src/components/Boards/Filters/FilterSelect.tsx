@@ -1,11 +1,11 @@
-import Select, { ControlProps, components } from 'react-select';
+import Select, { components, ControlProps } from 'react-select';
+import { useRecoilState } from 'recoil';
 
-import { styled } from '@/styles/stitches/stitches.config';
+import { filterByTeamSelectStyles } from '@/components/Boards/Filters/styles';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Text from '@/components/Primitives/Text/Text';
 import { filterTeamBoardsState } from '@/store/board/atoms/board.atom';
-import { useRecoilState } from 'recoil';
-import { filterByTeamSelectStyles } from '@/components/Boards/Filters/styles';
+import { styled } from '@/styles/stitches/stitches.config';
 
 const StyledSelect = styled(Select, {});
 interface OptionType {
@@ -23,9 +23,9 @@ const Control = ({ children, ...props }: ControlProps) => (
       {(props.selectProps.value as { label: string; value: string }).label ? (
         <Flex align="center" css={{ width: '100%' }}>
           <Text
-            size="sm"
             color={props.isFocused ? 'primary800' : 'primary300'}
             css={{ paddingBottom: '2.5px' }}
+            size="sm"
           >
             Team:
           </Text>
@@ -43,12 +43,18 @@ const FilterSelect: React.FC<FilterSelectProps> = ({ options }) => {
   const isSelected = !(filterState === 'all' || filterState === 'personal');
   return (
     <StyledSelect
-      placeholder="select team"
       className="react-select-container"
       classNamePrefix="react-select"
+      controlShouldRenderValue={isSelected}
+      options={options}
+      placeholder="select team"
+      styles={filterByTeamSelectStyles}
       components={{
         IndicatorSeparator: () => null,
         Control,
+      }}
+      onChange={(selectedOption) => {
+        setFilterState((selectedOption as OptionType)?.value);
       }}
       theme={(theme) => ({
         ...theme,
@@ -58,17 +64,11 @@ const FilterSelect: React.FC<FilterSelectProps> = ({ options }) => {
           primary: '#2F3742',
         },
       })}
-      styles={filterByTeamSelectStyles}
-      controlShouldRenderValue={isSelected}
-      options={options}
       value={
         !isSelected
           ? { label: 'select team', value: '' }
           : options.find((option) => option.value === filterState)
       }
-      onChange={(selectedOption) => {
-        setFilterState((selectedOption as OptionType)?.value);
-      }}
     />
   );
 };

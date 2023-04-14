@@ -1,8 +1,8 @@
+import Icon from '@/components/Primitives/Icons/Icon/Icon';
 import Button from '@/components/Primitives/Inputs/Button/Button';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Separator from '@/components/Primitives/Separator/Separator';
 import Text from '@/components/Primitives/Text/Text';
-import Icon from '@/components/Primitives/Icons/Icon/Icon';
 
 interface EmailSentProps {
   userEmail: string;
@@ -16,14 +16,14 @@ const EmailSent = ({ userEmail, resendEmail, goBack }: EmailSentProps) => (
       Check Your email
     </Text>
     <Text
-      size="md"
       color="primary500"
+      size="md"
       css={{
         margin: '12px auto 32px 0',
       }}
     >
       A link to reset your password has been sent to{' '}
-      <Text size="md" fontWeight="bold" color="primary500">
+      <Text color="primary500" fontWeight="bold" size="md">
         {userEmail}
       </Text>
       . Please allow a few minutes for the email to get to you and then follow the instructions in
@@ -40,11 +40,11 @@ const EmailSent = ({ userEmail, resendEmail, goBack }: EmailSentProps) => (
       If you dont see the email, check other places it might be, like your junk, spam, social, or
       other folders.
     </Text>
-    <Button size="lg" type="button" onClick={resendEmail}>
+    <Button onClick={resendEmail} size="lg" type="button">
       Resend email with reset link
     </Button>
     <Flex>
-      <Button variant="link" css={{ pl: '0', mt: '$24', color: '$primary500' }} onClick={goBack}>
+      <Button css={{ pl: '0', mt: '$24', color: '$primary500' }} onClick={goBack} variant="link">
         <Icon name="arrow-long-left" />
         Go Back
       </Button>

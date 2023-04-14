@@ -1,20 +1,21 @@
+import { ReactElement } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useRouter } from 'next/router';
 import { joiResolver } from '@hookform/resolvers/joi';
-import Input from '@/components/Primitives/Inputs/Input/Input';
-import Text from '@/components/Primitives/Text/Text';
-import { LoginGuestUser } from '@/types/user/user';
-import { START_PAGE_ROUTE } from '@/utils/routes';
-import Button from '@/components/Primitives/Inputs/Button/Button';
-import Flex from '@/components/Primitives/Layout/Flex/Flex';
-import SchemaLoginGuestForm from '@/schema/schemaLoginGuestForm';
-import { getUsername } from '@/utils/getUsername';
-import useRegisterGuestUser from '@/hooks/auth/useRegisterGuestUser';
-import { ReactElement } from 'react';
+
 import AccessLayout from '@/components/layouts/AccessLayout/AccessLayout';
-import { CreateGuestUser } from '@/types/user/create-login.user';
+import Button from '@/components/Primitives/Inputs/Button/Button';
+import Input from '@/components/Primitives/Inputs/Input/Input';
+import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Separator from '@/components/Primitives/Separator/Separator';
+import Text from '@/components/Primitives/Text/Text';
+import useRegisterGuestUser from '@/hooks/auth/useRegisterGuestUser';
+import SchemaLoginGuestForm from '@/schema/schemaLoginGuestForm';
 import { FlexForm } from '@/styles/pages/pages.styles';
+import { CreateGuestUser } from '@/types/user/create-login.user';
+import { LoginGuestUser } from '@/types/user/user';
+import { getUsername } from '@/utils/getUsername';
+import { START_PAGE_ROUTE } from '@/utils/routes';
 
 const LoginGuestUserPage = () => {
   const router = useRouter();
@@ -56,7 +57,7 @@ const LoginGuestUserPage = () => {
         <Text css={{ mt: '$24' }} heading="1">
           Guest User
         </Text>
-        <Text size="md" color="primary500" css={{ mt: '$8' }}>
+        <Text color="primary500" css={{ mt: '$8' }} size="md">
           Enter a guest user name and join the retro.
         </Text>
         <Input css={{ mt: '$32' }} id="username" placeholder="Guest user name" type="text" />
@@ -67,12 +68,12 @@ const LoginGuestUserPage = () => {
         <Flex align="center" direction="column" justify="center">
           <Flex align="center" css={{ width: '100%', my: '$26' }} gap="16">
             <Separator />
-            <Text color="primary300" size="sm" fontWeight="medium">
+            <Text color="primary300" fontWeight="medium" size="sm">
               OR
             </Text>
             <Separator />
           </Flex>
-          <Button css={{ width: '100%' }} size="lg" onClick={handleClick}>
+          <Button css={{ width: '100%' }} onClick={handleClick} size="lg">
             Sign In
           </Button>
         </Flex>

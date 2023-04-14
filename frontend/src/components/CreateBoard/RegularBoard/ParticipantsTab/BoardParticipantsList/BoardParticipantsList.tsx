@@ -2,17 +2,16 @@ import { MouseEvent, useState } from 'react';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 
 import ParticipantCard from '@/components/Board/RegularBoard/ParticipantsList/ParticipantCard';
+import ListParticipants from '@/components/CreateBoard/RegularBoard/ParticipantsTab/ListParticipants/ListParticipants';
 import Icon from '@/components/Primitives/Icons/Icon/Icon';
 import Button from '@/components/Primitives/Inputs/Button/Button';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
+import Text from '@/components/Primitives/Text/Text';
 import useCurrentSession from '@/hooks/useCurrentSession';
 import { createBoardDataState } from '@/store/createBoard/atoms/create-board.atom';
+import { usersListState } from '@/store/user.atom';
 import { BoardUser } from '@/types/board/board.user';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
-
-import ListParticipants from '@/components/CreateBoard/RegularBoard/ParticipantsTab/ListParticipants/ListParticipants';
-import Text from '@/components/Primitives/Text/Text';
-import { usersListState } from '@/store/team/atom/team.atom';
 import isEmpty from '@/utils/isEmpty';
 
 type BoardParticipantsListProps = {
@@ -74,18 +73,18 @@ const BoardParticipantsList = ({ isPageLoading }: BoardParticipantsListProps) =>
   );
 
   return (
-    <Flex direction="column" gap={16} css={{ width: '100%' }}>
-      <Flex direction="row" justify="between" align="center">
+    <Flex css={{ width: '100%' }} direction="column" gap={16}>
+      <Flex align="center" direction="row" justify="between">
         {isEmpty(responsibles) && !isPageLoading && (
           <Flex css={{ mt: '$10' }}>
-            <Icon name="error" size={20} css={{ color: '$dangerBase' }} />
-            <Text size="sm" fontWeight="medium" color="dangerBase" css={{ marginLeft: '5px' }}>
+            <Icon css={{ color: '$dangerBase' }} name="error" size={20} />
+            <Text color="dangerBase" css={{ marginLeft: '5px' }} fontWeight="medium" size="sm">
               You must select a responsible
             </Text>
           </Flex>
         )}
-        <Flex justify="end" css={{ mt: '$10' }}>
-          <Button variant="link" size="sm" onClick={handleOpen}>
+        <Flex css={{ mt: '$10' }} justify="end">
+          <Button onClick={handleOpen} size="sm" variant="link">
             <Icon name="plus" />
             Add/remove participants
           </Button>
@@ -95,13 +94,13 @@ const BoardParticipantsList = ({ isPageLoading }: BoardParticipantsListProps) =>
         {createBoardData.users.map((participant) => (
           <ParticipantCard
             key={participant.user._id}
-            participant={{ ...participant, _id: participant.user._id }}
-            handleRemoveParticipant={handleRemoveParticipant}
-            updateIsResponsibleStatus={updateIsResponsibleStatus}
-            isMemberCurrentUser={participant.user._id === userId}
             isCurrentUserResponsible
-            isCurrentUserSAdmin={!!isSAdmin}
+            handleRemoveParticipant={handleRemoveParticipant}
             isCreatedByCurrentUser={userId === participant.user._id}
+            isCurrentUserSAdmin={!!isSAdmin}
+            isMemberCurrentUser={participant.user._id === userId}
+            participant={{ ...participant, _id: participant.user._id }}
+            updateIsResponsibleStatus={updateIsResponsibleStatus}
           />
         ))}
       </Flex>

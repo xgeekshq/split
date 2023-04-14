@@ -1,10 +1,9 @@
 import React from 'react';
 import { ComponentStory } from '@storybook/react';
-
 import dedent from 'ts-dedent';
 
-import Tab from '@/components/Primitives/Tab/Tab';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
+import Tab from '@/components/Primitives/Tab/Tab';
 
 export default {
   title: 'Primitives/Tab',

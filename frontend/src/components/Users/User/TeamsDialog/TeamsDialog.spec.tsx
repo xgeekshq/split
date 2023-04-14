@@ -1,13 +1,14 @@
+import React from 'react';
+import { UseMutationResult } from '@tanstack/react-query';
+import { fireEvent, waitFor } from '@testing-library/react';
+
+import TeamsDialog, { TeamsDialogProps } from '@/components/Users/User/TeamsDialog/TeamsDialog';
+import useUpdateUserTeams from '@/hooks/teams/useUpdateUserTeams';
+import { TeamUserRoles } from '@/utils/enums/team.user.roles';
+import { TeamCheckedFactory } from '@/utils/factories/team';
+import { UserFactory } from '@/utils/factories/user';
 import { createMockRouter } from '@/utils/testing/mocks';
 import { renderWithProviders } from '@/utils/testing/renderWithProviders';
-import { UserFactory } from '@/utils/factories/user';
-import { fireEvent, waitFor } from '@testing-library/react';
-import TeamsDialog, { TeamsDialogProps } from '@/components/Users/User/TeamsDialog/TeamsDialog';
-import { TeamCheckedFactory } from '@/utils/factories/team';
-import React from 'react';
-import useUpdateUserTeams from '@/hooks/teams/useUpdateUserTeams';
-import { UseMutationResult } from '@tanstack/react-query';
-import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 
 const user = UserFactory.create();
 const router = createMockRouter({ query: { userId: user._id } });
@@ -15,12 +16,12 @@ const router = createMockRouter({ query: { userId: user._id } });
 const render = (props: Partial<TeamsDialogProps> = {}) =>
   renderWithProviders(
     <TeamsDialog
-      teamsList={TeamCheckedFactory.createMany(3)}
-      setIsOpen={jest.fn()}
       isOpen
       confirmationLabel="confirm"
-      title="Title"
       joinedAt="2022-01-01T00:00:00+00:00"
+      setIsOpen={jest.fn()}
+      teamsList={TeamCheckedFactory.createMany(3)}
+      title="Title"
       {...props}
     />,
     { routerOptions: router },

@@ -1,13 +1,12 @@
 import * as TooltipPrimitive from '@radix-ui/react-tooltip';
 
-import { styled } from '@/styles/stitches/stitches.config';
-
 import {
   slideDownAndFade,
   slideLeftAndFade,
   slideRightAndFade,
   slideUpAndFade,
 } from '@/animations/Slide';
+import { styled } from '@/styles/stitches/stitches.config';
 
 const StyledContent = styled(TooltipPrimitive.Content, {
   p: '$8',

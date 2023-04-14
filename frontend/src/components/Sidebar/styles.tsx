@@ -1,5 +1,5 @@
-import { styled } from '@/styles/stitches/stitches.config';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
+import { styled } from '@/styles/stitches/stitches.config';
 
 const StyledSidebar = styled('aside', {
   overflowY: 'auto',
@@ -74,4 +74,4 @@ const CollapsibleContent = styled(Flex, {
   },
 });
 
-export { StyledSidebar, StyledMenuItem, CollapsibleContent };
+export { CollapsibleContent, StyledMenuItem, StyledSidebar };

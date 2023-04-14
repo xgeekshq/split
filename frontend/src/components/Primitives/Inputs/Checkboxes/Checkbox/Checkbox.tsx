@@ -1,11 +1,10 @@
 import React from 'react';
-
 import * as CheckboxPrimitive from '@radix-ui/react-checkbox';
-import { styled } from '@/styles/stitches/stitches.config';
 
+import Icon from '@/components/Primitives/Icons/Icon/Icon';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Text from '@/components/Primitives/Text/Text';
-import Icon from '@/components/Primitives/Icons/Icon/Icon';
+import { styled } from '@/styles/stitches/stitches.config';
 
 const StyledCheckbox = styled(CheckboxPrimitive.Root, {
   all: 'unset',
@@ -99,15 +98,15 @@ const Checkbox = ({
   disabled = false,
   handleChange,
 }: CheckboxProps) => (
-  <Flex align="center" gap={8} data-testid="checkBox">
+  <Flex align="center" data-testid="checkBox" gap={8}>
     <StyledCheckbox
-      id={id}
       checked={checked}
-      onCheckedChange={handleChange}
       disabled={disabled}
+      id={id}
       name={id}
-      variant={variant}
+      onCheckedChange={handleChange}
       size={size}
+      variant={variant}
     >
       <StyledIndicator>
         <Icon name="check" />
@@ -117,12 +116,12 @@ const Checkbox = ({
       <Text
         as="label"
         color={disabled ? 'primary200' : 'primary800'}
+        htmlFor={id}
+        size="sm"
         css={{
           cursor: 'pointer',
           wordBreak: 'break-word',
         }}
-        htmlFor={id}
-        size="sm"
       >
         {label}
       </Text>

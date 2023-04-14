@@ -1,13 +1,13 @@
-import { createMockRouter } from '@/utils/testing/mocks';
-import { renderWithProviders } from '@/utils/testing/renderWithProviders';
-import { AvatarGroupUsersFactory } from '@/utils/factories/user';
-import { getInitials } from '@/utils/getInitials';
-import { User } from '@/types/user/user';
-import { TeamUserRoles } from '@/utils/enums/team.user.roles';
-import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import AvatarGroup, {
   AvatarGroupProps,
 } from '@/components/Primitives/Avatars/AvatarGroup/AvatarGroup';
+import { User } from '@/types/user/user';
+import { BoardUserRoles } from '@/utils/enums/board.user.roles';
+import { TeamUserRoles } from '@/utils/enums/team.user.roles';
+import { AvatarGroupUsersFactory } from '@/utils/factories/user';
+import { getInitials } from '@/utils/getInitials';
+import { createMockRouter } from '@/utils/testing/mocks';
+import { renderWithProviders } from '@/utils/testing/renderWithProviders';
 
 const router = createMockRouter({});
 

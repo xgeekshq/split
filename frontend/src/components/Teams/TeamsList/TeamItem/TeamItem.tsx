@@ -1,5 +1,5 @@
-import { useRouter } from 'next/router';
 import React, { useMemo } from 'react';
+import { useRouter } from 'next/router';
 
 import ConfirmationDialog from '@/components/Primitives/Alerts/ConfirmationDialog/ConfirmationDialog';
 import AvatarGroup from '@/components/Primitives/Avatars/AvatarGroup/AvatarGroup';
@@ -9,16 +9,15 @@ import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Separator from '@/components/Primitives/Separator/Separator';
 import Text from '@/components/Primitives/Text/Text';
 import RoleSelector from '@/components/Teams/Team/TeamMemberItem/RoleSelector/RoleSelector';
-import { InnerContainer } from '@/styles/pages/pages.styles';
-import { Team } from '@/types/team/team';
-import { TeamUserRoles } from '@/utils/enums/team.user.roles';
-
+import TeamBoards from '@/components/Teams/TeamsList/TeamItem/TeamBoards/TeamBoards';
+import TeamTitle from '@/components/Teams/TeamsList/TeamItem/TeamTitle/TeamTitle';
 import useDeleteTeam from '@/hooks/teams/useDeleteTeam';
 import useDeleteTeamUser from '@/hooks/teams/useDeleteTeamUser';
 import useUpdateTeamUser from '@/hooks/teams/useUpdateTeamUser';
+import { InnerContainer } from '@/styles/pages/pages.styles';
+import { Team } from '@/types/team/team';
 import { TeamUserUpdate } from '@/types/team/team.user';
-import TeamBoards from '@/components/Teams/TeamsList/TeamItem/TeamBoards/TeamBoards';
-import TeamTitle from '@/components/Teams/TeamsList/TeamItem/TeamTitle/TeamTitle';
+import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 
 export type TeamItemProps = {
   team: Team;
@@ -96,9 +95,9 @@ const TeamItem = React.memo(({ team, userId, isSAdmin }: TeamItemProps) => {
   };
 
   return (
-    <Flex direction="column" data-testid="teamItem">
+    <Flex data-testid="teamItem" direction="column">
       <InnerContainer align="center" elevation="1" gap="40">
-        <Flex align="center" gap="8" css={{ flex: '1' }}>
+        <Flex align="center" css={{ flex: '1' }} gap="8">
           <Icon
             name="blob-team"
             size={32}
@@ -110,13 +109,13 @@ const TeamItem = React.memo(({ team, userId, isSAdmin }: TeamItemProps) => {
 
           <TeamTitle teamId={teamId} title={teamName} />
         </Flex>
-        <Flex align="center" justify="start" gap="40" css={{ flex: '3' }}>
+        <Flex align="center" css={{ flex: '3' }} gap="40" justify="start">
           <Flex align="center" gap="8">
             <Text color="primary300" size="sm">
               Members
             </Text>
 
-            <AvatarGroup listUsers={teamUsers} userId={userId} css={{ minWidth: '$88' }} />
+            <AvatarGroup css={{ minWidth: '$88' }} listUsers={teamUsers} userId={userId} />
           </Flex>
 
           <Separator orientation="vertical" size="lg" />
@@ -129,9 +128,9 @@ const TeamItem = React.memo(({ team, userId, isSAdmin }: TeamItemProps) => {
             <AvatarGroup
               stakeholders
               teamAdmins
+              css={{ minWidth: '$88' }}
               listUsers={teamUsers}
               userId={userId}
-              css={{ minWidth: '$88' }}
             />
           </Flex>
 
@@ -139,19 +138,19 @@ const TeamItem = React.memo(({ team, userId, isSAdmin }: TeamItemProps) => {
 
           <Flex align="center">
             {!isTeamPage && userFound ? (
-              <RoleSelector role={userFound.role} handleRoleChange={handleRoleChange} />
+              <RoleSelector handleRoleChange={handleRoleChange} role={userFound.role} />
             ) : (
-              <TeamBoards team={team} havePermissions={havePermissions} />
+              <TeamBoards havePermissions={havePermissions} team={team} />
             )}
           </Flex>
         </Flex>
         <Flex css={{ flex: '0' }}>
           {havePermissions && (
             <ConfirmationDialog
-              title={isTeamPage ? 'Delete team' : 'Remove User'}
-              description={confirmationDialogDescription()}
               confirmationHandler={handleDelete}
               confirmationLabel={isTeamPage ? 'Delete' : 'Remove'}
+              description={confirmationDialogDescription()}
+              title={isTeamPage ? 'Delete team' : 'Remove User'}
               tooltip={isTeamPage ? 'Delete team' : 'Remove user'}
             >
               <Button isIcon size="sm">

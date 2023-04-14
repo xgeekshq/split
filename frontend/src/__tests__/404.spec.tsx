@@ -1,8 +1,9 @@
-import { renderWithProviders } from '@/utils/testing/renderWithProviders';
 import { fireEvent, waitFor } from '@testing-library/react';
+
 import Custom404 from '@/pages/404';
-import { libraryMocks } from '@/utils/testing/mocks';
 import { ROUTES } from '@/utils/routes';
+import { libraryMocks } from '@/utils/testing/mocks';
+import { renderWithProviders } from '@/utils/testing/renderWithProviders';
 
 const { mockRouter } = libraryMocks.mockNextRouter({ pathname: '/404' });
 

@@ -1,4 +1,8 @@
+import { useMemo, useState } from 'react';
+import { useRecoilValue } from 'recoil';
+
 import DragDropArea from '@/components/Board/DragDropArea';
+import RegularBoardHeader from '@/components/Board/RegularBoard/RegularHeader';
 import { BoardSettings } from '@/components/Board/Settings';
 import Timer from '@/components/Board/Timer';
 import Icon from '@/components/Primitives/Icons/Icon/Icon';
@@ -9,9 +13,6 @@ import { boardInfoState } from '@/store/board/atoms/board.atom';
 import { EmitEvent } from '@/types/events/emit-event.type';
 import { ListenEvent } from '@/types/events/listen-event.type';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
-import { useMemo, useState } from 'react';
-import { useRecoilValue } from 'recoil';
-import RegularBoardHeader from '@/components/Board/RegularBoard/RegularHeader';
 
 type RegularBoardProps = {
   socketId?: string;
@@ -78,8 +79,8 @@ const RegularBoard = ({
   return board && userId && socketId ? (
     <>
       <RegularBoardHeader />
-      <Flex direction="column" align="start" justify="center" css={{ px: '$36' }}>
-        <Flex gap={40} align="center" css={{ py: '$32', width: '100%' }} justify="end">
+      <Flex align="start" css={{ px: '$36' }} direction="column" justify="center">
+        <Flex align="center" css={{ py: '$32', width: '100%' }} gap={40} justify="end">
           {shouldRenderBoardSettings && <Flex css={{ flex: 1 }} />}
           {!board?.submitedAt && (
             <Flex
@@ -90,8 +91,8 @@ const RegularBoard = ({
             >
               <Timer
                 boardId={board._id}
-                isAdmin={hasAdminRole}
                 emitEvent={emitEvent}
+                isAdmin={hasAdminRole}
                 listenEvent={listenEvent}
               />
             </Flex>
@@ -105,6 +106,7 @@ const RegularBoard = ({
               </Button>
               {isOpen && (
                 <BoardSettings
+                  isRegularBoard
                   isOpen={isOpen}
                   isOwner={isOwner}
                   isResponsible={isResponsible}
@@ -112,18 +114,17 @@ const RegularBoard = ({
                   isStakeholderOrAdmin={isStakeholderOrAdmin}
                   setIsOpen={setIsOpen}
                   socketId={socketId}
-                  isRegularBoard
                 />
               )}
             </>
           )}
         </Flex>
         <DragDropArea
+          isRegularBoard
           board={board}
+          hasAdminRole={hasAdminRole}
           socketId={socketId}
           userId={userId}
-          isRegularBoard
-          hasAdminRole={hasAdminRole}
         />
       </Flex>
     </>

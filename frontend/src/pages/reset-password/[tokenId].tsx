@@ -1,19 +1,16 @@
 import { ReactElement } from 'react';
-
-import { useRouter } from 'next/router';
-
-import AccessLayout from '@/components/layouts/AccessLayout/AccessLayout';
-
 import { FormProvider, useForm } from 'react-hook-form';
+import { useRouter } from 'next/router';
 import { joiResolver } from '@hookform/resolvers/joi';
 
+import AccessLayout from '@/components/layouts/AccessLayout/AccessLayout';
 import Button from '@/components/Primitives/Inputs/Button/Button';
 import Input from '@/components/Primitives/Inputs/Input/Input';
 import Text from '@/components/Primitives/Text/Text';
-import SchemaResetPasswordForm from '@/schema/schemaResetPasswordForm';
-import { NewPassword } from '@/types/user/user';
 import useResetPassword from '@/hooks/auth/useResetPassword';
+import SchemaResetPasswordForm from '@/schema/schemaResetPasswordForm';
 import { FlexForm } from '@/styles/pages/pages.styles';
+import { NewPassword } from '@/types/user/user';
 
 const ResetPasswordPage = () => {
   const router = useRouter();
@@ -50,20 +47,20 @@ const ResetPasswordPage = () => {
         <Text css={{ mt: '$24' }} heading="1">
           Reset Password
         </Text>
-        <Text size="md" color="primary500" css={{ mt: '$8' }}>
+        <Text color="primary500" css={{ mt: '$8' }} size="md">
           Enter your new password
         </Text>
         <Input
           css={{ mt: '$32' }}
-          iconPosition="right"
           icon="eye"
+          iconPosition="right"
           id="newPassword"
           placeholder="Type new password here"
           type="password"
         />
         <Input
-          iconPosition="right"
           icon="eye"
+          iconPosition="right"
           id="newPasswordConf"
           placeholder="Repeat password"
           type="password"

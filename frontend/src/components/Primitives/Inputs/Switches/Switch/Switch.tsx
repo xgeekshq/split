@@ -1,9 +1,8 @@
 import * as SwitchPrimitive from '@radix-ui/react-switch';
 
-import { styled } from '@/styles/stitches/stitches.config';
-
-import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Icon from '@/components/Primitives/Icons/Icon/Icon';
+import Flex from '@/components/Primitives/Layout/Flex/Flex';
+import { styled } from '@/styles/stitches/stitches.config';
 
 const StyledThumb = styled(SwitchPrimitive.Thumb, Flex, {
   justifyContent: 'center',

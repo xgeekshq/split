@@ -1,14 +1,7 @@
+import Link from 'next/link';
 import { useRecoilValue } from 'recoil';
 
-import Breadcrumb from '@/components/Primitives/Breadcrumb/Breadcrumb';
-import Icon from '@/components/Primitives/Icons/Icon/Icon';
-import LogoIcon from '@/components/icons/Logo';
-import Flex from '@/components/Primitives/Layout/Flex/Flex';
-import Text from '@/components/Primitives/Text/Text';
-import Tooltip from '@/components/Primitives/Tooltips/Tooltip/Tooltip';
-import { boardInfoState } from '@/store/board/atoms/board.atom';
-import { BreadcrumbType } from '@/types/board/Breadcrumb';
-import Link from 'next/link';
+import HeaderParticipants from '@/components/Board/RegularBoard/RegularHeader/HeaderParticipants';
 import {
   MergeIconContainer,
   RecurrentIconContainer,
@@ -16,7 +9,14 @@ import {
   StyledLogo,
   TitleSection,
 } from '@/components/Board/SplitBoard/Header/styles';
-import HeaderParticipants from '@/components/Board/RegularBoard/RegularHeader/HeaderParticipants';
+import LogoIcon from '@/components/icons/Logo';
+import Breadcrumb from '@/components/Primitives/Breadcrumb/Breadcrumb';
+import Icon from '@/components/Primitives/Icons/Icon/Icon';
+import Flex from '@/components/Primitives/Layout/Flex/Flex';
+import Text from '@/components/Primitives/Text/Text';
+import Tooltip from '@/components/Primitives/Tooltips/Tooltip/Tooltip';
+import { boardInfoState } from '@/store/board/atoms/board.atom';
+import { BreadcrumbType } from '@/types/board/Breadcrumb';
 
 interface Props {
   isParticipantsPage?: boolean;

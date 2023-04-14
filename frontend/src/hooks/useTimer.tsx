@@ -1,3 +1,5 @@
+import { useCallback, useEffect, useRef, useState } from 'react';
+
 import { TimeDto } from '@/types/timer/time.dto';
 import { TimerProps } from '@/types/timer/timer-props.interface';
 import { TimerStateDto } from '@/types/timer/timer-state.dto';
@@ -28,7 +30,6 @@ import {
   BOARD_TIMER_USER_STOPPED,
   ONE_SECOND,
 } from '@/utils/constants';
-import { useCallback, useEffect, useRef, useState } from 'react';
 
 const useTimer = ({ boardId, isAdmin, listenEvent, emitEvent }: TimerProps) => {
   const [duration, setDuration] = useState<TimeWithTotalTime>(BOARD_TIMER_START_TIME);

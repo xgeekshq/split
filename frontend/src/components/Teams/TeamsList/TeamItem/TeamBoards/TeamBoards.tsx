@@ -1,8 +1,9 @@
+import Link from 'next/link';
+
 import Icon from '@/components/Primitives/Icons/Icon/Icon';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Text from '@/components/Primitives/Text/Text';
 import { Team } from '@/types/team/team';
-import Link from 'next/link';
 
 export type TeamBoardsProps = {
   havePermissions: boolean;
@@ -29,14 +30,14 @@ const TeamBoards = ({ havePermissions, team }: TeamBoardsProps) => {
                   color: '$primaryBase',
                 }}
               />
-              <Text css={{ ml: '$8' }} size="sm" fontWeight="medium" link>
+              <Text link css={{ ml: '$8' }} fontWeight="medium" size="sm">
                 Create first board
               </Text>
             </Flex>
           </Link>
         )}
         {!havePermissions && (
-          <Text size="sm" fontWeight="medium">
+          <Text fontWeight="medium" size="sm">
             No boards
           </Text>
         )}
@@ -52,7 +53,7 @@ const TeamBoards = ({ havePermissions, team }: TeamBoardsProps) => {
           query: { team: team.id },
         }}
       >
-        <Text size="sm" fontWeight="medium" link>
+        <Text link fontWeight="medium" size="sm">
           {team.boardsCount} team boards
         </Text>
       </Link>

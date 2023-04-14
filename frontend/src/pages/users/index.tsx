@@ -1,5 +1,6 @@
-import { GetServerSideProps, GetServerSidePropsContext } from 'next';
 import { ReactElement, Suspense } from 'react';
+import { GetServerSideProps, GetServerSidePropsContext } from 'next';
+import { dehydrate, QueryClient } from '@tanstack/react-query';
 
 import { getUsersWithTeams } from '@/api/userService';
 import QueryError from '@/components/Errors/QueryError';
@@ -9,7 +10,6 @@ import MainPageHeader from '@/components/layouts/Layout/MainPageHeader/MainPageH
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import LoadingPage from '@/components/Primitives/Loading/Page/Page';
 import UsersList from '@/components/Users/UsersList/UsersList';
-import { dehydrate, QueryClient } from '@tanstack/react-query';
 import { TEAMS_KEY, USERS_KEY } from '@/utils/constants/reactQueryKeys';
 
 const Users = () => (

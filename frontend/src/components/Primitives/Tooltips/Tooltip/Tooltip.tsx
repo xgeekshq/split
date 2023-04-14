@@ -18,8 +18,8 @@ const Tooltip = ({ children, content, color }: Props) => (
           avoidCollisions
           align="center"
           color={color}
-          side="top"
           css={{ zIndex: 128 }}
+          side="top"
         >
           {content}
           <StyledArrow color={color} height={5} width={16} />

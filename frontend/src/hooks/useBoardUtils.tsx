@@ -1,10 +1,10 @@
-import { useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/router';
 import { useSession } from 'next-auth/react';
+import { useQueryClient } from '@tanstack/react-query';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 
 import { toastState } from '@/store/toast/atom/toast.atom';
-import { usersListState } from '@/store/team/atom/team.atom';
+import { usersListState } from '@/store/user.atom';
 
 const useBoardUtils = () => {
   const router = useRouter();

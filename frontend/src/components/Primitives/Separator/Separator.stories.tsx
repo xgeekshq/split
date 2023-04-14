@@ -1,10 +1,9 @@
 import React from 'react';
 import { ComponentStory } from '@storybook/react';
-
 import dedent from 'ts-dedent';
 
-import Separator from '@/components/Primitives/Separator/Separator';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
+import Separator from '@/components/Primitives/Separator/Separator';
 import { SeparatorOrientationType, SeparatorSizeType } from '@/stories/types/PrimitiveTypes';
 
 const ORIENTATION_OPTIONS: SeparatorOrientationType[] = ['horizontal', 'vertical'];
@@ -53,7 +52,7 @@ export default {
 };
 
 const Template: ComponentStory<typeof Separator> = ({ ...args }) => (
-  <Flex align="center" justify="center" css={{ height: '100vh', width: '100vh' }}>
+  <Flex align="center" css={{ height: '100vh', width: '100vh' }} justify="center">
     <Separator {...args} />
   </Flex>
 );
