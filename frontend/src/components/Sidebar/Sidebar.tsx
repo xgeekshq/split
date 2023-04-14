@@ -1,8 +1,9 @@
+import { useState } from 'react';
+
 import SidebarContent from '@/components/Sidebar/Content/Content';
 import Header from '@/components/Sidebar/Header/Header';
 import { StyledSidebar } from '@/components/Sidebar/styles';
-import { SidebarProps, CollapsibleProps } from '@/components/Sidebar/types';
-import { useState } from 'react';
+import { CollapsibleProps, SidebarProps } from '@/components/Sidebar/types';
 
 const Sidebar = ({ firstName, lastName, email, strategy }: SidebarProps) => {
   const [isCollapsed, setIsCollapsed] = useState(false);

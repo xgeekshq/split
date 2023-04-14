@@ -1,16 +1,15 @@
 import React from 'react';
 
+import Icon from '@/components/Primitives/Icons/Icon/Icon';
 import {
   Popover,
-  PopoverContent,
-  PopoverTrigger,
-  PopoverItem,
   PopoverClose,
+  PopoverContent,
+  PopoverItem,
+  PopoverTrigger,
 } from '@/components/Primitives/Popovers/Popover/Popover';
 import Text from '@/components/Primitives/Text/Text';
 import { TeamUserRoles } from '@/utils/enums/team.user.roles';
-
-import Icon from '@/components/Primitives/Icons/Icon/Icon';
 
 export type TeamRolePopoverProps = {
   handleRoleChange: (role: TeamUserRoles) => void;
@@ -18,24 +17,24 @@ export type TeamRolePopoverProps = {
 
 const TeamRolePopover = React.memo(({ handleRoleChange }: TeamRolePopoverProps) => (
   <Popover>
-    <PopoverTrigger variant="dark" size="sm" data-testid="teamRolePopoverTrigger">
+    <PopoverTrigger data-testid="teamRolePopoverTrigger" size="sm" variant="dark">
       <Icon name="arrow-down" />
     </PopoverTrigger>
     <PopoverContent
-      css={{ width: '$360', height: '$316' }}
       collisionPadding={32}
+      css={{ width: '$360', height: '$316' }}
       onOpenAutoFocus={(e) => e.preventDefault()}
     >
       <PopoverClose>
         <PopoverItem
           align="end"
-          direction="column"
           css={{ pr: '$16', height: '$100' }}
+          direction="column"
           onClick={() => {
             handleRoleChange(TeamUserRoles.MEMBER);
           }}
         >
-          <Text css={{ textAlign: 'end' }} size="sm" fontWeight="medium">
+          <Text css={{ textAlign: 'end' }} fontWeight="medium" size="sm">
             Team Member
           </Text>
 
@@ -47,13 +46,13 @@ const TeamRolePopover = React.memo(({ handleRoleChange }: TeamRolePopoverProps) 
       <PopoverClose>
         <PopoverItem
           align="end"
-          direction="column"
           css={{ pr: '$16', height: '$100' }}
+          direction="column"
           onClick={() => {
             handleRoleChange(TeamUserRoles.ADMIN);
           }}
         >
-          <Text css={{ textAlign: 'end' }} size="sm" fontWeight="medium">
+          <Text css={{ textAlign: 'end' }} fontWeight="medium" size="sm">
             Team Admin
           </Text>
           <Text css={{ textAlign: 'end' }} size="sm">
@@ -65,13 +64,13 @@ const TeamRolePopover = React.memo(({ handleRoleChange }: TeamRolePopoverProps) 
       <PopoverClose>
         <PopoverItem
           align="end"
-          direction="column"
           css={{ pr: '$16', height: '$100' }}
+          direction="column"
           onClick={() => {
             handleRoleChange(TeamUserRoles.STAKEHOLDER);
           }}
         >
-          <Text css={{ textAlign: 'end' }} size="sm" fontWeight="medium">
+          <Text css={{ textAlign: 'end' }} fontWeight="medium" size="sm">
             Stakeholder
           </Text>
           <Text css={{ textAlign: 'end' }} size="sm">

@@ -1,19 +1,19 @@
 import React, { useEffect, useMemo, useRef } from 'react';
+import { useRouter } from 'next/router';
 import { useRecoilState } from 'recoil';
 
+import FilterBoards from '@/components/Boards/Filters/FilterBoards';
+import ListBoards from '@/components/Boards/MyBoards/ListBoards';
+import ListBoardsByTeam from '@/components/Boards/MyBoards/ListBoardsByTeam';
+import ListPersonalBoards from '@/components/Boards/MyBoards/ListPersonalBoards';
 import EmptyBoards from '@/components/Dashboard/RecentRetros/partials/EmptyBoards';
+import useTeams from '@/hooks/teams/useTeams';
+import useBoard from '@/hooks/useBoard';
+import useCurrentSession from '@/hooks/useCurrentSession';
+import { filterTeamBoardsState } from '@/store/board/atoms/board.atom';
 import BoardType from '@/types/board/board';
 import { Team } from '@/types/team/team';
 import isEmpty from '@/utils/isEmpty';
-import { useRouter } from 'next/router';
-import { filterTeamBoardsState } from '@/store/board/atoms/board.atom';
-import useBoard from '@/hooks/useBoard';
-import useTeams from '@/hooks/teams/useTeams';
-import useCurrentSession from '@/hooks/useCurrentSession';
-import FilterBoards from '@/components/Boards/Filters/FilterBoards';
-import ListBoardsByTeam from '@/components/Boards/MyBoards/ListBoardsByTeam';
-import ListBoards from '@/components/Boards/MyBoards/ListBoards';
-import ListPersonalBoards from '@/components/Boards/MyBoards/ListPersonalBoards';
 
 interface MyBoardsProps {
   userId: string;
@@ -91,20 +91,20 @@ const MyBoards = ({ userId, isSuperAdmin }: MyBoardsProps) => {
       <FilterBoards teamNames={teamNames} />
 
       {!['all', 'personal'].includes(filterState) && filteredTeam && (
-        <ListBoardsByTeam filteredTeam={filteredTeam} userId={userId} isSuperAdmin={isSuperAdmin} />
+        <ListBoardsByTeam filteredTeam={filteredTeam} isSuperAdmin={isSuperAdmin} userId={userId} />
       )}
       {filterState === 'personal' && (
-        <ListPersonalBoards userId={userId} isSuperAdmin={isSuperAdmin} />
+        <ListPersonalBoards isSuperAdmin={isSuperAdmin} userId={userId} />
       )}
       {filterState === 'all' && (
         <ListBoards
-          userId={userId}
-          isSuperAdmin={isSuperAdmin}
           dataByTeamAndDate={dataByTeamAndDate}
-          scrollRef={scrollRef}
-          onScroll={onScroll}
           filter={filterState}
           isLoading={isLoading}
+          isSuperAdmin={isSuperAdmin}
+          onScroll={onScroll}
+          scrollRef={scrollRef}
+          userId={userId}
         />
       )}
     </>

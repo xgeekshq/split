@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 
+import ConfirmationDialog from '@/components/Primitives/Alerts/ConfirmationDialog/ConfirmationDialog';
 import Icon from '@/components/Primitives/Icons/Icon/Icon';
 import {
   Popover,
@@ -10,7 +11,6 @@ import {
 import Text from '@/components/Primitives/Text/Text';
 import useCards from '@/hooks/useCards';
 import { CardItemType } from '@/types/card/cardItem';
-import ConfirmationDialog from '@/components/Primitives/Alerts/ConfirmationDialog/ConfirmationDialog';
 
 interface PopoverSettingsContentProps {
   isItem: boolean;
@@ -34,7 +34,7 @@ const PopoverSettingsContent = ({
       {isOwner && (
         <PopoverItem onClick={setEditCard}>
           <Icon name="edit" />
-          <Text size="sm" fontWeight="medium">
+          <Text fontWeight="medium" size="sm">
             Edit
           </Text>
         </PopoverItem>
@@ -51,22 +51,22 @@ const PopoverSettingsContent = ({
           }
         >
           <Icon name="arrow-long-right" />
-          <Text size="sm" fontWeight="medium">
+          <Text fontWeight="medium" size="sm">
             Unmerge card
           </Text>
         </PopoverItem>
       )}
       {isOwner && (
         <ConfirmationDialog
-          title="Delete card"
-          description="Do you really want to delete this card?"
-          confirmationLabel="Delete"
-          variant="danger"
           confirmationHandler={setDeleteCard}
+          confirmationLabel="Delete"
+          description="Do you really want to delete this card?"
+          title="Delete card"
+          variant="danger"
         >
           <PopoverItem>
             <Icon name="trash-alt" />
-            <Text size="sm" fontWeight="medium">
+            <Text fontWeight="medium" size="sm">
               Delete card
             </Text>
           </PopoverItem>
@@ -134,11 +134,11 @@ const PopoverCardSettings = React.memo(
     };
 
     return (
-      <Popover open={openPopover} onOpenChange={handleOpenPopover}>
+      <Popover onOpenChange={handleOpenPopover} open={openPopover}>
         <PopoverTrigger
-          variant="dark"
-          size="sm"
           disabled={hideCards && item.createdBy?._id !== userId && isItem}
+          size="sm"
+          variant="dark"
           css={{
             top: firstOne ? '-35px' : 0,
           }}

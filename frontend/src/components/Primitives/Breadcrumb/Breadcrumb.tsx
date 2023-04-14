@@ -1,8 +1,8 @@
-import Link from 'next/link';
 import React, { Fragment } from 'react';
+import Link from 'next/link';
 
-import { styled } from '@/styles/stitches/stitches.config';
 import Icon from '@/components/Primitives/Icons/Icon/Icon';
+import { styled } from '@/styles/stitches/stitches.config';
 import { BreadcrumbItemType, BreadcrumbType } from '@/types/board/Breadcrumb';
 
 const StyledList = styled('ul', {
@@ -59,7 +59,7 @@ const Breadcrumb = ({ items }: BreadcrumbProps) => (
       <Fragment key={item.title.toLowerCase().split(' ').join('-')}>
         {
           // If not the first item, show the chevron icon
-          index !== 0 && <Icon size={16} css={{ color: '$primary300' }} name="arrow-right" />
+          index !== 0 && <Icon css={{ color: '$primary300' }} name="arrow-right" size={16} />
         }
         <BreadcrumbItem item={item} />
       </Fragment>

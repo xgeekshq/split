@@ -1,5 +1,6 @@
-import { styled } from '@/styles/stitches/stitches.config';
 import Select, { CSSObjectWithLabel } from 'react-select';
+
+import { styled } from '@/styles/stitches/stitches.config';
 
 const filterByTeamSelectStyles = {
   control: (styles: CSSObjectWithLabel) => ({

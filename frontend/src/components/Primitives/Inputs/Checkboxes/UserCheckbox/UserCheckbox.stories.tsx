@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
 import { ComponentStory } from '@storybook/react';
-
 import dedent from 'ts-dedent';
 
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
-import { UserListFactory } from '@/utils/factories/user';
 import { UserList } from '@/types/team/userList';
+import { UserListFactory } from '@/utils/factories/user';
 import UserCheckbox from './UserCheckbox';
 
 export default {
@@ -47,8 +46,8 @@ const Template: ComponentStory<typeof UserCheckbox> = ({ disabled }) => {
   return (
     <Flex>
       <UserCheckbox
-        user={user}
         disabled={disabled}
+        user={user}
         handleChecked={() => {
           setUser((prev) => ({ ...prev, isChecked: !prev.isChecked }));
         }}

@@ -1,8 +1,8 @@
 // TODO: Test Tab Change
 
-import { renderWithProviders } from '@/utils/testing/renderWithProviders';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Tab, { TabProps } from '@/components/Primitives/Tab/Tab';
+import { renderWithProviders } from '@/utils/testing/renderWithProviders';
 
 const DUMMY_TABS = [
   {

@@ -5,12 +5,12 @@ import { getSession } from 'next-auth/react';
 import TroubleLogin from '@/components/auth/ForgotPassword/TroubleLogin';
 import LoginForm from '@/components/auth/LoginForm';
 import SignUpTabContent from '@/components/auth/SignUp/SignUpTabContent';
-import Text from '@/components/Primitives/Text/Text';
-import { DASHBOARD_ROUTE } from '@/utils/routes';
-import { NEXT_PUBLIC_LOGIN_SSO_ONLY } from '@/utils/constants';
-import { styled } from '@/styles/stitches/stitches.config';
 import AccessLayout from '@/components/layouts/AccessLayout/AccessLayout';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
+import Text from '@/components/Primitives/Text/Text';
+import { styled } from '@/styles/stitches/stitches.config';
+import { NEXT_PUBLIC_LOGIN_SSO_ONLY } from '@/utils/constants';
+import { DASHBOARD_ROUTE } from '@/utils/routes';
 
 const StyledImage = styled('img', {});
 
@@ -32,28 +32,28 @@ const Home = () => {
       return currentTab === 'login' ? (
         <Text css={{ textAlign: 'center', mt: '$8' }}>
           No account yet?{' '}
-          <Text link onClick={handleTabState} css={{ color: '$highlight2Dark' }}>
+          <Text link css={{ color: '$highlight2Dark' }} onClick={handleTabState}>
             Sign up.
           </Text>
         </Text>
       ) : (
         <Text css={{ textAlign: 'center', mt: '$8' }}>
           Already have an account?{' '}
-          <Text link onClick={handleTabState} css={{ color: '$highlight2Dark' }}>
+          <Text link css={{ color: '$highlight2Dark' }} onClick={handleTabState}>
             Log in.
           </Text>
         </Text>
       );
     }
     return (
-      <Flex justify="center" align="center" css={{ mt: '$8' }}>
+      <Flex align="center" css={{ mt: '$8' }} justify="center">
         SPLIT - A product by{' '}
         <StyledImage
           alt="xgeeks_logo"
+          css={{ ml: '$8', mt: '$6' }}
+          height={13}
           src="/xgeeks_logo.svg"
           width={66}
-          height={13}
-          css={{ ml: '$8', mt: '$6' }}
         />
       </Flex>
     );

@@ -1,15 +1,16 @@
-import { renderWithProviders } from '@/utils/testing/renderWithProviders';
 import { fireEvent, waitFor } from '@testing-library/dom';
+
 import ConfigurationSwitch, {
   ConfigurationSwitchProps,
 } from '@/components/Primitives/Inputs/Switches/ConfigurationSwitch/ConfigurationSwitch';
+import { renderWithProviders } from '@/utils/testing/renderWithProviders';
 
 const render = (props: Partial<ConfigurationSwitchProps> = {}) =>
   renderWithProviders(
     <ConfigurationSwitch
-      title="Title"
-      isChecked={false}
       handleCheckedChange={jest.fn()}
+      isChecked={false}
+      title="Title"
       {...props}
     />,
   );

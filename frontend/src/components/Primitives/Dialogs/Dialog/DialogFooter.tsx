@@ -22,23 +22,23 @@ const Footer = (props: FooterProps) => {
 
   return (
     <Flex
-      gap={24}
       align="center"
+      gap={24}
       justify="end"
       css={{
         borderTop: showSeparator ? '1px solid $colors$primary100' : 'none',
         padding: '$24 $32',
       }}
     >
-      <Button variant="primaryOutline" onClick={handleClose} type="button">
+      <Button onClick={handleClose} type="button" variant="primaryOutline">
         Cancel
       </Button>
       {affirmativeLabel && (
         <Button
-          onClick={handleAffirmative}
-          ref={buttonRef}
           data-testid="dialogFooterSubmit"
           disabled={disabled}
+          onClick={handleAffirmative}
+          ref={buttonRef}
         >
           {affirmativeLabel}
         </Button>

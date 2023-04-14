@@ -165,4 +165,4 @@ const StyledInput = styled('input', {
   },
 });
 
-export { StyledInputWrapper, PlaceholderText, IconWrapper, HelperTextWrapper, StyledInput };
+export { HelperTextWrapper, IconWrapper, PlaceholderText, StyledInput, StyledInputWrapper };

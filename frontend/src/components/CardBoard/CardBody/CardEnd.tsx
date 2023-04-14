@@ -1,5 +1,7 @@
 import React, { useMemo } from 'react';
 
+import CountCards from '@/components/CardBoard/CardBody/CountCards';
+import DuplicateBoardNameDialog from '@/components/CardBoard/CardBody/DuplicateBoardNameDialog';
 import ConfirmationDialog from '@/components/Primitives/Alerts/ConfirmationDialog/ConfirmationDialog';
 import AvatarGroup from '@/components/Primitives/Avatars/AvatarGroup/AvatarGroup';
 import Icon from '@/components/Primitives/Icons/Icon/Icon';
@@ -10,9 +12,6 @@ import Text from '@/components/Primitives/Text/Text';
 import useBoard from '@/hooks/useBoard';
 import BoardType from '@/types/board/board';
 import isEmpty from '@/utils/isEmpty';
-
-import CountCards from '@/components/CardBoard/CardBody/CountCards';
-import DuplicateBoardNameDialog from '@/components/CardBoard/CardBody/DuplicateBoardNameDialog';
 
 export type CardEndProps = {
   board: BoardType;
@@ -92,7 +91,7 @@ const CardEnd: React.FC<CardEndProps> = React.memo(
           <Text color="primary300" size="sm">
             {boardTypeCaption} |
           </Text>
-          <Text color="primary800" css={{ mx: '$8' }} size="sm" fontWeight="medium">
+          <Text color="primary800" css={{ mx: '$8' }} fontWeight="medium" size="sm">
             {boardOwnerName}
           </Text>
           <AvatarGroup listUsers={!team || isSubBoard ? users : team.users} userId={userId} />
@@ -114,18 +113,18 @@ const CardEnd: React.FC<CardEndProps> = React.memo(
           <CountCards columns={columns} />
           {(havePermissions || userSAdmin) && !isSubBoard && (
             <Flex align="center" css={{ ml: '$24' }} gap="24">
-              <Separator orientation="vertical" size="lg" css={{ ml: '$8' }} />
+              <Separator css={{ ml: '$8' }} orientation="vertical" size="lg" />
               {isEmpty(board.dividedBoards) && (
                 <DuplicateBoardNameDialog
-                  handleDuplicateBoard={handleDuplicateBoard}
                   boardTitle={title}
+                  handleDuplicateBoard={handleDuplicateBoard}
                 />
               )}
               <ConfirmationDialog
-                title="Delete board"
-                description={deleteBoardDescription}
                 confirmationHandler={handleDelete}
                 confirmationLabel="Delete"
+                description={deleteBoardDescription}
+                title="Delete board"
                 tooltip="Delete board"
                 variant="danger"
               >

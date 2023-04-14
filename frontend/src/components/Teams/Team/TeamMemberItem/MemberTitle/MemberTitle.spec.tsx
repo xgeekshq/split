@@ -1,15 +1,16 @@
 import { fireEvent, waitFor } from '@testing-library/react';
-import { ROUTES } from '@/utils/routes';
-import { libraryMocks } from '@/utils/testing/mocks';
-import { renderWithProviders } from '@/utils/testing/renderWithProviders';
-import { UserFactory } from '@/utils/factories/user';
+
 import MemberTitle, {
   MemberTitleProps,
 } from '@/components/Teams/Team/TeamMemberItem/MemberTitle/MemberTitle';
+import { UserFactory } from '@/utils/factories/user';
+import { ROUTES } from '@/utils/routes';
+import { libraryMocks } from '@/utils/testing/mocks';
+import { renderWithProviders } from '@/utils/testing/renderWithProviders';
 
 const { mockRouter } = libraryMocks.mockNextRouter({ pathname: '/teams' });
 const render = (props: Partial<MemberTitleProps>) =>
-  renderWithProviders(<MemberTitle name="User" userId="123" hasPermissions={false} {...props} />, {
+  renderWithProviders(<MemberTitle hasPermissions={false} name="User" userId="123" {...props} />, {
     routerOptions: mockRouter,
   });
 

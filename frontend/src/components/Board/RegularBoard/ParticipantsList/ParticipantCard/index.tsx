@@ -43,7 +43,7 @@ const ParticipantCard = React.memo<CardBodyProps>(
     return (
       <Flex direction="column">
         <InnerContainer align="center" elevation="1" justify="between">
-          <Flex align="center" gap={8} justify="start" css={{ flex: 2 }}>
+          <Flex align="center" css={{ flex: 2 }} gap={8} justify="start">
             <Icon
               name="blob-personal"
               size={32}
@@ -51,7 +51,7 @@ const ParticipantCard = React.memo<CardBodyProps>(
                 zIndex: 1,
               }}
             />
-            <Text size="sm" fontWeight="bold" overflow="wrap">
+            <Text fontWeight="bold" overflow="wrap" size="sm">
               {`${participant.user.firstName} ${participant.user.lastName}`}
             </Text>
           </Flex>
@@ -59,13 +59,13 @@ const ParticipantCard = React.memo<CardBodyProps>(
             {(isCurrentUserSAdmin || isCurrentUserResponsible) && (
               <Flex align="center" gap={8} justify="start">
                 <ConfigurationSwitch
-                  handleCheckedChange={(checked: boolean) =>
-                    updateIsResponsibleStatus(checked, participant)
-                  }
+                  disabled={isCreatedByCurrentUser}
                   isChecked={isMemberResponsible}
                   size="sm"
                   title="Responsible"
-                  disabled={isCreatedByCurrentUser}
+                  handleCheckedChange={(checked: boolean) =>
+                    updateIsResponsibleStatus(checked, participant)
+                  }
                 />
               </Flex>
             )}
@@ -94,7 +94,7 @@ const ParticipantCard = React.memo<CardBodyProps>(
             )}
             {isMemberResponsible && !isCurrentUserResponsible && !isCurrentUserSAdmin && (
               <Flex align="center" css={{ width: '100%' }} gap={8} justify="end">
-                <Text size="sm" fontWeight="medium">
+                <Text fontWeight="medium" size="sm">
                   Responsible
                 </Text>
               </Flex>

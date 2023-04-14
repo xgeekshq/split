@@ -1,9 +1,11 @@
-import { GetServerSideProps, GetServerSidePropsContext, NextPage } from 'next';
-import { getSession } from 'next-auth/react';
-import Link from 'next/link';
-import { useRouter } from 'next/router';
 import { Suspense, useCallback, useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
+import { GetServerSideProps, GetServerSidePropsContext, NextPage } from 'next';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+import { getSession } from 'next-auth/react';
+import { joiResolver } from '@hookform/resolvers/joi';
+import { dehydrate, QueryClient } from '@tanstack/react-query';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 
 import { getAllTeams, getUserTeams } from '@/api/teamService';
@@ -19,7 +21,6 @@ import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import TipBar from '@/components/Primitives/Layout/TipBar/TipBar';
 import LoadingPage from '@/components/Primitives/Loading/Page/Page';
 import { defaultSplitColumns } from '@/helper/board/defaultColumns';
-import { TEAMS_KEY } from '@/utils/constants/reactQueryKeys';
 import useTeams from '@/hooks/teams/useTeams';
 import useBoard from '@/hooks/useBoard';
 import useCurrentSession from '@/hooks/useCurrentSession';
@@ -32,13 +33,12 @@ import {
 import { toastState } from '@/store/toast/atom/toast.atom';
 import { StyledForm } from '@/styles/pages/pages.styles';
 import { CreateBoardDto } from '@/types/board/board';
+import { TEAMS_KEY } from '@/utils/constants/reactQueryKeys';
 import { BoardPhases } from '@/utils/enums/board.phases';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
 import isEmpty from '@/utils/isEmpty';
 import { DASHBOARD_ROUTE, ROUTES } from '@/utils/routes';
-import { joiResolver } from '@hookform/resolvers/joi';
-import { dehydrate, QueryClient } from '@tanstack/react-query';
 
 const defaultBoard = {
   users: [],
@@ -230,9 +230,9 @@ const NewSplitBoard: NextPage = () => {
           direction="column"
         >
           <CreateHeader
-            title="Add new SPLIT board"
             disableBack={isBackButtonDisable}
             handleBack={handleBack}
+            title="Add new SPLIT board"
           />
           <Flex
             css={{ height: '100%', position: 'relative', overflowY: 'auto' }}
@@ -250,16 +250,16 @@ const NewSplitBoard: NextPage = () => {
                     ),
                   })}
                 >
-                  <Flex direction="column" gap={24} css={{ width: '100%' }}>
+                  <Flex css={{ width: '100%' }} direction="column" gap={24}>
                     {haveError && (
                       <AlertBox
+                        css={{ flexWrap: 'wrap', gap: '$16' }}
                         text="In order to create a SPLIT retrospective, you need to have a team with an amount of people big enough to be split into smaller sub-teams. Also you need to be team-admin to create SPLIT retrospectives."
                         title="No team yet!"
                         type="error"
-                        css={{ flexWrap: 'wrap', gap: '$16' }}
                       >
                         <Link href={ROUTES.NewTeam}>
-                          <Button size="sm" css={{ px: '$40' }}>
+                          <Button css={{ px: '$40' }} size="sm">
                             Create team
                           </Button>
                         </Link>
@@ -267,8 +267,8 @@ const NewSplitBoard: NextPage = () => {
                     )}
                     <Flex direction="column">
                       <BoardName
-                        title="Main Board Name"
                         description="The main board is the board into which all sub-boards will be merged"
+                        title="Main Board Name"
                       />
                       <SettingsTabs />
                     </Flex>
@@ -279,11 +279,11 @@ const NewSplitBoard: NextPage = () => {
             </Flex>
           </Flex>
           <CreateFooter
-            disableButton={isBackButtonDisable}
-            hasError={haveError}
-            handleBack={handleCancelBtn}
-            formId="hook-form"
             confirmationLabel="Create board"
+            disableButton={isBackButtonDisable}
+            formId="hook-form"
+            handleBack={handleCancelBtn}
+            hasError={haveError}
           />
         </Flex>
       </QueryError>

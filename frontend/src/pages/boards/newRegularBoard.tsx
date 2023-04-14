@@ -1,8 +1,10 @@
-import { GetServerSideProps, GetServerSidePropsContext, NextPage } from 'next';
-import { getSession } from 'next-auth/react';
-import { useRouter } from 'next/router';
 import { Suspense, useCallback, useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
+import { GetServerSideProps, GetServerSidePropsContext, NextPage } from 'next';
+import { useRouter } from 'next/router';
+import { getSession } from 'next-auth/react';
+import { joiResolver } from '@hookform/resolvers/joi';
+import { dehydrate, QueryClient, useQuery } from '@tanstack/react-query';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 
 import { getAllTeams, getUserTeams } from '@/api/teamService';
@@ -18,7 +20,6 @@ import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import TipBar from '@/components/Primitives/Layout/TipBar/TipBar';
 import LoadingPage from '@/components/Primitives/Loading/Page/Page';
 import { defaultRegularColumns } from '@/helper/board/defaultColumns';
-import { TEAMS_KEY } from '@/utils/constants/reactQueryKeys';
 import useTeams from '@/hooks/teams/useTeams';
 import useBoard from '@/hooks/useBoard';
 import useCurrentSession from '@/hooks/useCurrentSession';
@@ -28,12 +29,11 @@ import { usersListState } from '@/store/team/atom/team.atom';
 import { toastState } from '@/store/toast/atom/toast.atom';
 import { StyledForm } from '@/styles/pages/pages.styles';
 import { BoardUserDto } from '@/types/board/board.user';
+import { TEAMS_KEY } from '@/utils/constants/reactQueryKeys';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
 import isEmpty from '@/utils/isEmpty';
 import { DASHBOARD_ROUTE } from '@/utils/routes';
-import { joiResolver } from '@hookform/resolvers/joi';
-import { dehydrate, QueryClient, useQuery } from '@tanstack/react-query';
 
 const defaultBoard = {
   users: [],
@@ -240,9 +240,9 @@ const NewRegularBoard: NextPage = () => {
           direction="column"
         >
           <CreateHeader
-            title="Add new Regular board"
             disableBack={isBackButtonDisable}
             handleBack={handleBack}
+            title="Add new Regular board"
           />
           {createBoard ? (
             <>
@@ -252,8 +252,8 @@ const NewRegularBoard: NextPage = () => {
               >
                 <Flex css={{ flex: '1' }}>
                   <StyledForm
-                    id="hook-form"
                     direction="column"
+                    id="hook-form"
                     onSubmit={methods.handleSubmit(({ text, maxVotes, slackEnable }) => {
                       saveBoard(text, maxVotes, slackEnable);
                     })}
@@ -261,8 +261,8 @@ const NewRegularBoard: NextPage = () => {
                     <Flex direction="column">
                       <FormProvider {...methods}>
                         <BoardName
-                          title="Board Name"
                           description="Make it short and descriptive. It well help you to distinguish retrospectives from each other."
+                          title="Board Name"
                         />
                         <SettingsTabs />
                       </FormProvider>
@@ -272,33 +272,33 @@ const NewRegularBoard: NextPage = () => {
                 </Flex>
               </Flex>
               <CreateFooter
-                disableButton={isBackButtonDisable}
-                handleBack={handleCancelBtn}
-                formId="hook-form"
                 confirmationLabel="Create board"
+                disableButton={isBackButtonDisable}
+                formId="hook-form"
+                handleBack={handleCancelBtn}
               />
             </>
           ) : (
             <Flex
-              gap={16}
-              direction="column"
               align="center"
-              justify="center"
               css={{ height: '100%' }}
+              direction="column"
+              gap={16}
+              justify="center"
             >
               <CreateBoardBox
-                iconName="blob-arrow-right"
-                title="Quick create"
                 description="Jump the settings and just create a board. All configurations can still be done within the board itself."
-                type="row"
+                iconName="blob-arrow-right"
                 onClick={saveEmptyBoard}
+                title="Quick create"
+                type="row"
               />
               <CreateBoardBox
-                iconName="blob-settings"
-                title="Configure board"
                 description="Select team or participants, configure your board and schedule a date and time."
-                type="row"
+                iconName="blob-settings"
                 onClick={addNewRegularBoard}
+                title="Configure board"
+                type="row"
               />
             </Flex>
           )}

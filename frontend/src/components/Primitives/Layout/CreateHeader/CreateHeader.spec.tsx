@@ -1,12 +1,13 @@
-import { renderWithProviders } from '@/utils/testing/renderWithProviders';
 import { fireEvent, waitFor } from '@testing-library/dom';
+
 import CreateHeader, {
   CreateHeaderProps,
 } from '@/components/Primitives/Layout/CreateHeader/CreateHeader';
+import { renderWithProviders } from '@/utils/testing/renderWithProviders';
 
 const render = (props: Partial<CreateHeaderProps> = {}) =>
   renderWithProviders(
-    <CreateHeader title="Title" disableBack={false} handleBack={jest.fn()} {...props} />,
+    <CreateHeader disableBack={false} handleBack={jest.fn()} title="Title" {...props} />,
   );
 
 describe('Components/Primitives/Layout/CreateHeader', () => {

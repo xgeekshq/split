@@ -1,5 +1,5 @@
-import { useRouter } from 'next/router';
 import React, { useCallback, useEffect, useMemo } from 'react';
+import { useRouter } from 'next/router';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 
 import Icon from '@/components/Primitives/Icons/Icon/Icon';
@@ -12,15 +12,15 @@ import {
 } from '@/components/Primitives/Inputs/Select/Select';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Text from '@/components/Primitives/Text/Text';
+import useTeams from '@/hooks/teams/useTeams';
 import useCreateBoard from '@/hooks/useCreateBoard';
+import useCurrentSession from '@/hooks/useCurrentSession';
 import { createBoardTeam } from '@/store/createBoard/atoms/create-board.atom';
 import { usersListState } from '@/store/team/atom/team.atom';
+import { Team } from '@/types/team/team';
+import { UserList } from '@/types/team/userList';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import { TeamUserRoles } from '@/utils/enums/team.user.roles';
-import useCurrentSession from '@/hooks/useCurrentSession';
-import { UserList } from '@/types/team/userList';
-import useTeams from '@/hooks/teams/useTeams';
-import { Team } from '@/types/team/team';
 
 const SelectTeam = () => {
   const { userId, isSAdmin } = useCurrentSession();
@@ -109,18 +109,18 @@ const SelectTeam = () => {
   }, [routerTeam, createBoard, selectedTeam]);
 
   return (
-    <Flex direction="column" css={{ flex: 1 }}>
+    <Flex css={{ flex: 1 }} direction="column">
       <Select
-        disabled={availableTeams.length === 0}
+        css={{ width: '100%', height: '$64' }}
         defaultValue={teamsNames.find((option) => option.value === selectedTeam?.id)?.value}
+        disabled={availableTeams.length === 0}
         onValueChange={(selectedOption: string) => {
           handleTeamChange(selectedOption);
         }}
-        css={{ width: '100%', height: '$64' }}
       >
         <SelectTrigger css={{ padding: '$24' }}>
           <Flex direction="column">
-            <Text size={selectedTeam ? 'sm' : 'md'} color="primary300">
+            <Text color="primary300" size={selectedTeam ? 'sm' : 'md'}>
               {availableTeams.length === 0 ? 'No teams available' : 'Select Team'}
             </Text>
             <SelectValue />
@@ -132,8 +132,8 @@ const SelectTeam = () => {
         <SelectContent options={teamsNames} />
       </Select>
       {availableTeams.length === 0 && (
-        <Flex justify="start" align="center" gap="4" css={{ mt: '$8', color: '$dangerBase' }}>
-          <Icon size={16} name="info" />
+        <Flex align="center" css={{ mt: '$8', color: '$dangerBase' }} gap="4" justify="start">
+          <Icon name="info" size={16} />
           <Text hint color="dangerBase">
             In order to create a team board, you must be team-admin or stakeholder of at least one
             team.

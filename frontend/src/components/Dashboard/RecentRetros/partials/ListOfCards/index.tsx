@@ -2,10 +2,10 @@ import React, { useMemo, useRef } from 'react';
 import { InfiniteData, UseInfiniteQueryResult } from '@tanstack/react-query';
 
 import CardBody from '@/components/CardBoard/CardBody/CardBody';
-import Dots from '@/components/Primitives/Loading/Dots/Dots';
-import Flex from '@/components/Primitives/Layout/Flex/Flex';
-import BoardType from '@/types/board/board';
 import { LastUpdatedText } from '@/components/Dashboard/RecentRetros/partials/ListOfCards/styles';
+import Flex from '@/components/Primitives/Layout/Flex/Flex';
+import Dots from '@/components/Primitives/Loading/Dots/Dots';
+import BoardType from '@/types/board/board';
 
 type ListOfCardsProp = {
   data: InfiniteData<{ boards: BoardType[]; hasNextPage: boolean }> | undefined;
@@ -56,8 +56,8 @@ const ListOfCards = React.memo<ListOfCardsProp>(({ data, userId, fetchBoards, is
       direction="column"
       gap="32"
       justify="start"
-      ref={scrollRef}
       onScroll={onScroll}
+      ref={scrollRef}
     >
       {Array.from(boardsSplitedByDay).map(([date, splitedBoard]) => {
         const formatedDate = new Date(date).toLocaleDateString('en-US', {
