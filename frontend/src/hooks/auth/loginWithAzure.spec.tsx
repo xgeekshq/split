@@ -1,6 +1,6 @@
-import { signIn } from 'next-auth/react';
+import loginWithAzure from '@/hooks/auth/loginWithAzure';
 import { DASHBOARD_ROUTE } from '@/utils/routes';
-import loginWithAzure from './loginWithAzure';
+import { signIn } from 'next-auth/react';
 
 const mockSignIn = signIn as jest.Mock;
 jest.mock('next-auth/react');
