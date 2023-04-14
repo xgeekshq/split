@@ -24,7 +24,7 @@ const UncontrolledInput = ({
   placeholder,
   IconPositionRight = false,
   cursorType = 'default',
-  iconName = '',
+  iconName,
   disabled = false,
   currentValue,
   handleChange,
@@ -36,16 +36,18 @@ const UncontrolledInput = ({
     direction="column"
   >
     <StyledInputWrapper disabled={disabled} gap="8">
-      <Flex style={{ order: IconPositionRight ? 2 : 1 }}>
-        <IconWrapper>
-          <Icon
-            name={iconName}
-            css={{
-              color: '$primary300',
-            }}
-          />
-        </IconWrapper>
-      </Flex>
+      {iconName && (
+        <Flex style={{ order: IconPositionRight ? 2 : 1 }}>
+          <IconWrapper>
+            <Icon
+              name={iconName}
+              css={{
+                color: '$primary300',
+              }}
+            />
+          </IconWrapper>
+        </Flex>
+      )}
 
       <Flex css={{ flexGrow: '1' }} style={{ order: IconPositionRight ? 1 : 2 }}>
         <StyledInput
