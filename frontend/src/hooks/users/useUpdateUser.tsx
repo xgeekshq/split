@@ -1,12 +1,11 @@
-import { updateUserIsAdminRequest } from '@/api/userService';
 import { InfiniteData, useMutation, useQueryClient } from '@tanstack/react-query';
-
 import { useSetRecoilState } from 'recoil';
-import { toastState } from '@/store/toast/atom/toast.atom';
-import { ToastStateEnum } from '@/utils/enums/toast-types';
 
+import { updateUserIsAdminRequest } from '@/api/userService';
+import { toastState } from '@/store/toast/atom/toast.atom';
 import { InfiniteUsersWithTeams } from '@/types/user/user';
 import { TEAMS_KEY, USERS_KEY } from '@/utils/constants/reactQueryKeys';
+import { ToastStateEnum } from '@/utils/enums/toast-types';
 
 const useUpdateUser = () => {
   const queryClient = useQueryClient();

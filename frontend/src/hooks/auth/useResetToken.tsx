@@ -1,13 +1,11 @@
 import { useMutation } from '@tanstack/react-query';
+import { useSetRecoilState } from 'recoil';
 
 import { resetTokenEmail } from '@/api/authService';
-
-import { useSetRecoilState } from 'recoil';
 import { toastState } from '@/store/toast/atom/toast.atom';
-import { ToastStateEnum } from '@/utils/enums/toast-types';
-
-import { USERS_KEY } from '@/utils/constants/reactQueryKeys';
 import { ForgotPassword } from '@/utils/constants/forgotPassword';
+import { USERS_KEY } from '@/utils/constants/reactQueryKeys';
+import { ToastStateEnum } from '@/utils/enums/toast-types';
 
 const useResetToken = () => {
   const setToastState = useSetRecoilState(toastState);

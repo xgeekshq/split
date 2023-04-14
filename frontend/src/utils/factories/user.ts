@@ -1,13 +1,13 @@
+import { faker } from '@faker-js/faker';
+
+import { ListUsersType } from '@/components/Primitives/Avatars/AvatarGroup/AvatarGroup';
+import { BoardUser } from '@/types/board/board.user';
+import { TeamUser } from '@/types/team/team.user';
 import { UserList } from '@/types/team/userList';
 import { User, UserWithTeams } from '@/types/user/user';
-import { faker } from '@faker-js/faker';
-import { buildTestFactory } from '@/utils/testing';
-
-import { BoardUser } from '@/types/board/board.user';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import { TeamUserRoles } from '@/utils/enums/team.user.roles';
-import { ListUsersType } from '@/components/Primitives/Avatars/AvatarGroup/AvatarGroup';
-import { TeamUser } from '@/types/team/team.user';
+import { buildTestFactory } from '@/utils/testing';
 
 export const UserFactory = buildTestFactory<User>(() => {
   const _id = faker.database.mongodbObjectId();

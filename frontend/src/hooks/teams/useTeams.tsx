@@ -1,12 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
+import { useSetRecoilState } from 'recoil';
 
 import { getAllTeams, getUserTeams } from '@/api/teamService';
-import { ToastStateEnum } from '@/utils/enums/toast-types';
-
-import { useSetRecoilState } from 'recoil';
 import { toastState } from '@/store/toast/atom/toast.atom';
-
 import { TEAMS_KEY } from '@/utils/constants/reactQueryKeys';
+import { ToastStateEnum } from '@/utils/enums/toast-types';
 
 const useTeams = (isSAdmin: boolean) => {
   const setToastState = useSetRecoilState(toastState);

@@ -1,6 +1,5 @@
 import React from 'react';
 import { ComponentStory } from '@storybook/react';
-
 import dedent from 'ts-dedent';
 
 import ConfirmationDialog from '@/components/Primitives/Alerts/ConfirmationDialog/ConfirmationDialog';

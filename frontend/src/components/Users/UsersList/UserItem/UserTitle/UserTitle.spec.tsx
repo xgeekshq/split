@@ -1,16 +1,17 @@
 import React from 'react';
-import { libraryMocks } from '@/utils/testing/mocks';
 import { fireEvent, waitFor } from '@testing-library/react';
-import { renderWithProviders } from '@/utils/testing/renderWithProviders';
-import { UserFactory } from '@/utils/factories/user';
+
 import UserTitle, {
   UserTitleProps,
 } from '@/components/Users/UsersList/UserItem/UserTitle/UserTitle';
+import { UserFactory } from '@/utils/factories/user';
 import { ROUTES } from '@/utils/routes';
+import { libraryMocks } from '@/utils/testing/mocks';
+import { renderWithProviders } from '@/utils/testing/renderWithProviders';
 
 const { mockRouter } = libraryMocks.mockNextRouter({ pathname: '/users' });
 const render = (props: Partial<UserTitleProps> = {}) =>
-  renderWithProviders(<UserTitle user={UserFactory.create()} hasPermissions={false} {...props} />, {
+  renderWithProviders(<UserTitle hasPermissions={false} user={UserFactory.create()} {...props} />, {
     routerOptions: mockRouter,
   });
 

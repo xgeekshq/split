@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
+import { joiResolver } from '@hookform/resolvers/joi';
 
 import {
   AlertDialog,
@@ -13,9 +14,8 @@ import Button from '@/components/Primitives/Inputs/Button/Button';
 import Input from '@/components/Primitives/Inputs/Input/Input';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Text from '@/components/Primitives/Text/Text';
-import SchemaDuplicateBoard from '@/schema/schemaDuplicateBoardForm';
-import { joiResolver } from '@hookform/resolvers/joi';
 import Tooltip from '@/components/Primitives/Tooltips/Tooltip/Tooltip';
+import SchemaDuplicateBoard from '@/schema/schemaDuplicateBoardForm';
 
 export type DuplicateBoardNameDialogProps = {
   handleDuplicateBoard: (title: string) => void;
@@ -48,11 +48,11 @@ const DuplicateBoardNameDialog = ({
         <AlertDialogTrigger asChild>
           <Button
             isIcon
+            data-testid="duplicateBoardTrigger"
             size="sm"
             onClick={() => {
               setIsOpen(true);
             }}
-            data-testid="duplicateBoardTrigger"
           >
             <Icon
               name="clone"
@@ -65,8 +65,8 @@ const DuplicateBoardNameDialog = ({
       </Tooltip>
       <AlertDialogContent
         css={{ top: '200px', flexDirection: 'column' }}
-        title="Duplicate Board"
         handleClose={handleClose}
+        title="Duplicate Board"
       >
         <FormProvider {...methods}>
           <form
@@ -80,13 +80,13 @@ const DuplicateBoardNameDialog = ({
               <Input id="title" maxChars="45" placeholder="Board title" type="text" />
             </Flex>
             <Flex css={{ mt: '$32' }} gap="24" justify="end">
-              <AlertDialogCancel variant="primaryOutline" type="button" onClick={handleClose}>
+              <AlertDialogCancel onClick={handleClose} type="button" variant="primaryOutline">
                 Cancel
               </AlertDialogCancel>
               <AlertDialogAction
-                type="submit"
-                disabled={!methods.formState.isDirty || !methods.formState.isValid}
                 data-testid="duplicateBoardSubmit"
+                disabled={!methods.formState.isDirty || !methods.formState.isValid}
+                type="submit"
               >
                 Duplicate
               </AlertDialogAction>

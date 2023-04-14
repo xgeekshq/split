@@ -119,8 +119,17 @@ const TextArea = ({
 
   return (
     <Controller
+      control={control}
+      defaultValue={placeholder}
+      name={id}
       render={({ field: { onChange, value, ref } }) => (
         <StyledTextArea
+          disabled={disabled}
+          id={id}
+          onChange={onChange}
+          placeholder={placeholder}
+          value={value}
+          variant={getCurrentState}
           css={{
             minHeight: '$80',
             backgroundColor: '$primary50',
@@ -128,21 +137,12 @@ const TextArea = ({
             px: '$16',
             color: textColor,
           }}
-          value={value}
-          onChange={onChange}
-          disabled={disabled}
-          id={id}
-          placeholder={placeholder}
-          variant={getCurrentState}
           ref={(e) => {
             if (ref) ref(e);
             textareaRef.current = e;
           }}
         />
       )}
-      control={control}
-      name={id}
-      defaultValue={placeholder}
     />
   );
 };

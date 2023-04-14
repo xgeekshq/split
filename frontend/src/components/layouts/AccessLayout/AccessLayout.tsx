@@ -1,6 +1,5 @@
 import React, { ReactNode } from 'react';
 
-import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Banner from '@/components/icons/Banner';
 import {
   BannerContainer,
@@ -8,18 +7,19 @@ import {
   ImageBackground,
   ImageContainer,
 } from '@/components/layouts/AccessLayout/styles';
+import Flex from '@/components/Primitives/Layout/Flex/Flex';
 
 type AccessLayoutProps = {
   children: ReactNode;
 };
 
 const AccessLayout = ({ children }: AccessLayoutProps) => (
-  <Flex justify="between" css={{ minHeight: '100vh', overflow: 'auto' }}>
+  <Flex css={{ minHeight: '100vh', overflow: 'auto' }} justify="between">
     <BodyContainer direction="column">
       <BannerContainer>
         <Banner />
       </BannerContainer>
-      <Flex direction="column" justify="between" css={{ height: '100%' }}>
+      <Flex css={{ height: '100%' }} direction="column" justify="between">
         {children}
       </Flex>
     </BodyContainer>

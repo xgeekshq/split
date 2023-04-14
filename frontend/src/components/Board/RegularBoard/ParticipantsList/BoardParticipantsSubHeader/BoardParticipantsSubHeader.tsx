@@ -1,5 +1,5 @@
-import { useRouter } from 'next/router';
 import React, { useState } from 'react';
+import { useRouter } from 'next/router';
 import { useRecoilValue } from 'recoil';
 
 import UserListDialog from '@/components/Primitives/Dialogs/UserListDialog/UserListDialog';
@@ -70,21 +70,21 @@ const BoardParticipantsSubHeader = ({
   };
 
   return (
-    <Flex justify="between" css={{ mt: '$32', px: '$150' }}>
+    <Flex css={{ mt: '$32', px: '$150' }} justify="between">
       <Text heading="1">Participants</Text>
       {hasPermissions && (
-        <Button size="sm" onClick={() => setIsOpen(true)}>
+        <Button onClick={() => setIsOpen(true)} size="sm">
           <Icon css={{ color: 'white' }} name="plus" />
           Add/remove participants
         </Button>
       )}
       <UserListDialog
-        usersList={usersList}
+        confirmationHandler={saveParticipants}
+        confirmationLabel="Add/remove participants"
         isOpen={isOpen}
         setIsOpen={setIsOpen}
-        confirmationHandler={saveParticipants}
         title="Board Participants"
-        confirmationLabel="Add/remove participants"
+        usersList={usersList}
       />
     </Flex>
   );

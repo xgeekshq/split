@@ -1,18 +1,19 @@
 import { ReactElement, Suspense } from 'react';
 import { GetServerSideProps, GetServerSidePropsContext } from 'next';
 import { getSession } from 'next-auth/react';
+import { dehydrate, QueryClient } from '@tanstack/react-query';
+
+import { getAllTeams, getUserTeams } from '@/api/teamService';
 import MyBoards from '@/components/Boards/MyBoards';
 import QueryError from '@/components/Errors/QueryError';
 import requireAuthentication from '@/components/HOC/requireAuthentication';
 import Layout from '@/components/layouts/Layout/Layout';
-import LoadingPage from '@/components/Primitives/Loading/Page/Page';
-import Flex from '@/components/Primitives/Layout/Flex/Flex';
-import { TEAMS_KEY } from '@/utils/constants/reactQueryKeys';
-import { dehydrate, QueryClient } from '@tanstack/react-query';
 import MainPageHeader from '@/components/layouts/Layout/MainPageHeader/MainPageHeader';
-import { ROUTES } from '@/utils/routes';
-import { getAllTeams, getUserTeams } from '@/api/teamService';
+import Flex from '@/components/Primitives/Layout/Flex/Flex';
+import LoadingPage from '@/components/Primitives/Loading/Page/Page';
 import useCurrentSession from '@/hooks/useCurrentSession';
+import { TEAMS_KEY } from '@/utils/constants/reactQueryKeys';
+import { ROUTES } from '@/utils/routes';
 
 const Boards = () => {
   const { session, userId, isSAdmin } = useCurrentSession({ required: true });

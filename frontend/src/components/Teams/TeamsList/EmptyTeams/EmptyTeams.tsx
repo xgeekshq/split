@@ -1,11 +1,10 @@
-import { styled } from '@/styles/stitches/stitches.config';
 import Link from 'next/link';
 
-import Text from '@/components/Primitives/Text/Text';
+import EmptyTeamsImage from '@/components/images/EmptyTeams';
 import Box from '@/components/Primitives/Layout/Box/Box';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
-
-import EmptyTeamsImage from '@/components/images/EmptyTeams';
+import Text from '@/components/Primitives/Text/Text';
+import { styled } from '@/styles/stitches/stitches.config';
 
 const StyledBox = styled(Flex, Box, {
   position: 'relative',
@@ -18,10 +17,10 @@ const StyledBox = styled(Flex, Box, {
 const EmptyTeams = () => (
   <StyledBox
     align="center"
+    data-testid="emptyTeams"
     direction="column"
     elevation="1"
     justify="center"
-    data-testid="emptyTeams"
   >
     <EmptyTeamsImage />
     <Text css={{ mt: '$40', textAlign: 'center' }} size="md">

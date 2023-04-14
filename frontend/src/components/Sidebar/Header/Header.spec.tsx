@@ -1,9 +1,10 @@
 import { fireEvent, waitFor } from '@testing-library/react';
-import { libraryMocks } from '@/utils/testing/mocks';
-import { DASHBOARD_ROUTE } from '@/utils/routes';
-import { getInitials } from '@/utils/getInitials';
-import { renderWithProviders } from '@/utils/testing/renderWithProviders';
+
 import Header, { SidebarHeaderProps } from '@/components/Sidebar/Header/Header';
+import { getInitials } from '@/utils/getInitials';
+import { DASHBOARD_ROUTE } from '@/utils/routes';
+import { libraryMocks } from '@/utils/testing/mocks';
+import { renderWithProviders } from '@/utils/testing/renderWithProviders';
 
 const DEFAULT_PROPS: SidebarHeaderProps = {
   firstName: 'First',

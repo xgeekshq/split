@@ -1,10 +1,11 @@
 import React from 'react';
-import { renderWithProviders } from '@/utils/testing/renderWithProviders';
-import { UserFactory, UserWithTeamsFactory } from '@/utils/factories/user';
+
 import UserItem, {
-  UserItemProps,
   getTeamsCountText,
+  UserItemProps,
 } from '@/components/Users/UsersList/UserItem/UserItem';
+import { UserFactory, UserWithTeamsFactory } from '@/utils/factories/user';
+import { renderWithProviders } from '@/utils/testing/renderWithProviders';
 
 const render = (props: Partial<UserItemProps> = {}) =>
   renderWithProviders(<UserItem userWithTeams={UserWithTeamsFactory.create()} {...props} />, {

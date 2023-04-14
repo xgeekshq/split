@@ -1,11 +1,11 @@
-import { renderWithProviders } from '@/utils/testing/renderWithProviders';
-
-import Teams from '@/pages/teams';
-import { libraryMocks } from '@/utils/testing/mocks';
-import { TeamFactory } from '@/utils/factories/team';
-import useTeams from '@/hooks/teams/useTeams';
 import { UseQueryResult } from '@tanstack/react-query';
+
+import useTeams from '@/hooks/teams/useTeams';
+import Teams from '@/pages/teams';
 import { Team } from '@/types/team/team';
+import { TeamFactory } from '@/utils/factories/team';
+import { libraryMocks } from '@/utils/testing/mocks';
+import { renderWithProviders } from '@/utils/testing/renderWithProviders';
 
 const mockUseTeams = useTeams as jest.Mock<UseQueryResult<Team[]>>;
 jest.mock('@/hooks/teams/useTeams');

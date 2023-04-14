@@ -1,10 +1,11 @@
 import { fireEvent, waitFor } from '@testing-library/react';
-import { libraryMocks } from '@/utils/testing/mocks';
-import { BOARDS_ROUTE } from '@/utils/routes';
-import { renderWithProviders } from '@/utils/testing/renderWithProviders';
+
 import MainPageHeader, {
   MainPagerHeaderProps,
 } from '@/components/layouts/Layout/MainPageHeader/MainPageHeader';
+import { BOARDS_ROUTE } from '@/utils/routes';
+import { libraryMocks } from '@/utils/testing/mocks';
+import { renderWithProviders } from '@/utils/testing/renderWithProviders';
 
 const DEFAULT_PROPS: MainPagerHeaderProps = {
   title: 'Boards',

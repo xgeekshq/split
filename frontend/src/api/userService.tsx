@@ -1,7 +1,7 @@
 import { GetServerSidePropsContext } from 'next';
 
+import { DeleteUser, InfiniteUsersWithTeams, UpdateUserIsAdmin, User } from '@/types/user/user';
 import fetchData from '@/utils/fetchData';
-import { User, UpdateUserIsAdmin, DeleteUser, InfiniteUsersWithTeams } from '@/types/user/user';
 
 // #region GET
 export const getAllUsers = (context?: GetServerSidePropsContext): Promise<User[]> =>
@@ -24,5 +24,5 @@ export const getUsersWithTeams = (
 export const updateUserIsAdminRequest = (user: UpdateUserIsAdmin): Promise<User> =>
   fetchData(`/users/sadmin/`, { method: 'PUT', data: user });
 
-export const deleteUserRequest = (user: DeleteUser): Promise<Boolean> =>
+export const deleteUserRequest = (user: DeleteUser): Promise<boolean> =>
   fetchData(`/users/${user.id}`, { method: 'DELETE' });

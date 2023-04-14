@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
 import { ComponentStory } from '@storybook/react';
-
 import dedent from 'ts-dedent';
 
 import Dialog from '@/components/Primitives/Dialogs/Dialog/Dialog';
-import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Button from '@/components/Primitives/Inputs/Button/Button';
+import Flex from '@/components/Primitives/Layout/Flex/Flex';
 
 export default {
   title: 'Primitives/Dialogs/Dialog',
@@ -110,16 +109,16 @@ const Template: ComponentStory<typeof Dialog> = () => {
         <Dialog.Header title="Dialog Title" />
         <Flex
           align="center"
-          justify="center"
-          direction="column"
           css={{ height: '100%', overflow: 'auto' }}
+          direction="column"
+          justify="center"
         >
           Dialog Content
         </Flex>
         <Dialog.Footer
-          handleClose={handleClick}
-          handleAffirmative={handleClick}
           affirmativeLabel="Confirm"
+          handleAffirmative={handleClick}
+          handleClose={handleClick}
         />
       </Dialog>
     </>

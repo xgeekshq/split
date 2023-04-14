@@ -1,26 +1,7 @@
-import { useMutation } from '@tanstack/react-query';
 import { useSession } from 'next-auth/react';
+import { useMutation } from '@tanstack/react-query';
 import { useSetRecoilState } from 'recoil';
 
-import {
-  handleDeleteCard,
-  handleMergeCard,
-  handleNewCard,
-  handleUnMergeCard,
-  handleUpdateCardItemIdOfUnmergedCard,
-  handleUpdateCardPosition,
-  handleUpdateText,
-} from '@/helper/board/transformBoard';
-import { mergeCardState } from '@/store/mergeCard/atoms/merge-card.atom';
-import BoardType from '@/types/board/board';
-import AddCardDto from '@/types/card/addCard.dto';
-import { ToastStateEnum } from '@/utils/enums/toast-types';
-import UpdateCardPositionDto from '@/types/card/updateCardPosition.dto';
-import RemoveFromCardGroupDto from '@/types/card/removeFromCardGroup.dto';
-import MergeCardsDto from '@/types/board/mergeCard.dto';
-import DeleteCardDto from '@/types/card/deleteCard.dto';
-import UpdateCardDto from '@/types/card/updateCard.dto';
-import { operationsQueueAtom } from '@/store/operations/atom/operations-queue.atom';
 import {
   addCardRequest,
   deleteCardRequest,
@@ -30,7 +11,26 @@ import {
   updateCardPositionRequest,
   updateCardRequest,
 } from '@/api/boardService';
+import {
+  handleDeleteCard,
+  handleMergeCard,
+  handleNewCard,
+  handleUnMergeCard,
+  handleUpdateCardItemIdOfUnmergedCard,
+  handleUpdateCardPosition,
+  handleUpdateText,
+} from '@/helper/board/transformBoard';
 import useBoardUtils from '@/hooks/useBoardUtils';
+import { mergeCardState } from '@/store/mergeCard/atoms/merge-card.atom';
+import { operationsQueueAtom } from '@/store/operations/atom/operations-queue.atom';
+import BoardType from '@/types/board/board';
+import MergeCardsDto from '@/types/board/mergeCard.dto';
+import AddCardDto from '@/types/card/addCard.dto';
+import DeleteCardDto from '@/types/card/deleteCard.dto';
+import RemoveFromCardGroupDto from '@/types/card/removeFromCardGroup.dto';
+import UpdateCardDto from '@/types/card/updateCard.dto';
+import UpdateCardPositionDto from '@/types/card/updateCardPosition.dto';
+import { ToastStateEnum } from '@/utils/enums/toast-types';
 
 const useCards = () => {
   const { queryClient, setToastState } = useBoardUtils();
