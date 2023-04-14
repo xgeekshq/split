@@ -1,18 +1,19 @@
 import React, { ReactElement, Suspense } from 'react';
-import { useQuery } from '@tanstack/react-query';
 import { GetServerSideProps } from 'next';
 import { useSession } from 'next-auth/react';
+import { useQuery } from '@tanstack/react-query';
+
 import { getDashboardHeaderInfo } from '@/api/authService';
+import RecentRetros from '@/components/Dashboard/RecentRetros';
+import Tiles from '@/components/Dashboard/Tiles/Tiles';
 import QueryError from '@/components/Errors/QueryError';
 import requireAuthentication from '@/components/HOC/requireAuthentication';
 import Layout from '@/components/layouts/Layout/Layout';
+import MainPageHeader from '@/components/layouts/Layout/MainPageHeader/MainPageHeader';
+import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import LoadingPage from '@/components/Primitives/Loading/Page/Page';
 import Text from '@/components/Primitives/Text/Text';
-import Tiles from '@/components/Dashboard/Tiles/Tiles';
-import RecentRetros from '@/components/Dashboard/RecentRetros';
-import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import { ROUTES } from '@/utils/routes';
-import MainPageHeader from '@/components/layouts/Layout/MainPageHeader/MainPageHeader';
 
 export const getServerSideProps: GetServerSideProps = requireAuthentication(async () => ({
   props: {},
@@ -38,7 +39,7 @@ const Dashboard = () => {
           label: 'Add new board',
         }}
       />
-      <Flex direction="column" css={{ mt: '$40' }}>
+      <Flex css={{ mt: '$40' }} direction="column">
         <Suspense fallback={<LoadingPage />}>
           <QueryError>
             <Tiles data={data} />

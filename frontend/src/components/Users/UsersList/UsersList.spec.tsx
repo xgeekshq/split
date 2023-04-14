@@ -1,13 +1,14 @@
 import React from 'react';
+import { UseInfiniteQueryResult } from '@tanstack/react-query';
+import { waitFor } from '@testing-library/dom';
+import userEvent from '@testing-library/user-event';
+
+import UserList from '@/components/Users/UsersList/UsersList';
+import useUsersWithTeams from '@/hooks/users/useUsersWithTeams';
+import { UserWithTeams } from '@/types/user/user';
+import { UserFactory, UserWithTeamsFactory } from '@/utils/factories/user';
 import { libraryMocks } from '@/utils/testing/mocks';
 import { renderWithProviders } from '@/utils/testing/renderWithProviders';
-import UserList from '@/components/Users/UsersList/UsersList';
-import { UserFactory, UserWithTeamsFactory } from '@/utils/factories/user';
-import { UserWithTeams } from '@/types/user/user';
-import userEvent from '@testing-library/user-event';
-import { waitFor } from '@testing-library/dom';
-import useUsersWithTeams from '@/hooks/users/useUsersWithTeams';
-import { UseInfiniteQueryResult } from '@tanstack/react-query';
 
 const { mockRouter } = libraryMocks.mockNextRouter({ pathname: '/users' });
 

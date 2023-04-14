@@ -1,8 +1,9 @@
-import { renderWithProviders } from '@/utils/testing/renderWithProviders';
-import Breadcrumb, { BreadcrumbProps } from '@/components/Primitives/Breadcrumb/Breadcrumb';
 import { fireEvent, waitFor } from '@testing-library/react';
-import { libraryMocks } from '@/utils/testing/mocks';
+
+import Breadcrumb, { BreadcrumbProps } from '@/components/Primitives/Breadcrumb/Breadcrumb';
 import { ROUTES } from '@/utils/routes';
+import { libraryMocks } from '@/utils/testing/mocks';
+import { renderWithProviders } from '@/utils/testing/renderWithProviders';
 
 const DUMMY_ITEMS = [
   { title: 'Teams', link: ROUTES.Teams },

@@ -1,11 +1,11 @@
 import Link from 'next/link';
-import Text from '@/components/Primitives/Text/Text';
 
 import {
   EmptyBoardsText,
   StyledBox,
   StyledImage,
 } from '@/components/Dashboard/RecentRetros/partials/EmptyBoards/styles';
+import Text from '@/components/Primitives/Text/Text';
 
 const EmptyBoards: React.FC = () => (
   <StyledBox align="center" direction="column" elevation="1" justify="center">

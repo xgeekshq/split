@@ -4,8 +4,8 @@ import { useRecoilState, useSetRecoilState } from 'recoil';
 import UserListDialog from '@/components/Primitives/Dialogs/UserListDialog/UserListDialog';
 import useCurrentSession from '@/hooks/useCurrentSession';
 import { createBoardDataState } from '@/store/createBoard/atoms/create-board.atom';
-import { usersListState } from '@/store/team/atom/team.atom';
 import { toastState } from '@/store/toast/atom/toast.atom';
+import { usersListState } from '@/store/user.atom';
 import { UserList } from '@/types/team/userList';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
@@ -76,12 +76,12 @@ const ListParticipants = ({ isOpen, setIsOpen }: ListParticipantsProps) => {
 
   return (
     <UserListDialog
-      usersList={usersList}
+      confirmationHandler={saveParticipants}
+      confirmationLabel="Add/remove participants"
       isOpen={isOpen}
       setIsOpen={setIsOpen}
-      confirmationHandler={saveParticipants}
       title="Board Participants"
-      confirmationLabel="Add/remove participants"
+      usersList={usersList}
     />
   );
 };

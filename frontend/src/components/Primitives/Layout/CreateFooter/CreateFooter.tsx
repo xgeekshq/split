@@ -1,7 +1,6 @@
-import { styled } from '@/styles/stitches/stitches.config';
-
-import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Button from '@/components/Primitives/Inputs/Button/Button';
+import Flex from '@/components/Primitives/Layout/Flex/Flex';
+import { styled } from '@/styles/stitches/stitches.config';
 
 const Footer = styled(Flex, {
   borderTop: '1px solid $primary200',
@@ -24,11 +23,11 @@ const CreateFooter = ({
   formId,
   confirmationLabel,
 }: CreateFooterProps) => (
-  <Footer gap="24" justify="end" data-testid="createFooter">
-    <Button disabled={disableButton} type="button" variant="lightOutline" onClick={handleBack}>
+  <Footer data-testid="createFooter" gap="24" justify="end">
+    <Button disabled={disableButton} onClick={handleBack} type="button" variant="lightOutline">
       Cancel
     </Button>
-    <Button form={formId} disabled={disableButton || hasError} type="submit">
+    <Button disabled={disableButton || hasError} form={formId} type="submit">
       {confirmationLabel}
     </Button>
   </Footer>

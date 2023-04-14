@@ -1,6 +1,7 @@
 import React from 'react';
 import { ComponentStory } from '@storybook/react';
 import dedent from 'ts-dedent';
+
 import Avatar from '@/components/Primitives/Avatars/Avatar/Avatar';
 
 export default {

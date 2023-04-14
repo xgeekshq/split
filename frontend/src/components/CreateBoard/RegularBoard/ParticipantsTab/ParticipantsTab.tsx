@@ -1,10 +1,9 @@
 import { Dispatch, SetStateAction } from 'react';
 
+import BoardParticipantsList from '@/components/CreateBoard/RegularBoard/ParticipantsTab/BoardParticipantsList/BoardParticipantsList';
+import RadioGroupParticipants from '@/components/CreateBoard/RegularBoard/ParticipantsTab/RadioGroupParticipants/RadioGroupParticipants';
 import SelectTeam from '@/components/CreateBoard/RegularBoard/ParticipantsTab/SelectTeam/SelectTeam';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
-
-import RadioGroupParticipants from '@/components/CreateBoard/RegularBoard/ParticipantsTab/RadioGroupParticipants/RadioGroupParticipants';
-import BoardParticipantsList from '@/components/CreateBoard/RegularBoard/ParticipantsTab/BoardParticipantsList/BoardParticipantsList';
 
 type Props = { optionSelected: string; setOptionSelected: Dispatch<SetStateAction<string>> };
 
@@ -16,8 +15,8 @@ const ParticipantsTab = ({ optionSelected, setOptionSelected }: Props) => {
   return (
     <Flex direction="column" gap={24}>
       <RadioGroupParticipants
-        optionSelected={optionSelected}
         handleSelection={handleChangeOption}
+        optionSelected={optionSelected}
       />
       {optionSelected === 'team' ? <SelectTeam /> : <BoardParticipantsList />}
     </Flex>

@@ -1,18 +1,17 @@
 import React from 'react';
 import { ComponentStory } from '@storybook/react';
-
 import dedent from 'ts-dedent';
 
-import Text from '@/components/Primitives/Text/Text';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
+import Text from '@/components/Primitives/Text/Text';
 import {
   ColorType,
   DisplayType,
   FontWeightType,
   HeadingType,
+  OverflowType,
   Overline,
   TextSizeType,
-  OverflowType,
 } from '@/stories/types/PrimitiveTypes';
 
 const FONT_WEIGHT_OPTIONS: FontWeightType[] = ['regular', 'medium', 'bold'];
@@ -201,9 +200,9 @@ export const Default = Template.bind({});
 Default.storyName = 'Basic Usage';
 
 export const Displays: ComponentStory<typeof Text> = ({ color, underline }) => (
-  <Flex direction="column" justify="center" align="center" gap={40} wrap="wrap">
+  <Flex align="center" direction="column" gap={40} justify="center" wrap="wrap">
     {DISPLAY_OPTIONS.map((display) => (
-      <Text display={display} color={color} underline={underline} key={display}>
+      <Text key={display} color={color} display={display} underline={underline}>
         Display {display}
       </Text>
     ))}
@@ -211,9 +210,9 @@ export const Displays: ComponentStory<typeof Text> = ({ color, underline }) => (
 );
 
 export const Headings: ComponentStory<typeof Text> = ({ color, underline }) => (
-  <Flex direction="column" justify="center" align="center" gap={40} wrap="wrap">
+  <Flex align="center" direction="column" gap={40} justify="center" wrap="wrap">
     {HEADING_OPTIONS.map((heading) => (
-      <Text heading={heading} color={color} underline={underline} key={heading}>
+      <Text key={heading} color={color} heading={heading} underline={underline}>
         Heading {heading}
       </Text>
     ))}
@@ -221,12 +220,12 @@ export const Headings: ComponentStory<typeof Text> = ({ color, underline }) => (
 );
 
 export const SizesAndWeights: ComponentStory<typeof Text> = ({ children, color, underline }) => (
-  <Flex justify="evenly" wrap="wrap" gap="32">
+  <Flex gap="32" justify="evenly" wrap="wrap">
     {FONT_WEIGHT_OPTIONS.map((fontWeight) => (
-      <Flex direction="column" justify="center" align="center" gap={20} key={fontWeight}>
+      <Flex key={fontWeight} align="center" direction="column" gap={20} justify="center">
         <Text heading="4">Font Weight {fontWeight}</Text>
         {SIZE_OPTIONS.map((size) => (
-          <Text fontWeight={fontWeight} size={size} color={color} underline={underline} key={size}>
+          <Text key={size} color={color} fontWeight={fontWeight} size={size} underline={underline}>
             {children}
           </Text>
         ))}
@@ -236,22 +235,22 @@ export const SizesAndWeights: ComponentStory<typeof Text> = ({ children, color, 
 );
 
 export const Other: ComponentStory<typeof Text> = ({ children, underline }) => (
-  <Flex justify="evenly" wrap="wrap" gap="32">
-    <Flex direction="column" align="center" gap={20}>
+  <Flex gap="32" justify="evenly" wrap="wrap">
+    <Flex align="center" direction="column" gap={20}>
       <Text heading="4">Overline</Text>
       {OVERLINE_OPTIONS.map((overline) => (
-        <Text overline={overline} underline={underline} key={overline}>
+        <Text key={overline} overline={overline} underline={underline}>
           {children}
         </Text>
       ))}
     </Flex>
-    <Flex direction="column" align="center" gap={20}>
+    <Flex align="center" direction="column" gap={20}>
       <Text heading="4">Hint</Text>
       <Text hint underline={underline}>
         {children}
       </Text>
     </Flex>
-    <Flex direction="column" align="center" gap={20}>
+    <Flex align="center" direction="column" gap={20}>
       <Text heading="4">Label</Text>
       <Text label underline={underline}>
         {children}

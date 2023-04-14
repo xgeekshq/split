@@ -1,18 +1,19 @@
-import { useRouter } from 'next/router';
 import React, { Dispatch, SetStateAction } from 'react';
+import { useRouter } from 'next/router';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 
 import UserListDialog from '@/components/Primitives/Dialogs/UserListDialog/UserListDialog';
+import useTeam from '@/hooks/teams/useTeam';
+import useUpdateTeamUsers from '@/hooks/teams/useUpdateTeamUsers';
 import useCurrentSession from '@/hooks/useCurrentSession';
-import { createTeamState, usersListState } from '@/store/team/atom/team.atom';
+import { createTeamState } from '@/store/team.atom';
 import { toastState } from '@/store/toast/atom/toast.atom';
+import { usersListState } from '@/store/user.atom';
 import { CreateTeamUser, TeamUserAddAndRemove } from '@/types/team/team.user';
 import { UserList } from '@/types/team/userList';
 import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
 import { verifyIfIsNewJoiner } from '@/utils/verifyIfIsNewJoiner';
-import useUpdateTeamUsers from '@/hooks/teams/useUpdateTeamUsers';
-import useTeam from '@/hooks/teams/useTeam';
 
 type Props = {
   setIsOpen: Dispatch<SetStateAction<boolean>>;
@@ -120,12 +121,12 @@ const ListMembers = ({ isOpen, setIsOpen, isTeamPage }: Props) => {
 
   return (
     <UserListDialog
-      usersList={usersList}
+      confirmationHandler={saveMembers}
+      confirmationLabel="Add/remove members"
       isOpen={isOpen}
       setIsOpen={setIsOpen}
-      confirmationHandler={saveMembers}
       title="Team Members"
-      confirmationLabel="Add/remove members"
+      usersList={usersList}
     />
   );
 };

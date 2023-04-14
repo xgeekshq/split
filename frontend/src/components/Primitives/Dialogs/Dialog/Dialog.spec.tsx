@@ -1,10 +1,10 @@
-import { createMockRouter } from '@/utils/testing/mocks';
-import { renderWithProviders } from '@/utils/testing/renderWithProviders';
 import { fireEvent, waitFor } from '@testing-library/dom';
 
 import Dialog, { DialogProps } from '@/components/Primitives/Dialogs/Dialog/Dialog';
-import { HeaderProps } from '@/components/Primitives/Dialogs/Dialog/DialogHeader';
 import { FooterProps } from '@/components/Primitives/Dialogs/Dialog/DialogFooter';
+import { HeaderProps } from '@/components/Primitives/Dialogs/Dialog/DialogHeader';
+import { createMockRouter } from '@/utils/testing/mocks';
+import { renderWithProviders } from '@/utils/testing/renderWithProviders';
 
 const router = createMockRouter({});
 
@@ -20,9 +20,9 @@ const render = ({
       <Dialog.Header title={title} />
       {children}
       <Dialog.Footer
-        handleClose={jest.fn()}
-        handleAffirmative={jest.fn()}
         affirmativeLabel="Confirm"
+        handleAffirmative={jest.fn()}
+        handleClose={jest.fn()}
         {...props}
       />
     </Dialog>,

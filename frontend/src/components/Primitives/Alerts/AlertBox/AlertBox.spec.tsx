@@ -4,7 +4,7 @@ import { renderWithProviders } from '@/utils/testing/renderWithProviders';
 
 const render = ({ children, ...props }: Partial<AlertBoxProps> = {}) =>
   renderWithProviders(
-    <AlertBox type="info" title="Title" text="Text" {...props}>
+    <AlertBox text="Text" title="Title" type="info" {...props}>
       {children}
     </AlertBox>,
   );

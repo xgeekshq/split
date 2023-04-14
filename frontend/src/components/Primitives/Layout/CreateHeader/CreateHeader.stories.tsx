@@ -1,8 +1,8 @@
 import React from 'react';
 import { ComponentStory } from '@storybook/react';
+import dedent from 'ts-dedent';
 
 import CreateHeader from '@/components/Primitives/Layout/CreateHeader/CreateHeader';
-import dedent from 'ts-dedent';
 
 export default {
   title: 'Primitives/Layout/CreateHeader',

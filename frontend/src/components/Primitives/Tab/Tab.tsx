@@ -1,10 +1,9 @@
+import { ReactNode } from 'react';
 import * as Tabs from '@radix-ui/react-tabs';
 
-import { styled } from '@/styles/stitches/stitches.config';
-
-import { ReactNode } from 'react';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Text from '@/components/Primitives/Text/Text';
+import { styled } from '@/styles/stitches/stitches.config';
 
 const StyledTabsRoot = styled(Tabs.Root, Flex, {});
 
@@ -50,22 +49,22 @@ const Tab = ({ tabList, defaultValue, activeValue, onChangeActiveValue, children
 
   return (
     <StyledTabsRoot
-      direction="column"
-      defaultValue={initialValue}
-      value={activeValue}
-      onValueChange={onChangeActiveValue}
       data-testid="tabs"
+      defaultValue={initialValue}
+      direction="column"
+      onValueChange={onChangeActiveValue}
+      value={activeValue}
     >
       <StyledTabsList>
         {tabList.map((tab) => (
-          <StyledTabsTrigger value={tab.value} key={tab.value}>
+          <StyledTabsTrigger key={tab.value} value={tab.value}>
             {tab.label}
           </StyledTabsTrigger>
         ))}
       </StyledTabsList>
-      <Flex direction="column" css={{ mt: '$24' }}>
+      <Flex css={{ mt: '$24' }} direction="column">
         {tabList.map((tab) => (
-          <Tabs.Content value={tab.value} key={tab.value}>
+          <Tabs.Content key={tab.value} value={tab.value}>
             {tab.content}
           </Tabs.Content>
         ))}

@@ -1,10 +1,9 @@
 import { useCallback } from 'react';
 import Link from 'next/link';
 
-import { styled } from '@/styles/stitches/stitches.config';
-
 import Text from '@/components/Primitives/Text/Text';
 import Tooltip from '@/components/Primitives/Tooltips/Tooltip/Tooltip';
+import { styled } from '@/styles/stitches/stitches.config';
 
 type CardTitleProps = {
   userIsParticipating: boolean;

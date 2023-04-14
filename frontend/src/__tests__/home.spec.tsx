@@ -1,7 +1,8 @@
-import { renderWithProviders } from '@/utils/testing/renderWithProviders';
 import { fireEvent, waitFor } from '@testing-library/react';
+
 import Home from '@/pages/index';
 import { libraryMocks } from '@/utils/testing/mocks';
+import { renderWithProviders } from '@/utils/testing/renderWithProviders';
 
 const { mockRouter } = libraryMocks.mockNextRouter({ pathname: '/' });
 

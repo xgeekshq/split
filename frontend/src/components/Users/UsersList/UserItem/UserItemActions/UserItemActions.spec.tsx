@@ -1,15 +1,16 @@
 import React from 'react';
-import { libraryMocks } from '@/utils/testing/mocks';
+import { UseMutationResult } from '@tanstack/react-query';
 import { fireEvent, waitFor } from '@testing-library/react';
-import { renderWithProviders } from '@/utils/testing/renderWithProviders';
-import { UserFactory } from '@/utils/factories/user';
+
 import UserItemActions, {
   UserItemActionsProps,
 } from '@/components/Users/UsersList/UserItem/UserItemActions/UserItemActions';
-import { ROUTES } from '@/utils/routes';
-import useUpdateUser from '@/hooks/users/useUpdateUser';
-import { UseMutationResult } from '@tanstack/react-query';
 import useDeleteUser from '@/hooks/users/useDeleteUser';
+import useUpdateUser from '@/hooks/users/useUpdateUser';
+import { UserFactory } from '@/utils/factories/user';
+import { ROUTES } from '@/utils/routes';
+import { libraryMocks } from '@/utils/testing/mocks';
+import { renderWithProviders } from '@/utils/testing/renderWithProviders';
 
 const { mockRouter } = libraryMocks.mockNextRouter({ pathname: '/users' });
 

@@ -11,7 +11,7 @@ export type MemberTitleProps = {
 
 const MemberTitle = ({ userId, name, hasPermissions }: MemberTitleProps) => {
   const renderName = () => (
-    <Text link={hasPermissions} size="sm" fontWeight="bold" overflow="wrap">
+    <Text fontWeight="bold" link={hasPermissions} overflow="wrap" size="sm">
       {name}
     </Text>
   );

@@ -1,6 +1,7 @@
 import React from 'react';
 import { ComponentStory } from '@storybook/react';
 import dedent from 'ts-dedent';
+
 import NewJoinerTooltip from '@/components/Primitives/Tooltips/NewJoinerTooltip/NewJoinerTooltip';
 
 export default {

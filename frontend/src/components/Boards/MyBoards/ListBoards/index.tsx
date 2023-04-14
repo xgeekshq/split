@@ -1,17 +1,18 @@
 import React from 'react';
-import BoardType from '@/types/board/board';
-import LoadingPage from '@/components/Primitives/Loading/Page/Page';
-import CardBody from '@/components/CardBoard/CardBody/CardBody';
-import Flex from '@/components/Primitives/Layout/Flex/Flex';
-import Text from '@/components/Primitives/Text/Text';
-import Icon from '@/components/Primitives/Icons/Icon/Icon';
-import { Team } from '@/types/team/team';
 import Link from 'next/link';
-import { TeamUserRoles } from '@/utils/enums/team.user.roles';
-import Button from '@/components/Primitives/Inputs/Button/Button';
-import useTeams from '@/hooks/teams/useTeams';
+
 import { ScrollableContent } from '@/components/Boards/MyBoards/styles';
 import TeamHeader from '@/components/Boards/TeamHeader';
+import CardBody from '@/components/CardBoard/CardBody/CardBody';
+import Icon from '@/components/Primitives/Icons/Icon/Icon';
+import Button from '@/components/Primitives/Inputs/Button/Button';
+import Flex from '@/components/Primitives/Layout/Flex/Flex';
+import LoadingPage from '@/components/Primitives/Loading/Page/Page';
+import Text from '@/components/Primitives/Text/Text';
+import useTeams from '@/hooks/teams/useTeams';
+import BoardType from '@/types/board/board';
+import { Team } from '@/types/team/team';
+import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 
 interface ListBoardsProps {
   userId: string;
@@ -45,11 +46,11 @@ const ListBoards = React.memo<ListBoardsProps>(
 
     return (
       <ScrollableContent
+        css={{ height: 'calc(100vh - 225px)', paddingBottom: '$8' }}
         direction="column"
         justify="start"
-        ref={scrollRef}
         onScroll={onScroll}
-        css={{ height: 'calc(100vh - 225px)', paddingBottom: '$8' }}
+        ref={scrollRef}
       >
         {Array.from(dataByTeamAndDate.boardsTeamAndDate).map(([teamId, boardsOfTeam], index) => {
           const { users } = Array.from(boardsOfTeam)[0][1][0];
@@ -69,7 +70,7 @@ const ListBoards = React.memo<ListBoardsProps>(
               >
                 <TeamHeader team={teamFound} userId={userId} users={users} />
               </Flex>
-              <Flex justify="end" css={{ width: '100%', minHeight: '15px' }}>
+              <Flex css={{ width: '100%', minHeight: '15px' }} justify="end">
                 {(isSuperAdmin ||
                   isTeamAdmin(boardsOfTeam) ||
                   !Array.from(dataByTeamAndDate.teams.keys()).includes(teamId)) && (
@@ -79,7 +80,7 @@ const ListBoards = React.memo<ListBoardsProps>(
                       query: { team: teamId },
                     }}
                   >
-                    <Button variant="link" size="sm" css={{ zIndex: '9' }}>
+                    <Button css={{ zIndex: '9' }} size="sm" variant="link">
                       <Icon name="plus" />
                       {!Array.from(dataByTeamAndDate.teams.keys()).includes(teamId)
                         ? 'Add new personal board'

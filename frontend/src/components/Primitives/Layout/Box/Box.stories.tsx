@@ -1,12 +1,11 @@
 import React from 'react';
 import { ComponentStory } from '@storybook/react';
-
 import dedent from 'ts-dedent';
 
 import Box from '@/components/Primitives/Layout/Box/Box';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Text from '@/components/Primitives/Text/Text';
-import { ElevationType, BoxVariantType } from '@/stories/types/PrimitiveTypes';
+import { BoxVariantType, ElevationType } from '@/stories/types/PrimitiveTypes';
 import { capitalize } from '@/stories/utils';
 
 const ELEVATION_OPTIONS: ElevationType[] = [0, 1, 2, 3, 4];
@@ -74,7 +73,7 @@ Default.storyName = 'Basic Usage';
 export const Elevations: ComponentStory<typeof Box> = ({ children, ...args }) => (
   <Flex direction="column" gap={20}>
     {ELEVATION_OPTIONS.map((elevation) => (
-      <Flex direction="column" gap={8} key={elevation}>
+      <Flex key={elevation} direction="column" gap={8}>
         <Text heading="4">Elevation {elevation}</Text>
         <Box elevation={elevation} {...args}>
           {children}
@@ -87,7 +86,7 @@ export const Elevations: ComponentStory<typeof Box> = ({ children, ...args }) =>
 export const Variants: ComponentStory<typeof Box> = ({ children, ...args }) => (
   <Flex direction="column" gap={20}>
     {VARIANT_OPTIONS.map((variant) => (
-      <Flex direction="column" gap={8} key={variant}>
+      <Flex key={variant} direction="column" gap={8}>
         <Text heading="4">{capitalize(variant)} variant</Text>
         <Box variant={variant} {...args}>
           {children}

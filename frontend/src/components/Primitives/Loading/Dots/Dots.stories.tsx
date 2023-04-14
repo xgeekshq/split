@@ -1,8 +1,8 @@
 import React from 'react';
 import { ComponentStory } from '@storybook/react';
+import dedent from 'ts-dedent';
 
 import Dots from '@/components/Primitives/Loading/Dots/Dots';
-import dedent from 'ts-dedent';
 
 export default {
   title: 'Primitives/Loading/Dots',
