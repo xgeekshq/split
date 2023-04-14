@@ -8,7 +8,7 @@ import Button from '@/components/Primitives/Inputs/Button/Button';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import useCurrentSession from '@/hooks/useCurrentSession';
 import { createBoardDataState } from '@/store/createBoard/atoms/create-board.atom';
-import { usersListState } from '@/store/team/atom/team.atom';
+import { usersListState } from '@/store/user.atom';
 import { BoardUser } from '@/types/board/board.user';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 

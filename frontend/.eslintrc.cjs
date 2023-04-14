@@ -1,23 +1,21 @@
 const fs = require('fs');
 
-
 const folders = fs
-  .readdirSync('src', {withFileTypes: true})
-  .filter(dirent => dirent.isDirectory())
-  .map(dirent => !['styles'].includes(dirent.name) && dirent.name);
-
+  .readdirSync('src', { withFileTypes: true })
+  .filter((dirent) => dirent.isDirectory())
+  .map((dirent) => !['styles'].includes(dirent.name) && dirent.name);
 
 const tsconfigPaths = [
   '@components',
   '@helper',
   '@hooks',
   '@pages',
-  '@schemas',
+  '@schema',
   '@styles',
   '@utils',
   '@api',
   '@animations',
-  '@'
+  '@',
 ];
 
 module.exports = {
@@ -25,7 +23,7 @@ module.exports = {
   extends: ['next/core-web-vitals', 'prettier', 'plugin:storybook/recommended'],
   plugins: ['prettier'],
   rules: {
-    'prettier/prettier': ['error', {usePrettierrc: true}],
+    'prettier/prettier': ['error', { usePrettierrc: true }],
   },
   overrides: [
     {
@@ -41,12 +39,7 @@ module.exports = {
         extraFileExtensions: ['.css'],
         project: './tsconfig.json',
       },
-      plugins: [
-        '@typescript-eslint',
-        'simple-import-sort',
-        'import',
-        'unused-imports',
-      ],
+      plugins: ['@typescript-eslint', 'simple-import-sort', 'import', 'unused-imports'],
       rules: {
         '@typescript-eslint/ban-types': 'warn',
         '@typescript-eslint/no-empty-function': 'warn',
@@ -108,7 +101,7 @@ module.exports = {
         'react/prop-types': 'off',
         'react/react-in-jsx-scope': 'off',
         'react/display-name': 'off',
-        'react/jsx-curly-brace-presence': ['error', {props: 'never'}],
+        'react/jsx-curly-brace-presence': ['error', { props: 'never' }],
         'react/jsx-boolean-value': ['error', 'never'],
         'react/jsx-sort-props': [
           'error',
