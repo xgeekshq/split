@@ -1,8 +1,8 @@
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 
 import Calendar from '@/components/Primitives/Calendar/Calendar';
+import UncontrolledInput from '@/components/Primitives/Inputs/UncontrolledInput/UncontrolledInput';
 import { styled } from '@/styles/stitches/stitches.config';
-import UncontrolledInput from '../Inputs/UncontrolledInput/UncontrolledInput';
 
 // TODO: Styled dropdown trigger
 const StyledDropDownTrigger = styled(DropdownMenu.Trigger, {
