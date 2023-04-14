@@ -5,32 +5,27 @@ const DEFAULT_CREATE_MANY_COUNT = 10;
 
 export type BuildTestFactoryCountValue = number | 'random';
 
-export type BuildTestFactoryGetterProps<TModel extends unknown> = (
-  index: number,
-) => Partial<TModel>;
+export type BuildTestFactoryGetterProps<TModel> = (index: number) => Partial<TModel>;
 
-export type BuildTestFactoryArrayProps<
-  TModel extends unknown,
-  TCount extends number,
-> = FixedLengthArray<Partial<TModel>, TCount>;
+export type BuildTestFactoryArrayProps<TModel, TCount extends number> = FixedLengthArray<
+  Partial<TModel>,
+  TCount
+>;
 
 type BuildTestFactoryProps<
-  TModel extends unknown,
+  TModel,
   TCount extends BuildTestFactoryCountValue,
 > = TCount extends number
   ? BuildTestFactoryGetterProps<TModel> | BuildTestFactoryArrayProps<TModel, TCount>
   : BuildTestFactoryGetterProps<TModel>;
 
-const isGetterProps = <TModel extends unknown>(
-  props: unknown,
-): props is BuildTestFactoryGetterProps<TModel> => typeof props === 'function';
+const isGetterProps = <TModel,>(props: unknown): props is BuildTestFactoryGetterProps<TModel> =>
+  typeof props === 'function';
 
-const isArrayProps = <TModel extends unknown>(
-  props: unknown,
-  index: number,
-): props is Array<TModel> => Array.isArray(props) && index < props.length;
+const isArrayProps = <TModel,>(props: unknown, index: number): props is Array<TModel> =>
+  Array.isArray(props) && index < props.length;
 
-const getOverrideProps = <TModel extends unknown, TCount extends number>(
+const getOverrideProps = <TModel, TCount extends number>(
   props: BuildTestFactoryProps<TModel, TCount> | undefined,
   index: number,
 ): Partial<TModel> => {

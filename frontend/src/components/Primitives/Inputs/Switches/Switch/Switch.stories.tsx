@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { ComponentStory } from '@storybook/react';
-
 import dedent from 'ts-dedent';
 
 import Switch from '@/components/Primitives/Inputs/Switches/Switch/Switch';
@@ -61,9 +60,9 @@ const Template: ComponentStory<typeof Switch> = ({ size, disabled }) => {
 
   return (
     <Switch
-      size={size}
-      disabled={disabled}
       checked={isChecked}
+      disabled={disabled}
+      size={size}
       onCheckedChange={() => {
         setIsChecked((prevState) => !prevState);
       }}

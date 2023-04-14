@@ -1,15 +1,16 @@
+import { waitFor } from '@testing-library/dom';
+import { renderHook } from '@testing-library/react';
+
 import { getUsersWithTeams } from '@/api/userService';
+import useUsersWithTeams from '@/hooks/users/useUsersWithTeams';
 import { toastState } from '@/store/toast/atom/toast.atom';
+import { InfiniteUsersWithTeams } from '@/types/user/user';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
 import { UserWithTeamsFactory } from '@/utils/factories/user';
 import {
-  RenderHookWithProvidersOptions,
   renderHookWithProviders,
+  RenderHookWithProvidersOptions,
 } from '@/utils/testing/renderHookWithProviders';
-import { waitFor } from '@testing-library/dom';
-import { renderHook } from '@testing-library/react';
-import { InfiniteUsersWithTeams } from '@/types/user/user';
-import useUsersWithTeams from '@/hooks/users/useUsersWithTeams';
 
 const DUMMY_USERS = {
   hasNextPage: false,

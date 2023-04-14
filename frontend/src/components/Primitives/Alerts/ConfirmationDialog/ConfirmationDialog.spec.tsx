@@ -1,4 +1,3 @@
-import { renderWithProviders } from '@/utils/testing/renderWithProviders';
 import { fireEvent, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
@@ -6,14 +5,15 @@ import ConfirmationDialog, {
   ConfirmationDialogProps,
 } from '@/components/Primitives/Alerts/ConfirmationDialog/ConfirmationDialog';
 import Button from '@/components/Primitives/Inputs/Button/Button';
+import { renderWithProviders } from '@/utils/testing/renderWithProviders';
 
 const render = (props: Partial<ConfirmationDialogProps> = {}) =>
   renderWithProviders(
     <ConfirmationDialog
-      title="Title"
-      description="Description"
       confirmationHandler={jest.fn()}
       confirmationLabel="Confirm"
+      description="Description"
+      title="Title"
       {...props}
     >
       <Button>Trigger</Button>

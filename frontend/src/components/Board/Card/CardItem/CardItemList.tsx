@@ -1,8 +1,8 @@
+import CardItem from '@/components/Board/Card/CardItem/CardItem';
 import Icon from '@/components/Primitives/Icons/Icon/Icon';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Separator from '@/components/Primitives/Separator/Separator';
 import { CardItemType } from '@/types/card/cardItem';
-import CardItem from '@/components/Board/Card/CardItem/CardItem';
 
 interface CardItemListProps {
   items: CardItemType[];
@@ -59,20 +59,20 @@ const CardItemList: React.FC<CardItemListProps> = ({
           boardId={boardId}
           cardGroupId={cardGroupId}
           cardGroupPosition={cardGroupPosition}
+          cardTextDefault={cardTextDefault}
           color={color}
           columnId={columnId}
           firstOne={idx === 0}
+          hasAdminRole={hasAdminRole}
           hideCards={hideCards}
+          isDefaultText={isDefaultText}
           isMainboard={isMainboard}
           isSubmited={isSubmited}
           item={item}
           lastOne={idx + 1 === items.length}
+          postAnonymously={postAnonymously}
           socketId={socketId}
           userId={userId}
-          isDefaultText={isDefaultText}
-          hasAdminRole={hasAdminRole}
-          postAnonymously={postAnonymously}
-          cardTextDefault={cardTextDefault}
         />
       </Flex>
     ))}

@@ -1,6 +1,6 @@
+import { ReactNode, useEffect } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { RenderOptions } from '@testing-library/react';
-import { ReactNode, useEffect } from 'react';
 import { RecoilRoot, RecoilState, useRecoilValue } from 'recoil';
 
 type RecoilOptions = {
@@ -31,7 +31,7 @@ function createWrapper({ children, queryClient, recoilHandler, recoilState }: Wr
     <QueryClientProvider client={queryClient}>
       <RecoilRoot>
         {recoilHandler && recoilState && (
-          <RecoilObserver recoilState={recoilState} recoilHandler={recoilHandler} />
+          <RecoilObserver recoilHandler={recoilHandler} recoilState={recoilState} />
         )}
         {children}
       </RecoilRoot>

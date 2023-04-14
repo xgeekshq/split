@@ -1,14 +1,15 @@
 import { renderHook, waitFor } from '@testing-library/react';
-import {
-  RenderHookWithProvidersOptions,
-  renderHookWithProviders,
-} from '@/utils/testing/renderHookWithProviders';
+
 import { updateAddTeamsToUser } from '@/api/teamService';
-import { ToastStateEnum } from '@/utils/enums/toast-types';
+import useUpdateUserTeams from '@/hooks/teams/useUpdateUserTeams';
 import { toastState } from '@/store/toast/atom/toast.atom';
 import { TeamUserUpdate } from '@/types/team/team.user';
-import useUpdateUserTeams from '@/hooks/teams/useUpdateUserTeams';
+import { ToastStateEnum } from '@/utils/enums/toast-types';
 import { CreateTeamUserFactory } from '@/utils/factories/user';
+import {
+  renderHookWithProviders,
+  RenderHookWithProvidersOptions,
+} from '@/utils/testing/renderHookWithProviders';
 
 const DUMMY_TEAMUSER_UPDATE = CreateTeamUserFactory.create() as TeamUserUpdate;
 

@@ -109,14 +109,14 @@ const QuickEditSubTeams = ({ team }: QuickEditSubTeamsProps) => {
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
-        <Button variant="link" size="sm" css={{ py: '$24' }}>
+        <Button css={{ py: '$24' }} size="sm" variant="link">
           <Icon name="edit" />
           Quick edit sub-teams configurations
         </Button>
       </AlertDialogTrigger>
-      <AlertDialogContent title="Quick edit sub-teams configurations" css={{ gap: 24 }}>
+      <AlertDialogContent css={{ gap: 24 }} title="Quick edit sub-teams configurations">
         <Flex gap={8}>
-          <Icon css={{ color: '$primary500' }} size={24} name="info" />
+          <Icon css={{ color: '$primary500' }} name="info" size={24} />
           <Text color="primary500" size="md">
             Note, if you change any of the two values below, the other value will adjust
             accordingly.
@@ -150,7 +150,7 @@ const QuickEditSubTeams = ({ team }: QuickEditSubTeamsProps) => {
         </Flex>
         <Flex gap={24} justify="end">
           <AlertDialogCancel variant="primaryOutline">Cancel</AlertDialogCancel>
-          <AlertDialogAction onClick={handleSaveConfigs} disabled={isSubmitDisabled}>
+          <AlertDialogAction disabled={isSubmitDisabled} onClick={handleSaveConfigs}>
             Save configurations
           </AlertDialogAction>
         </Flex>

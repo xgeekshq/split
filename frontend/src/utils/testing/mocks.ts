@@ -1,7 +1,8 @@
-import { User } from '@/types/user/user';
-import { Session } from 'next-auth/core/types';
 import * as NextRouter from 'next/router';
+import { Session } from 'next-auth/core/types';
 import * as ReactQuery from '@tanstack/react-query';
+
+import { User } from '@/types/user/user';
 import { SessionUserFactory } from '@/utils/factories/user';
 
 export type MockReactQueryOptions = {

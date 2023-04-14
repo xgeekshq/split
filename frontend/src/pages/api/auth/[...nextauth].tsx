@@ -4,6 +4,7 @@ import AzureADProvider from 'next-auth/providers/azure-ad';
 import CredentialsProvider from 'next-auth/providers/credentials';
 
 import { createOrLoginUserAzure, login, refreshAccessToken } from '@/api/authService';
+import { getAuthError } from '@/errors/auth-messages';
 import { Token } from '@/types/token';
 import { LoginUser } from '@/types/user/user';
 import {
@@ -16,7 +17,6 @@ import {
   UNDEFINED,
 } from '@/utils/constants';
 import { DASHBOARD_ROUTE, ERROR_500_PAGE, START_PAGE_ROUTE } from '@/utils/routes';
-import { getAuthError } from '@/errors/auth-messages';
 
 async function getNewAccessToken(prevToken: JWT): Promise<JWT> {
   try {

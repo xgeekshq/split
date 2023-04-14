@@ -1,17 +1,18 @@
 import { renderHook, waitFor } from '@testing-library/react';
-import {
-  RenderHookWithProvidersOptions,
-  renderHookWithProviders,
-} from '@/utils/testing/renderHookWithProviders';
-import { UserFactory } from '@/utils/factories/user';
+
 import { deleteUserRequest } from '@/api/userService';
+import useDeleteUser from '@/hooks/users/useDeleteUser';
 import { toastState } from '@/store/toast/atom/toast.atom';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
-import useDeleteUser from '@/hooks/users/useDeleteUser';
+import { UserFactory } from '@/utils/factories/user';
+import {
+  renderHookWithProviders,
+  RenderHookWithProvidersOptions,
+} from '@/utils/testing/renderHookWithProviders';
 
 const DUMMY_USER = UserFactory.create();
 
-const mockDeleteUserRequest = deleteUserRequest as jest.Mock<Promise<Boolean>>;
+const mockDeleteUserRequest = deleteUserRequest as jest.Mock<Promise<boolean>>;
 jest.mock('@/api/userService');
 
 const render = (options?: Partial<RenderHookWithProvidersOptions>) =>

@@ -1,5 +1,5 @@
-import { renderWithProviders } from '@/utils/testing/renderWithProviders';
 import TipBar, { TipBarProps } from '@/components/Primitives/Layout/TipBar/TipBar';
+import { renderWithProviders } from '@/utils/testing/renderWithProviders';
 
 const DUMMY_TIPS = [
   {

@@ -1,14 +1,15 @@
 import { renderHook, waitFor } from '@testing-library/react';
-import {
-  RenderHookWithProvidersOptions,
-  renderHookWithProviders,
-} from '@/utils/testing/renderHookWithProviders';
-import { TeamCheckedFactory } from '@/utils/factories/team';
+
 import { getTeamsWithoutUser } from '@/api/teamService';
+import useTeamsWithoutUser from '@/hooks/teams/useTeamsWithoutUser';
+import { toastState } from '@/store/toast/atom/toast.atom';
 import { TeamChecked } from '@/types/team/team';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
-import { toastState } from '@/store/toast/atom/toast.atom';
-import useTeamsWithoutUser from '@/hooks/teams/useTeamsWithoutUser';
+import { TeamCheckedFactory } from '@/utils/factories/team';
+import {
+  renderHookWithProviders,
+  RenderHookWithProvidersOptions,
+} from '@/utils/testing/renderHookWithProviders';
 
 const DUMMY_TEAMS = TeamCheckedFactory.createMany(3);
 

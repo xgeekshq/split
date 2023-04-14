@@ -1,9 +1,9 @@
-import { renderWithProviders } from '@/utils/testing/renderWithProviders';
+import { UseInfiniteQueryResult } from '@tanstack/react-query';
 
+import useUsersWithTeams from '@/hooks/users/useUsersWithTeams';
 import Users from '@/pages/users';
 import { libraryMocks } from '@/utils/testing/mocks';
-import useUsersWithTeams from '@/hooks/users/useUsersWithTeams';
-import { UseInfiniteQueryResult } from '@tanstack/react-query';
+import { renderWithProviders } from '@/utils/testing/renderWithProviders';
 
 const { mockRouter } = libraryMocks.mockNextRouter({ pathname: '/users' });
 

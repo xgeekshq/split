@@ -1,13 +1,13 @@
 import Icon from '@/components/Primitives/Icons/Icon/Icon';
 import ConfigurationSwitch from '@/components/Primitives/Inputs/Switches/ConfigurationSwitch/ConfigurationSwitch';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
-import Text from '@/components/Primitives/Text/Text';
 import {
   Popover,
   PopoverContent,
   PopoverItem,
   PopoverTrigger,
 } from '@/components/Primitives/Popovers/Popover/Popover';
+import Text from '@/components/Primitives/Text/Text';
 
 export type BoardRolePopoverProps = {
   isNewJoinerHandler: (checked: boolean) => void;
@@ -22,31 +22,31 @@ const BoardRolePopover = ({
   canBeResponsibleHandler,
   canBeResponsible,
 }: BoardRolePopoverProps) => (
-  <Flex align="center" gap={8} data-testid="boardRolePopover">
+  <Flex align="center" data-testid="boardRolePopover" gap={8}>
     <Text fontWeight="medium" size="sm">
       Board role
     </Text>
     <Popover>
-      <PopoverTrigger variant="dark" size="sm" data-testid="boardRolePopoverTrigger">
+      <PopoverTrigger data-testid="boardRolePopoverTrigger" size="sm" variant="dark">
         <Icon name="arrow-down" />
       </PopoverTrigger>
       <PopoverContent collisionPadding={32} onOpenAutoFocus={(e) => e.preventDefault()}>
         <PopoverItem css={{ cursor: 'default !important' }}>
           <ConfigurationSwitch
+            disabled={canBeResponsible}
             handleCheckedChange={isNewJoinerHandler}
             isChecked={isNewJoiner}
-            title="New Joiner"
             size="sm"
-            disabled={canBeResponsible}
+            title="New Joiner"
           />
         </PopoverItem>
         <PopoverItem css={{ cursor: 'default !important' }}>
           <ConfigurationSwitch
+            disabled={isNewJoiner}
             handleCheckedChange={canBeResponsibleHandler}
             isChecked={canBeResponsible}
-            title="Responsible allowed"
             size="sm"
-            disabled={isNewJoiner}
+            title="Responsible allowed"
           />
         </PopoverItem>
       </PopoverContent>

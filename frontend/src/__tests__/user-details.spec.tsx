@@ -1,17 +1,17 @@
-import { renderWithProviders } from '@/utils/testing/renderWithProviders';
-
-import UserDetails from '@/pages/users/[userId]';
-import { libraryMocks } from '@/utils/testing/mocks';
-import useUser from '@/hooks/users/useUser';
 import { UseQueryResult } from '@tanstack/react-query';
-import { User } from '@/types/user/user';
-import useUserTeams from '@/hooks/teams/useUserTeams';
-import { Team } from '@/types/team/team';
-import { UserFactory } from '@/utils/factories/user';
-import { TeamCheckedFactory, TeamFactory } from '@/utils/factories/team';
 import { waitFor } from '@testing-library/react';
-import { ROUTES } from '@/utils/routes';
+
 import useTeamsWithoutUser from '@/hooks/teams/useTeamsWithoutUser';
+import useUserTeams from '@/hooks/teams/useUserTeams';
+import useUser from '@/hooks/users/useUser';
+import UserDetails from '@/pages/users/[userId]';
+import { Team } from '@/types/team/team';
+import { User } from '@/types/user/user';
+import { TeamCheckedFactory, TeamFactory } from '@/utils/factories/team';
+import { UserFactory } from '@/utils/factories/user';
+import { ROUTES } from '@/utils/routes';
+import { libraryMocks } from '@/utils/testing/mocks';
+import { renderWithProviders } from '@/utils/testing/renderWithProviders';
 
 const randomUser = UserFactory.create();
 const mockUseUser = useUser as jest.Mock<UseQueryResult<User>>;

@@ -1,5 +1,5 @@
-import { styled } from '@/styles/stitches/stitches.config';
 import Icon from '@/components/Primitives/Icons/Icon/Icon';
+import { styled } from '@/styles/stitches/stitches.config';
 
 const StyledTile = styled('div', {
   position: 'relative',

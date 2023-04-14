@@ -1,13 +1,14 @@
 import { renderHook, waitFor } from '@testing-library/react';
-import {
-  RenderHookWithProvidersOptions,
-  renderHookWithProviders,
-} from '@/utils/testing/renderHookWithProviders';
-import { toastState } from '@/store/toast/atom/toast.atom';
-import { ToastStateEnum } from '@/utils/enums/toast-types';
-import useResetPassword from '@/hooks/auth/useResetPassword';
+
 import { resetUserPassword } from '@/api/authService';
+import useResetPassword from '@/hooks/auth/useResetPassword';
+import { toastState } from '@/store/toast/atom/toast.atom';
 import { ResetPasswordResponse } from '@/types/user/user';
+import { ToastStateEnum } from '@/utils/enums/toast-types';
+import {
+  renderHookWithProviders,
+  RenderHookWithProvidersOptions,
+} from '@/utils/testing/renderHookWithProviders';
 
 const DUMMY_PASSWORD = {
   newPassword: '123',

@@ -1,8 +1,8 @@
 import React from 'react';
 import { ComponentStory } from '@storybook/react';
+import dedent from 'ts-dedent';
 
 import TipBar from '@/components/Primitives/Layout/TipBar/TipBar';
-import dedent from 'ts-dedent';
 
 export default {
   title: 'Primitives/Layout/TipBar',

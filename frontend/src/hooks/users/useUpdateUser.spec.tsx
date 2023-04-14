@@ -1,14 +1,15 @@
 import { renderHook, waitFor } from '@testing-library/react';
-import {
-  RenderHookWithProvidersOptions,
-  renderHookWithProviders,
-} from '@/utils/testing/renderHookWithProviders';
-import { UserFactory } from '@/utils/factories/user';
+
 import { updateUserIsAdminRequest } from '@/api/userService';
-import { User } from '@/types/user/user';
-import { toastState } from '@/store/toast/atom/toast.atom';
-import { ToastStateEnum } from '@/utils/enums/toast-types';
 import useUpdateUser from '@/hooks/users/useUpdateUser';
+import { toastState } from '@/store/toast/atom/toast.atom';
+import { User } from '@/types/user/user';
+import { ToastStateEnum } from '@/utils/enums/toast-types';
+import { UserFactory } from '@/utils/factories/user';
+import {
+  renderHookWithProviders,
+  RenderHookWithProvidersOptions,
+} from '@/utils/testing/renderHookWithProviders';
 
 const DUMMY_USER = UserFactory.create();
 

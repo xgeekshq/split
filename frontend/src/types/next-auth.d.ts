@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { DefaultSession } from 'next-auth';
+
 import { Token } from '@/types/token';
 
 declare module 'next-auth' {

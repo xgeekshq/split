@@ -1,5 +1,6 @@
-import { inSeconds } from '@/types/utils';
 import getConfig from 'next/config';
+
+import { inSeconds } from '@/types/utils';
 
 const { publicRuntimeConfig, serverRuntimeConfig } = getConfig();
 

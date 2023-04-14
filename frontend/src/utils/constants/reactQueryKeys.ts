@@ -1,2 +1,2 @@
-export const TEAMS_KEY: string = 'teams';
-export const USERS_KEY: string = 'users';
+export const TEAMS_KEY = 'teams';
+export const USERS_KEY = 'users';

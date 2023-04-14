@@ -1,17 +1,18 @@
 import { renderHook, waitFor } from '@testing-library/react';
-import {
-  RenderHookWithProvidersOptions,
-  renderHookWithProviders,
-} from '@/utils/testing/renderHookWithProviders';
-import { toastState } from '@/store/toast/atom/toast.atom';
-import { ToastStateEnum } from '@/utils/enums/toast-types';
-import { registerGuest } from '@/api/authService';
-import { GuestUser } from '@/types/user/user';
-import { UserFactory } from '@/utils/factories/user';
-import { BoardFactory } from '@/utils/factories/board';
 import { setCookie } from 'cookies-next';
-import { GUEST_USER_COOKIE } from '@/utils/constants';
+
+import { registerGuest } from '@/api/authService';
 import useRegisterGuestUser from '@/hooks/auth/useRegisterGuestUser';
+import { toastState } from '@/store/toast/atom/toast.atom';
+import { GuestUser } from '@/types/user/user';
+import { GUEST_USER_COOKIE } from '@/utils/constants';
+import { ToastStateEnum } from '@/utils/enums/toast-types';
+import { BoardFactory } from '@/utils/factories/board';
+import { UserFactory } from '@/utils/factories/user';
+import {
+  renderHookWithProviders,
+  RenderHookWithProvidersOptions,
+} from '@/utils/testing/renderHookWithProviders';
 
 const DUMMY_USER = UserFactory.create();
 const DUMMY_CREATE_GUEST_USER = {

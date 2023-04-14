@@ -1,6 +1,5 @@
 import React from 'react';
 import { ComponentStory } from '@storybook/react';
-
 import dedent from 'ts-dedent';
 
 import AvatarGroup from '@/components/Primitives/Avatars/AvatarGroup/AvatarGroup';

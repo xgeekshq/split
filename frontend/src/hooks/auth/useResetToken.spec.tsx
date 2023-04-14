@@ -1,15 +1,16 @@
 import { renderHook, waitFor } from '@testing-library/react';
-import {
-  RenderHookWithProvidersOptions,
-  renderHookWithProviders,
-} from '@/utils/testing/renderHookWithProviders';
-import { UserFactory } from '@/utils/factories/user';
-import { toastState } from '@/store/toast/atom/toast.atom';
-import { ToastStateEnum } from '@/utils/enums/toast-types';
-import useResetToken from '@/hooks/auth/useResetToken';
+
 import { resetTokenEmail } from '@/api/authService';
+import useResetToken from '@/hooks/auth/useResetToken';
+import { toastState } from '@/store/toast/atom/toast.atom';
 import { ResetTokenResponse } from '@/types/user/user';
 import { ForgotPassword } from '@/utils/constants/forgotPassword';
+import { ToastStateEnum } from '@/utils/enums/toast-types';
+import { UserFactory } from '@/utils/factories/user';
+import {
+  renderHookWithProviders,
+  RenderHookWithProvidersOptions,
+} from '@/utils/testing/renderHookWithProviders';
 
 const DUMMY_USER = UserFactory.create();
 

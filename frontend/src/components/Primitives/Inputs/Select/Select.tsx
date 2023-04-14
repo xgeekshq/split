@@ -1,9 +1,10 @@
 import { ReactNode } from 'react';
-import * as SelectPrimitive from '@radix-ui/react-select';
-import { styled, CSS } from '@/styles/stitches/stitches.config';
 import * as ScrollArea from '@radix-ui/react-scroll-area';
+import * as SelectPrimitive from '@radix-ui/react-select';
+
 import Box from '@/components/Primitives/Layout/Box/Box';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
+import { CSS, styled } from '@/styles/stitches/stitches.config';
 
 export const SelectTrigger = styled(SelectPrimitive.SelectTrigger, {
   all: 'unset',
@@ -97,12 +98,12 @@ type Option = {
 type ContentProps = { options: Option[] };
 
 export const SelectContent = ({ options }: ContentProps) => (
-  <StyledContent position="popper" collisionPadding={100}>
+  <StyledContent collisionPadding={100} position="popper">
     <ScrollArea.Root type="auto">
       <SelectPrimitive.Viewport>
         <ScrollArea.Viewport>
           {options.map((option) => (
-            <SelectItem value={option.value} key={option.value}>
+            <SelectItem key={option.value} value={option.value}>
               <SelectPrimitive.ItemText>{option.label}</SelectPrimitive.ItemText>
             </SelectItem>
           ))}
@@ -128,15 +129,15 @@ export const Select = ({ children, disabled, hasError = false, css, ...props }: 
 
   return (
     <StyledBox
+      data-testid="select"
+      direction="column"
+      elevation="1"
       css={{
         ...css,
         borderRadius: '$4',
         backgroundColor: disabled ? 'transparent' : 'white',
         border: hasError ? '1px solid $dangerBase' : '1px solid $primary200',
       }}
-      direction="column"
-      elevation="1"
-      data-testid="select"
     >
       <SelectPrimitive.Root disabled={disabled} {...props}>
         {children}

@@ -1,5 +1,6 @@
-import { UserWithTeams } from '@/types/user/user';
 import { atom } from 'recoil';
+
+import { UserWithTeams } from '@/types/user/user';
 
 export const userState = atom({
   key: 'user',

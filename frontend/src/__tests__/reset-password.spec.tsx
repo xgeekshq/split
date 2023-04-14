@@ -1,10 +1,11 @@
-import { renderWithProviders } from '@/utils/testing/renderWithProviders';
-import { fireEvent, waitFor } from '@testing-library/react';
-import useResetPassword from '@/hooks/auth/useResetPassword';
-import { libraryMocks } from '@/utils/testing/mocks';
-import ResetPasswordPage from '@/pages/reset-password/[tokenId]';
 import { UseMutationResult } from '@tanstack/react-query';
+import { fireEvent, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+
+import useResetPassword from '@/hooks/auth/useResetPassword';
+import ResetPasswordPage from '@/pages/reset-password/[tokenId]';
+import { libraryMocks } from '@/utils/testing/mocks';
+import { renderWithProviders } from '@/utils/testing/renderWithProviders';
 
 const mockUseResetPassword = useResetPassword as jest.Mock<Partial<UseMutationResult>>;
 jest.mock('@/hooks/auth/useResetPassword');

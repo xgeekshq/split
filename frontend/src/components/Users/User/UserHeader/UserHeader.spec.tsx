@@ -1,13 +1,14 @@
 import React from 'react';
-import { libraryMocks } from '@/utils/testing/mocks';
-import { fireEvent, waitFor } from '@testing-library/react';
-import { renderWithProviders } from '@/utils/testing/renderWithProviders';
-import { USERS_ROUTE } from '@/utils/routes';
-import { UserFactory } from '@/utils/factories/user';
-import UserHeader, { UserHeaderProps } from '@/components/Users/User/UserHeader/UserHeader';
 import { UseQueryResult } from '@tanstack/react-query';
+import { fireEvent, waitFor } from '@testing-library/react';
+
+import UserHeader, { UserHeaderProps } from '@/components/Users/User/UserHeader/UserHeader';
 import useTeamsWithoutUser from '@/hooks/teams/useTeamsWithoutUser';
 import { TeamCheckedFactory } from '@/utils/factories/team';
+import { UserFactory } from '@/utils/factories/user';
+import { USERS_ROUTE } from '@/utils/routes';
+import { libraryMocks } from '@/utils/testing/mocks';
+import { renderWithProviders } from '@/utils/testing/renderWithProviders';
 
 const { mockRouter } = libraryMocks.mockNextRouter({ pathname: '/users' });
 

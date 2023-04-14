@@ -1,4 +1,5 @@
 import React from 'react';
+
 import {
   AlertDialog,
   AlertDialogAction,
@@ -44,12 +45,12 @@ const ConfirmationDialog = ({
     <AlertDialog>
       {renderTrigger()}
       <AlertDialogContent title={title}>
-        <Flex direction="column" css={{ mb: '$8' }}>
+        <Flex css={{ mb: '$8' }} direction="column">
           {description}
         </Flex>
-        <Flex justify="end" gap="16">
+        <Flex gap="16" justify="end">
           <AlertDialogCancel variant="primaryOutline">Cancel</AlertDialogCancel>
-          <AlertDialogAction variant={variant} onClick={confirmationHandler}>
+          <AlertDialogAction onClick={confirmationHandler} variant={variant}>
             {confirmationLabel}
           </AlertDialogAction>
         </Flex>

@@ -1,6 +1,5 @@
 import React from 'react';
 import { ComponentStory } from '@storybook/react';
-
 import dedent from 'ts-dedent';
 
 import Svg from '@/components/Primitives/Icons/Svg/Svg';

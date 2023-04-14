@@ -4,7 +4,7 @@
 # Allow files and directories for prod
 !/public
 !/src
-!.eslintrc.json
+!.eslintrc.cjs
 !.prettierrc.json
 !next.config.js
 !next-i18next.config.js

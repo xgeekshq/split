@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { ComponentStory } from '@storybook/react';
-
 import dedent from 'ts-dedent';
 
 import BoardRolePopover from '@/components/Primitives/Popovers/BoardRolePopover/BoardRolePopover';
@@ -47,10 +46,10 @@ const Template: ComponentStory<typeof BoardRolePopover> = () => {
 
   return (
     <BoardRolePopover
-      isNewJoiner={isNewJoiner}
-      isNewJoinerHandler={() => setIsNewJoiner((prev) => !prev)}
       canBeResponsible={canBeResponsible}
       canBeResponsibleHandler={() => setCanBeResponsible((prev) => !prev)}
+      isNewJoiner={isNewJoiner}
+      isNewJoinerHandler={() => setIsNewJoiner((prev) => !prev)}
     />
   );
 };
