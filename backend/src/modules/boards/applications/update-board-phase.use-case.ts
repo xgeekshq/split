@@ -22,7 +22,7 @@ export class UpdateBoardPhaseUseCase implements UseCase<BoardPhaseDto, void> {
 		@Inject(TYPES.repositories.BoardRepository)
 		private readonly boardRepository: BoardRepositoryInterface,
 		@Inject(CommunicationsType.TYPES.services.SlackSendMessageService)
-		private slackSendMessageService: SendMessageServiceInterface,
+		private readonly slackSendMessageService: SendMessageServiceInterface,
 		private readonly eventEmitter: EventEmitter2,
 		private readonly configService: ConfigService
 	) {}
