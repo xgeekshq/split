@@ -3,9 +3,9 @@ import { updateTeamUserUseCase } from '../teamusers.providers';
 import { Test, TestingModule } from '@nestjs/testing';
 import { createMock } from '@golevelup/ts-jest';
 import { UseCase } from 'src/libs/interfaces/use-case.interface';
-import * as TeamUsers from 'src/modules/teamUsers/interfaces/types';
 import TeamUserDto from '../dto/team.user.dto';
 import TeamUser from '../entities/team.user.schema';
+import { UPDATE_TEAM_USER_SERVICE } from 'src/modules/teamUsers/constants';
 
 describe('UpdateTeamUserUseCase', () => {
 	let updateTeamUser: UseCase<TeamUserDto, TeamUser>;
@@ -15,13 +15,13 @@ describe('UpdateTeamUserUseCase', () => {
 			providers: [
 				updateTeamUserUseCase,
 				{
-					provide: TeamUsers.TYPES.services.UpdateTeamUserService,
+					provide: UPDATE_TEAM_USER_SERVICE,
 					useValue: createMock<UpdateTeamUserServiceInterface>()
 				}
 			]
 		}).compile();
 
-		updateTeamUser = module.get<UseCase<TeamUserDto, TeamUser>>(updateTeamUserUseCase.provide);
+		updateTeamUser = module.get(updateTeamUserUseCase.provide);
 	});
 
 	beforeEach(() => {

@@ -1,5 +1,5 @@
 import { BadRequestException, Inject, Injectable } from '@nestjs/common';
-import { TYPES } from '../interfaces/types';
+import { CREATE_TEAM_USER_SERVICE, DELETE_TEAM_USER_SERVICE } from '../constants';
 import { UPDATE_FAILED } from 'src/libs/exceptions/messages';
 import TeamUser from 'src/modules/teamUsers/entities/team.user.schema';
 import { CreateTeamUserServiceInterface } from '../interfaces/services/create.team.user.service.interface';
@@ -11,10 +11,10 @@ import TeamUserDto from '../dto/team.user.dto';
 @Injectable()
 export class AddAndRemoveTeamUsersUseCase implements UseCase<UpdateTeamUserDto, TeamUser[]> {
 	constructor(
-		@Inject(TYPES.services.CreateTeamUserService)
-		private createTeamUserService: CreateTeamUserServiceInterface,
-		@Inject(TYPES.services.DeleteTeamUserService)
-		private deleteTeamUserService: DeleteTeamUserServiceInterface
+		@Inject(CREATE_TEAM_USER_SERVICE)
+		private readonly createTeamUserService: CreateTeamUserServiceInterface,
+		@Inject(DELETE_TEAM_USER_SERVICE)
+		private readonly deleteTeamUserService: DeleteTeamUserServiceInterface
 	) {}
 
 	async execute({ addUsers, removeUsers }: UpdateTeamUserDto): Promise<TeamUser[]> {

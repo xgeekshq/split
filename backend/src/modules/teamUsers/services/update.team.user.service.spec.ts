@@ -9,9 +9,13 @@ import TeamUser from 'src/modules/teamUsers/entities/team.user.schema';
 import { Test, TestingModule } from '@nestjs/testing';
 import { DeepMocked, createMock } from '@golevelup/ts-jest';
 import { UpdateTeamUserServiceInterface } from 'src/modules/teamUsers/interfaces/services/update.team.user.service.interface';
-import * as TeamUsers from 'src/modules/teamUsers/interfaces/types';
 import { TeamUserRepositoryInterface } from '../interfaces/repositories/team-user.repository.interface';
 import { TeamUserDtoFactory } from 'src/libs/test-utils/mocks/factories/dto/teamUserDto-factory.mock';
+import {
+	CREATE_TEAM_USER_SERVICE,
+	DELETE_TEAM_USER_SERVICE,
+	TEAM_USER_REPOSITORY
+} from 'src/modules/teamUsers/constants';
 
 const teamUser: TeamUserDto = TeamUserDtoFactory.create();
 
@@ -33,22 +37,22 @@ describe('UpdateTeamUserService', () => {
 			providers: [
 				updateTeamUserService,
 				{
-					provide: TeamUsers.TYPES.repositories.TeamUserRepository,
+					provide: TEAM_USER_REPOSITORY,
 					useValue: createMock<TeamUserRepositoryInterface>()
 				},
 				{
-					provide: TeamUsers.TYPES.services.CreateTeamUserService,
+					provide: CREATE_TEAM_USER_SERVICE,
 					useValue: createMock<CreateTeamUserServiceInterface>()
 				},
 				{
-					provide: TeamUsers.TYPES.services.DeleteTeamUserService,
+					provide: DELETE_TEAM_USER_SERVICE,
 					useValue: createMock<DeleteTeamUserServiceInterface>()
 				}
 			]
 		}).compile();
 
-		teamUserService = module.get<UpdateTeamUserServiceInterface>(updateTeamUserService.provide);
-		teamUserRepositoryMock = module.get(TeamUsers.TYPES.repositories.TeamUserRepository);
+		teamUserService = module.get(updateTeamUserService.provide);
+		teamUserRepositoryMock = module.get(TEAM_USER_REPOSITORY);
 	});
 
 	beforeEach(() => {
