@@ -1,5 +1,5 @@
-import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Box from '@/components/Primitives/Layout/Box/Box';
+import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import { styled } from '@/styles/stitches/stitches.config';
 
 export const StyledForm = styled('form', Flex, {

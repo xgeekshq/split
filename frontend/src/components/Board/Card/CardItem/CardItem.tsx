@@ -1,14 +1,13 @@
 import React, { useState } from 'react';
 
-import { styled } from '@/styles/stitches/stitches.config';
-
 import AddCardOrComment from '@/components/Board/AddCardOrComment';
-import Flex from '@/components/Primitives/Layout/Flex/Flex';
-import Text from '@/components/Primitives/Text/Text';
-import { CardItemType } from '@/types/card/cardItem';
-import useCards from '@/hooks/useCards';
 import CardFooter from '@/components/Board/Card/CardFooter';
 import PopoverCardSettings from '@/components/Board/Card/PopoverSettings';
+import Flex from '@/components/Primitives/Layout/Flex/Flex';
+import Text from '@/components/Primitives/Text/Text';
+import useCards from '@/hooks/useCards';
+import { styled } from '@/styles/stitches/stitches.config';
+import { CardItemType } from '@/types/card/cardItem';
 
 interface CardItemProps {
   item: CardItemType;
@@ -104,13 +103,13 @@ const CardItem = React.memo(
                     firstOne={firstOne}
                     handleDelete={handleDelete}
                     handleEditing={handleEditing}
+                    hasAdminRole={hasAdminRole}
                     hideCards={hideCards}
                     item={item}
                     itemId={item._id}
                     newPosition={cardGroupPosition}
                     socketId={socketId}
                     userId={userId}
-                    hasAdminRole={hasAdminRole}
                   />
                 )}
             </Flex>
@@ -134,17 +133,17 @@ const CardItem = React.memo(
             isCard
             isEditing
             isUpdate
+            anonymous={item.anonymous}
             boardId={boardId}
             cancelUpdate={handleEditing}
             cardId={cardGroupId}
             cardItemId={item._id}
             cardText={item.text}
+            cardTextDefault={cardTextDefault}
             colId={columnId}
-            socketId={socketId}
-            anonymous={item.anonymous}
             isDefaultText={isDefaultText}
             postAnonymously={postAnonymously}
-            cardTextDefault={cardTextDefault}
+            socketId={socketId}
           />
         )}
       </Container>

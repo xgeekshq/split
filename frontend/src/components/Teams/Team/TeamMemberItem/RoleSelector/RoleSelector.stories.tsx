@@ -2,8 +2,8 @@ import { ComponentStory } from '@storybook/react';
 
 import RoleSelector from '@/components/Teams/Team/TeamMemberItem/RoleSelector/RoleSelector';
 import { TeamUserRoles } from '@/utils/enums/team.user.roles';
-import { UserFactory } from '@/utils/factories/user';
 import { TeamFactory } from '@/utils/factories/team';
+import { UserFactory } from '@/utils/factories/user';
 
 export default {
   title: 'Teams/RoleSelector',

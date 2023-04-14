@@ -19,7 +19,7 @@ export interface User {
 }
 
 export interface UseUserType {
-  deleteUser: UseMutationResult<Boolean, unknown, DeleteUser, unknown>;
+  deleteUser: UseMutationResult<boolean, unknown, DeleteUser, unknown>;
 }
 
 export interface LoginUser {

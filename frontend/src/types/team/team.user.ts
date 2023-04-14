@@ -1,5 +1,5 @@
-import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 import { User } from '@/types/user/user';
+import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 
 export interface TeamUser {
   user: User;

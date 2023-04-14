@@ -1,10 +1,10 @@
-import { styled } from '@/styles/stitches/stitches.config';
+import { useRecoilState } from 'recoil';
 
+import FilterSelect from '@/components/Boards/Filters/FilterSelect';
 import Button from '@/components/Primitives/Inputs/Button/Button';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import { filterTeamBoardsState } from '@/store/board/atoms/board.atom';
-import { useRecoilState } from 'recoil';
-import FilterSelect from '@/components/Boards/Filters/FilterSelect';
+import { styled } from '@/styles/stitches/stitches.config';
 
 export interface OptionType {
   value: string;
@@ -34,17 +34,17 @@ const FilterBoards: React.FC<FilterBoardsProps> = ({ teamNames }) => {
   return (
     <Flex css={{ zIndex: '10' }} justify="end">
       <StyledButton
-        size="sm"
         css={{ borderRadius: '12px 0 0 12px' }}
         data-active={filterState === 'all'}
         onClick={() => setFilterState('all')}
+        size="sm"
       >
         All
       </StyledButton>
       <StyledButton
-        size="sm"
         data-active={filterState === 'personal'}
         onClick={() => setFilterState('personal')}
+        size="sm"
       >
         Personal
       </StyledButton>

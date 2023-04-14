@@ -1,17 +1,16 @@
 import React from 'react';
 import { ComponentStory } from '@storybook/react';
-
 import dedent from 'ts-dedent';
 
 import {
   AlertDialog,
-  AlertDialogTrigger,
-  AlertDialogContent,
   AlertDialogAction,
   AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogTrigger,
 } from '@/components/Primitives/Alerts/AlertDialog/AlertDialog';
-import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Button from '@/components/Primitives/Inputs/Button/Button';
+import Flex from '@/components/Primitives/Layout/Flex/Flex';
 
 export default {
   title: 'Primitives/Alerts/AlertDialog',
@@ -58,7 +57,7 @@ const Template: ComponentStory<typeof AlertDialog> = ({ children, ...args }) => 
     {/* Actual Dialog */}
     <AlertDialogContent {...args}>
       {children}
-      <Flex justify="end" gap="16">
+      <Flex gap="16" justify="end">
         <AlertDialogCancel variant="primaryOutline">Cancel</AlertDialogCancel>
         <AlertDialogAction>Action</AlertDialogAction>
       </Flex>

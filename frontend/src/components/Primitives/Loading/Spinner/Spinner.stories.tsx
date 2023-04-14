@@ -1,8 +1,8 @@
 import React from 'react';
 import { ComponentStory } from '@storybook/react';
+import dedent from 'ts-dedent';
 
 import Spinner from '@/components/Primitives/Loading/Spinner/Spinner';
-import dedent from 'ts-dedent';
 import { SpinnerColorType, SpinnerSizeType } from '@/stories/types/PrimitiveTypes';
 
 const COLOR_OPTIONS: SpinnerColorType[] = ['light', 'dark'];

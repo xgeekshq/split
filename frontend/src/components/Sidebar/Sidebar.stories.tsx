@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { Meta, StoryObj } from '@storybook/react';
-import Sidebar from '@/components/Sidebar/Sidebar';
-import SidebarHeader, { SidebarHeaderProps } from '@/components/Sidebar/Header/Header';
-import SidebarContent, { SidebarContentProps } from '@/components/Sidebar/Content/Content';
+
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
+import SidebarContent, { SidebarContentProps } from '@/components/Sidebar/Content/Content';
+import SidebarHeader, { SidebarHeaderProps } from '@/components/Sidebar/Header/Header';
 import SidebarItem, { SidebarItemProps } from '@/components/Sidebar/Item/Item';
+import Sidebar from '@/components/Sidebar/Sidebar';
 import { UserFactory } from '@/utils/factories/user';
 
 const user = UserFactory.create();
@@ -60,11 +61,11 @@ export const Header = ({ firstName, lastName, email }: SidebarHeaderProps) => {
   return (
     <Flex css={{ backgroundColor: '$primary800' }}>
       <SidebarHeader
-        firstName={firstName}
-        lastName={lastName}
         email={email}
-        isCollapsed={isCollapsed}
+        firstName={firstName}
         handleCollapse={setIsCollapsed}
+        isCollapsed={isCollapsed}
+        lastName={lastName}
       />
     </Flex>
   );
@@ -79,11 +80,11 @@ Header.parameters = {
 export const Content = ({ strategy }: SidebarContentProps) => {
   const [isCollapsed, setIsCollapsed] = useState(false);
   return (
-    <Flex direction="column" css={{ backgroundColor: '$primary800', width: '256px' }}>
+    <Flex css={{ backgroundColor: '$primary800', width: '256px' }} direction="column">
       <SidebarContent
-        strategy={strategy}
-        isCollapsed={isCollapsed}
         handleCollapse={setIsCollapsed}
+        isCollapsed={isCollapsed}
+        strategy={strategy}
       />
     </Flex>
   );
@@ -100,13 +101,13 @@ Content.args = {
 };
 
 export const Item = ({ disabled, link, iconName, label, active }: SidebarItemProps) => (
-  <Flex direction="column" css={{ backgroundColor: '$primary800', width: '256px' }}>
+  <Flex css={{ backgroundColor: '$primary800', width: '256px' }} direction="column">
     <SidebarItem
+      active={active}
       disabled={disabled}
-      link={link}
       iconName={iconName}
       label={label}
-      active={active}
+      link={link}
     />
   </Flex>
 );

@@ -1,9 +1,10 @@
-import { renderWithProviders } from '@/utils/testing/renderWithProviders';
 import { fireEvent, waitFor } from '@testing-library/dom';
+import userEvent from '@testing-library/user-event';
+
 import SearchInput, {
   SearchInputProps,
 } from '@/components/Primitives/Inputs/SearchInput/SearchInput';
-import userEvent from '@testing-library/user-event';
+import { renderWithProviders } from '@/utils/testing/renderWithProviders';
 
 const render = (props: Partial<SearchInputProps> = {}) =>
   renderWithProviders(<SearchInput placeholder="Placeholder" {...props} />);

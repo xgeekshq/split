@@ -1,12 +1,12 @@
 import React, { Dispatch, SetStateAction } from 'react';
 
+import { FilterBoardMembers } from '@/components/Boards/MyBoards/ListBoardMembers/FilterBoardMembers';
+import { ScrollableContent } from '@/components/Boards/MyBoards/ListBoardMembers/styles';
+import Dialog from '@/components/Primitives/Dialogs/Dialog/Dialog';
 import { User } from '@/types/user/user';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 import isEmpty from '@/utils/isEmpty';
-import Dialog from '@/components/Primitives/Dialogs/Dialog/Dialog';
-import { FilterBoardMembers } from '@/components/Boards/MyBoards/ListBoardMembers/FilterBoardMembers';
-import { ScrollableContent } from '@/components/Boards/MyBoards/ListBoardMembers/styles';
 
 type ListUsersType = {
   user: User;

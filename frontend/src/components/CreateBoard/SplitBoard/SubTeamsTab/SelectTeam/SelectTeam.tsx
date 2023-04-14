@@ -1,6 +1,6 @@
-import { useRouter } from 'next/router';
 import React, { useCallback, useEffect, useMemo } from 'react';
 import { useFormContext } from 'react-hook-form';
+import { useRouter } from 'next/router';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 
 import Icon from '@/components/Primitives/Icons/Icon/Icon';
@@ -13,6 +13,7 @@ import {
 } from '@/components/Primitives/Inputs/Select/Select';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Text from '@/components/Primitives/Text/Text';
+import useTeams from '@/hooks/teams/useTeams';
 import useCreateBoard from '@/hooks/useCreateBoard';
 import useCurrentSession from '@/hooks/useCurrentSession';
 import { createBoardError, createBoardTeam } from '@/store/createBoard/atoms/create-board.atom';
@@ -21,7 +22,6 @@ import { MIN_MEMBERS } from '@/utils/constants';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 import isEmpty from '@/utils/isEmpty';
-import useTeams from '@/hooks/teams/useTeams';
 
 type SelectTeamProps = {
   previousTeam?: string;
@@ -154,19 +154,19 @@ const SelectTeam = ({ previousTeam }: SelectTeamProps) => {
   }, []);
 
   return (
-    <Flex direction="column" css={{ flex: 1 }}>
+    <Flex css={{ flex: 1 }} direction="column">
       <Select
+        css={{ width: '100%', height: '$64' }}
+        defaultValue={teamsNames.find((option) => option.value === selectedTeam?.id)?.value}
         disabled={availableTeams.length === 0}
         hasError={currentSelectTeamState === 'error'}
-        defaultValue={teamsNames.find((option) => option.value === selectedTeam?.id)?.value}
         onValueChange={(selectedOption: string) => {
           handleTeamChange(selectedOption);
         }}
-        css={{ width: '100%', height: '$64' }}
       >
         <SelectTrigger css={{ padding: '$24' }}>
           <Flex direction="column">
-            <Text size={selectedTeam ? 'sm' : 'md'} color="primary300">
+            <Text color="primary300" size={selectedTeam ? 'sm' : 'md'}>
               {availableTeams.length === 0 ? 'No teams available' : 'Select Team'}
             </Text>
             <SelectValue />
@@ -178,8 +178,8 @@ const SelectTeam = ({ previousTeam }: SelectTeamProps) => {
         <SelectContent options={teamsNames} />
       </Select>
       {!isHelperEmpty && (
-        <Flex justify="start" gap={4} css={{ mt: '$8', color: '$dangerBase' }}>
-          {currentSelectTeamState === 'error' && <Icon size={16} name="info" />}
+        <Flex css={{ mt: '$8', color: '$dangerBase' }} gap={4} justify="start">
+          {currentSelectTeamState === 'error' && <Icon name="info" size={16} />}
           <Text hint color={currentSelectTeamState === 'error' ? 'dangerBase' : 'primary300'}>
             {message}
           </Text>

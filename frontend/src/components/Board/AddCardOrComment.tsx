@@ -1,21 +1,22 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { joiResolver } from '@hookform/resolvers/joi';
+
+import Icon from '@/components/Primitives/Icons/Icon/Icon';
 import Button from '@/components/Primitives/Inputs/Button/Button';
 import Checkbox from '@/components/Primitives/Inputs/Checkboxes/Checkbox/Checkbox';
-import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import TextArea from '@/components/Primitives/Inputs/TextArea/TextArea';
+import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import useCards from '@/hooks/useCards';
 import useComments from '@/hooks/useComments';
 import { SchemaAddCommentForm } from '@/schema/schemaAddCommentForm';
+import { FlexForm } from '@/styles/pages/pages.styles';
 import AddCardDto from '@/types/card/addCard.dto';
 import { CardToAdd } from '@/types/card/card';
 import UpdateCardDto from '@/types/card/updateCard.dto';
 import AddCommentDto from '@/types/comment/addComment.dto';
 import UpdateCommentDto from '@/types/comment/updateComment.dto';
 import { CARD_TEXT_DEFAULT } from '@/utils/constants';
-import Icon from '@/components/Primitives/Icons/Icon/Icon';
-import { FlexForm } from '@/styles/pages/pages.styles';
 
 type AddCardProps = {
   isUpdate: boolean;
@@ -218,11 +219,11 @@ const AddCard = React.memo<AddCardProps>(
     if (!isOpen)
       return (
         <Button
+          onClick={() => setIsOpen(true)}
           css={{
             mx: '$20',
             display: 'flex',
           }}
-          onClick={() => setIsOpen(true)}
         >
           <Icon name="plus" />
           Add new card
@@ -260,10 +261,10 @@ const AddCard = React.memo<AddCardProps>(
             {!isCard && (isOwner || !commentId) && (
               // This is when you are editing a card / comment
               <Checkbox
+                checked={isCommentAnonymous}
                 id={[colId, cardId, commentId].join('_')}
                 label="Post anonymously"
                 size="md"
-                checked={isCommentAnonymous}
                 handleChange={() => {
                   setIsCommentAnonymous(!isCommentAnonymous);
                 }}
@@ -272,21 +273,21 @@ const AddCard = React.memo<AddCardProps>(
             {!isEditing && (
               // This is when you are Creating a new Card
               <Checkbox
+                checked={isAnonymous}
                 id={colId}
                 label="Post anonymously"
                 size="md"
-                checked={isAnonymous}
                 handleChange={() => {
                   setIsAnonymous(!isAnonymous);
                 }}
               />
             )}
-            <Flex gap="8" css={{ flex: '1' }} justify="end">
+            <Flex css={{ flex: '1' }} gap="8" justify="end">
               <Button
                 css={{ width: '$52', height: '$36' }}
+                onClick={handleClear}
                 size="sm"
                 variant={!isUpdate && isCard ? 'lightOutline' : 'primaryOutline'}
-                onClick={handleClear}
               >
                 <Icon name="close" />
               </Button>

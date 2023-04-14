@@ -35,14 +35,14 @@ const RadioGroupParticipants = ({
   return (
     <RadioGroupWrapper>
       <RadioGroup
-        direction="row"
-        defaultValue="team"
         aria-label="View density"
+        defaultValue="team"
+        direction="row"
         onValueChange={handleSelect}
         value={optionSelected}
       >
         <Flex>
-          <RadioGroupItem value="team" id="selectTeam">
+          <RadioGroupItem id="selectTeam" value="team">
             <RadioGroupIndicator />
           </RadioGroupItem>
           <Label htmlFor="selectTeam">
@@ -50,14 +50,14 @@ const RadioGroupParticipants = ({
               <Text color="primary800" fontWeight="bold" size="sm">
                 Select Team
               </Text>
-              <Text size="sm" color="primary500">
+              <Text color="primary500" size="sm">
                 Select a team for your new board.
               </Text>
             </Flex>
           </Label>
         </Flex>
         <Flex>
-          <RadioGroupItem value="participant" id="selectParticipant">
+          <RadioGroupItem id="selectParticipant" value="participant">
             <RadioGroupIndicator />
           </RadioGroupItem>
           <Label htmlFor="selectParticipant">
@@ -65,7 +65,7 @@ const RadioGroupParticipants = ({
               <Text color="primary800" fontWeight="bold" size="sm">
                 Select Participants
               </Text>
-              <Text size="sm" color="primary500">
+              <Text color="primary500" size="sm">
                 Select individual participants for your new board.
               </Text>
             </Flex>

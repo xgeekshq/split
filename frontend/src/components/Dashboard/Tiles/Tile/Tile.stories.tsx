@@ -1,5 +1,6 @@
 import { ComponentStory } from '@storybook/react';
 import dedent from 'ts-dedent';
+
 import Tile from '@/components/Dashboard/Tiles/Tile/Tile';
 
 export default {

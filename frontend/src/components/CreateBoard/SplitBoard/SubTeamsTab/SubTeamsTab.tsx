@@ -1,6 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 
+import BoardUsersDropdown from '@/components/CreateBoard/SplitBoard/SubTeamsTab/BoardUsersDropdown/BoardUsersDropdown';
+import BoardSection from '@/components/CreateBoard/SplitBoard/SubTeamsTab/CreateBoardItem/CreateBoardItem';
+import FakeBoardItem from '@/components/CreateBoard/SplitBoard/SubTeamsTab/FakeBoardItem/FakeBoardItem';
+import QuickEditSubTeams from '@/components/CreateBoard/SplitBoard/SubTeamsTab/QuickEditSubTeams/QuickEditSubTeams';
+import SelectTeam from '@/components/CreateBoard/SplitBoard/SubTeamsTab/SelectTeam/SelectTeam';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import useTeams from '@/hooks/teams/useTeams';
 import useCurrentSession from '@/hooks/useCurrentSession';
@@ -8,12 +13,6 @@ import { createBoardError, createBoardTeam } from '@/store/createBoard/atoms/cre
 import { TeamUser } from '@/types/team/team.user';
 import { User } from '@/types/user/user';
 import { TeamUserRoles } from '@/utils/enums/team.user.roles';
-
-import BoardUsersDropdown from '@/components/CreateBoard/SplitBoard/SubTeamsTab/BoardUsersDropdown/BoardUsersDropdown';
-import BoardSection from '@/components/CreateBoard/SplitBoard/SubTeamsTab/CreateBoardItem/CreateBoardItem';
-import FakeBoardItem from '@/components/CreateBoard/SplitBoard/SubTeamsTab/FakeBoardItem/FakeBoardItem';
-import QuickEditSubTeams from '@/components/CreateBoard/SplitBoard/SubTeamsTab/QuickEditSubTeams/QuickEditSubTeams';
-import SelectTeam from '@/components/CreateBoard/SplitBoard/SubTeamsTab/SelectTeam/SelectTeam';
 
 type SubTeamsTabProps = {
   previousTeam?: string;
@@ -54,7 +53,7 @@ const SubTeamsTab = React.memo<SubTeamsTabProps>(({ previousTeam }) => {
     <Flex direction="column">
       <Flex css={{ width: '100%' }} gap={22}>
         <SelectTeam previousTeam={previousTeam} />
-        <BoardUsersDropdown users={stakeholders} haveError={haveError} title="Stakeholders" />
+        <BoardUsersDropdown haveError={haveError} title="Stakeholders" users={stakeholders} />
       </Flex>
       {!haveError && selectedTeam ? (
         <>

@@ -1,6 +1,5 @@
 import React from 'react';
 import { ComponentStory } from '@storybook/react';
-
 import dedent from 'ts-dedent';
 
 import TeamRolePopover from '@/components/Primitives/Popovers/TeamRolePopover/TeamRolePopover';

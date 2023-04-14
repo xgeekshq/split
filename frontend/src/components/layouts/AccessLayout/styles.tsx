@@ -1,6 +1,5 @@
-import { styled } from '@/styles/stitches/stitches.config';
-
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
+import { styled } from '@/styles/stitches/stitches.config';
 
 const BodyContainer = styled(Flex, {
   width: '100%',
@@ -41,4 +40,4 @@ const BannerContainer = styled(Flex, {
   },
 });
 
-export { BannerContainer, BodyContainer, ImageContainer, ImageBackground };
+export { BannerContainer, BodyContainer, ImageBackground, ImageContainer };

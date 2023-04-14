@@ -1,5 +1,5 @@
-import Link from 'next/link';
 import React from 'react';
+import Link from 'next/link';
 
 import ConfirmationDialog from '@/components/Primitives/Alerts/ConfirmationDialog/ConfirmationDialog';
 import Icon from '@/components/Primitives/Icons/Icon/Icon';
@@ -9,10 +9,10 @@ import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Separator from '@/components/Primitives/Separator/Separator';
 import Text from '@/components/Primitives/Text/Text';
 import useCurrentSession from '@/hooks/useCurrentSession';
+import useDeleteUser from '@/hooks/users/useDeleteUser';
+import useUpdateUser from '@/hooks/users/useUpdateUser';
 import { UpdateUserIsAdmin, User } from '@/types/user/user';
 import { ROUTES } from '@/utils/routes';
-import useUpdateUser from '@/hooks/users/useUpdateUser';
-import useDeleteUser from '@/hooks/users/useDeleteUser';
 
 export type UserItemActionsProps = {
   user: User;
@@ -49,14 +49,14 @@ const UserItemActions = React.memo(({ user }: UserItemActionsProps) => {
   };
 
   return (
-    <Flex justify="end" data-testid="userItemActions">
+    <Flex data-testid="userItemActions" justify="end">
       <Flex css={{ alignItems: 'center' }} gap={24}>
         <ConfigurationSwitch
+          disabled={userId === user._id}
+          disabledInfo={userId !== user._id ? undefined : "Can't change your own role"}
           handleCheckedChange={handleSuperAdminChange}
           isChecked={user.isSAdmin}
           title="Super Admin"
-          disabled={userId === user._id}
-          disabledInfo={userId !== user._id ? undefined : "Can't change your own role"}
         />
         <Separator orientation="vertical" size="lg" />
         <Flex align="center">
@@ -73,10 +73,10 @@ const UserItemActions = React.memo(({ user }: UserItemActionsProps) => {
         </Flex>
         <Flex align="center">
           <ConfirmationDialog
-            title="Delete user"
-            description={deleteUserDescription}
             confirmationHandler={handleDeleteUser}
             confirmationLabel="Delete"
+            description={deleteUserDescription}
+            title="Delete user"
             tooltip="Delete user"
             variant="danger"
           >

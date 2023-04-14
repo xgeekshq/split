@@ -1,14 +1,13 @@
 import { ReactNode } from 'react';
-
 import * as AlertDialogPrimitive from '@radix-ui/react-alert-dialog';
-import { CSS, styled } from '@/styles/stitches/stitches.config';
-import { overlayShow } from '@/animations/DialogShow';
 
+import { overlayShow } from '@/animations/DialogShow';
+import Icon from '@/components/Primitives/Icons/Icon/Icon';
 import Button from '@/components/Primitives/Inputs/Button/Button';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
-import Text from '@/components/Primitives/Text/Text';
-import Icon from '@/components/Primitives/Icons/Icon/Icon';
 import Separator from '@/components/Primitives/Separator/Separator';
+import Text from '@/components/Primitives/Text/Text';
+import { CSS, styled } from '@/styles/stitches/stitches.config';
 
 const StyledOverlay = styled(AlertDialogPrimitive.Overlay, {
   backdropFilter: 'blur(3px)',
@@ -56,16 +55,16 @@ const Content = ({ children, css, handleClose, title, ...props }: AlertDialogPro
     <StyledContent onCloseAutoFocus={handleClose} {...props}>
       {title && (
         <>
-          <Flex align="center" justify="between" css={{ px: '$32', py: '$24' }}>
+          <Flex align="center" css={{ px: '$32', py: '$24' }} justify="between">
             <Text heading="4">{title}</Text>
             <AlertDialogCancel isIcon onClick={handleClose}>
-              <Icon name="close" css={{ color: '$primary400' }} />
+              <Icon css={{ color: '$primary400' }} name="close" />
             </AlertDialogCancel>
           </Flex>
           <Separator />
         </>
       )}
-      <Flex direction="column" gap="8" css={{ ...css, px: '$32', py: '$24' }}>
+      <Flex css={{ ...css, px: '$32', py: '$24' }} direction="column" gap="8">
         {children}
       </Flex>
     </StyledContent>

@@ -62,11 +62,11 @@ const CreateBoardBox = ({
   onClick,
 }: CreateBoardBoxProps) => (
   <StyledCreateBoardBox
-    type={type}
+    align="start"
     direction={type}
     elevation={2}
-    align="start"
     gap={20}
+    type={type}
     {...(onClick && { onClick })}
     disabled={disabled}
   >
@@ -77,7 +77,7 @@ const CreateBoardBox = ({
       <Text color="primary800" heading={4}>
         {title}
       </Text>
-      <Text size="md" color="primary500">
+      <Text color="primary500" size="md">
         {description}
       </Text>
     </Flex>

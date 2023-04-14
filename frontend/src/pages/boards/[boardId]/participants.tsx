@@ -1,5 +1,6 @@
-import { GetServerSideProps } from 'next';
 import React, { Suspense, useCallback, useEffect } from 'react';
+import { GetServerSideProps } from 'next';
+import { dehydrate, QueryClient, useQuery } from '@tanstack/react-query';
 import { SetterOrUpdater, useRecoilState, useSetRecoilState } from 'recoil';
 
 import { getBoardRequest } from '@/api/boardService';
@@ -18,7 +19,6 @@ import { UserList } from '@/types/team/userList';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
 import { DASHBOARD_ROUTE } from '@/utils/routes';
-import { dehydrate, QueryClient, useQuery } from '@tanstack/react-query';
 
 // Sorts participants list to show responsibles first and then regular board members
 export const sortParticipantsList = (
@@ -95,7 +95,7 @@ const BoardParticipants = () => {
   return recoilBoard ? (
     <Suspense fallback={<LoadingPage />}>
       <QueryError>
-        <Flex direction="column" gap={32} css={{ width: '100%', height: '100vh' }}>
+        <Flex css={{ width: '100%', height: '100vh' }} direction="column" gap={32}>
           <RegularBoardHeader isParticipantsPage />
           <ParticipantsList createdBy={boardData?.board.createdBy._id} />
         </Flex>

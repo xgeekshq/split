@@ -1,8 +1,8 @@
 import React from 'react';
 import { ComponentStory } from '@storybook/react';
+import dedent from 'ts-dedent';
 
 import Breadcrumb from '@/components/Primitives/Breadcrumb/Breadcrumb';
-import dedent from 'ts-dedent';
 
 export default {
   title: 'Primitives/Breadcrumb',

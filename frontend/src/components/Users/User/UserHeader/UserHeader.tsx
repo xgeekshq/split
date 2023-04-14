@@ -1,16 +1,17 @@
-import Breadcrumb from '@/components/Primitives/Breadcrumb/Breadcrumb';
-import Flex from '@/components/Primitives/Layout/Flex/Flex';
-import Text from '@/components/Primitives/Text/Text';
-import { BreadcrumbType } from '@/types/board/Breadcrumb';
 import { useMemo, useState } from 'react';
+
+import Badge from '@/components/Primitives/Badge/Badge';
+import Breadcrumb from '@/components/Primitives/Breadcrumb/Breadcrumb';
 import Icon from '@/components/Primitives/Icons/Icon/Icon';
 import Button from '@/components/Primitives/Inputs/Button/Button';
+import Flex from '@/components/Primitives/Layout/Flex/Flex';
+import Text from '@/components/Primitives/Text/Text';
+import TeamsDialog from '@/components/Users/User/TeamsDialog/TeamsDialog';
+import useTeamsWithoutUser from '@/hooks/teams/useTeamsWithoutUser';
+import { BreadcrumbType } from '@/types/board/Breadcrumb';
 import { TeamChecked } from '@/types/team/team';
 import { User } from '@/types/user/user';
 import { ROUTES } from '@/utils/routes';
-import Badge from '@/components/Primitives/Badge/Badge';
-import useTeamsWithoutUser from '@/hooks/teams/useTeamsWithoutUser';
-import TeamsDialog from '@/components/Users/User/TeamsDialog/TeamsDialog';
 
 export type UserHeaderProps = {
   user: User;
@@ -38,8 +39,8 @@ const UserHeader = ({ user }: UserHeaderProps) => {
   ];
 
   return (
-    <Flex align="center" justify="between" data-testid="userHeader">
-      <Flex direction="column" gap="12" css={{ width: '100%' }}>
+    <Flex align="center" data-testid="userHeader" justify="between">
+      <Flex css={{ width: '100%' }} direction="column" gap="12">
         <Flex align="center">
           <Breadcrumb items={breadcrumbItems} />
         </Flex>
@@ -49,24 +50,24 @@ const UserHeader = ({ user }: UserHeaderProps) => {
               {user.firstName} {user.lastName}
             </Text>
             {user.isSAdmin && (
-              <Badge variant="success" pill size="sm">
+              <Badge pill size="sm" variant="success">
                 SUPER ADMIN
               </Badge>
             )}
           </Flex>
           <>
-            <Button size="sm" onClick={handleOpen}>
+            <Button onClick={handleOpen} size="sm">
               <Icon name="plus" />
               Add user to new team
             </Button>
             <TeamsDialog
-              isOpen={isOpen}
-              setIsOpen={setIsOpen}
               confirmationLabel="Add new team"
-              title="Teams"
-              providerAccountCreatedAt={user.providerAccountCreatedAt}
+              isOpen={isOpen}
               joinedAt={user.joinedAt}
+              providerAccountCreatedAt={user.providerAccountCreatedAt}
+              setIsOpen={setIsOpen}
               teamsList={teamCheckedList}
+              title="Teams"
             />
           </>
         </Flex>
