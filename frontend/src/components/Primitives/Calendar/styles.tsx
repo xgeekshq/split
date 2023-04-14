@@ -156,6 +156,10 @@ const StyledCalendar = styled(Calendar, {
   '.react-calendar__month-view__days__day--neighboringMonth': {
     visibility: 'hidden',
   },
+  '.react-calendar__month-view__days': {
+    justifyContent: 'space-between',
+  },
+
   '.react-calendar__tile': {
     reset: 'all',
     maxWidth: '$42',
