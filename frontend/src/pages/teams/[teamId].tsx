@@ -16,7 +16,7 @@ import TeamMembersList from '@/components/Teams/Team/TeamMembersList';
 import useTeam from '@/hooks/teams/useTeam';
 import useCurrentSession from '@/hooks/useCurrentSession';
 import useUsers from '@/hooks/users/useUsers';
-import { usersListState } from '@/store/team/atom/team.atom';
+import { usersListState } from '@/store/user.atom';
 import { UserList } from '@/types/team/userList';
 import { TEAMS_KEY, USERS_KEY } from '@/utils/constants/reactQueryKeys';
 import { TeamUserRoles } from '@/utils/enums/team.user.roles';

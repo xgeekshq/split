@@ -16,7 +16,7 @@ import useTeams from '@/hooks/teams/useTeams';
 import useCreateBoard from '@/hooks/useCreateBoard';
 import useCurrentSession from '@/hooks/useCurrentSession';
 import { createBoardTeam } from '@/store/createBoard/atoms/create-board.atom';
-import { usersListState } from '@/store/team/atom/team.atom';
+import { usersListState } from '@/store/user.atom';
 import { Team } from '@/types/team/team';
 import { UserList } from '@/types/team/userList';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
