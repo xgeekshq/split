@@ -9,7 +9,7 @@ import MemberTitle from '@/components/Teams/Team/TeamMemberItem/MemberTitle/Memb
 import RoleSelector from '@/components/Teams/Team/TeamMemberItem/RoleSelector/RoleSelector';
 import useUpdateTeamUser from '@/hooks/teams/useUpdateTeamUser';
 import useCurrentSession from '@/hooks/useCurrentSession';
-import { createTeamState } from '@/store/team/atom/team.atom';
+import { createTeamState } from '@/store/team.atom';
 import { InnerContainer } from '@/styles/pages/pages.styles';
 import { TeamUser, TeamUserUpdate } from '@/types/team/team.user';
 import { TeamUserRoles } from '@/utils/enums/team.user.roles';

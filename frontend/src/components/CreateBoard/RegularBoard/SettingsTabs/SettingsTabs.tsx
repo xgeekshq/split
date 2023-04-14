@@ -12,8 +12,8 @@ import {
   createBoardDataState,
   createBoardError,
 } from '@/store/createBoard/atoms/create-board.atom';
-import { usersListState } from '@/store/team/atom/team.atom';
 import { toastState } from '@/store/toast/atom/toast.atom';
+import { usersListState } from '@/store/user.atom';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
 
