@@ -6,8 +6,9 @@ import UserListDialog from '@/components/Primitives/Dialogs/UserListDialog/UserL
 import useTeam from '@/hooks/teams/useTeam';
 import useUpdateTeamUsers from '@/hooks/teams/useUpdateTeamUsers';
 import useCurrentSession from '@/hooks/useCurrentSession';
-import { createTeamState, usersListState } from '@/store/team/atom/team.atom';
+import { createTeamState } from '@/store/team.atom';
 import { toastState } from '@/store/toast/atom/toast.atom';
+import { usersListState } from '@/store/user.atom';
 import { CreateTeamUser, TeamUserAddAndRemove } from '@/types/team/team.user';
 import { UserList } from '@/types/team/userList';
 import { TeamUserRoles } from '@/utils/enums/team.user.roles';
