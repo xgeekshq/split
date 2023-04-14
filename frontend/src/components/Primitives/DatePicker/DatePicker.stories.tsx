@@ -16,6 +16,9 @@ export default {
         **File Path:**
         \`@/components/Primitives/DatePicker/DatePicker\``,
       },
+      source: {
+        code: null,
+      },
     },
   },
   argTypes: {
@@ -29,6 +32,20 @@ export default {
     currentDate: {
       control: false,
       description: 'The current date of the calendar',
+      table: {
+        type: { summary: 'Date' },
+      },
+    },
+    minDate: {
+      control: false,
+      description: 'The minimum date of the calendar',
+      table: {
+        type: { summary: 'Date' },
+      },
+    },
+    maxDate: {
+      control: false,
+      description: 'The maximum date of the calendar',
       table: {
         type: { summary: 'Date' },
       },
