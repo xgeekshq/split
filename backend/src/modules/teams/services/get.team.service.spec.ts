@@ -14,10 +14,10 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { DeepMocked, createMock } from '@golevelup/ts-jest';
 import { getTeamService } from 'src/modules/teams/providers';
 import * as Boards from 'src/modules/boards/interfaces/types';
-import * as Teams from 'src/modules/teams/constants';
 import * as TeamUsers from 'src/modules/teamUsers/interfaces/types';
 import { TeamUserFactory } from 'src/libs/test-utils/mocks/factories/teamUser-factory.mock';
 import { TeamRepositoryInterface } from '../interfaces/repositories/team.repository.interface';
+import { TEAM_REPOSITORY } from 'src/modules/teams/constants';
 
 const teams: Team[] = TeamFactory.createMany(4);
 const teamUsers: TeamUser[] = TeamUserFactory.createMany(5);
@@ -58,7 +58,7 @@ describe('GetTeamService', () => {
 			providers: [
 				getTeamService,
 				{
-					provide: Teams.TYPES.repositories.TeamRepository,
+					provide: TEAM_REPOSITORY,
 					useValue: createMock<TeamRepositoryInterface>()
 				},
 				{
@@ -73,7 +73,7 @@ describe('GetTeamService', () => {
 		}).compile();
 
 		teamService = module.get<GetTeamServiceInterface>(getTeamService.provide);
-		teamRepositoryMock = module.get(Teams.TYPES.repositories.TeamRepository);
+		teamRepositoryMock = module.get(TEAM_REPOSITORY);
 		getTeamUserServiceMock = module.get(TeamUsers.TYPES.services.GetTeamUserService);
 		getBoardServiceMock = module.get(Boards.TYPES.services.GetBoardService);
 	});
