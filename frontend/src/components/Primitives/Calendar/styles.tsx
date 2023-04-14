@@ -1,5 +1,6 @@
-import { styled } from '@/styles/stitches/stitches.config';
 import Calendar from 'react-calendar';
+
+import { styled } from '@/styles/stitches/stitches.config';
 
 const StyledCalendar = styled(Calendar, {
   height: '100%',

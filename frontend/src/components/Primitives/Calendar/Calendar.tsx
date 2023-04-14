@@ -1,5 +1,5 @@
-import Icon from '@/components/Primitives/Icons/Icon/Icon';
 import StyledCalendar from '@/components/Primitives/Calendar/styles';
+import Icon from '@/components/Primitives/Icons/Icon/Icon';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 
 export type CalendarProps = {
@@ -13,17 +13,17 @@ export type CalendarProps = {
 const Calendar = ({ minDate, maxDate, tileContent, currentDate, setDate }: CalendarProps) => (
   <Flex data-testid="calendar">
     <StyledCalendar
-      minDate={minDate}
       maxDate={maxDate}
-      tileContent={tileContent}
+      minDate={minDate}
       minDetail="year"
       nextLabel={<Icon name="arrow-right" />}
+      onChange={setDate}
       prevLabel={<Icon name="arrow-left" />}
+      tileContent={tileContent}
       value={currentDate}
       formatShortWeekday={(locale: string | undefined, date: Date) =>
         ['Su', 'Mo', 'Th', 'We', 'Th', 'Fr', 'Sa'][date.getDay()]
       }
-      onChange={setDate}
     />
   </Flex>
 );

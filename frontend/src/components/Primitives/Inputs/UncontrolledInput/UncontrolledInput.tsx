@@ -1,12 +1,13 @@
 import React from 'react';
+
 import Icon from '@/components/Primitives/Icons/Icon/Icon';
-import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import {
   IconWrapper,
   PlaceholderText,
   StyledInput,
   StyledInputWrapper,
 } from '@/components/Primitives/Inputs/Input/styles';
+import Flex from '@/components/Primitives/Layout/Flex/Flex';
 
 export type UncontrolledInputProps = {
   placeholder: string;
@@ -31,10 +32,10 @@ const UncontrolledInput = ({
 }: UncontrolledInputProps) => (
   <Flex
     css={{ position: 'relative', width: '100%', mb: '$16', height: 'auto' }}
-    direction="column"
     data-testid="uncontrolledInput"
+    direction="column"
   >
-    <StyledInputWrapper gap="8" disabled={disabled}>
+    <StyledInputWrapper disabled={disabled} gap="8">
       <Flex style={{ order: IconPositionRight ? 2 : 1 }}>
         <IconWrapper>
           <Icon
@@ -48,13 +49,13 @@ const UncontrolledInput = ({
 
       <Flex css={{ flexGrow: '1' }} style={{ order: IconPositionRight ? 1 : 2 }}>
         <StyledInput
-          id="uncontrolledInput"
-          disabled={disabled}
-          placeholder=" "
-          value={currentValue}
-          onChange={handleChange}
           css={{ pt: '$28', pb: '$8' }}
+          disabled={disabled}
+          id="uncontrolledInput"
+          onChange={handleChange}
+          placeholder=" "
           style={{ cursor: cursorType || '' }}
+          value={currentValue}
         />
         <PlaceholderText as="label" htmlFor="uncontrolledInput">
           {placeholder}
@@ -62,16 +63,16 @@ const UncontrolledInput = ({
       </Flex>
       {handleClear && (
         <IconWrapper
-          justify="center"
+          data-testid="uncontrolledInputClear"
           data-type="clear"
+          justify="center"
+          onClick={handleClear}
           css={{
             width: '$24',
             height: '$24',
             borderRadius: '100%',
             order: 3,
           }}
-          onClick={handleClear}
-          data-testid="uncontrolledInputClear"
         >
           <Icon
             name="close"

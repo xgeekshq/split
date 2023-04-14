@@ -1,6 +1,7 @@
-import { styled } from '@/styles/stitches/stitches.config';
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
+
 import Calendar from '@/components/Primitives/Calendar/Calendar';
+import { styled } from '@/styles/stitches/stitches.config';
 import UncontrolledInput from '../Inputs/UncontrolledInput/UncontrolledInput';
 
 // TODO: Styled dropdown trigger
@@ -21,16 +22,16 @@ const DatePicker = ({ currentDate, minDate, maxDate, setDate }: DatePickerProps)
   <DropdownMenu.Root>
     <StyledDropDownTrigger>
       <UncontrolledInput
-        placeholder="Select date"
         IconPositionRight
+        currentValue={currentDate?.toLocaleDateString() || ''}
         cursorType="pointer"
         iconName="calendar-alt"
-        currentValue={currentDate?.toLocaleDateString() || ''}
+        placeholder="Select date"
       />
     </StyledDropDownTrigger>
     <DropdownMenu.Portal>
       <DropdownMenu.Content align="start">
-        <Calendar currentDate={currentDate} setDate={setDate} minDate={minDate} maxDate={maxDate} />
+        <Calendar currentDate={currentDate} maxDate={maxDate} minDate={minDate} setDate={setDate} />
       </DropdownMenu.Content>
     </DropdownMenu.Portal>
   </DropdownMenu.Root>
