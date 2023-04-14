@@ -17,15 +17,26 @@ import { INSERT_VOTE_FAILED } from 'src/libs/exceptions/messages';
 import { CardGroupVoteUseCase } from './card-group-vote.use-case';
 import CardGroupVoteUseCaseDto from '../dto/useCase/card-group-vote.use-case.dto';
 import { DeleteVoteServiceInterface } from '../interfaces/services/delete.vote.service.interface';
+import { DeleteFailedException } from 'src/libs/exceptions/deleteFailedBadRequestException';
+import CardItem from 'src/modules/cards/entities/card.item.schema';
+import { BoardUserFactory } from 'src/libs/test-utils/mocks/factories/boardUser-factory.mock';
+import BoardUser from 'src/modules/boardUsers/entities/board.user.schema';
 
 const userId: string = faker.datatype.uuid();
 const board: Board = BoardFactory.create({ maxVotes: 3 });
-const card: Card = CardFactory.create();
+const boardUser: BoardUser = BoardUserFactory.create({ board: board._id, votesCount: 1 });
+const card: Card = CardFactory.create({ votes: [boardUser._id, userId] });
+const cardItem: CardItem = card.items[0];
+cardItem.votes = [boardUser._id, userId];
+const completionHandler = () => {
+	return;
+};
 
 describe('CardGroupVoteUseCase', () => {
 	let useCase: UseCase<CardGroupVoteUseCaseDto, void>;
 	let voteRepositoryMock: DeepMocked<VoteRepositoryInterface>;
 	let createVoteServiceMock: DeepMocked<CreateVoteServiceInterface>;
+	let deleteVoteServiceMock: DeepMocked<DeleteVoteServiceInterface>;
 
 	beforeAll(async () => {
 		const module: TestingModule = await Test.createTestingModule({
@@ -53,15 +64,23 @@ describe('CardGroupVoteUseCase', () => {
 		useCase = module.get(CardGroupVoteUseCase);
 		voteRepositoryMock = module.get(TYPES.repositories.VoteRepository);
 		createVoteServiceMock = module.get(TYPES.services.CreateVoteService);
+		deleteVoteServiceMock = module.get(TYPES.services.DeleteVoteService);
 	});
 
 	beforeEach(() => {
 		jest.clearAllMocks();
 		jest.restoreAllMocks();
 
+		//insert vote on card group
 		createVoteServiceMock.canUserVote.mockResolvedValue();
 		createVoteServiceMock.incrementVoteUser.mockResolvedValue();
 		voteRepositoryMock.insertCardGroupVote.mockResolvedValue(board);
+
+		//delete vote from card group
+		deleteVoteServiceMock.canUserDeleteVote.mockResolvedValue();
+		deleteVoteServiceMock.getCardFromBoard.mockResolvedValue(card);
+		deleteVoteServiceMock.removeVotesFromCardItem.mockResolvedValue();
+		deleteVoteServiceMock.decrementVoteUser.mockResolvedValue();
 	});
 
 	it('should be defined', () => {
@@ -69,105 +88,276 @@ describe('CardGroupVoteUseCase', () => {
 	});
 
 	describe('execute', () => {
-		it('should throw an error when the canUserVote function returns error', async () => {
-			try {
-				createVoteServiceMock.canUserVote.mockRejectedValueOnce(new InsertFailedException());
+		describe('deleteVotesFormCardItem', () => {
+			it('should throw an error when the canUserVote function returns error', async () => {
+				createVoteServiceMock.canUserVote.mockRejectedValue(new InsertFailedException());
 
-				await useCase.execute({
-					boardId: board._id,
-					cardId: card._id,
-					userId,
-					count: 1,
-					completionHandler: () => {
-						return;
-					}
-				});
-			} catch (ex) {
-				expect(ex).toBeInstanceOf(InsertFailedException);
-			}
-		});
-
-		it('should throw an error when the addVoteToCardAndUser fails', async () => {
-			//if createVoteServiceMock.incrementVoteUser fails
-			try {
-				createVoteServiceMock.incrementVoteUser.mockRejectedValueOnce(INSERT_VOTE_FAILED);
-
-				await useCase.execute({
-					boardId: board._id,
-					cardId: card._id,
-					userId,
-					count: 1,
-					completionHandler: () => {
-						return;
-					}
-				});
-			} catch (ex) {
-				expect(ex).toBeInstanceOf(InsertFailedException);
-			}
-
-			//if voteRepositoryMock.insertCardGroupVote fails
-			try {
-				voteRepositoryMock.insertCardGroupVote.mockResolvedValueOnce(null);
-				await useCase.execute({
-					boardId: board._id,
-					cardId: card._id,
-					userId,
-					count: 1,
-					completionHandler: () => {
-						return;
-					}
-				});
-			} catch (ex) {
-				expect(ex).toBeInstanceOf(InsertFailedException);
-			}
-
-			//if the error code is WRITE_ERROR_LOCK and the retryCount is less than 5
-			try {
-				voteRepositoryMock.insertCardGroupVote.mockRejectedValueOnce({ code: WRITE_LOCK_ERROR });
-				await useCase.execute({
-					boardId: board._id,
-					cardId: card._id,
-					userId,
-					count: 1,
-					completionHandler: () => {
-						return;
-					}
-				});
-			} catch (ex) {
-				expect(ex).toBeInstanceOf(InsertFailedException);
-			}
-		});
-
-		it('should call all the functions when execute succeeds', async () => {
-			await useCase.execute({
-				boardId: board._id,
-				cardId: card._id,
-				userId,
-				count: 1,
-				completionHandler: () => {
-					return;
-				}
+				expect(
+					async () =>
+						await useCase.execute({
+							boardId: board._id,
+							cardId: card._id,
+							userId,
+							count: 1,
+							completionHandler
+						})
+				).rejects.toThrowError(InsertFailedException);
 			});
-			expect(createVoteServiceMock.canUserVote).toBeCalled();
-			expect(createVoteServiceMock.incrementVoteUser).toBeCalled();
-			expect(voteRepositoryMock.insertCardGroupVote).toBeCalled();
-		});
 
-		it('should throw an error when a commit transaction fails', async () => {
-			voteRepositoryMock.commitTransaction.mockRejectedValueOnce('Commit transaction failed');
+			it('should throw an error when the addVoteToCardAndUser fails', async () => {
+				//if createVoteServiceMock.incrementVoteUser fails
+				try {
+					createVoteServiceMock.incrementVoteUser.mockRejectedValueOnce(INSERT_VOTE_FAILED);
 
-			expect(
-				async () =>
 					await useCase.execute({
 						boardId: board._id,
 						cardId: card._id,
 						userId,
 						count: 1,
-						completionHandler: () => {
-							return;
-						}
-					})
-			).rejects.toThrow(InsertFailedException);
+						completionHandler
+					});
+				} catch (ex) {
+					expect(ex).toBeInstanceOf(InsertFailedException);
+				}
+
+				//if voteRepositoryMock.insertCardGroupVote fails
+				try {
+					voteRepositoryMock.insertCardGroupVote.mockResolvedValueOnce(null);
+					await useCase.execute({
+						boardId: board._id,
+						cardId: card._id,
+						userId,
+						count: 1,
+						completionHandler
+					});
+				} catch (ex) {
+					expect(ex).toBeInstanceOf(InsertFailedException);
+				}
+
+				//if the error code is WRITE_ERROR_LOCK and the retryCount is less than 5
+				try {
+					voteRepositoryMock.insertCardGroupVote.mockRejectedValue({ code: WRITE_LOCK_ERROR });
+					await useCase.execute({
+						boardId: board._id,
+						cardId: card._id,
+						userId,
+						count: 1,
+						completionHandler
+					});
+				} catch (ex) {
+					expect(ex).toBeInstanceOf(InsertFailedException);
+				}
+			});
+
+			it('should call all the functions when execute succeeds', async () => {
+				await useCase.execute({
+					boardId: board._id,
+					cardId: card._id,
+					userId,
+					count: 1,
+					completionHandler
+				});
+				expect(createVoteServiceMock.canUserVote).toBeCalled();
+				expect(createVoteServiceMock.incrementVoteUser).toBeCalled();
+				expect(voteRepositoryMock.insertCardGroupVote).toBeCalled();
+			});
+
+			it('should throw an error when a commit transaction fails', async () => {
+				voteRepositoryMock.commitTransaction.mockRejectedValueOnce('Commit transaction failed');
+
+				expect(
+					async () =>
+						await useCase.execute({
+							boardId: board._id,
+							cardId: card._id,
+							userId,
+							count: 1,
+							completionHandler
+						})
+				).rejects.toThrow(InsertFailedException);
+			});
+		});
+
+		describe('deleteVoteFromCardGroup', () => {
+			it('should throw an error when the deleteVoteService.canUserDeleteVote function returns error', async () => {
+				deleteVoteServiceMock.canUserDeleteVote.mockRejectedValue(new DeleteFailedException());
+
+				expect(
+					async () =>
+						await useCase.execute({
+							boardId: board._id,
+							cardId: card._id,
+							userId,
+							count: -1,
+							completionHandler
+						})
+				).rejects.toThrowError(DeleteFailedException);
+			});
+
+			it('should throw an error when the deleteVoteService.getCardFromBoard function returns error', async () => {
+				deleteVoteServiceMock.getCardFromBoard.mockRejectedValue(new DeleteFailedException());
+
+				expect(
+					async () =>
+						await useCase.execute({
+							boardId: board._id,
+							cardId: card._id,
+							userId,
+							count: -1,
+							completionHandler
+						})
+				).rejects.toThrowError(DeleteFailedException);
+			});
+
+			it('should throw an error when the deleteCardGroupAndUserVotes function fails on voteRepositoryMock.removeVotesFromCard', async () => {
+				voteRepositoryMock.removeVotesFromCard.mockRejectedValue({
+					code: WRITE_LOCK_ERROR
+				});
+				expect(
+					async () =>
+						await useCase.execute({
+							boardId: board._id,
+							cardId: card._id,
+							userId,
+							count: -1,
+							completionHandler
+						})
+				).rejects.toThrowError(DeleteFailedException);
+			});
+
+			it('should throw an error when the deleteCardGroupAndUserVotes (voteRepositoryMock.removeVotesFromCard) function fails', async () => {
+				voteRepositoryMock.removeVotesFromCard.mockResolvedValue(null);
+				expect(
+					async () =>
+						await useCase.execute({
+							boardId: board._id,
+							cardId: card._id,
+							userId,
+							count: -1,
+							completionHandler
+						})
+				).rejects.toThrowError(DeleteFailedException);
+			});
+
+			it('should call all the functions when deleteCardGroupAndUserVotes function succeeds', async () => {
+				const cardWithVotes: Card = CardFactory.create({ votes: [userId, userId] });
+				const cardItemWithVotes: CardItem = cardWithVotes.items[0];
+				cardItemWithVotes.votes = [userId, userId];
+
+				deleteVoteServiceMock.getCardFromBoard.mockResolvedValue(cardWithVotes);
+				voteRepositoryMock.removeVotesFromCard.mockResolvedValue(board);
+				deleteVoteServiceMock.getCardItemFromBoard.mockResolvedValue(cardItemWithVotes);
+				deleteVoteServiceMock.removeVotesFromCardItem.mockResolvedValue();
+				deleteVoteServiceMock.decrementVoteUser.mockResolvedValue();
+
+				await useCase.execute({
+					boardId: board._id,
+					cardId: cardWithVotes._id,
+					userId,
+					count: -4,
+					completionHandler
+				});
+
+				expect(deleteVoteServiceMock.canUserDeleteVote).toBeCalled();
+				expect(deleteVoteServiceMock.getCardFromBoard).toBeCalled();
+				expect(voteRepositoryMock.removeVotesFromCard).toBeCalled();
+				expect(deleteVoteServiceMock.decrementVoteUser).toBeCalled();
+				expect(deleteVoteServiceMock.removeVotesFromCardItem).toBeCalled();
+			});
+
+			it("should thrown error inside deleteCardItemAndUserVotes function when a cardItem isn't found", async () => {
+				const cardWithoutVotes: Card = CardFactory.create({ votes: [] });
+
+				const cardItem: CardItem = cardWithoutVotes.items[0];
+				const boardUser = BoardUserFactory.create();
+				cardItem.votes = [boardUser._id];
+
+				deleteVoteServiceMock.getCardFromBoard.mockResolvedValue(cardWithoutVotes);
+
+				deleteVoteServiceMock.getCardFromBoard
+					.mockResolvedValueOnce(cardWithoutVotes)
+					.mockResolvedValueOnce(cardWithoutVotes);
+
+				expect(
+					async () =>
+						await useCase.execute({
+							boardId: board._id,
+							cardId: card._id,
+							userId,
+							count: -1,
+							completionHandler
+						})
+				).rejects.toThrowError(DeleteFailedException);
+			});
+
+			it('should throw an error when the deleteVoteFromCardItemOnCardGroup fails', async () => {
+				const cardWithoutVotes: Card = CardFactory.create({ votes: [] });
+				const cardItemWithVotes: CardItem = cardWithoutVotes.items[0];
+				cardItemWithVotes.votes = [userId];
+
+				deleteVoteServiceMock.getCardFromBoard.mockResolvedValue(cardWithoutVotes);
+				voteRepositoryMock.removeVotesFromCard.mockResolvedValue(board);
+				deleteVoteServiceMock.getCardItemFromBoard.mockResolvedValue(cardItemWithVotes);
+
+				//if the error code is WRITE_ERROR_LOCK and the retryCount is less than 5
+				try {
+					deleteVoteServiceMock.removeVotesFromCardItem.mockRejectedValueOnce({
+						code: WRITE_LOCK_ERROR
+					});
+					await useCase.execute({
+						boardId: board._id,
+						cardId: card._id,
+						userId,
+						count: -1,
+						completionHandler
+					});
+				} catch (ex) {
+					expect(ex).toBeInstanceOf(DeleteFailedException);
+				}
+
+				//if voteRepositoryMock.removeVotesFromCardItem fails
+				try {
+					deleteVoteServiceMock.removeVotesFromCardItem.mockRejectedValueOnce(null);
+					await useCase.execute({
+						boardId: board._id,
+						cardId: card._id,
+						userId,
+						count: -1,
+						completionHandler
+					});
+				} catch (ex) {
+					expect(ex).toBeInstanceOf(DeleteFailedException);
+				}
+
+				//if updateBoardUserServiceMock.updateBoardUserRole
+				try {
+					deleteVoteServiceMock.decrementVoteUser.mockRejectedValue(null);
+					await useCase.execute({
+						boardId: board._id,
+						cardId: card._id,
+						userId,
+						count: -1,
+						completionHandler
+					});
+				} catch (ex) {
+					expect(ex).toBeInstanceOf(DeleteFailedException);
+				}
+			});
+
+			it('should throw an error when a commit transaction fails', async () => {
+				voteRepositoryMock.commitTransaction.mockRejectedValue('Commit transaction failed');
+
+				expect(
+					async () =>
+						await useCase.execute({
+							boardId: board._id,
+							cardId: card._id,
+							userId,
+							count: -1,
+							completionHandler
+						})
+				).rejects.toThrow(DeleteFailedException);
+			});
 		});
 	});
 });
