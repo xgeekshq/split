@@ -12,10 +12,12 @@ const StyledDropDownTrigger = styled(DropdownMenu.Trigger, {
 
 export type DatePickerProps = {
   currentDate?: Date;
+  minDate?: Date;
+  maxDate?: Date;
   setDate: (date: Date) => void;
 };
 
-const DatePicker = ({ currentDate, setDate }: DatePickerProps) => (
+const DatePicker = ({ currentDate, minDate, maxDate, setDate }: DatePickerProps) => (
   <DropdownMenu.Root>
     <StyledDropDownTrigger>
       <UncontrolledInput
@@ -28,11 +30,7 @@ const DatePicker = ({ currentDate, setDate }: DatePickerProps) => (
     </StyledDropDownTrigger>
     <DropdownMenu.Portal>
       <DropdownMenu.Content align="start">
-        <Calendar
-          currentDate={currentDate}
-          setDate={setDate}
-          minDate={new Date(new Date().getFullYear(), new Date().getMonth(), 1)}
-        />
+        <Calendar currentDate={currentDate} setDate={setDate} minDate={minDate} maxDate={maxDate} />
       </DropdownMenu.Content>
     </DropdownMenu.Portal>
   </DropdownMenu.Root>
