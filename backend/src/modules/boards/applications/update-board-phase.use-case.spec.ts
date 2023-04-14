@@ -116,7 +116,7 @@ describe('UpdateBoardPhaseUseCase', () => {
 			expect(eventEmitterMock.emit).toHaveBeenCalledTimes(1);
 		});
 
-		it('should call the slackSendMessageService.execute once with slackMessageDto', async () => {
+		it('should call the slackSendMessageService.execute once with slackMessageDto (Phase: VOTIINGPHASE)', async () => {
 			const boardPhaseDto = { boardId: '6405f9a04633b1668f71c068', phase: BoardPhases.VOTINGPHASE };
 			// Create a fake board object with the specified properties
 			const board = BoardFactory.create({ phase: BoardPhases.VOTINGPHASE, slackEnable: true });
@@ -148,7 +148,7 @@ describe('UpdateBoardPhaseUseCase', () => {
 			});
 		});
 
-		it('should call the slackSendMessageService.execute once with slackMessageDto', async () => {
+		it('should call the slackSendMessageService.execute once with slackMessageDto (Phase: SUBMITTED)', async () => {
 			const boardPhaseDto = { boardId: '6405f9a04633b1668f71c068', phase: BoardPhases.SUBMITTED };
 			// Create a fake board object with the specified properties
 			const board = BoardFactory.create({ phase: BoardPhases.SUBMITTED, slackEnable: true });
