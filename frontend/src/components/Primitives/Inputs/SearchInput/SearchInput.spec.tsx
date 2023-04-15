@@ -7,7 +7,9 @@ import SearchInput, {
 import { renderWithProviders } from '@/utils/testing/renderWithProviders';
 
 const render = (props: Partial<SearchInputProps> = {}) =>
-  renderWithProviders(<SearchInput placeholder="Placeholder" {...props} />);
+  renderWithProviders(
+    <SearchInput handleChange={jest.fn()} placeholder="Placeholder" {...props} />,
+  );
 
 describe('Components/Primitives/Inputs/SearchInput', () => {
   it('should render correctly', () => {
@@ -32,7 +34,7 @@ describe('Components/Primitives/Inputs/SearchInput', () => {
     const { getByLabelText } = render({ handleChange });
 
     const searchInput = getByLabelText('Placeholder');
-    userEvent.type(searchInput, 'My Other Board');
+    await userEvent.type(searchInput, 'My Other Board');
 
     // Assert
     await waitFor(() => {
