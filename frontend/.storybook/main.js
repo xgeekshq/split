@@ -22,7 +22,7 @@ module.exports = {
       '@helper': path.resolve(__dirname, '../src/helper'),
       '@hooks': path.resolve(__dirname, '../src/hooks'),
       '@pages': path.resolve(__dirname, '../src/pages'),
-      '@schemas': path.resolve(__dirname, '../src/schemas'),
+      '@schema': path.resolve(__dirname, '../src/schema'),
       '@styles': path.resolve(__dirname, '../src/styles'),
       '@utils': path.resolve(__dirname, '../src/utils'),
       '@api': path.resolve(__dirname, '../src/api'),
