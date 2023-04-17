@@ -82,9 +82,11 @@ export const libraryMocks = {
 };
 
 export function createMockSession(session?: Partial<Session>, user?: User): Session {
+  const date = new Date();
+
   return {
     user: SessionUserFactory.create({ ...user, id: user?._id, isSAdmin: user?.isSAdmin ?? false }),
-    expires: new Date().toISOString(),
+    expires: new Date(date.setDate(date.getDate() + 1)).toISOString(),
     strategy: 'local',
     error: '',
     ...session,

@@ -2,7 +2,7 @@ import { faker } from '@faker-js/faker';
 
 import { ListUsersType } from '@/components/Primitives/Avatars/AvatarGroup/AvatarGroup';
 import { BoardUser } from '@/types/board/board.user';
-import { TeamUser } from '@/types/team/team.user';
+import { CreatedTeamUser, TeamUser } from '@/types/team/team.user';
 import { UserList } from '@/types/team/userList';
 import { User, UserWithTeams } from '@/types/user/user';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
@@ -95,6 +95,7 @@ export const AvatarGroupUsersFactory = buildTestFactory<ListUsersType>(() => {
 
 export const TeamUserFactory = buildTestFactory<TeamUser>(() => {
   const user = UserFactory.create();
+  const team = faker.database.mongodbObjectId();
   const role = faker.helpers.arrayElement([
     TeamUserRoles.ADMIN,
     TeamUserRoles.MEMBER,
@@ -104,6 +105,28 @@ export const TeamUserFactory = buildTestFactory<TeamUser>(() => {
 
   return {
     user,
+    team,
+    role,
+    isNewJoiner,
+    canBeResponsible: !isNewJoiner,
+  };
+});
+
+export const CreateTeamUserFactory = buildTestFactory<CreatedTeamUser>(() => {
+  const _id = faker.database.mongodbObjectId();
+  const team = faker.database.mongodbObjectId();
+  const user = UserFactory.create()._id;
+  const role = faker.helpers.arrayElement([
+    TeamUserRoles.ADMIN,
+    TeamUserRoles.MEMBER,
+    TeamUserRoles.STAKEHOLDER,
+  ]);
+  const isNewJoiner = faker.datatype.boolean();
+
+  return {
+    _id,
+    user,
+    team,
     role,
     isNewJoiner,
     canBeResponsible: !isNewJoiner,
