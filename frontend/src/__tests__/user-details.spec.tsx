@@ -1,12 +1,13 @@
 import { UseQueryResult } from '@tanstack/react-query';
 import { waitFor } from '@testing-library/react';
 
+import useTeamsWithoutUser from '@/hooks/teams/useTeamsWithoutUser';
 import useUserTeams from '@/hooks/teams/useUserTeams';
 import useUser from '@/hooks/users/useUser';
 import UserDetails from '@/pages/users/[userId]';
 import { Team } from '@/types/team/team';
 import { User } from '@/types/user/user';
-import { TeamFactory } from '@/utils/factories/team';
+import { TeamCheckedFactory, TeamFactory } from '@/utils/factories/team';
 import { UserFactory } from '@/utils/factories/user';
 import { ROUTES } from '@/utils/routes';
 import { libraryMocks } from '@/utils/testing/mocks';
@@ -19,6 +20,9 @@ jest.mock('@/hooks/users/useUser');
 const mockUseUserTeams = useUserTeams as jest.Mock<UseQueryResult<Team[]>>;
 jest.mock('@/hooks/teams/useUserTeams');
 
+const mockUseTeamsWithoutUser = useTeamsWithoutUser as jest.Mock<Partial<UseQueryResult>>;
+jest.mock('@/hooks/teams/useTeamsWithoutUser');
+
 const { mockRouter } = libraryMocks.mockNextRouter({
   pathname: `/users/${randomUser._id}`,
   query: { userId: randomUser._id },
@@ -27,6 +31,12 @@ const { mockRouter } = libraryMocks.mockNextRouter({
 const render = () => renderWithProviders(<UserDetails />, { routerOptions: mockRouter });
 
 describe('Pages/Users/[userId]', () => {
+  beforeEach(() => {
+    mockUseTeamsWithoutUser.mockReturnValue({
+      data: TeamCheckedFactory.createMany(3),
+    } as Partial<UseQueryResult>);
+  });
+
   it('should render correctly', () => {
     // Arrange
     mockUseUser.mockReturnValue({

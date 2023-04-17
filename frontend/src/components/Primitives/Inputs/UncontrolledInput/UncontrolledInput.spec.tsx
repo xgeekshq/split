@@ -31,7 +31,7 @@ describe('Components/Primitives/Inputs/UncontrolledInput', () => {
     const { getByLabelText } = render({ handleChange });
 
     const searchInput = getByLabelText('Placeholder');
-    userEvent.type(searchInput, 'My Other Board');
+    await userEvent.type(searchInput, 'My Other Board');
 
     // Assert
     await waitFor(() => {
