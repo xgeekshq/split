@@ -11,21 +11,14 @@ const Button = styled('button', {
   border: 'none',
   outline: 'none',
   gap: '$8',
-  '@hover': {
-    '&:hover': {
-      cursor: 'pointer',
-    },
-  },
+  cursor: 'pointer',
   '&:disabled': {
-    '@hover': {
-      '&:hover': {
-        cursor: 'not-allowed',
-      },
-    },
+    cursor: 'not-allowed',
     '&:active': {
       boxShadow: 'none',
     },
   },
+  '& svg': { aspectRatio: '1/1' },
   variants: {
     variant: {
       primary: {
@@ -332,40 +325,28 @@ const Button = styled('button', {
       isIcon: 'true',
       size: 'xl',
       css: {
-        '& svg': {
-          height: '$60',
-          width: '$60',
-        },
+        '& svg': { width: '$60' },
       },
     },
     {
       isIcon: 'true',
       size: 'lg',
       css: {
-        '& svg': {
-          height: '$40',
-          width: '$40',
-        },
+        '& svg': { width: '$40' },
       },
     },
     {
       size: 'md',
       isIcon: 'true',
       css: {
-        '& svg': {
-          height: '$24',
-          width: '$24',
-        },
+        '& svg': { width: '$24' },
       },
     },
     {
       isIcon: 'true',
       size: 'sm',
       css: {
-        '& svg': {
-          height: '$20',
-          width: '$20',
-        },
+        '& svg': { width: '$20' },
       },
     },
   ],
