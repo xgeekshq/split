@@ -3,12 +3,12 @@ import React, { Dispatch, SetStateAction, useEffect, useMemo, useState } from 'r
 import Dialog from '@/components/Primitives/Dialogs/Dialog/Dialog';
 import Checkbox from '@/components/Primitives/Inputs/Checkboxes/Checkbox/Checkbox';
 import CheckboxUserItem from '@/components/Primitives/Inputs/Checkboxes/UserCheckbox/UserCheckbox';
-import SearchInput from '@/components/Primitives/Inputs/SearchInput/SearchInput';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Separator from '@/components/Primitives/Separator/Separator';
 import Text from '@/components/Primitives/Text/Text';
 import useCurrentSession from '@/hooks/useCurrentSession';
 import { UserList } from '@/types/team/userList';
+import UncontrolledInput from '../../Inputs/UncontrolledInput/UncontrolledInput';
 
 export type UserListDialogProps = {
   usersList: UserList[];
@@ -111,8 +111,9 @@ const UserListDialog = React.memo<UserListDialogProps>(
         <Flex css={{ height: '100%' }} data-testid="userListDialog" direction="column">
           <Dialog.Header title={confirmationLabel} />
           <Flex css={{ p: '$32' }} direction="column">
-            <SearchInput
+            <UncontrolledInput
               currentValue={searchMember}
+              iconName="search"
               placeholder="Search member"
               handleChange={(e) => {
                 setSearchMember(e.target.value);

@@ -13,15 +13,17 @@ export const TYPES = {
 	},
 	applications: {
 		DuplicateBoardUseCase: 'DuplicateBoardUseCase',
-		DeleteBoardApplication: 'DeleteBoardApplication',
-		UpdateBoardApplication: 'UpdateBoardApplication',
 		GetBoardsForDashboardUseCase: 'GetBoardsForDashboardUseCase',
 		GetAllBoardsUseCase: 'GetAllBoardUseCase',
 		GetPersonalBoardsUseCase: 'GetPersonalBoardsUseCase',
 		GetBoardUseCase: 'GetBoardUseCase',
 		CreateBoardUseCase: 'CreateBoardUseCase',
 		IsBoardPublicUseCase: 'IsBoardPublicUseCase',
-		DeleteBoardUseCase: 'DeleteBoardUseCase'
+		DeleteBoardUseCase: 'DeleteBoardUseCase',
+		UpdateBoardUseCase: 'UpdateBoardUseCase',
+		UpdateBoardParticipantsUseCase: 'UpdateBoardParticipantsUseCase',
+		MergeBoardUseCase: 'MergeBoardUseCase',
+		UpdateBoardPhaseUseCase: 'UpdateBoardPhaseUseCase'
 	},
 	repositories: {
 		BoardTimerRepository: 'BoardTimerRepository',

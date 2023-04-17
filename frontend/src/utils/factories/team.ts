@@ -1,7 +1,7 @@
 import { faker } from '@faker-js/faker';
 
-import { Team, TeamChecked } from '@/types/team/team';
-import { TeamUserFactory } from '@/utils/factories/user';
+import { CreateTeamDto, Team, TeamChecked } from '@/types/team/team';
+import { CreateTeamUserFactory, TeamUserFactory } from '@/utils/factories/user';
 import { buildTestFactory } from '@/utils/testing';
 
 export const TeamFactory = buildTestFactory<Team>(() => {
@@ -27,5 +27,15 @@ export const TeamCheckedFactory = buildTestFactory<TeamChecked>(() => {
     _id,
     name,
     isChecked,
+  };
+});
+
+export const CreateTeamFactory = buildTestFactory<CreateTeamDto>(() => {
+  const name = faker.company.name();
+  const users = CreateTeamUserFactory.createMany();
+
+  return {
+    name,
+    users,
   };
 });
