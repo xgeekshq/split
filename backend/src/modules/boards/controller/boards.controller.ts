@@ -63,7 +63,8 @@ import MergeBoardUseCaseDto from '../dto/useCase/merge-board.use-case.dto';
 import Board from '../entities/board.schema';
 import { TYPES } from '../interfaces/types';
 import BoardUseCasePresenter from '../presenter/board.use-case.presenter';
-import BoardsPaginatedPresenter from '../presenter/boards-paginated.presenter';
+import DeleteBoardUseCaseDto from 'src/modules/boards/dto/useCase/delete-board.use-case';
+import BoardsPaginatedPresenter from 'src/modules/boards/presenter/boards-paginated.presenter';
 
 const BoardUser = (permissions: string[]) => SetMetadata('permissions', permissions);
 
@@ -103,8 +104,8 @@ export default class BoardsController {
 		@Inject(TYPES.applications.UpdateBoardPhaseUseCase)
 		private readonly updateBoardPhaseUseCase: UseCase<BoardPhaseDto, void>,
 		@Inject(TYPES.applications.DeleteBoardUseCase)
-		private readonly deleteBoardUseCase: UseCase<string, boolean>,
-		private readonly socketService: SocketGateway
+		private deleteBoardUseCase: UseCase<DeleteBoardUseCaseDto, boolean>,
+		private socketService: SocketGateway
 	) {}
 
 	@ApiOperation({ summary: 'Create a new board' })
@@ -351,12 +352,15 @@ export default class BoardsController {
 		@Query() { teamId }: TeamParamOptional,
 		@Query() { socketId }: BaseParamWSocket
 	) {
-		const result = await this.deleteBoardUseCase.execute(boardId);
+		const completionHandler = (deletedBoards: string[]) => {
+			this.socketService.sendDeleteBoard(socketId, deletedBoards);
 
-		if (socketId && teamId) {
-			this.socketService.sendUpdatedBoards(socketId, teamId);
-			this.socketService.sendUpdatedBoard(boardId, socketId);
-		}
+			if (socketId && teamId) {
+				this.socketService.sendUpdatedBoard(boardId, socketId);
+			}
+		};
+
+		const result = await this.deleteBoardUseCase.execute({ boardId, completionHandler });
 
 		return result;
 	}

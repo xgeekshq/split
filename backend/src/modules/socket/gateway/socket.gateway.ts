@@ -69,6 +69,10 @@ export default class SocketGateway
 		this.server.to(board._id.toString()).except(excludedClient).emit('board', board);
 	}
 
+	sendDeleteBoard(excludedClient: string, deletedBoards: string[]) {
+		this.server.to(deletedBoards).except(excludedClient).emit('deleteBoard');
+	}
+
 	sendUpdatedBoards(excludedClient: string, teamId: string) {
 		this.server.to(teamId).except(excludedClient).emit('teamId');
 	}
