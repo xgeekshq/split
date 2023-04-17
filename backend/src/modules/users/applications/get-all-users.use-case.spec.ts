@@ -4,9 +4,10 @@ import { UserRepositoryInterface } from '../repository/user.repository.interface
 import { getAllUsersUseCase } from '../users.providers';
 import * as Users from 'src/modules/users/interfaces/types';
 import { Test, TestingModule } from '@nestjs/testing';
+import User from '../entities/user.schema';
 
 describe('GetAllUsersUseCase', () => {
-	let deleteUser: UseCase<string, boolean>;
+	let getAllUsers: UseCase<void, User[]>;
 
 	beforeAll(async () => {
 		const module: TestingModule = await Test.createTestingModule({
@@ -19,7 +20,7 @@ describe('GetAllUsersUseCase', () => {
 			]
 		}).compile();
 
-		deleteUser = module.get<UseCase<string, boolean>>(getAllUsersUseCase.provide);
+		getAllUsers = module.get<UseCase<void, User[]>>(getAllUsersUseCase.provide);
 	});
 
 	beforeEach(() => {
@@ -28,6 +29,6 @@ describe('GetAllUsersUseCase', () => {
 	});
 
 	it('should be defined', () => {
-		expect(deleteUser).toBeDefined();
+		expect(getAllUsers).toBeDefined();
 	});
 });

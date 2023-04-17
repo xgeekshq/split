@@ -38,12 +38,12 @@ import { NotFoundResponse } from '../../../libs/swagger/errors/not-found.swagger
 import { UpdateSuperAdminSwagger } from '../swagger/update.superadmin.swagger';
 import RequestWithUser from 'src/libs/interfaces/requestWithUser.interface';
 import { PaginationParams } from 'src/libs/dto/param/pagination.params';
-import { GetAllUsersUseCaseInterface } from '../interfaces/applications/get-all-users.use-case.interface';
-import { GetAllUsersWithTeamsUseCaseInterface } from '../interfaces/applications/get-all-users-with-teams.use-case.interface';
-import { GetUserUseCaseInterface } from '../interfaces/applications/get-user.use-case.interface';
-import { UpdateSAdminUseCaseInterface } from '../interfaces/applications/update-sadmin.use-case.interface';
-import { DeleteUserUseCaseInterface } from '../interfaces/applications/delete-user.use-case.interface';
 import { DeleteUserGuard } from 'src/libs/guards/deleteUser.guard';
+import { UseCase } from 'src/libs/interfaces/use-case.interface';
+import UpdateSAdminUseCaseDto from '../dto/useCase/update-sadmin.use-case.dto';
+import User from '../entities/user.schema';
+import { GetAllUsersWithTeamsPresenter } from 'src/libs/dto/response/get-all-users-with-teams.presenter';
+import GetAllUsersWithTeamsUseCaseDto from '../dto/useCase/get-all-users-with-teams.use-case.dto';
 
 @ApiBearerAuth('access-token')
 @ApiTags('Users')
@@ -52,15 +52,18 @@ import { DeleteUserGuard } from 'src/libs/guards/deleteUser.guard';
 export default class UsersController {
 	constructor(
 		@Inject(TYPES.applications.GetUserUseCase)
-		private getUserUseCase: GetUserUseCaseInterface,
+		private getUserUseCase: UseCase<string, User>,
 		@Inject(TYPES.applications.GetAllUsersUseCase)
-		private getAllUsersUseCase: GetAllUsersUseCaseInterface,
+		private getAllUsersUseCase: UseCase<void, User[]>,
 		@Inject(TYPES.applications.GetAllUsersWithTeamsUseCase)
-		private getAllUsersWithTeamsUseCase: GetAllUsersWithTeamsUseCaseInterface,
+		private getAllUsersWithTeamsUseCase: UseCase<
+			GetAllUsersWithTeamsUseCaseDto,
+			GetAllUsersWithTeamsPresenter
+		>,
 		@Inject(TYPES.applications.UpdateSAdminUseCase)
-		private updateSAdminUseCase: UpdateSAdminUseCaseInterface,
+		private updateSAdminUseCase: UseCase<UpdateSAdminUseCaseDto, User>,
 		@Inject(TYPES.applications.DeleteUserUseCase)
-		private deleteUserApp: DeleteUserUseCaseInterface
+		private deleteUserApp: UseCase<string, boolean>
 	) {}
 
 	@ApiOperation({ summary: 'Retrieve a list of existing users' })
@@ -102,7 +105,7 @@ export default class UsersController {
 	})
 	@Get('teams')
 	getAllUsersWithTeams(@Query() { page, size, searchUser }: PaginationParams) {
-		return this.getAllUsersWithTeamsUseCase.execute(page, size, searchUser);
+		return this.getAllUsersWithTeamsUseCase.execute({ page, size, searchUser });
 	}
 
 	@ApiOperation({ summary: 'Retrieve user' })
@@ -161,7 +164,7 @@ export default class UsersController {
 	@UseGuards(SuperAdminGuard)
 	@Put('/sadmin')
 	updateUserSuperAdmin(@Req() request: RequestWithUser, @Body() userData: UpdateUserDto) {
-		return this.updateSAdminUseCase.execute(userData, request.user);
+		return this.updateSAdminUseCase.execute({ user: userData, requestUser: request.user });
 	}
 
 	@ApiOperation({ summary: 'Delete user' })

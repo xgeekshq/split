@@ -1,8 +1,13 @@
 import { LeanDocument } from 'mongoose';
+import UpdateUserDto from '../../dto/update.user.dto';
 import User, { UserDocument } from '../../entities/user.schema';
+import UserDto from '../../dto/user.dto';
 
-export interface UpdateUserServiceInterface {
-	setCurrentRefreshToken(refreshToken: string, userId: string): Promise<User | null>;
+export interface UpdateUserApplicationInterface {
+	setCurrentRefreshToken(
+		refreshToken: string,
+		userId: string
+	): Promise<LeanDocument<UserDocument> | null>;
 
 	setPassword(
 		userEmail: string,
@@ -10,9 +15,7 @@ export interface UpdateUserServiceInterface {
 		newPasswordConf: string
 	): Promise<User | null>;
 
-	checkEmailOfToken(token: string): Promise<string>;
+	checkEmail(token: string): Promise<string>;
 
-	updateUserAvatar(avatar: string, userId: string): Promise<LeanDocument<UserDocument>>;
-
-	updateUserUpdatedAtField(user: string): Promise<User>;
+	updateSuperAdmin(user: UpdateUserDto, requestUser: UserDto): Promise<LeanDocument<UserDocument>>;
 }

@@ -65,6 +65,7 @@ describe('CreateUserService', () => {
 			userRepositoryMock.create.mockResolvedValue(createdUser);
 			await expect(userService.createGuest(createGuestUserDto)).resolves.toEqual(createdUser);
 		});
+
 		it('should throw error when user is not created', async () => {
 			userRepositoryMock.create.mockResolvedValue(null);
 			await expect(userService.createGuest(createGuestUserDto)).rejects.toThrowError(
