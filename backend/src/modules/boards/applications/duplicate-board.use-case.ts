@@ -1,22 +1,22 @@
+import { Inject, Injectable } from '@nestjs/common';
+import { BoardNotFoundException } from 'src/libs/exceptions/boardNotFoundException';
+import { CreateFailedException } from 'src/libs/exceptions/createFailedBadRequestException';
+import { CREATE_FAILED } from 'src/libs/exceptions/messages';
+import { UserNotFoundException } from 'src/libs/exceptions/userNotFoundException';
 import { UseCase } from 'src/libs/interfaces/use-case.interface';
+import BoardUserDto from 'src/modules/boardUsers/dto/board.user.dto';
 import { CreateBoardUserServiceInterface } from 'src/modules/boardUsers/interfaces/services/create.board.user.service.interface';
 import * as BoardUsers from 'src/modules/boardUsers/interfaces/types';
 import Card from 'src/modules/cards/entities/card.schema';
 import Column from 'src/modules/columns/entities/column.schema';
+import Team from 'src/modules/teams/entities/team.schema';
+import User from 'src/modules/users/entities/user.schema';
 import { GetUserServiceInterface } from 'src/modules/users/interfaces/services/get.user.service.interface';
 import * as Users from 'src/modules/users/interfaces/types';
-import { Inject, Injectable } from '@nestjs/common';
 import Board from '../entities/board.schema';
 import { GetBoardServiceInterface } from '../interfaces/services/get.board.service.interface';
 import { TYPES } from '../interfaces/types';
 import { BoardRepositoryInterface } from '../repositories/board.repository.interface';
-import User from 'src/modules/users/entities/user.schema';
-import Team from 'src/modules/teams/entities/team.schema';
-import BoardUserDto from 'src/modules/boardUsers/dto/board.user.dto';
-import { UserNotFoundException } from 'src/libs/exceptions/userNotFoundException';
-import { BoardNotFoundException } from 'src/libs/exceptions/boardNotFoundException';
-import { CREATE_FAILED } from 'src/libs/exceptions/messages';
-import { CreateFailedException } from 'src/libs/exceptions/createFailedBadRequestException';
 
 export type DuplicateBoardDto = { boardId: string; userId: string; boardTitle: string };
 
@@ -24,13 +24,13 @@ export type DuplicateBoardDto = { boardId: string; userId: string; boardTitle: s
 export class DuplicateBoardUseCase implements UseCase<DuplicateBoardDto, Board> {
 	constructor(
 		@Inject(TYPES.services.GetBoardService)
-		private getBoardService: GetBoardServiceInterface,
+		private readonly getBoardService: GetBoardServiceInterface,
 		@Inject(Users.TYPES.services.GetUserService)
-		private getUserService: GetUserServiceInterface,
+		private readonly getUserService: GetUserServiceInterface,
 		@Inject(TYPES.repositories.BoardRepository)
 		private readonly boardRepository: BoardRepositoryInterface,
 		@Inject(BoardUsers.TYPES.services.CreateBoardUserService)
-		private createBoardUserService: CreateBoardUserServiceInterface
+		private readonly createBoardUserService: CreateBoardUserServiceInterface
 	) {}
 
 	async execute({ boardId, userId, boardTitle }: DuplicateBoardDto) {
