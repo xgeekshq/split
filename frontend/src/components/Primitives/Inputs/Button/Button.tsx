@@ -18,7 +18,7 @@ const Button = styled('button', {
       boxShadow: 'none',
     },
   },
-  '& svg': { aspectRatio: '1/1' },
+  '& svg': { aspectRatio: '1 / 1', height: 'unset' },
   variants: {
     variant: {
       primary: {
@@ -300,30 +300,22 @@ const Button = styled('button', {
     {
       isIcon: 'true',
       size: 'xl',
-      css: {
-        '& svg': { width: '$60' },
-      },
+      css: { '& svg': { width: '$60' } },
     },
     {
       isIcon: 'true',
       size: 'lg',
-      css: {
-        '& svg': { width: '$40' },
-      },
+      css: { '& svg': { width: '$40' } },
     },
     {
       size: 'md',
       isIcon: 'true',
-      css: {
-        '& svg': { width: '$24' },
-      },
+      css: { '& svg': { width: '$24' } },
     },
     {
       isIcon: 'true',
       size: 'sm',
-      css: {
-        '& svg': { width: '$20' },
-      },
+      css: { '& svg': { width: '$20' } },
     },
   ],
   defaultVariants: {
