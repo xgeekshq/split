@@ -79,7 +79,6 @@ const Button = styled('button', {
         },
       },
       transparent: {
-        py: '$12',
         backgroundColor: '$tansparent',
         '&:disabled': {
           backgroundColor: '$primary50',
@@ -87,7 +86,6 @@ const Button = styled('button', {
         },
       },
       transparentHover: {
-        py: '$2',
         backgroundColor: '$tansparent',
         '@hover': {
           '&:hover': {
