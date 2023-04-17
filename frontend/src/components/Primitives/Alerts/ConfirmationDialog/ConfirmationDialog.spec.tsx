@@ -76,7 +76,7 @@ describe('Components/Primitives/Alerts/ConfirmationDialog', () => {
     // Assert
     expect(getByRole('button')).toBeInTheDocument();
 
-    userEvent.hover(getByRole('button'));
+    await userEvent.hover(getByRole('button'));
 
     await waitFor(() => {
       expect(getByRole('tooltip')).toBeInTheDocument();

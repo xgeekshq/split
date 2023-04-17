@@ -6,13 +6,13 @@ import { DeepMocked, createMock } from '@golevelup/ts-jest';
 import { CreateTeamUserServiceInterface } from 'src/modules/teamUsers/interfaces/services/create.team.user.service.interface';
 import { createTeamService } from 'src/modules/teams/providers';
 import { CreateTeamServiceInterface } from '../interfaces/services/create.team.service.interface';
-import * as Teams from 'src/modules/teams/interfaces/types';
 import * as TeamUsers from 'src/modules/teamUsers/interfaces/types';
 import { CreateTeamDto } from '../dto/create-team.dto';
 import { TeamUserDtoFactory } from 'src/libs/test-utils/mocks/factories/dto/teamUserDto-factory.mock';
 import { BadRequestException, HttpException, HttpStatus } from '@nestjs/common';
 import { TEAM_ALREADY_EXISTS } from 'src/libs/constants/team';
 import { TeamRepositoryInterface } from '../interfaces/repositories/team.repository.interface';
+import { TEAM_REPOSITORY } from 'src/modules/teams/constants';
 
 const createTeamDto: CreateTeamDto = {
 	name: faker.name.findName(),
@@ -34,7 +34,7 @@ describe('CreateTeamService', () => {
 			providers: [
 				createTeamService,
 				{
-					provide: Teams.TYPES.repositories.TeamRepository,
+					provide: TEAM_REPOSITORY,
 					useValue: createMock<TeamRepositoryInterface>()
 				},
 				{
@@ -45,7 +45,7 @@ describe('CreateTeamService', () => {
 		}).compile();
 
 		teamService = module.get<CreateTeamServiceInterface>(createTeamService.provide);
-		teamRepositoryMock = module.get(Teams.TYPES.repositories.TeamRepository);
+		teamRepositoryMock = module.get(TEAM_REPOSITORY);
 		createTeamUserServiceMock = module.get(TeamUsers.TYPES.services.CreateTeamUserService);
 	});
 

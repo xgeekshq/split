@@ -6,7 +6,7 @@ import isEmpty from 'src/libs/utils/isEmpty';
 import { CreateTeamDto } from '../dto/create-team.dto';
 import { CreateTeamServiceInterface } from '../interfaces/services/create.team.service.interface';
 import { TeamRepositoryInterface } from '../interfaces/repositories/team.repository.interface';
-import { TYPES } from '../interfaces/types';
+import { TEAM_REPOSITORY } from '../constants';
 import { TEAM_ALREADY_EXISTS } from 'src/libs/constants/team';
 import * as TeamUsers from 'src/modules/teamUsers/interfaces/types';
 import TeamUser from 'src/modules/teamUsers/entities/team.user.schema';
@@ -14,7 +14,7 @@ import TeamUser from 'src/modules/teamUsers/entities/team.user.schema';
 @Injectable()
 export default class CreateTeamService implements CreateTeamServiceInterface {
 	constructor(
-		@Inject(TYPES.repositories.TeamRepository)
+		@Inject(TEAM_REPOSITORY)
 		private readonly teamRepository: TeamRepositoryInterface,
 		@Inject(TeamUsers.TYPES.services.CreateTeamUserService)
 		private readonly createTeamUserService: CreateTeamUserServiceInterface
