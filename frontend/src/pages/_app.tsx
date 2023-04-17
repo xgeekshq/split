@@ -39,6 +39,8 @@ const QUERY_OPTIONS: QueryClientConfig = {
   },
 };
 
+globalStyles();
+
 function Root({
   Component,
   pageProps,
@@ -48,7 +50,6 @@ function Root({
   const getLayout = Component.getLayout ?? ((page) => page);
 
   const router = useRouter();
-  globalStyles();
 
   return (
     <>
