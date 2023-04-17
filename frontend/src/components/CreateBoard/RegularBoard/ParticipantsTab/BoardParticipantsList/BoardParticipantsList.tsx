@@ -78,7 +78,7 @@ const BoardParticipantsList = ({ isPageLoading }: BoardParticipantsListProps) =>
         {isEmpty(responsibles) && !isPageLoading && (
           <Flex css={{ mt: '$10' }}>
             <Icon css={{ color: '$dangerBase' }} name="error" size={20} />
-            <Text color="dangerBase" css={{ marginLeft: '5px' }} fontWeight="medium" size="sm">
+            <Text color="dangerBase" css={{ marginLeft: '$5' }} fontWeight="medium" size="sm">
               You must select a responsible
             </Text>
           </Flex>
