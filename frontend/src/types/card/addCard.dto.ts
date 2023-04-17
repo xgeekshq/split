@@ -1,5 +1,5 @@
-import { User } from '@/types/user/user';
 import CardType, { CardToAdd } from '@/types/card/card';
+import { User } from '@/types/user/user';
 
 export default interface AddCardDto {
   boardId: string;

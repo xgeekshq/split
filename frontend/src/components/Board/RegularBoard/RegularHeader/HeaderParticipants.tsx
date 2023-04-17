@@ -1,12 +1,12 @@
 import { useSession } from 'next-auth/react';
 import { useRecoilValue } from 'recoil';
 
+import { StyledBoardTitle } from '@/components/CardBoard/CardBody/CardTitle/partials/Title/styles';
+import AvatarGroup from '@/components/Primitives/Avatars/AvatarGroup/AvatarGroup';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Separator from '@/components/Primitives/Separator/Separator';
 import Text from '@/components/Primitives/Text/Text';
 import { boardInfoState } from '@/store/board/atoms/board.atom';
-import { StyledBoardTitle } from '@/components/CardBoard/CardBody/CardTitle/partials/Title/styles';
-import AvatarGroup from '@/components/Primitives/Avatars/AvatarGroup/AvatarGroup';
 
 interface Props {
   isParticipantsPage?: boolean;
@@ -31,7 +31,7 @@ const HeaderParticipants = ({ isParticipantsPage }: Props) => {
             <Text size="sm">Participants</Text>
           </StyledBoardTitle>
         )}
-        <AvatarGroup listUsers={users} userId={session?.user.id} isClickable />
+        <AvatarGroup isClickable listUsers={users} userId={session?.user.id} />
       </Flex>
       <Flex align="center">
         <Separator orientation="vertical" size="lg" />
@@ -40,7 +40,7 @@ const HeaderParticipants = ({ isParticipantsPage }: Props) => {
         <Text color="primary300" size="sm">
           Responsibles
         </Text>
-        <AvatarGroup responsible listUsers={users} userId={session?.user.id} isClickable />
+        <AvatarGroup isClickable responsible listUsers={users} userId={session?.user.id} />
       </Flex>
     </Flex>
   );

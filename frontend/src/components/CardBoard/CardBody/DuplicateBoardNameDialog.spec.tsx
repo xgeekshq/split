@@ -1,12 +1,13 @@
 import React from 'react';
-import { libraryMocks } from '@/utils/testing/mocks';
-import { renderWithProviders } from '@/utils/testing/renderWithProviders';
-import { UserFactory } from '@/utils/factories/user';
-import { fireEvent, waitFor, act } from '@testing-library/react';
+import { fireEvent, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+
 import DuplicateBoardNameDialog, {
   DuplicateBoardNameDialogProps,
 } from '@/components/CardBoard/CardBody/DuplicateBoardNameDialog';
+import { UserFactory } from '@/utils/factories/user';
+import { libraryMocks } from '@/utils/testing/mocks';
+import { renderWithProviders } from '@/utils/testing/renderWithProviders';
 
 const { mockRouter } = libraryMocks.mockNextRouter({ pathname: '/teams' });
 
@@ -14,7 +15,7 @@ const mockUser = UserFactory.create();
 
 const render = (props: Partial<DuplicateBoardNameDialogProps> = {}) =>
   renderWithProviders(
-    <DuplicateBoardNameDialog handleDuplicateBoard={jest.fn()} boardTitle="My Board" {...props} />,
+    <DuplicateBoardNameDialog boardTitle="My Board" handleDuplicateBoard={jest.fn()} {...props} />,
     {
       routerOptions: mockRouter,
       sessionOptions: { user: mockUser },
@@ -83,10 +84,8 @@ describe('Components/CardBoard/CardBody/DuplicateBoardNameDialog', () => {
 
     const input = getByLabelText('Board title');
 
-    await act(() => {
-      userEvent.clear(input);
-      userEvent.type(input, 'My Other Board');
-    });
+    await userEvent.clear(input);
+    await userEvent.type(input, 'My Other Board');
 
     await waitFor(() => {
       expect(input).toHaveValue('My Other Board');
@@ -108,7 +107,7 @@ describe('Components/CardBoard/CardBody/DuplicateBoardNameDialog', () => {
     // Assert
     expect(getByRole('button')).toBeInTheDocument();
 
-    userEvent.hover(getByRole('button'));
+    await userEvent.hover(getByRole('button'));
 
     await waitFor(() => {
       expect(getByRole('tooltip')).toBeInTheDocument();

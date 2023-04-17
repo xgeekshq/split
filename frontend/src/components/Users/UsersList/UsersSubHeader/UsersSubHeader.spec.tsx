@@ -1,16 +1,17 @@
-import { renderWithProviders } from '@/utils/testing/renderWithProviders';
 import { fireEvent, waitFor } from '@testing-library/react';
+
 import UsersSubHeader, {
   UsersSubHeaderProps,
 } from '@/components/Users/UsersList/UsersSubHeader/UsersSubHeader';
+import { renderWithProviders } from '@/utils/testing/renderWithProviders';
 
 const render = (props: Partial<UsersSubHeaderProps> = {}) =>
   renderWithProviders(
     <UsersSubHeader
-      userAmount={2}
-      search=""
-      handleSearchUser={jest.fn()}
       handleClearSearch={jest.fn()}
+      handleSearchUser={jest.fn()}
+      search=""
+      userAmount={2}
       {...props}
     />,
   );
@@ -30,7 +31,7 @@ describe('Users/UsersList/UsersSubHeader', () => {
 
     // Act
     const { getByTestId } = render({ handleClearSearch: mockClearSearch });
-    const clearBtn = getByTestId('searchInput').querySelector('div[data-type="clear"]')!;
+    const clearBtn = getByTestId('uncontrolledInput').querySelector('div[data-type="clear"]')!;
     fireEvent.click(clearBtn);
 
     // Assert

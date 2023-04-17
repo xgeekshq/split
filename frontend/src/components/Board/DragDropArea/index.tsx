@@ -1,22 +1,23 @@
 import React from 'react';
+import { BeforeCapture, DragDropContext, Droppable, DropResult } from 'react-beautiful-dnd';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
-import { DragDropContext, DropResult, BeforeCapture, Droppable } from 'react-beautiful-dnd';
+
+import Column from '@/components/Board/Column/Column';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import { countBoardCards } from '@/helper/board/countCards';
+import useBoard from '@/hooks/useBoard';
 import useCards from '@/hooks/useCards';
+import { boardInfoState } from '@/store/board/atoms/board.atom';
+import { filteredColumnsState } from '@/store/board/atoms/filterColumns';
+import { onDragCardStart } from '@/store/card/atoms/card.atom';
 import { toastState } from '@/store/toast/atom/toast.atom';
+import { styled } from '@/styles/stitches/stitches.config';
 import BoardType from '@/types/board/board';
 import MergeCardsDto from '@/types/board/mergeCard.dto';
 import UpdateCardPositionDto from '@/types/card/updateCardPosition.dto';
-import { ToastStateEnum } from '@/utils/enums/toast-types';
-import { onDragCardStart } from '@/store/card/atoms/card.atom';
-import { filteredColumnsState } from '@/store/board/atoms/filterColumns';
-import Column from '@/components/Board/Column/Column';
-import { styled } from '@/styles/stitches/stitches.config';
-import useBoard from '@/hooks/useBoard';
-import { boardInfoState } from '@/store/board/atoms/board.atom';
-import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import ColumnType from '@/types/column';
+import { BoardUserRoles } from '@/utils/enums/board.user.roles';
+import { ToastStateEnum } from '@/utils/enums/toast-types';
 
 const Container = styled(Flex, {
   boxSizing: 'border-box',
@@ -200,46 +201,46 @@ const DragDropArea: React.FC<Props> = ({
 
   const ColumnnContainer = (
     <Droppable
-      droppableId="column"
       direction="horizontal"
-      type="COLUMN"
+      droppableId="column"
       isDropDisabled={isMainboard || !hasAdminRole}
+      type="COLUMN"
     >
       {(provided) => (
         <Container
+          ref={provided.innerRef}
           css={{
             gap: '$24',
           }}
-          ref={provided.innerRef}
           {...provided.droppableProps}
         >
           {board.columns.map((column, index) => (
             <Column
               key={column._id}
-              hasMoreThanThreeColumns={hasMoreThanThreeColumns}
+              addCards={board.addCards}
               boardId={board._id}
+              boardUser={board.users.find((boardUser) => boardUser.user?._id === userId)}
+              cardText={column.cardText}
               cards={column.cards}
               color={column.color}
-              cardText={column.cardText}
               columnId={column._id}
-              isDefaultText={column.isDefaultText}
+              columnIndex={index}
               countAllCards={countAllCards}
+              hasAdminRole={hasAdminRole}
+              hasMoreThanThreeColumns={hasMoreThanThreeColumns}
               hideCards={board.hideCards}
               index={index}
+              isDefaultText={column.isDefaultText}
               isMainboard={isMainboard}
+              isRegularBoard={isRegularBoard}
               isSubBoard={board.isSubBoard}
               isSubmited={!!board.submitedByUser}
               maxVotes={Number(board.maxVotes)}
+              phase={board.phase}
+              postAnonymously={board.postAnonymously}
               socketId={socketId}
               title={column.title}
               userId={userId}
-              boardUser={board.users.find((boardUser) => boardUser.user?._id === userId)}
-              isRegularBoard={isRegularBoard}
-              hasAdminRole={hasAdminRole}
-              addCards={board.addCards}
-              postAnonymously={board.postAnonymously}
-              columnIndex={index}
-              phase={board.phase}
             />
           ))}
           {provided.placeholder}
@@ -250,7 +251,7 @@ const DragDropArea: React.FC<Props> = ({
 
   return (
     <>
-      <DragDropContext onDragEnd={onDragEnd} onBeforeCapture={onDragStart}>
+      <DragDropContext onBeforeCapture={onDragStart} onDragEnd={onDragEnd}>
         {ColumnnContainer}
       </DragDropContext>
     </>

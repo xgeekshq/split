@@ -26,7 +26,6 @@ describe('CreateBoardUseCase', () => {
 		}).compile();
 
 		useCase = module.get(CreateBoardUseCase);
-
 		createBoardServiceMock = module.get(Boards.TYPES.services.CreateBoardService);
 	});
 

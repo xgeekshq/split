@@ -1,13 +1,14 @@
-import { User } from '@/types/user/user';
-import { createMockRouter, createMockSession } from '@/utils/testing/mocks';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { render as rtlRender, RenderOptions, RenderResult } from '@testing-library/react';
+import { ReactElement, ReactNode } from 'react';
 import { Session } from 'next-auth';
-import { SessionProvider } from 'next-auth/react';
 import { RouterContext } from 'next/dist/shared/lib/router-context';
 import { NextRouter } from 'next/router';
-import { ReactElement, ReactNode } from 'react';
+import { SessionProvider } from 'next-auth/react';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { render as rtlRender, RenderOptions, RenderResult } from '@testing-library/react';
 import { RecoilRoot } from 'recoil';
+
+import { User } from '@/types/user/user';
+import { createMockRouter, createMockSession } from '@/utils/testing/mocks';
 
 export type RenderWithProvidersOptions = Omit<RenderOptions, 'queries'> & {
   routerOptions?: Partial<NextRouter>;
@@ -50,7 +51,13 @@ export function renderWithProviders(
   return rtlRender(ui, {
     wrapper: ({ children }: { children: ReactNode }) => {
       const router = createMockRouter(options?.routerOptions);
-      const queryClient = options?.queryClient ?? new QueryClient();
+
+      const defaultQueryOptions = {
+        defaultOptions: {
+          queries: { retry: false },
+        },
+      };
+      const queryClient = options?.queryClient ?? new QueryClient(defaultQueryOptions);
       const session = createMockSession(
         options?.sessionOptions?.session,
         options?.sessionOptions?.user,

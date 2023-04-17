@@ -38,4 +38,4 @@ const LotteryButton = styled(Flex, {
   },
 });
 
-export { StyledSubBoardItem, LotteryButton };
+export { LotteryButton, StyledSubBoardItem };

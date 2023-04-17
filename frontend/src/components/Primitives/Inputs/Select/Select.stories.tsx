@@ -1,18 +1,17 @@
 import React, { useState } from 'react';
 import { ComponentStory } from '@storybook/react';
-
 import dedent from 'ts-dedent';
 
+import Icon from '@/components/Primitives/Icons/Icon/Icon';
 import {
   Select,
+  SelectContent,
+  SelectIcon,
   SelectTrigger,
   SelectValue,
-  SelectIcon,
-  SelectContent,
 } from '@/components/Primitives/Inputs/Select/Select';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Text from '@/components/Primitives/Text/Text';
-import Icon from '@/components/Primitives/Icons/Icon/Icon';
 
 const DUMMY_OPTIONS = [
   {
@@ -101,15 +100,15 @@ export default {
 };
 
 const Template: ComponentStory<typeof Select> = ({ disabled, hasError }) => {
-  const [selectedOption, setSelectedOption] = useState<String | null>();
+  const [selectedOption, setSelectedOption] = useState<string | null>();
 
   return (
     <Flex>
       <Select
-        disabled={disabled}
-        hasError={hasError}
         css={{ width: '$300' }}
         defaultValue={selectedOption}
+        disabled={disabled}
+        hasError={hasError}
         onValueChange={(newSelectedOption: string) => {
           setSelectedOption(newSelectedOption);
         }}
@@ -132,22 +131,22 @@ export const Default = Template.bind({});
 Default.storyName = 'Basic Usage';
 
 export const WithLabel: ComponentStory<typeof Select> = ({ disabled, hasError }) => {
-  const [selectedItem, setSelectedItem] = useState<String | null>();
+  const [selectedItem, setSelectedItem] = useState<string | null>();
 
   return (
     <Flex>
       <Select
-        disabled={disabled}
-        hasError={hasError}
         css={{ width: '$300', height: '$64' }}
         defaultValue={selectedItem}
+        disabled={disabled}
+        hasError={hasError}
         onValueChange={(selectedOption: string) => {
           setSelectedItem(selectedOption);
         }}
       >
         <SelectTrigger css={{ padding: '$24' }}>
           <Flex direction="column">
-            <Text size={selectedItem ? 'sm' : 'md'} color="primary300">
+            <Text color="primary300" size={selectedItem ? 'sm' : 'md'}>
               Choose a fruit
             </Text>
             <SelectValue />

@@ -1,13 +1,11 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useSetRecoilState } from 'recoil';
 
 import { deleteTeamUser } from '@/api/teamService';
-import { ToastStateEnum } from '@/utils/enums/toast-types';
-
-import { useSetRecoilState } from 'recoil';
 import { toastState } from '@/store/toast/atom/toast.atom';
-
 import { Team, TeamChecked } from '@/types/team/team';
 import { TEAMS_KEY, USERS_KEY } from '@/utils/constants/reactQueryKeys';
+import { ToastStateEnum } from '@/utils/enums/toast-types';
 
 const useDeleteTeamUser = (userId: string) => {
   const queryClient = useQueryClient();

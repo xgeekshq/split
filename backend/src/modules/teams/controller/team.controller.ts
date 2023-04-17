@@ -39,7 +39,11 @@ import { TeamUserGuard } from '../../../libs/guards/teamRoles.guard';
 import { ForbiddenResponse } from '../../../libs/swagger/errors/forbidden.swagger';
 import { CreateTeamDto } from '../dto/create-team.dto';
 import TeamDto from '../dto/team.dto';
-import { TYPES } from '../interfaces/types';
+import {
+	CREATE_TEAM_APPLICATION,
+	DELETE_TEAM_APPLICATION,
+	GET_TEAM_APPLICATION
+} from '../constants';
 import { SuperAdminGuard } from 'src/libs/guards/superAdmin.guard';
 import { CreateTeamApplicationInterface } from '../interfaces/applications/create.team.application.interface';
 import { GetTeamApplicationInterface } from '../interfaces/applications/get.team.application.interface';
@@ -53,11 +57,11 @@ const TeamUserPermission = (permissions: string[]) => SetMetadata('permissions',
 @Controller('teams')
 export default class TeamsController {
 	constructor(
-		@Inject(TYPES.applications.CreateTeamApplication)
+		@Inject(CREATE_TEAM_APPLICATION)
 		private createTeamApp: CreateTeamApplicationInterface,
-		@Inject(TYPES.applications.GetTeamApplication)
+		@Inject(GET_TEAM_APPLICATION)
 		private getTeamApp: GetTeamApplicationInterface,
-		@Inject(TYPES.applications.DeleteTeamApplication)
+		@Inject(DELETE_TEAM_APPLICATION)
 		private deleteTeamApp: DeleteTeamApplicationInterface
 	) {}
 

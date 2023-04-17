@@ -1,5 +1,4 @@
 import {
-	BadRequestException,
 	Body,
 	Controller,
 	Delete,
@@ -28,7 +27,6 @@ import { CardGroupParams } from 'src/libs/dto/param/card.group.params';
 import { CardItemParams } from 'src/libs/dto/param/card.item.params';
 import { MergeCardsParams } from 'src/libs/dto/param/merge.cards.params';
 import { UnmergeCardsParams } from 'src/libs/dto/param/unmerge.cards.params';
-import { UPDATE_FAILED } from 'src/libs/exceptions/messages';
 import JwtAuthenticationGuard from 'src/libs/guards/jwtAuth.guard';
 import RequestWithUser from 'src/libs/interfaces/requestWithUser.interface';
 import { BadRequestResponse } from 'src/libs/swagger/errors/bad-request.swagger';
@@ -43,12 +41,14 @@ import UpdateCardDto from '../dto/update.card.dto';
 import { UpdateCardPositionDto } from '../dto/update-position.card.dto';
 import { TYPES } from '../interfaces/types';
 import { MergeCardDto } from '../dto/group/merge.card.dto';
-import { UpdateCardApplicationInterface } from '../interfaces/applications/update.card.application.interface';
 import CreateCardUseCaseDto from '../dto/useCase/create-card.use-case.dto';
 import { UseCase } from 'src/libs/interfaces/use-case.interface';
 import CardCreationPresenter from '../dto/useCase/presenters/create-card-res.use-case.dto';
 import UnmergeCardUseCaseDto from '../dto/useCase/unmerge-card.use-case.dto';
 import MergeCardUseCaseDto from '../dto/useCase/merge-card.use-case.dto';
+import UpdateCardPositionUseCaseDto from '../dto/useCase/update-card-position.use-case.dto';
+import UpdateCardTextUseCaseDto from '../dto/useCase/update-card-text.use-case.dto';
+import UpdateCardGroupTextUseCaseDto from '../dto/useCase/update-card-group-text.use-case.dto';
 import DeleteCardUseCaseDto from '../dto/useCase/delete-card.use-case.dto';
 import DeleteFromCardGroupUseCaseDto from '../dto/useCase/delete-fom-card-group.use-case.dto';
 
@@ -60,16 +60,20 @@ export default class CardsController {
 	constructor(
 		@Inject(TYPES.applications.CreateCardUseCase)
 		private readonly createCardUseCase: UseCase<CreateCardUseCaseDto, CardCreationPresenter>,
-		@Inject(TYPES.applications.UpdateCardApplication)
-		private readonly updateCardApp: UpdateCardApplicationInterface,
+		@Inject(TYPES.applications.UpdateCardPositionUseCase)
+		private readonly updateCardPositionUseCase: UseCase<UpdateCardPositionUseCaseDto, void>,
+		@Inject(TYPES.applications.UpdateCardTextUseCase)
+		private readonly updateCardTextUseCase: UseCase<UpdateCardTextUseCaseDto, void>,
+		@Inject(TYPES.applications.UpdateCardGroupTextUseCase)
+		private readonly updateCardGroupTextUseCase: UseCase<UpdateCardGroupTextUseCaseDto, void>,
+		@Inject(TYPES.applications.UnmergeCardUseCase)
+		private readonly unmergeCardUseCase: UseCase<UnmergeCardUseCaseDto, string>,
 		@Inject(TYPES.applications.MergeCardUseCase)
 		private readonly mergeCardUseCase: UseCase<MergeCardUseCaseDto, boolean>,
 		@Inject(TYPES.applications.DeleteCardUseCase)
 		private readonly deleteCardUseCase: UseCase<DeleteCardUseCaseDto, void>,
 		@Inject(TYPES.applications.DeleteFromCardGroupUseCase)
 		private readonly deleteFromCardGroupUseCase: UseCase<DeleteFromCardGroupUseCaseDto, void>,
-		@Inject(TYPES.applications.UnmergeCardUseCase)
-		private readonly unmergeCardUseCase: UseCase<UnmergeCardUseCaseDto, string>,
 		private readonly socketService: SocketGateway
 	) {}
 
@@ -131,11 +135,7 @@ export default class CardsController {
 		type: InternalServerErrorResponse
 	})
 	@Delete(':boardId/card/:cardId')
-	deleteCard(
-		@Req() request: RequestWithUser,
-		@Param() params: CardGroupParams,
-		@Body() deleteCardDto: DeleteCardDto
-	) {
+	deleteCard(@Param() params: CardGroupParams, @Body() deleteCardDto: DeleteCardDto) {
 		const { boardId, cardId } = params;
 
 		const completionHandler = () => {
@@ -206,26 +206,27 @@ export default class CardsController {
 		type: InternalServerErrorResponse
 	})
 	@Put(':boardId/card/:cardId/items/:itemId')
-	async updateCardText(
+	updateCardText(
 		@Req() request: RequestWithUser,
 		@Param() params: CardItemParams,
 		@Body() updateCardDto: UpdateCardDto
 	) {
-		const { boardId, cardId, itemId } = params;
+		const { boardId, cardId, itemId: cardItemId } = params;
 		const { text, socketId } = updateCardDto;
+		const userId = request.user._id;
 
-		const board = await this.updateCardApp.updateCardText(
+		const completionHandler = () => {
+			this.socketService.sendUpdateCard(socketId, updateCardDto);
+		};
+
+		return this.updateCardTextUseCase.execute({
 			boardId,
 			cardId,
-			itemId,
-			request.user._id,
-			text
-		);
-
-		if (!board) throw new BadRequestException(UPDATE_FAILED);
-		this.socketService.sendUpdateCard(socketId, updateCardDto);
-
-		return HttpStatus.OK;
+			cardItemId,
+			userId,
+			text,
+			completionHandler
+		});
 	}
 
 	@ApiOperation({ summary: 'Update a specific card' })
@@ -248,25 +249,26 @@ export default class CardsController {
 		type: InternalServerErrorResponse
 	})
 	@Put(':boardId/card/:cardId')
-	async updateCardGroupText(
+	updateCardGroupText(
 		@Req() request: RequestWithUser,
 		@Param() params: CardGroupParams,
 		@Body() updateCardDto: UpdateCardDto
 	) {
 		const { boardId, cardId } = params;
 		const { text, socketId } = updateCardDto;
+		const userId = request.user._id;
 
-		const board = await this.updateCardApp.updateCardGroupText(
+		const completionHandler = () => {
+			this.socketService.sendUpdateCard(socketId, updateCardDto);
+		};
+
+		return this.updateCardGroupTextUseCase.execute({
 			boardId,
 			cardId,
-			request.user._id,
-			text
-		);
-
-		if (!board) throw new BadRequestException(UPDATE_FAILED);
-		this.socketService.sendUpdateCard(socketId, updateCardDto);
-
-		return HttpStatus.OK;
+			userId,
+			text,
+			completionHandler
+		});
 	}
 
 	@ApiOperation({
@@ -293,24 +295,21 @@ export default class CardsController {
 		type: InternalServerErrorResponse
 	})
 	@Patch(':boardId/card/:cardId/position')
-	async updateCardPosition(
-		@Param() params: CardGroupParams,
-		@Body() boardData: UpdateCardPositionDto
-	) {
+	updateCardPosition(@Param() params: CardGroupParams, @Body() boardData: UpdateCardPositionDto) {
 		const { boardId, cardId } = params;
 		const { targetColumnId, newPosition, socketId } = boardData;
 
-		try {
-			await this.updateCardApp.updateCardPosition(boardId, cardId, targetColumnId, newPosition);
-
+		const completionHandler = () => {
 			this.socketService.sendUpdateCardPosition(socketId, boardData);
+		};
 
-			return HttpStatus.OK;
-		} catch (e) {
-			this.socketService.sendUpdatedBoard(boardId, socketId);
-
-			throw e;
-		}
+		return this.updateCardPositionUseCase.execute({
+			boardId,
+			cardId,
+			targetColumnId,
+			newPosition,
+			completionHandler
+		});
 	}
 
 	@ApiOperation({ summary: 'Merge two cards together' })

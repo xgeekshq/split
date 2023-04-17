@@ -1,22 +1,27 @@
-import { dehydrate, QueryClient } from '@tanstack/react-query';
-import { GetServerSideProps, GetServerSidePropsContext, NextPage } from 'next';
-import { useSetRecoilState } from 'recoil';
-import { getAllUsers } from '@/api/userService';
-import requireAuthentication from '@/components/HOC/requireAuthentication';
-import CreateTeam from '@/components/Teams/CreateTeam/CreateTeam';
-import { createTeamState, usersListState } from '@/store/team/atom/team.atom';
-import { TeamUserRoles } from '@/utils/enums/team.user.roles';
-import QueryError from '@/components/Errors/QueryError';
-import LoadingPage from '@/components/Primitives/Loading/Page/Page';
 import { Suspense, useEffect } from 'react';
+import { GetServerSideProps, GetServerSidePropsContext, NextPage } from 'next';
+import { useRouter } from 'next/router';
+import { dehydrate, QueryClient } from '@tanstack/react-query';
+import { useSetRecoilState } from 'recoil';
+
+import { getAllUsers } from '@/api/userService';
+import QueryError from '@/components/Errors/QueryError';
+import requireAuthentication from '@/components/HOC/requireAuthentication';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Dots from '@/components/Primitives/Loading/Dots/Dots';
+import LoadingPage from '@/components/Primitives/Loading/Page/Page';
+import CreateTeam from '@/components/Teams/CreateTeam/CreateTeam';
 import useCurrentSession from '@/hooks/useCurrentSession';
 import useUsers from '@/hooks/users/useUsers';
+import { createTeamState } from '@/store/team.atom';
+import { usersListState } from '@/store/user.atom';
 import { USERS_KEY } from '@/utils/constants/reactQueryKeys';
+import { TeamUserRoles } from '@/utils/enums/team.user.roles';
+import { ROUTES } from '@/utils/routes';
 
 const NewTeam: NextPage = () => {
   const { session, userId } = useCurrentSession({ required: true });
+  const { replace } = useRouter();
 
   const { data: usersData, isLoading } = useUsers();
 
@@ -48,13 +53,16 @@ const NewTeam: NextPage = () => {
     setUsersListState(usersWithChecked);
   }, [usersData, userId, setUsersListState, setCreateTeamState]);
 
-  if (!session || !usersData) return null;
+  if (!session || !usersData) {
+    replace(ROUTES.Teams);
+    return null;
+  }
 
   return (
     <Suspense fallback={<LoadingPage />}>
       <QueryError>
         {isLoading ? (
-          <Flex justify="center" css={{ mt: '$16' }}>
+          <Flex css={{ mt: '$16' }} data-testid="loading" justify="center">
             <Dots />
           </Flex>
         ) : (

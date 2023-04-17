@@ -1,4 +1,10 @@
 import { ReactElement, ReactNode, useState } from 'react';
+import { NextPage } from 'next';
+import { Session } from 'next-auth';
+import App, { AppContext, AppProps } from 'next/app';
+import Head from 'next/head';
+import { useRouter } from 'next/router';
+import { SessionProvider } from 'next-auth/react';
 import {
   DehydratedState,
   Hydrate,
@@ -6,23 +12,15 @@ import {
   QueryClientConfig,
   QueryClientProvider,
 } from '@tanstack/react-query';
-
-import { NextPage } from 'next';
-import App, { AppContext, AppProps } from 'next/app';
-import Head from 'next/head';
-import { useRouter } from 'next/router';
-import { SessionProvider } from 'next-auth/react';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { RecoilRoot } from 'recoil';
-
-import globalStyles from '@/styles/globals';
 
 import Sprite from '@/components/icons/Sprite';
 import Toast, { ToastProvider, ToastViewport } from '@/components/Primitives/Toast/Toast';
+import RecoilDevTools from '@/components/RecoilDevTools/RecoilDevTools';
+import globalStyles from '@/styles/globals';
 import { JWT_EXPIRATION_TIME, RECOIL_DEV_TOOLS } from '@/utils/constants';
 import { ROUTES } from '@/utils/routes';
-import { Session } from 'next-auth';
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
-import RecoilDevTools from '@/components/RecoilDevTools/RecoilDevTools';
 
 type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
   getLayout?: (page: ReactElement) => ReactNode;
@@ -41,6 +39,8 @@ const QUERY_OPTIONS: QueryClientConfig = {
   },
 };
 
+globalStyles();
+
 function Root({
   Component,
   pageProps,
@@ -50,7 +50,6 @@ function Root({
   const getLayout = Component.getLayout ?? ((page) => page);
 
   const router = useRouter();
-  globalStyles();
 
   return (
     <>

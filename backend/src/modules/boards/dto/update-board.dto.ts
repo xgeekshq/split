@@ -18,4 +18,9 @@ export class UpdateBoardDto extends PartialType(BoardDto) {
 	@ApiPropertyOptional({ type: String })
 	@IsOptional()
 	mainBoardId?: string;
+
+	@ApiProperty()
+	boardId: string;
+
+	completionHandler: () => void;
 }

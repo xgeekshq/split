@@ -1,12 +1,14 @@
-import { User } from '@/types/user/user';
-import { Session } from 'next-auth/core/types';
 import * as NextRouter from 'next/router';
+import { Session } from 'next-auth/core/types';
 import * as ReactQuery from '@tanstack/react-query';
+
+import { User } from '@/types/user/user';
 import { SessionUserFactory } from '@/utils/factories/user';
 
 export type MockReactQueryOptions = {
-  useQueryResult: ReactQuery.UseQueryResult;
-  useMutationResult: ReactQuery.UseMutationResult;
+  useQueryResult: Partial<ReactQuery.UseQueryResult>;
+  useInfiniteQueryResult: Partial<ReactQuery.UseInfiniteQueryResult>;
+  useMutationResult: Partial<ReactQuery.UseMutationResult>;
 };
 
 export function createMockRouter(router?: Partial<NextRouter.NextRouter>): NextRouter.NextRouter {
@@ -53,17 +55,22 @@ export const libraryMocks = {
       useRouterMockFn,
     };
   },
-  mockReactQuery(options?: MockReactQueryOptions) {
-    const { useQueryResult, useMutationResult } = options ?? {};
+
+  mockReactQuery(options?: Partial<MockReactQueryOptions>) {
+    const { useQueryResult, useInfiniteQueryResult, useMutationResult } = options ?? {};
+
     const useQueryMockFn = jest.fn<Partial<ReactQuery.UseQueryResult>, any>(() => ({
       ...useQueryResult,
     }));
+    const useInfiniteQueryMockFn = jest.fn<Partial<ReactQuery.UseInfiniteQueryResult>, any>(() => ({
+      ...useInfiniteQueryResult,
+    }));
     const useMutationMockFn = jest.fn<Partial<ReactQuery.UseMutationResult>, any>(() => ({
       ...useMutationResult,
-      mutate: jest.fn(),
     }));
 
     jest.spyOn(ReactQuery, 'useQuery').mockImplementation(useQueryMockFn as any);
+    jest.spyOn(ReactQuery, 'useInfiniteQuery').mockImplementation(useInfiniteQueryMockFn as any);
     jest.spyOn(ReactQuery, 'useMutation').mockImplementation(useMutationMockFn as any);
 
     return {
@@ -75,9 +82,11 @@ export const libraryMocks = {
 };
 
 export function createMockSession(session?: Partial<Session>, user?: User): Session {
+  const date = new Date();
+
   return {
-    user: SessionUserFactory.create({ ...user, id: user?._id, isSAdmin: false }),
-    expires: new Date().toISOString(),
+    user: SessionUserFactory.create({ ...user, id: user?._id, isSAdmin: user?.isSAdmin ?? false }),
+    expires: new Date(date.setDate(date.getDate() + 1)).toISOString(),
     strategy: 'local',
     error: '',
     ...session,

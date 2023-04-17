@@ -1,6 +1,7 @@
+import * as HoverCard from '@radix-ui/react-hover-card';
+
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import { styled } from '@/styles/stitches/stitches.config';
-import * as HoverCard from '@radix-ui/react-hover-card';
 
 const UserNamesContainer = styled(HoverCard.Trigger, Flex, {
   height: '$64',
@@ -31,4 +32,4 @@ const DropdownItem = styled(Flex, {
 
 const Dropdown = styled(HoverCard.Root, {});
 
-export { UserNamesContainer, Dropdown, DropdownContent, DropdownItem };
+export { Dropdown, DropdownContent, DropdownItem, UserNamesContainer };

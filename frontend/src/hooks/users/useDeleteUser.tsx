@@ -1,12 +1,11 @@
 import { InfiniteData, useMutation, useQueryClient } from '@tanstack/react-query';
-import { deleteUserRequest } from '@/api/userService';
-
 import { useSetRecoilState } from 'recoil';
-import { toastState } from '@/store/toast/atom/toast.atom';
-import { ToastStateEnum } from '@/utils/enums/toast-types';
-import { InfiniteUsersWithTeams } from '@/types/user/user';
 
+import { deleteUserRequest } from '@/api/userService';
+import { toastState } from '@/store/toast/atom/toast.atom';
+import { InfiniteUsersWithTeams } from '@/types/user/user';
 import { TEAMS_KEY, USERS_KEY } from '@/utils/constants/reactQueryKeys';
+import { ToastStateEnum } from '@/utils/enums/toast-types';
 
 const useDeleteUser = () => {
   const queryClient = useQueryClient();
@@ -32,7 +31,7 @@ const useDeleteUser = () => {
     onSuccess: () => {
       setToastState({
         open: true,
-        content: 'The team user was successfully updated.',
+        content: 'The user was successfully updated.',
         type: ToastStateEnum.SUCCESS,
       });
     },
@@ -41,7 +40,7 @@ const useDeleteUser = () => {
 
       setToastState({
         open: true,
-        content: 'Error while updating the user',
+        content: 'Error while deleting the user',
         type: ToastStateEnum.ERROR,
       });
     },

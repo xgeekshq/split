@@ -1,16 +1,17 @@
-import { renderWithProviders } from '@/utils/testing/renderWithProviders';
 import { fireEvent, waitFor } from '@testing-library/dom';
+
 import CreateFooter, {
   CreateFooterProps,
 } from '@/components/Primitives/Layout/CreateFooter/CreateFooter';
+import { renderWithProviders } from '@/utils/testing/renderWithProviders';
 
 const render = (props: Partial<CreateFooterProps> = {}) =>
   renderWithProviders(
     <CreateFooter
-      disableButton={false}
-      handleBack={jest.fn()}
-      formId="form"
       confirmationLabel="Confirm"
+      disableButton={false}
+      formId="form"
+      handleBack={jest.fn()}
       {...props}
     />,
   );

@@ -10,7 +10,7 @@ export class UserRepository
 	extends MongoGenericRepository<User>
 	implements UserRepositoryInterface
 {
-	constructor(@InjectModel(User.name) private model: Model<User>) {
+	constructor(@InjectModel(User.name) private readonly model: Model<User>) {
 		super(model);
 	}
 

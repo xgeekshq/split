@@ -1,6 +1,7 @@
-import { renderWithProviders } from '@/utils/testing/renderWithProviders';
 import { fireEvent, waitFor } from '@testing-library/dom';
+
 import Switch, { SwitchProps } from '@/components/Primitives/Inputs/Switches/Switch/Switch';
+import { renderWithProviders } from '@/utils/testing/renderWithProviders';
 
 const render = (props: Partial<SwitchProps> = {}) =>
   renderWithProviders(<Switch checked={false} {...props} />);

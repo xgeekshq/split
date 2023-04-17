@@ -14,9 +14,9 @@
     "pre-commit:frontend": "npm run pre-commit --prefix frontend"
   },
   "devDependencies": {
-    "@commitlint/cli": "^17.5.0",
-    "@commitlint/config-conventional": "^17.4.0",
+    "@commitlint/cli": "^17.6.1",
+    "@commitlint/config-conventional": "^17.6.1",
     "concurrently": "^8.0.1",
-    "husky": "^8.0.1"
+    "husky": "^8.0.3"
   }
 }

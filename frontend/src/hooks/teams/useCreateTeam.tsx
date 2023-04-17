@@ -1,13 +1,11 @@
 import { useMutation } from '@tanstack/react-query';
+import { AxiosError } from 'axios';
+import { useSetRecoilState } from 'recoil';
 
 import { createTeamRequest } from '@/api/teamService';
-import { ToastStateEnum } from '@/utils/enums/toast-types';
-import { AxiosError } from 'axios';
-
-import { useSetRecoilState } from 'recoil';
-import { toastState } from '@/store/toast/atom/toast.atom';
-
 import { INVALID_NAME } from '@/errors/teams/errors';
+import { toastState } from '@/store/toast/atom/toast.atom';
+import { ToastStateEnum } from '@/utils/enums/toast-types';
 
 const useCreateTeam = () => {
   const setToastState = useSetRecoilState(toastState);

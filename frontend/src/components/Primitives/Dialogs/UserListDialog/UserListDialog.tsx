@@ -1,13 +1,14 @@
 import React, { Dispatch, SetStateAction, useEffect, useMemo, useState } from 'react';
+
 import Dialog from '@/components/Primitives/Dialogs/Dialog/Dialog';
-import Text from '@/components/Primitives/Text/Text';
-import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Checkbox from '@/components/Primitives/Inputs/Checkboxes/Checkbox/Checkbox';
-import { UserList } from '@/types/team/userList';
-import Separator from '@/components/Primitives/Separator/Separator';
-import useCurrentSession from '@/hooks/useCurrentSession';
-import SearchInput from '@/components/Primitives/Inputs/SearchInput/SearchInput';
 import CheckboxUserItem from '@/components/Primitives/Inputs/Checkboxes/UserCheckbox/UserCheckbox';
+import Flex from '@/components/Primitives/Layout/Flex/Flex';
+import Separator from '@/components/Primitives/Separator/Separator';
+import Text from '@/components/Primitives/Text/Text';
+import useCurrentSession from '@/hooks/useCurrentSession';
+import { UserList } from '@/types/team/userList';
+import UncontrolledInput from '../../Inputs/UncontrolledInput/UncontrolledInput';
 
 export type UserListDialogProps = {
   usersList: UserList[];
@@ -107,18 +108,19 @@ const UserListDialog = React.memo<UserListDialogProps>(
 
     return (
       <Dialog isOpen={isOpen} setIsOpen={setIsOpen}>
-        <Flex direction="column" css={{ height: '100%' }} data-testid="userListDialog">
+        <Flex css={{ height: '100%' }} data-testid="userListDialog" direction="column">
           <Dialog.Header title={confirmationLabel} />
           <Flex css={{ p: '$32' }} direction="column">
-            <SearchInput
+            <UncontrolledInput
               currentValue={searchMember}
+              iconName="search"
+              placeholder="Search member"
               handleChange={(e) => {
                 setSearchMember(e.target.value);
               }}
               handleClear={() => {
                 setSearchMember('');
               }}
-              placeholder="Search member"
             />
           </Flex>
           <Text css={{ display: 'block', px: '$32', pb: '$24' }} heading="4">
@@ -129,9 +131,9 @@ const UserListDialog = React.memo<UserListDialogProps>(
               <Flex css={{ flex: 1 }}>
                 <Flex align="center" gap={8}>
                   <Checkbox
-                    id="selectAll"
                     checked={isCheckAll}
                     handleChange={handleSelectAll}
+                    id="selectAll"
                     size="md"
                   />
                   <Text heading={5}>Name</Text>
@@ -144,26 +146,26 @@ const UserListDialog = React.memo<UserListDialogProps>(
             <Separator orientation="horizontal" />
           </Flex>
           <Flex
+            css={{ height: '100%', overflowY: 'auto', py: '$16' }}
             direction="column"
             justify="start"
-            css={{ height: '100%', overflowY: 'auto', py: '$16' }}
           >
             <Flex css={{ px: '$32' }} direction="column" gap={20}>
               {filteredList?.map((user) => (
                 <CheckboxUserItem
                   key={user._id}
-                  user={user}
                   disabled={user._id === userId && !isSAdmin}
                   handleChecked={handleChecked}
+                  user={user}
                 />
               ))}
             </Flex>
           </Flex>
           <Dialog.Footer
-            handleAffirmative={handleUpdateUsers}
-            handleClose={handleClose}
             affirmativeLabel="Update"
             disabled={disableUpdate}
+            handleAffirmative={handleUpdateUsers}
+            handleClose={handleClose}
           />
         </Flex>
       </Dialog>

@@ -2,7 +2,6 @@ import { GetBoardUserServiceInterface } from '../../boardUsers/interfaces/servic
 import { Inject, Injectable, NotFoundException, forwardRef } from '@nestjs/common';
 import { BOARD_NOT_FOUND } from 'src/libs/exceptions/messages';
 import { GetTeamServiceInterface } from 'src/modules/teams/interfaces/services/get.team.service.interface';
-import * as Teams from 'src/modules/teams/interfaces/types';
 import * as BoardUsers from 'src/modules/boardUsers/interfaces/types';
 import { QueryType } from '../interfaces/findQuery';
 import { GetBoardServiceInterface } from '../interfaces/services/get.board.service.interface';
@@ -10,11 +9,12 @@ import { cleanBoard } from '../utils/clean-board';
 import { TYPES } from '../interfaces/types';
 import { BoardRepositoryInterface } from '../repositories/board.repository.interface';
 import UserDto from 'src/modules/users/dto/user.dto';
+import { GET_TEAM_SERVICE } from 'src/modules/teams/constants';
 
 @Injectable()
 export default class GetBoardService implements GetBoardServiceInterface {
 	constructor(
-		@Inject(forwardRef(() => Teams.TYPES.services.GetTeamService))
+		@Inject(forwardRef(() => GET_TEAM_SERVICE))
 		private getTeamService: GetTeamServiceInterface,
 		@Inject(BoardUsers.TYPES.services.GetBoardUserService)
 		private getBoardUserService: GetBoardUserServiceInterface,

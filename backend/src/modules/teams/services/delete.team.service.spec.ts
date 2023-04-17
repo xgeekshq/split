@@ -8,13 +8,13 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { DeepMocked, createMock } from '@golevelup/ts-jest';
 import { deleteTeamService } from 'src/modules/teams/providers';
 import * as Boards from 'src/modules/boards/interfaces/types';
-import * as Teams from 'src/modules/teams/interfaces/types';
 import * as TeamUsers from 'src/modules/teamUsers/interfaces/types';
 import { TeamUserFactory } from 'src/libs/test-utils/mocks/factories/teamUser-factory.mock';
 import { DeleteBoardServiceInterface } from 'src/modules/boards/interfaces/services/delete.board.service.interface';
 import { DeleteTeamUserServiceInterface } from 'src/modules/teamUsers/interfaces/services/delete.team.user.service.interface';
 import { BadRequestException } from '@nestjs/common';
 import { TeamRepositoryInterface } from '../interfaces/repositories/team.repository.interface';
+import { TEAM_REPOSITORY } from 'src/modules/teams/constants';
 
 const teams: Team[] = TeamFactory.createMany(4);
 const teamUsers: TeamUser[] = TeamUserFactory.createMany(5);
@@ -43,7 +43,7 @@ describe('DeleteTeamService', () => {
 			providers: [
 				deleteTeamService,
 				{
-					provide: Teams.TYPES.repositories.TeamRepository,
+					provide: TEAM_REPOSITORY,
 					useValue: createMock<TeamRepositoryInterface>()
 				},
 				{
@@ -58,7 +58,7 @@ describe('DeleteTeamService', () => {
 		}).compile();
 
 		teamService = module.get<DeleteTeamServiceInterface>(deleteTeamService.provide);
-		teamRepositoryMock = module.get(Teams.TYPES.repositories.TeamRepository);
+		teamRepositoryMock = module.get(TEAM_REPOSITORY);
 		deleteTeamUserServiceMock = module.get(TeamUsers.TYPES.services.DeleteTeamUserService);
 		deleteBoardServiceMock = module.get(Boards.TYPES.services.DeleteBoardService);
 	});

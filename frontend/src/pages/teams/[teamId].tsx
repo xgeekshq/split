@@ -1,6 +1,7 @@
+import React, { ReactElement, Suspense, useEffect } from 'react';
 import { GetServerSideProps } from 'next';
 import { useRouter } from 'next/router';
-import React, { ReactElement, Suspense, useEffect } from 'react';
+import { dehydrate, QueryClient } from '@tanstack/react-query';
 import { useSetRecoilState } from 'recoil';
 
 import { getTeam } from '@/api/teamService';
@@ -12,15 +13,14 @@ import Dots from '@/components/Primitives/Loading/Dots/Dots';
 import LoadingPage from '@/components/Primitives/Loading/Page/Page';
 import TeamHeader from '@/components/Teams/Team/Header/Header';
 import TeamMembersList from '@/components/Teams/Team/TeamMembersList';
+import useTeam from '@/hooks/teams/useTeam';
 import useCurrentSession from '@/hooks/useCurrentSession';
-import { TEAMS_KEY, USERS_KEY } from '@/utils/constants/reactQueryKeys';
-import { usersListState } from '@/store/team/atom/team.atom';
+import useUsers from '@/hooks/users/useUsers';
+import { usersListState } from '@/store/user.atom';
 import { UserList } from '@/types/team/userList';
+import { TEAMS_KEY, USERS_KEY } from '@/utils/constants/reactQueryKeys';
 import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 import { ROUTES } from '@/utils/routes';
-import { dehydrate, QueryClient } from '@tanstack/react-query';
-import useTeam from '@/hooks/teams/useTeam';
-import useUsers from '@/hooks/users/useUsers';
 
 const Team = () => {
   // Session Details
@@ -39,7 +39,9 @@ const Team = () => {
 
   const userFound = teamData?.users.find((member) => member.user?._id === userId);
   const hasPermissions =
-    isSAdmin || [TeamUserRoles.ADMIN, TeamUserRoles.STAKEHOLDER].includes(userFound?.role!);
+    isSAdmin || userFound !== undefined
+      ? [TeamUserRoles.ADMIN, TeamUserRoles.STAKEHOLDER].includes(userFound!.role)
+      : false;
 
   useEffect(() => {
     if (!usersData || !teamData) return;
@@ -61,7 +63,7 @@ const Team = () => {
 
   return (
     <Flex css={{ width: '100%' }} direction="column" gap="40">
-      <TeamHeader title={teamData.name} hasPermissions={hasPermissions} />
+      <TeamHeader hasPermissions={hasPermissions} title={teamData.name} />
       <Flex
         css={{ height: '100%', position: 'relative', overflowY: 'auto', pr: '$8' }}
         direction="column"
@@ -69,14 +71,14 @@ const Team = () => {
         <Suspense fallback={<LoadingPage />}>
           <QueryError>
             {isLoadingTeam || isLoadingUsers ? (
-              <Flex justify="center" css={{ mt: '$16' }}>
+              <Flex css={{ mt: '$16' }} justify="center">
                 <Dots />
               </Flex>
             ) : (
               <TeamMembersList
-                teamUsers={teamData.users}
-                hasPermissions={hasPermissions}
                 isTeamPage
+                hasPermissions={hasPermissions}
+                teamUsers={teamData.users}
               />
             )}
           </QueryError>

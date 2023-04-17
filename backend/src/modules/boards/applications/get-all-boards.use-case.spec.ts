@@ -20,7 +20,6 @@ const boards = BoardFactory.createMany(5, [
 	{ isSubBoard: true, team: teamIds[1] }
 ]);
 const boardIds = boards.map((board) => board._id);
-
 const userId = faker.datatype.uuid();
 
 describe('GetAllBoardsUseCase', () => {

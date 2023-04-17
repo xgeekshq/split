@@ -1,5 +1,5 @@
-import { useRouter } from 'next/router';
 import React, { useState } from 'react';
+import { useRouter } from 'next/router';
 import { useRecoilValue } from 'recoil';
 
 import UserListDialog from '@/components/Primitives/Dialogs/UserListDialog/UserListDialog';
@@ -8,7 +8,7 @@ import Button from '@/components/Primitives/Inputs/Button/Button';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Text from '@/components/Primitives/Text/Text';
 import useParticipants from '@/hooks/useParticipants';
-import { usersListState } from '@/store/team/atom/team.atom';
+import { usersListState } from '@/store/user.atom';
 import { BoardUser, BoardUserToAdd, UpdateBoardUser } from '@/types/board/board.user';
 import { UserList } from '@/types/team/userList';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
@@ -70,21 +70,21 @@ const BoardParticipantsSubHeader = ({
   };
 
   return (
-    <Flex justify="between" css={{ mt: '$32', px: '$150' }}>
+    <Flex css={{ mt: '$32', px: '$150' }} justify="between">
       <Text heading="1">Participants</Text>
       {hasPermissions && (
-        <Button size="sm" onClick={() => setIsOpen(true)}>
+        <Button onClick={() => setIsOpen(true)} size="sm">
           <Icon css={{ color: 'white' }} name="plus" />
           Add/remove participants
         </Button>
       )}
       <UserListDialog
-        usersList={usersList}
+        confirmationHandler={saveParticipants}
+        confirmationLabel="Add/remove participants"
         isOpen={isOpen}
         setIsOpen={setIsOpen}
-        confirmationHandler={saveParticipants}
         title="Board Participants"
-        confirmationLabel="Add/remove participants"
+        usersList={usersList}
       />
     </Flex>
   );

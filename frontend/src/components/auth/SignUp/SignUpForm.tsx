@@ -1,8 +1,8 @@
 import React, { Dispatch } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
+import { joiResolver } from '@hookform/resolvers/joi';
 import { useQuery } from '@tanstack/react-query';
 import { useSetRecoilState } from 'recoil';
-import { joiResolver } from '@hookform/resolvers/joi';
 
 import { checkUserExists, checkUserExistsAD } from '@/api/authService';
 import Button from '@/components/Primitives/Inputs/Button/Button';
@@ -10,11 +10,11 @@ import Input from '@/components/Primitives/Inputs/Input/Input';
 import Text from '@/components/Primitives/Text/Text';
 import SchemaEmail from '@/schema/schemaEmail';
 import { toastState } from '@/store/toast/atom/toast.atom';
+import { FlexForm } from '@/styles/pages/pages.styles';
 import { EmailUser } from '@/types/user/user';
 import { NEXT_PUBLIC_ENABLE_AZURE } from '@/utils/constants';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
 import { SignUpEnum } from '@/utils/signUp.enum';
-import { FlexForm } from '@/styles/pages/pages.styles';
 
 interface SignUpFormProps {
   setShowSignUp: Dispatch<React.SetStateAction<SignUpEnum>>;
@@ -96,7 +96,7 @@ const SignUpForm = ({ setShowSignUp, setEmailName, emailName }: SignUpFormProps)
         <Text css={{ mt: '$24' }} heading="1">
           Sign up
         </Text>
-        <Text size="md" color="primary500" css={{ mt: '$8' }}>
+        <Text color="primary500" css={{ mt: '$8' }} size="md">
           Enter your email address to proceed further
         </Text>
 

@@ -34,7 +34,18 @@ export default class CreateUserService implements CreateUserServiceInterface {
 	async createGuest(guestUserData: CreateGuestUserDto) {
 		const { firstName, lastName } = guestUserData;
 
-		const email = faker.internet.email(firstName, lastName, '', { allowSpecialCharacters: true });
+		let email: string;
+		let maxCount = 0;
+		while (maxCount < 5) {
+			email = faker.internet.email(firstName, lastName, '', { allowSpecialCharacters: true });
+
+			const nUsersWithTheSameEmail = await this.userRepository.countDocumentsWithQuery({ email });
+			const emailAlreadyExists = nUsersWithTheSameEmail > 0;
+
+			if (!emailAlreadyExists) break;
+			maxCount++;
+		}
+
 		const user: User = {
 			firstName,
 			lastName: lastName ?? '',

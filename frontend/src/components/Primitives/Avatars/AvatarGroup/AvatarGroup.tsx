@@ -1,5 +1,7 @@
 import React, { useCallback, useMemo, useState } from 'react';
+import { CSS } from '@stitches/react';
 
+import { ListBoardMembers } from '@/components/Boards/MyBoards/ListBoardMembers';
 import Avatar, { AvatarButton, AvatarColor } from '@/components/Primitives/Avatars/Avatar/Avatar';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Tooltip from '@/components/Primitives/Tooltips/Tooltip/Tooltip';
@@ -7,8 +9,6 @@ import { User } from '@/types/user/user';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 import { getInitials } from '@/utils/getInitials';
-import { ListBoardMembers } from '@/components/Boards/MyBoards/ListBoardMembers';
-import { CSS } from '@stitches/react';
 
 export type ListUsersType = {
   user: User | string;
@@ -133,9 +133,9 @@ const AvatarGroup = ({
         key={`${keyValue}-${idx}-${Math.random()}`}
         aria-hidden="true"
         disabled={!isClickable && !hasDrawer}
-        type="button"
         isClickable={(isClickable || hasDrawer) && !haveError}
         onClick={hasDrawer && !haveError ? handleOpenDialog : undefined}
+        type="button"
       >
         <Avatar
           key={`${keyValue}-${idx}-${Math.random()}`}
@@ -180,10 +180,10 @@ const AvatarGroup = ({
     <>
       {hasDrawer && (
         <ListBoardMembers
+          isSubBoard
           boardMembers={boardMembers}
           isOpen={dialogIsOpen}
           setIsOpen={setDialogIsOpen}
-          isSubBoard
         />
       )}
       <Flex align="center" css={{ ...css, height: 'fit-content', overflow: 'hidden' }}>

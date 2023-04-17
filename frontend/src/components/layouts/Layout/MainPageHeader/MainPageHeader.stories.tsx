@@ -1,5 +1,6 @@
 import { ComponentStory } from '@storybook/react';
 import dedent from 'ts-dedent';
+
 import MainPageHeader from '@/components/layouts/Layout/MainPageHeader/MainPageHeader';
 
 export default {
