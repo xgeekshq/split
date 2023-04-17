@@ -1,5 +1,5 @@
 import React from 'react';
-import { act, fireEvent, waitFor } from '@testing-library/react';
+import { fireEvent, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import DuplicateBoardNameDialog, {
@@ -84,10 +84,8 @@ describe('Components/CardBoard/CardBody/DuplicateBoardNameDialog', () => {
 
     const input = getByLabelText('Board title');
 
-    await act(() => {
-      userEvent.clear(input);
-      userEvent.type(input, 'My Other Board');
-    });
+    await userEvent.clear(input);
+    await userEvent.type(input, 'My Other Board');
 
     await waitFor(() => {
       expect(input).toHaveValue('My Other Board');
@@ -109,7 +107,7 @@ describe('Components/CardBoard/CardBody/DuplicateBoardNameDialog', () => {
     // Assert
     expect(getByRole('button')).toBeInTheDocument();
 
-    userEvent.hover(getByRole('button'));
+    await userEvent.hover(getByRole('button'));
 
     await waitFor(() => {
       expect(getByRole('tooltip')).toBeInTheDocument();
