@@ -203,12 +203,11 @@ const Button = styled('button', {
     },
     size: {
       xl: {
-        height: '$64',
         fontWeight: '$medium',
         fontSize: '$24',
-        lineHeight: '$28',
+        lineHeight: '$32',
         px: '$32',
-        py: '$20',
+        py: '$16',
         '& svg': { width: '$32' },
         '& span': {
           height: '$32',
@@ -216,7 +215,6 @@ const Button = styled('button', {
         },
       },
       lg: {
-        height: '$56',
         fontWeight: '$medium',
         fontSize: '$18',
         lineHeight: '$24',
@@ -229,7 +227,6 @@ const Button = styled('button', {
         },
       },
       md: {
-        height: '$48',
         fontWeight: '$medium',
         fontSize: '$16',
         lineHeight: '$20',
@@ -242,7 +239,6 @@ const Button = styled('button', {
         },
       },
       sm: {
-        height: '$36',
         fontWeight: '$medium',
         fontSize: '$14',
         lineHeight: '$16',
@@ -251,20 +247,18 @@ const Button = styled('button', {
         '& svg': { width: '$16' },
       },
       xs: {
-        height: '$28',
         fontWeight: '$medium',
         fontSize: '$12',
         lineHeight: '$12',
         px: '$12',
-        py: '$6',
+        py: '$8',
         '& svg': { width: '$12' },
         '& span': { width: '$12' },
       },
       xxs: {
-        height: '$10',
         fontWeight: '$bold',
         fontSize: '$12',
-        lineHeight: '$1',
+        lineHeight: '$8',
         px: '$1',
         py: '$1',
         '& svg': { width: '$8' },
