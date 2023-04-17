@@ -1,11 +1,11 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { DeleteTeamApplicationInterface } from '../interfaces/applications/delete.team.application.interface';
-import { TYPES } from '../interfaces/types';
+import { DELETE_TEAM_SERVICE } from '../constants';
 
 @Injectable()
 export class DeleteTeamApplication implements DeleteTeamApplicationInterface {
 	constructor(
-		@Inject(TYPES.services.DeleteTeamService)
+		@Inject(DELETE_TEAM_SERVICE)
 		private deleteTeamServices: DeleteTeamApplicationInterface
 	) {}
 
