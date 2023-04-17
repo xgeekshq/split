@@ -2,19 +2,21 @@ import React from 'react';
 import { ComponentStory } from '@storybook/react';
 import dedent from 'ts-dedent';
 
-import SearchInput from '@/components/Primitives/Inputs/SearchInput/SearchInput';
+import UncontrolledInput from '@/components/Primitives/Inputs/UncontrolledInput/UncontrolledInput';
+
+const CURSOR_OPTIONS = ['default', 'Pointer', 'text'];
 
 export default {
-  title: 'Primitives/Inputs/SearchInput',
-  component: SearchInput,
+  title: 'Primitives/Inputs/UncontrolledInput',
+  component: UncontrolledInput,
   parameters: {
     docs: {
       description: {
         component: dedent`
-        Specifies an input field where the user can enter data. Used to filter lists, tables, etc.
+        Allows a customizable input field for users to display data and filter through lists or tables. 
 
         **File Path:**
-        \`@/components/Primitives/Inputs/SearchInput/SearchInput.tsx\` and \`@/components/Primitives/Input/styles.tsx\` 
+        \`@/components/Primitives/Inputs/UncontrolledInput/UncontrolledInput.tsx\` 
         `,
       },
     },
@@ -48,10 +50,20 @@ export default {
       control: false,
       description: 'Event handler called when the clear button is pressed.',
     },
+    cursorType: {
+      options: CURSOR_OPTIONS,
+      control: { type: 'select' },
+      description: 'The cursor options examples',
+      table: {
+        type: { summary: CURSOR_OPTIONS.join('|') },
+      },
+    },
   },
 };
 
-const Template: ComponentStory<typeof SearchInput> = ({ ...args }) => <SearchInput {...args} />;
+const Template: ComponentStory<typeof UncontrolledInput> = ({ ...args }) => (
+  <UncontrolledInput {...args} />
+);
 
 export const Default = Template.bind({});
 Default.storyName = 'Basic Usage';
