@@ -1,27 +1,24 @@
 import { fireEvent, waitFor } from '@testing-library/dom';
 import userEvent from '@testing-library/user-event';
 
-import SearchInput, {
-  SearchInputProps,
-} from '@/components/Primitives/Inputs/SearchInput/SearchInput';
+import UncontrolledInput, {
+  UncontrolledInputProps,
+} from '@/components/Primitives/Inputs/UncontrolledInput/UncontrolledInput';
 import { renderWithProviders } from '@/utils/testing/renderWithProviders';
 
-const render = (props: Partial<SearchInputProps> = {}) =>
-  renderWithProviders(
-    <SearchInput handleChange={jest.fn()} placeholder="Placeholder" {...props} />,
-  );
+const render = (props: Partial<UncontrolledInputProps> = {}) =>
+  renderWithProviders(<UncontrolledInput placeholder="Placeholder" {...props} />);
 
-describe('Components/Primitives/Inputs/SearchInput', () => {
+describe('Components/Primitives/Inputs/UncontrolledInput', () => {
   it('should render correctly', () => {
     // Act
-    const { getByTestId, getByText, getByLabelText } = render({
+    const { getByText, getByLabelText } = render({
       currentValue: 'Value',
     });
 
     const searchInput = getByLabelText('Placeholder');
 
     // Assert
-    expect(getByTestId('searchInputClear')).toBeInTheDocument();
     expect(getByText('Placeholder')).toBeInTheDocument();
     expect(searchInput).toHaveValue('Value');
   });
@@ -49,7 +46,7 @@ describe('Components/Primitives/Inputs/SearchInput', () => {
     // Act
     const { getByTestId } = render({ handleClear });
 
-    fireEvent.click(getByTestId('searchInputClear'));
+    fireEvent.click(getByTestId('uncontrolledInputClear'));
 
     // Assert
     await waitFor(() => {

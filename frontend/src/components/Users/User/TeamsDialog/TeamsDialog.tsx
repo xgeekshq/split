@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 
 import Dialog from '@/components/Primitives/Dialogs/Dialog/Dialog';
 import Checkbox from '@/components/Primitives/Inputs/Checkboxes/Checkbox/Checkbox';
-import SearchInput from '@/components/Primitives/Inputs/SearchInput/SearchInput';
+import UncontrolledInput from '@/components/Primitives/Inputs/UncontrolledInput/UncontrolledInput';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Separator from '@/components/Primitives/Separator/Separator';
 import Text from '@/components/Primitives/Text/Text';
@@ -92,8 +92,9 @@ const TeamsDialog = ({
     <Dialog isOpen={isOpen} setIsOpen={setIsOpen}>
       <Dialog.Header title={confirmationLabel} />
       <Flex css={{ p: '$32' }} direction="column">
-        <SearchInput
+        <UncontrolledInput
           currentValue={searchTeam}
+          iconName="search"
           placeholder="Search team"
           handleChange={(e) => {
             setSearchTeam(e.target.value);
