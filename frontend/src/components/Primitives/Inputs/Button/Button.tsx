@@ -8,7 +8,7 @@ const Button = styled('button', {
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
-  border: 'none',
+  border: '2px solid transparent',
   outline: 'none',
   gap: '$8',
   cursor: 'pointer',
@@ -40,7 +40,7 @@ const Button = styled('button', {
       primaryOutline: {
         color: '$primaryBase',
         backgroundColor: '$transparent',
-        border: '2px solid $primaryBase',
+        borderColor: '$primaryBase',
         '@hover': {
           '&:hover': {
             color: 'white',
@@ -104,7 +104,7 @@ const Button = styled('button', {
       lightOutline: {
         color: '$primary300',
         backgroundColor: '$transparent',
-        border: '2px solid $primary100',
+        borderColor: '$primary100',
         '@hover': {
           '&:hover': {
             color: '$primaryBase',
@@ -145,7 +145,7 @@ const Button = styled('button', {
       dangerOutline: {
         color: '$dangerBase',
         backgroundColor: '$transparent',
-        border: '2px solid $dangerBase',
+        borderColor: '$dangerBase',
         '@hover': {
           '&:hover': {
             color: '$white',
@@ -169,7 +169,6 @@ const Button = styled('button', {
       link: {
         color: '$primaryBase',
         backgroundColor: '$transparent',
-        border: 'none',
         '@hover': {
           '&:hover': {
             textDecoration: 'underline',
@@ -205,7 +204,7 @@ const Button = styled('button', {
         fontSize: '$24',
         lineHeight: '$32',
         px: '$32',
-        py: '$16',
+        py: '$14',
         '& svg': { width: '$32' },
         '& span': {
           height: '$32',
@@ -217,7 +216,7 @@ const Button = styled('button', {
         fontSize: '$18',
         lineHeight: '$24',
         px: '$24',
-        py: '$16',
+        py: '$14',
         '& svg': { width: '$24' },
         '& span': {
           height: '$24',
@@ -229,7 +228,7 @@ const Button = styled('button', {
         fontSize: '$16',
         lineHeight: '$20',
         px: '$24',
-        py: '$14',
+        py: '$12',
         '& svg': { width: '$20' },
         '& span': {
           height: '$20',
@@ -241,7 +240,7 @@ const Button = styled('button', {
         fontSize: '$14',
         lineHeight: '$16',
         px: '$16',
-        py: '$10',
+        py: '$8',
         '& svg': { width: '$16' },
       },
       xs: {
@@ -249,7 +248,7 @@ const Button = styled('button', {
         fontSize: '$12',
         lineHeight: '$12',
         px: '$12',
-        py: '$8',
+        py: '$6',
         '& svg': { width: '$12' },
         '& span': { width: '$12' },
       },
@@ -257,8 +256,8 @@ const Button = styled('button', {
         fontWeight: '$bold',
         fontSize: '$12',
         lineHeight: '$8',
-        px: '$1',
-        py: '$1',
+        px: '$2',
+        py: '$2',
         '& svg': { width: '$8' },
         '& span': { width: '$10' },
       },
