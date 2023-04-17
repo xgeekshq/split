@@ -18,13 +18,16 @@ import { GetBoardUseCase } from './applications/get-board.use-case';
 import { GetBoardsForDashboardUseCase } from './applications/get-boards-for-dashboard.use-case';
 import { GetPersonalBoardsUseCase } from './applications/get-personal-boards.use-case';
 import { IsBoardPublicUseCase } from './applications/is-board-public.use-case';
-import { UpdateBoardApplication } from './applications/update.board.application';
 import { TYPES } from './interfaces/types';
 import { BoardRepository } from './repositories/board.repository';
 import CreateBoardService from './services/create.board.service';
 import DeleteBoardService from './services/delete.board.service';
 import GetBoardService from './services/get.board.service';
 import UpdateBoardService from './services/update.board.service';
+import { UpdateBoardUseCase } from './applications/update-board.use-case';
+import { UpdateBoardParticipantsUseCase } from './applications/update-board-participants.use-case';
+import { MergeBoardUseCase } from './applications/merge-board.use-case';
+import { UpdateBoardPhaseUseCase } from './applications/update-board-phase.use-case';
 
 export const createBoardService = {
 	provide: TYPES.services.CreateBoardService,
@@ -76,9 +79,24 @@ export const isBoardPublicUseCase = {
 	useClass: IsBoardPublicUseCase
 };
 
-export const updateBoardApplication = {
-	provide: TYPES.applications.UpdateBoardApplication,
-	useClass: UpdateBoardApplication
+export const updateBoardUseCase = {
+	provide: TYPES.applications.UpdateBoardUseCase,
+	useClass: UpdateBoardUseCase
+};
+
+export const updateBoardParticipantsUseCase = {
+	provide: TYPES.applications.UpdateBoardParticipantsUseCase,
+	useClass: UpdateBoardParticipantsUseCase
+};
+
+export const mergeBoardUseCase = {
+	provide: TYPES.applications.MergeBoardUseCase,
+	useClass: MergeBoardUseCase
+};
+
+export const updateBoardPhaseUseCase = {
+	provide: TYPES.applications.UpdateBoardPhaseUseCase,
+	useClass: UpdateBoardPhaseUseCase
 };
 
 export const deleteBoardUseCase = {

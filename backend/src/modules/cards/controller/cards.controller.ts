@@ -135,11 +135,7 @@ export default class CardsController {
 		type: InternalServerErrorResponse
 	})
 	@Delete(':boardId/card/:cardId')
-	deleteCard(
-		@Req() request: RequestWithUser,
-		@Param() params: CardGroupParams,
-		@Body() deleteCardDto: DeleteCardDto
-	) {
+	deleteCard(@Param() params: CardGroupParams, @Body() deleteCardDto: DeleteCardDto) {
 		const { boardId, cardId } = params;
 
 		const completionHandler = () => {
