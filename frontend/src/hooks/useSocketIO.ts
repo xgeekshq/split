@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { useQueryClient } from '@tanstack/react-query';
-import { useRecoilValue } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { io, Socket } from 'socket.io-client';
 
 import useBoard from '@/hooks/useBoard';
@@ -9,6 +9,7 @@ import useCards from '@/hooks/useCards';
 import useComments from '@/hooks/useComments';
 import useVotes from '@/hooks/useVotes';
 import { operationsQueueAtom } from '@/store/operations/atom/operations-queue.atom';
+import { toastState } from '@/store/toast/atom/toast.atom';
 import BoardType, { PhaseChangeEventType } from '@/types/board/board';
 import { BoardUser } from '@/types/board/board.user';
 import MergeCardsDto from '@/types/board/mergeCard.dto';
@@ -26,7 +27,8 @@ import { ListenEvent } from '@/types/events/listen-event.type';
 import VoteDto from '@/types/vote/vote.dto';
 import { BOARD_PHASE_SERVER_SENT, NEXT_PUBLIC_BACKEND_URL } from '@/utils/constants';
 import isEmpty from '@/utils/isEmpty';
-import { DELETED_BOARD_ROUTE } from '@utils/routes';
+import { ToastStateEnum } from '@utils/enums/toast-types';
+import { ROUTES } from '@utils/routes';
 
 enum BoardAction {
   UPDATECARDPOSITION,
@@ -52,6 +54,7 @@ interface SocketInterface {
 export const useSocketIO = (boardId: string): SocketInterface => {
   const queryClient = useQueryClient();
   const router = useRouter();
+  const setToastState = useSetRecoilState(toastState);
   const [socket, setSocket] = useState<Socket | null>(null);
   const { updateBoardPhase } = useBoard({ autoFetchBoard: true });
   const {
@@ -92,7 +95,12 @@ export const useSocketIO = (boardId: string): SocketInterface => {
     });
 
     socket?.on('deleteBoard', () => {
-      router.replace(DELETED_BOARD_ROUTE);
+      router.replace(ROUTES.Boards);
+      setToastState({
+        open: true,
+        content: 'The board was deleted by a board admin.',
+        type: ToastStateEnum.ERROR,
+      });
     });
 
     socket?.on('board', (board: BoardType) => {

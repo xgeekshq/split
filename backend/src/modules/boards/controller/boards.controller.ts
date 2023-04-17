@@ -334,17 +334,13 @@ export default class BoardsController {
 	) {
 		const completionHandler = (deletedBoards: string[]) => {
 			this.socketService.sendDeleteBoard(socketId, deletedBoards);
+
+			if (socketId && teamId) {
+				this.socketService.sendUpdatedBoard(boardId, socketId);
+			}
 		};
 
 		const result = await this.deleteBoardUseCase.execute({ boardId, completionHandler });
-
-		if (socketId && teamId) {
-			// This socket emit doesn't have a recieving function on the Frontend.
-			// Is it really necessary?
-			this.socketService.sendUpdatedBoards(socketId, teamId);
-
-			this.socketService.sendUpdatedBoard(boardId, socketId);
-		}
 
 		return result;
 	}
