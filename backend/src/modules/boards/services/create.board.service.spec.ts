@@ -2,7 +2,6 @@ import { Test, TestingModule } from '@nestjs/testing';
 import * as CommunicationsType from 'src/modules/communication/interfaces/types';
 import * as Boards from 'src/modules/boards/interfaces/types';
 import * as BoardUsers from 'src/modules/boardUsers/interfaces/types';
-import * as Teams from 'src/modules/teams/interfaces/types';
 import * as TeamUsers from 'src/modules/teamUsers/interfaces/types';
 import * as Schedules from 'src/modules/schedules/interfaces/types';
 import { BoardRepositoryInterface } from '../repositories/board.repository.interface';
@@ -33,6 +32,7 @@ import TeamUser from 'src/modules/teamUsers/entities/team.user.schema';
 import { Configs } from '../dto/configs.dto';
 import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { TeamRoles } from 'src/libs/enum/team.roles';
+import { GET_TEAM_SERVICE } from 'src/modules/teams/constants';
 
 const userId: string = faker.datatype.uuid();
 
@@ -204,7 +204,7 @@ describe('CreateBoardService', () => {
 			providers: [
 				CreateBoardService,
 				{
-					provide: Teams.TYPES.services.GetTeamService,
+					provide: GET_TEAM_SERVICE,
 					useValue: createMock<GetTeamServiceInterface>()
 				},
 				{
@@ -237,7 +237,7 @@ describe('CreateBoardService', () => {
 		boardService = module.get<CreateBoardService>(CreateBoardService);
 		boardRepositoryMock = module.get(Boards.TYPES.repositories.BoardRepository);
 		createBoardUserServiceMock = module.get(BoardUsers.TYPES.services.CreateBoardUserService);
-		getTeamServiceMock = module.get(Teams.TYPES.services.GetTeamService);
+		getTeamServiceMock = module.get(GET_TEAM_SERVICE);
 		getTeamUserServiceMock = module.get(TeamUsers.TYPES.services.GetTeamUserService);
 		updateTeamUserServiceMock = module.get(TeamUsers.TYPES.services.UpdateTeamUserService);
 		createSchedulesServiceMock = module.get(Schedules.TYPES.services.CreateSchedulesService);
