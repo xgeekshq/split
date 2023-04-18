@@ -1,8 +1,8 @@
 import { fireEvent, waitFor } from '@testing-library/dom';
 import userEvent from '@testing-library/user-event';
 
+import DatePicker, { DatePickerProps } from '@/components/Primitives/DatePicker/DatePicker';
 import { renderWithProviders } from '@/utils/testing/renderWithProviders';
-import DatePicker, { DatePickerProps } from './DatePicker';
 
 const currentDate = new Date();
 const render = (props: Partial<DatePickerProps> = {}) =>
