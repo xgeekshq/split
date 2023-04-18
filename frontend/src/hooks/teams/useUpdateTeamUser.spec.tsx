@@ -1,11 +1,11 @@
 import { renderHook, waitFor } from '@testing-library/react';
 
 import { updateTeamUser } from '@/api/teamService';
+import { createErrorMessage, createSuccessMessage } from '@/constants/toasts';
 import { ErrorMessages, SuccessMessages } from '@/constants/toasts/teams-messages';
 import useUpdateTeamUser from '@/hooks/teams/useUpdateTeamUser';
 import { toastState } from '@/store/toast/atom/toast.atom';
 import { TeamUserUpdate } from '@/types/team/team.user';
-import { ToastStateEnum } from '@/utils/enums/toast-types';
 import { TeamUserFactory } from '@/utils/factories/user';
 import {
   renderHookWithProviders,
@@ -55,11 +55,7 @@ describe('Hooks/Teams/useUpdateTeamUser', () => {
     await waitFor(() => expect(result.current.isSuccess).toBeTruthy());
 
     expect(mockUpdateTeamUser).toBeCalledWith(DUMMY_TEAMUSER_UPDATE);
-    expect(recoilHandler).toHaveBeenCalledWith({
-      open: true,
-      content: SuccessMessages.UPDATE_USER,
-      type: ToastStateEnum.SUCCESS,
-    });
+    expect(recoilHandler).toHaveBeenCalledWith(createSuccessMessage(SuccessMessages.UPDATE_USER));
   });
 
   it('should set toast error', async () => {
@@ -82,11 +78,7 @@ describe('Hooks/Teams/useUpdateTeamUser', () => {
     await waitFor(() => {
       expect(result.current.isError).toBeTruthy();
       expect(result.current.data).not.toBeDefined();
-      expect(recoilHandler).toHaveBeenCalledWith({
-        open: true,
-        content: ErrorMessages.UPDATE_USER,
-        type: ToastStateEnum.ERROR,
-      });
+      expect(recoilHandler).toHaveBeenCalledWith(createErrorMessage(ErrorMessages.UPDATE_USER));
     });
   });
 });

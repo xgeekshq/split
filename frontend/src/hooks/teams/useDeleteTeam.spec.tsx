@@ -1,11 +1,11 @@
 import { renderHook, waitFor } from '@testing-library/react';
 
 import { deleteTeam } from '@/api/teamService';
+import { createErrorMessage, createSuccessMessage } from '@/constants/toasts';
 import { ErrorMessages, SuccessMessages } from '@/constants/toasts/teams-messages';
 import useDeleteTeam from '@/hooks/teams/useDeleteTeam';
 import { toastState } from '@/store/toast/atom/toast.atom';
 import { Team } from '@/types/team/team';
-import { ToastStateEnum } from '@/utils/enums/toast-types';
 import { TeamFactory } from '@/utils/factories/team';
 import {
   renderHookWithProviders,
@@ -41,11 +41,7 @@ describe('Hooks/Teams/useDeleteTeam', () => {
     await waitFor(() => expect(result.current.isSuccess).toBeTruthy());
 
     expect(mockDeleteTeam).toBeCalledWith(teamId);
-    expect(recoilHandler).toHaveBeenCalledWith({
-      open: true,
-      content: SuccessMessages.DELETE,
-      type: ToastStateEnum.SUCCESS,
-    });
+    expect(recoilHandler).toHaveBeenCalledWith(createSuccessMessage(SuccessMessages.DELETE));
   });
 
   it('should set toast error', async () => {
@@ -67,11 +63,7 @@ describe('Hooks/Teams/useDeleteTeam', () => {
     await waitFor(() => {
       expect(result.current.isError).toBeTruthy();
       expect(result.current.data).not.toBeDefined();
-      expect(recoilHandler).toHaveBeenCalledWith({
-        open: true,
-        content: ErrorMessages.DELETE,
-        type: ToastStateEnum.ERROR,
-      });
+      expect(recoilHandler).toHaveBeenCalledWith(createErrorMessage(ErrorMessages.DELETE));
     });
   });
 });

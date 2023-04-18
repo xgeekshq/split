@@ -1,11 +1,11 @@
 import { renderHook, waitFor } from '@testing-library/react';
 
 import { getAllTeams, getUserTeams } from '@/api/teamService';
+import { createErrorMessage } from '@/constants/toasts';
 import { ErrorMessages } from '@/constants/toasts/teams-messages';
 import useTeams from '@/hooks/teams/useTeams';
 import { toastState } from '@/store/toast/atom/toast.atom';
 import { Team } from '@/types/team/team';
-import { ToastStateEnum } from '@/utils/enums/toast-types';
 import { TeamFactory } from '@/utils/factories/team';
 import {
   renderHookWithProviders,
@@ -61,11 +61,7 @@ describe('Hooks/Teams/useTeams', () => {
     await waitFor(() => {
       expect(result.current.isError).toBeTruthy();
       expect(result.current.data).not.toBeDefined();
-      expect(recoilHandler).toHaveBeenCalledWith({
-        open: true,
-        content: ErrorMessages.GET,
-        type: ToastStateEnum.ERROR,
-      });
+      expect(recoilHandler).toHaveBeenCalledWith(createErrorMessage(ErrorMessages.GET));
     });
   });
 });
