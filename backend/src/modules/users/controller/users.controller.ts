@@ -42,7 +42,7 @@ import { DeleteUserGuard } from 'src/libs/guards/deleteUser.guard';
 import { UseCase } from 'src/libs/interfaces/use-case.interface';
 import UpdateSAdminUseCaseDto from '../dto/useCase/update-sadmin.use-case.dto';
 import User from '../entities/user.schema';
-import { GetAllUsersWithTeamsPresenter } from 'src/libs/dto/response/get-all-users-with-teams.presenter';
+import { GetAllUsersWithTeamsPresenter } from 'src/modules/users/presenter/get-all-users-with-teams.presenter';
 import GetAllUsersWithTeamsUseCaseDto from '../dto/useCase/get-all-users-with-teams.use-case.dto';
 
 @ApiBearerAuth('access-token')

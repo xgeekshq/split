@@ -11,7 +11,7 @@ import { UserFactory } from 'src/libs/test-utils/mocks/factories/user-factory';
 import { TeamFactory } from 'src/libs/test-utils/mocks/factories/team-factory.mock';
 import { UserWithTeams } from '../interfaces/type-user-with-teams';
 import GetAllUsersWithTeamsUseCaseDto from '../dto/useCase/get-all-users-with-teams.use-case.dto';
-import { GetAllUsersWithTeamsPresenter } from 'src/libs/dto/response/get-all-users-with-teams.presenter';
+import { GetAllUsersWithTeamsPresenter } from 'src/modules/users/presenter/get-all-users-with-teams.presenter';
 import { sortTeamUserListAlphabetically } from '../utils/sortings';
 
 const users = UserFactory.createMany(10);

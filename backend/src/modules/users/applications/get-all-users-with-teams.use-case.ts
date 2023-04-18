@@ -1,4 +1,4 @@
-import { GetAllUsersWithTeamsPresenter } from './../../../libs/dto/response/get-all-users-with-teams.presenter';
+import { GetAllUsersWithTeamsPresenter } from '../presenter/get-all-users-with-teams.presenter';
 import { GetTeamUserServiceInterface } from 'src/modules/teamUsers/interfaces/services/get.team.user.service.interface';
 import { Inject, Injectable } from '@nestjs/common';
 import { UserWithTeams } from '../interfaces/type-user-with-teams';
