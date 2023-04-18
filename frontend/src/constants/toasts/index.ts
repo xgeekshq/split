@@ -11,3 +11,11 @@ export const createSuccessMessage = (message: string) => {
 export const createErrorMessage = (message: string) => {
   return createToastObject(message, ToastStateEnum.ERROR);
 };
+
+export const createInfoMessage = (message: string) => {
+  return createToastObject(message, ToastStateEnum.INFO);
+};
+
+export const createWarningMessage = (message: string) => {
+  return createToastObject(message, ToastStateEnum.WARNING);
+};
