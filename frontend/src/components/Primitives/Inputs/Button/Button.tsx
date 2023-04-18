@@ -205,7 +205,7 @@ const Button = styled('button', {
         lineHeight: '$32',
         px: '$32',
         py: '$14',
-        '& svg': { width: '$32' },
+        '& svg': { width: '$32', minWidth: '$32' },
         '& span': {
           height: '$32',
           width: '$32',
@@ -217,7 +217,7 @@ const Button = styled('button', {
         lineHeight: '$24',
         px: '$24',
         py: '$14',
-        '& svg': { width: '$24' },
+        '& svg': { width: '$24', minWidth: '$24' },
         '& span': {
           height: '$24',
           width: '$24',
@@ -229,7 +229,7 @@ const Button = styled('button', {
         lineHeight: '$20',
         px: '$24',
         py: '$12',
-        '& svg': { width: '$20' },
+        '& svg': { width: '$20', minWidth: '$20' },
         '& span': {
           height: '$20',
           width: '$20',
@@ -241,7 +241,7 @@ const Button = styled('button', {
         lineHeight: '$16',
         px: '$16',
         py: '$8',
-        '& svg': { width: '$16' },
+        '& svg': { width: '$16', minWidth: '$16' },
       },
       xs: {
         fontWeight: '$medium',
@@ -249,7 +249,7 @@ const Button = styled('button', {
         lineHeight: '$12',
         px: '$12',
         py: '$6',
-        '& svg': { width: '$12' },
+        '& svg': { width: '$12', minWidth: '$12' },
         '& span': { width: '$12' },
       },
       xxs: {
@@ -258,7 +258,7 @@ const Button = styled('button', {
         lineHeight: '$8',
         px: '$2',
         py: '$2',
-        '& svg': { width: '$8' },
+        '& svg': { width: '$8', minWidth: '$8' },
         '& span': { width: '$10' },
       },
     },
@@ -291,22 +291,22 @@ const Button = styled('button', {
     {
       isIcon: 'true',
       size: 'xl',
-      css: { '& svg': { width: '$60' } },
+      css: { '& svg': { width: '$60', minWidth: '$60' } },
     },
     {
       isIcon: 'true',
       size: 'lg',
-      css: { '& svg': { width: '$40' } },
+      css: { '& svg': { width: '$40', minWidth: '$40' } },
     },
     {
       size: 'md',
       isIcon: 'true',
-      css: { '& svg': { width: '$24' } },
+      css: { '& svg': { width: '$24', minWidth: '$24' } },
     },
     {
       isIcon: 'true',
       size: 'sm',
-      css: { '& svg': { width: '$20' } },
+      css: { '& svg': { width: '$20', minWidth: '$20' } },
     },
   ],
   defaultVariants: {
