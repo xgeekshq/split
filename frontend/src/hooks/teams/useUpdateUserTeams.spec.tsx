@@ -1,6 +1,7 @@
 import { renderHook, waitFor } from '@testing-library/react';
 
 import { updateAddTeamsToUser } from '@/api/teamService';
+import { ErrorMessages, SuccessMessages } from '@/constants/toasts/teams-messages';
 import useUpdateUserTeams from '@/hooks/teams/useUpdateUserTeams';
 import { toastState } from '@/store/toast/atom/toast.atom';
 import { TeamUserUpdate } from '@/types/team/team.user';
@@ -44,7 +45,7 @@ describe('Hooks/Teams/useUpdateUserTeams', () => {
     expect(mockUpdateUserTeams).toBeCalledWith([DUMMY_TEAMUSER_UPDATE]);
     expect(recoilHandler).toHaveBeenCalledWith({
       open: true,
-      content: 'The team(s) was successfully added to the user.',
+      content: SuccessMessages.UPDATE_TEAM,
       type: ToastStateEnum.SUCCESS,
     });
   });
@@ -70,7 +71,7 @@ describe('Hooks/Teams/useUpdateUserTeams', () => {
       expect(result.current.data).not.toBeDefined();
       expect(recoilHandler).toHaveBeenCalledWith({
         open: true,
-        content: 'Error while adding team(s) to the user',
+        content: ErrorMessages.UPDATE_TEAM,
         type: ToastStateEnum.ERROR,
       });
     });

@@ -3,7 +3,7 @@ import { AxiosError } from 'axios';
 import { useSetRecoilState } from 'recoil';
 
 import { createTeamRequest } from '@/api/teamService';
-import { INVALID_NAME } from '@/errors/teams/errors';
+import { ErrorMessages, SuccessMessages } from '@/constants/toasts/teams-messages';
 import { toastState } from '@/store/toast/atom/toast.atom';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
 
@@ -14,7 +14,7 @@ const useCreateTeam = () => {
     onSuccess: () => {
       setToastState({
         open: true,
-        content: 'The team was successfully created.',
+        content: SuccessMessages.CREATE,
         type: ToastStateEnum.SUCCESS,
       });
     },
@@ -23,12 +23,20 @@ const useCreateTeam = () => {
         open: true,
         content:
           error.response?.data.message === 'INVALID_NAME'
-            ? INVALID_NAME
-            : 'Error creating the team',
+            ? ErrorMessages.INVALID_NAME
+            : ErrorMessages.CREATE,
         type: ToastStateEnum.ERROR,
       });
     },
   });
+};
+
+const createToastObject = (content: string, type: ToastStateEnum) => {
+  return { open: true, content, type };
+};
+
+export const createSuccessMessage = (message: string) => {
+  return createToastObject(message, ToastStateEnum.SUCCESS);
 };
 
 export default useCreateTeam;

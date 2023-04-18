@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useSetRecoilState } from 'recoil';
 
 import { deleteTeam } from '@/api/teamService';
+import { ErrorMessages, SuccessMessages } from '@/constants/toasts/teams-messages';
 import { toastState } from '@/store/toast/atom/toast.atom';
 import { Team } from '@/types/team/team';
 import { TEAMS_KEY } from '@/utils/constants/reactQueryKeys';
@@ -22,7 +23,7 @@ const useDeleteTeam = (teamId: string) => {
     onSuccess: () => {
       setToastState({
         open: true,
-        content: 'The team was successfully deleted.',
+        content: SuccessMessages.DELETE,
         type: ToastStateEnum.SUCCESS,
       });
     },
@@ -30,7 +31,7 @@ const useDeleteTeam = (teamId: string) => {
       queryClient.invalidateQueries([TEAMS_KEY]);
       setToastState({
         open: true,
-        content: 'Error deleting the team.',
+        content: ErrorMessages.DELETE,
         type: ToastStateEnum.ERROR,
       });
     },

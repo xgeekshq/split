@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useSetRecoilState } from 'recoil';
 
 import { updateTeamUser } from '@/api/teamService';
+import { ErrorMessages, SuccessMessages } from '@/constants/toasts/teams-messages';
 import { toastState } from '@/store/toast/atom/toast.atom';
 import { Team } from '@/types/team/team';
 import { TeamUser } from '@/types/team/team.user';
@@ -61,7 +62,7 @@ const useUpdateTeamUser = (teamId: string, userId?: string) => {
     onSuccess: () => {
       setToastState({
         open: true,
-        content: 'The team user was successfully updated.',
+        content: SuccessMessages.UPDATE_USER,
         type: ToastStateEnum.SUCCESS,
       });
     },
@@ -71,7 +72,7 @@ const useUpdateTeamUser = (teamId: string, userId?: string) => {
 
       setToastState({
         open: true,
-        content: 'Error while updating the team user',
+        content: ErrorMessages.UPDATE_USER,
         type: ToastStateEnum.ERROR,
       });
     },

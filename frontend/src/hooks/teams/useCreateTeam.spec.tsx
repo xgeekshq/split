@@ -1,6 +1,7 @@
 import { renderHook, waitFor } from '@testing-library/react';
 
 import { createTeamRequest } from '@/api/teamService';
+import { ErrorMessages, SuccessMessages } from '@/constants/toasts/teams-messages';
 import useCreateTeam from '@/hooks/teams/useCreateTeam';
 import { toastState } from '@/store/toast/atom/toast.atom';
 import { Team } from '@/types/team/team';
@@ -42,7 +43,7 @@ describe('Hooks/Teams/useCreateTeam', () => {
     expect(mockCreateTeam).toBeCalledWith(teamToCreate);
     expect(recoilHandler).toHaveBeenCalledWith({
       open: true,
-      content: 'The team was successfully created.',
+      content: SuccessMessages.CREATE,
       type: ToastStateEnum.SUCCESS,
     });
   });
@@ -67,7 +68,7 @@ describe('Hooks/Teams/useCreateTeam', () => {
       expect(result.current.data).not.toBeDefined();
       expect(recoilHandler).toHaveBeenCalledWith({
         open: true,
-        content: 'Error creating the team',
+        content: ErrorMessages.CREATE,
         type: ToastStateEnum.ERROR,
       });
     });

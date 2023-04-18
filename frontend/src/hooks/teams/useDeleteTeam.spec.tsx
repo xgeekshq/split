@@ -1,6 +1,7 @@
 import { renderHook, waitFor } from '@testing-library/react';
 
 import { deleteTeam } from '@/api/teamService';
+import { ErrorMessages, SuccessMessages } from '@/constants/toasts/teams-messages';
 import useDeleteTeam from '@/hooks/teams/useDeleteTeam';
 import { toastState } from '@/store/toast/atom/toast.atom';
 import { Team } from '@/types/team/team';
@@ -42,7 +43,7 @@ describe('Hooks/Teams/useDeleteTeam', () => {
     expect(mockDeleteTeam).toBeCalledWith(teamId);
     expect(recoilHandler).toHaveBeenCalledWith({
       open: true,
-      content: 'The team was successfully deleted.',
+      content: SuccessMessages.DELETE,
       type: ToastStateEnum.SUCCESS,
     });
   });
@@ -68,7 +69,7 @@ describe('Hooks/Teams/useDeleteTeam', () => {
       expect(result.current.data).not.toBeDefined();
       expect(recoilHandler).toHaveBeenCalledWith({
         open: true,
-        content: 'Error deleting the team.',
+        content: ErrorMessages.DELETE,
         type: ToastStateEnum.ERROR,
       });
     });

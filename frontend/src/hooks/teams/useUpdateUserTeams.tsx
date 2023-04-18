@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useSetRecoilState } from 'recoil';
 
 import { updateAddTeamsToUser } from '@/api/teamService';
+import { ErrorMessages, SuccessMessages } from '@/constants/toasts/teams-messages';
 import { toastState } from '@/store/toast/atom/toast.atom';
 import { Team } from '@/types/team/team';
 import { TEAMS_KEY, USERS_KEY } from '@/utils/constants/reactQueryKeys';
@@ -29,7 +30,7 @@ const useUpdateUserTeams = (userId: string) => {
 
       setToastState({
         open: true,
-        content: 'The team(s) was successfully added to the user.',
+        content: SuccessMessages.UPDATE_TEAM,
         type: ToastStateEnum.SUCCESS,
       });
     },
@@ -38,7 +39,7 @@ const useUpdateUserTeams = (userId: string) => {
       queryClient.invalidateQueries([TEAMS_KEY, 'not', USERS_KEY, userId]);
       setToastState({
         open: true,
-        content: 'Error while adding team(s) to the user',
+        content: ErrorMessages.UPDATE_TEAM,
         type: ToastStateEnum.ERROR,
       });
     },

@@ -1,6 +1,7 @@
 import { renderHook, waitFor } from '@testing-library/react';
 
 import { getTeamsWithoutUser } from '@/api/teamService';
+import { ErrorMessages } from '@/constants/toasts/teams-messages';
 import useTeamsWithoutUser from '@/hooks/teams/useTeamsWithoutUser';
 import { toastState } from '@/store/toast/atom/toast.atom';
 import { TeamChecked } from '@/types/team/team';
@@ -52,7 +53,7 @@ describe('Hooks/Teams/useTeamsWithoutUser', () => {
       expect(result.current.data).not.toBeDefined();
       expect(recoilHandler).toHaveBeenCalledWith({
         open: true,
-        content: 'Error getting the teams',
+        content: ErrorMessages.GET,
         type: ToastStateEnum.ERROR,
       });
     });

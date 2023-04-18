@@ -1,6 +1,7 @@
 import { renderHook, waitFor } from '@testing-library/react';
 
 import { deleteTeamUser } from '@/api/teamService';
+import { ErrorMessages, SuccessMessages } from '@/constants/toasts/teams-messages';
 import useDeleteTeamUser from '@/hooks/teams/useDeleteTeamUser';
 import { toastState } from '@/store/toast/atom/toast.atom';
 import { TeamUser } from '@/types/team/team.user';
@@ -42,7 +43,7 @@ describe('Hooks/Teams/useDeleteTeamUser', () => {
     expect(mockDeleteTeamUser).toBeCalledWith(DUMMY_TEAMUSER);
     expect(recoilHandler).toHaveBeenCalledWith({
       open: true,
-      content: 'The user was successfully removed from the team.',
+      content: SuccessMessages.DELETE_USER,
       type: ToastStateEnum.SUCCESS,
     });
   });
@@ -68,7 +69,7 @@ describe('Hooks/Teams/useDeleteTeamUser', () => {
       expect(result.current.data).not.toBeDefined();
       expect(recoilHandler).toHaveBeenCalledWith({
         open: true,
-        content: 'Error removing user from the team.',
+        content: ErrorMessages.DELETE_USER,
         type: ToastStateEnum.ERROR,
       });
     });
