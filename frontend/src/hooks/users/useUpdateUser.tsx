@@ -2,10 +2,11 @@ import { InfiniteData, useMutation, useQueryClient } from '@tanstack/react-query
 import { useSetRecoilState } from 'recoil';
 
 import { updateUserIsAdminRequest } from '@/api/userService';
+import { createErrorMessage, createSuccessMessage } from '@/constants/toasts';
+import { ErrorMessages, SuccessMessages } from '@/constants/toasts/users-messages';
 import { toastState } from '@/store/toast/atom/toast.atom';
 import { InfiniteUsersWithTeams } from '@/types/user/user';
 import { TEAMS_KEY, USERS_KEY } from '@/utils/constants/reactQueryKeys';
-import { ToastStateEnum } from '@/utils/enums/toast-types';
 
 const useUpdateUser = () => {
   const queryClient = useQueryClient();
@@ -35,20 +36,11 @@ const useUpdateUser = () => {
       );
     },
     onSuccess: () => {
-      setToastState({
-        open: true,
-        content: 'The team user was successfully updated.',
-        type: ToastStateEnum.SUCCESS,
-      });
+      setToastState(createSuccessMessage(SuccessMessages.UPDATE));
     },
     onError: () => {
       queryClient.invalidateQueries([USERS_KEY, TEAMS_KEY]);
-
-      setToastState({
-        open: true,
-        content: 'Error while updating the user',
-        type: ToastStateEnum.ERROR,
-      });
+      setToastState(createErrorMessage(ErrorMessages.UPDATE));
     },
   });
 };
