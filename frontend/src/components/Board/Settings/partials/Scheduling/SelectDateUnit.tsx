@@ -1,6 +1,5 @@
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Text from '@/components/Primitives/Text/Text';
-import DatePicker from '@components/Primitives/DatePicker/DatePicker';
 import Icon from '@components/Primitives/Icons/Icon/Icon';
 import Checkbox from '@components/Primitives/Inputs/Checkboxes/Checkbox/Checkbox';
 import {
@@ -15,19 +14,30 @@ export type RepeatProps = {
   title: string;
   isChecked: boolean;
   description: string;
-  currentDate?: Date;
-  setDate: (date: Date) => void;
+  unitTime?: string;
   setCheckboxState: (value: boolean) => void;
+  setUnitTime: (unitTime: string) => void;
 };
 
 const SelectDateUnit = ({
   isChecked,
   title,
   description,
-  currentDate,
+  unitTime,
+
+  setUnitTime,
   setCheckboxState,
-  setDate,
 }: RepeatProps) => {
+  const options = [];
+
+  for (let i = 1; i <= 99; i++) {
+    const obj = {
+      label: i.toString(),
+      value: i.toString(),
+    };
+    options.push(obj);
+  }
+
   return (
     <>
       <Text fontWeight="medium">{title}</Text>
@@ -48,9 +58,26 @@ const SelectDateUnit = ({
           }}
         />
 
-        <DatePicker currentDate={currentDate} disabled={!isChecked} setDate={setDate} />
+        {/* <DatePicker currentDate={currentDate} disabled={!isChecked} setDate={setDate} /> */}
 
         <Select css={{ width: '50%', height: '$60' }} disabled={!isChecked}>
+          <SelectTrigger css={{ padding: '$24' }}>
+            <Flex direction="column">
+              <Text color="primary300">Select time range</Text>
+              <SelectValue />
+            </Flex>
+            <SelectIcon className="SelectIcon">
+              <Icon name="arrow-down" />
+            </SelectIcon>
+          </SelectTrigger>
+          <SelectContent options={options} />
+        </Select>
+        <Select
+          css={{ width: '50%', height: '$60' }}
+          disabled={!isChecked}
+          onValueChange={setUnitTime}
+          value={unitTime}
+        >
           <SelectTrigger css={{ padding: '$24' }}>
             <Flex direction="column">
               <Text color="primary300">Select time unit</Text>

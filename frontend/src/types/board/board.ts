@@ -88,6 +88,23 @@ export type UpdateBoardType = {
   mainBoardId?: string;
 };
 
+export type UpdateScheduleType = {
+  scheduleDate: Date;
+  startTime: string;
+  endTime: string;
+  repeatDate: Date;
+  repeatTimeUnit: string;
+  reminderDate: Date;
+  reminderTimeUnit: string;
+  viaSlack: boolean;
+  viaEmail: boolean;
+  prefillingCards: boolean;
+};
+
+export type TimeSlot = {
+  label: string;
+  value: string;
+};
 export type UpdateBoardPhaseType = {
   boardId: string;
   phase: string;

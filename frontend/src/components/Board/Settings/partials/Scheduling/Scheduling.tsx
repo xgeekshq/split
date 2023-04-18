@@ -9,33 +9,71 @@ import {
 } from '@/components/Board/Settings/styles';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Text from '@/components/Primitives/Text/Text';
+import { UpdateScheduleType } from '@/types/board/board';
 import { DateAndTimePicker } from '@components/Board/Settings/partials/Scheduling/DateAndTime';
 import { SelectDateUnit } from '@components/Board/Settings/partials/Scheduling/SelectDateUnit';
 import Checkbox from '@components/Primitives/Inputs/Checkboxes/Checkbox/Checkbox';
 import Separator from '@components/Primitives/Separator/Separator';
 
 export type SchedulingProps = {
-  schedulingDate?: Date;
-  repeatDate?: Date;
-  reminderDate?: Date;
-  setRepeatDate: (date: Date) => void;
-  setReminderDate: (date: Date) => void;
-  setSchedulingDate: (date: Date) => void;
+  schedulingData?: UpdateScheduleType;
+  setSchedulingData: (data: any) => void;
 };
 
-const SchedulingSettings = ({
-  schedulingDate,
-  repeatDate,
-  reminderDate,
-  setSchedulingDate,
-  setReminderDate,
-  setRepeatDate,
-}: SchedulingProps) => {
-  const [isViaSlackActive, setSlackState] = useState<boolean>(false);
-  const [isEmailActive, setEmailState] = useState<boolean>(false);
-  const [isPrefillingActive, setPrefillingState] = useState<boolean>(false);
+const SchedulingSettings = ({ schedulingData, setSchedulingData }: SchedulingProps) => {
   const [isReminderActive, setReminderState] = useState<boolean>(false);
   const [isRepeatActive, setRepeatState] = useState<boolean>(false);
+
+  const handleRepeatTimeUnitChange = (timeUnit: string) => {
+    setSchedulingData((prev: UpdateScheduleType) => ({
+      ...prev,
+      repeatTimeUnit: timeUnit,
+    }));
+  };
+  const handleReminderTimeUnitChange = (timeUnit: string) => {
+    setSchedulingData((prev: UpdateScheduleType) => ({
+      ...prev,
+      reminderTimeUnit: timeUnit,
+    }));
+  };
+
+  const handleSlackChange = (viaSlackActive: boolean) => {
+    setSchedulingData((prev: UpdateScheduleType) => ({
+      ...prev,
+      viaSlack: viaSlackActive,
+    }));
+  };
+  const handleEmailChange = (viaEmailActive: boolean) => {
+    setSchedulingData((prev: UpdateScheduleType) => ({
+      ...prev,
+      viaEmail: viaEmailActive,
+    }));
+  };
+
+  const handlePrefillingCardChange = (prefillingCards: boolean) => {
+    setSchedulingData((prev: UpdateScheduleType) => ({
+      ...prev,
+      prefillingCards: prefillingCards,
+    }));
+  };
+  const handleScheduleDateChange = (scheduleDate: Date) => {
+    setSchedulingData((prev: UpdateScheduleType) => ({
+      ...prev,
+      scheduleDate: scheduleDate,
+    }));
+  };
+  const handleRepeatDateChange = (repeatDate: Date) => {
+    setSchedulingData((prev: UpdateScheduleType) => ({
+      ...prev,
+      repeatDate: repeatDate,
+    }));
+  };
+  const handleReminderDateChange = (reminderDate: Date) => {
+    setSchedulingData((prev: UpdateScheduleType) => ({
+      ...prev,
+      reminderDate: reminderDate,
+    }));
+  };
 
   return (
     <StyledAccordionItem value="Scheduling" variant="first">
@@ -48,58 +86,52 @@ const SchedulingSettings = ({
       <StyledAccordionContent>
         <Flex direction="column" gap={16}>
           <DateAndTimePicker
-            currentDate={schedulingDate}
-            setDate={setSchedulingDate}
+            currentDate={schedulingData?.scheduleDate}
+            setDate={handleScheduleDateChange}
           ></DateAndTimePicker>
           <Separator></Separator>
           <SelectDateUnit
-            currentDate={repeatDate}
             isChecked={isRepeatActive}
             setCheckboxState={setRepeatState}
-            setDate={setRepeatDate}
+            setUnitTime={handleRepeatTimeUnitChange}
             title="Repeat"
+            unitTime={schedulingData?.repeatTimeUnit}
             description="Repeat minutes/days/weeks 
 "
           />
           <Separator></Separator>
           <SelectDateUnit
-            currentDate={reminderDate}
             description="Send reminder minutes/days/weeks before"
             isChecked={isReminderActive}
             setCheckboxState={setReminderState}
-            setDate={setReminderDate}
+            setUnitTime={handleReminderTimeUnitChange}
             title="Reminder"
+            unitTime={schedulingData?.reminderTimeUnit}
           />
           <Flex direction="column" style={{ marginLeft: '35px' }}>
             <Checkbox
-              checked={isViaSlackActive}
+              checked={schedulingData?.viaSlack}
               disabled={!isReminderActive}
+              handleChange={handleSlackChange}
               id="repeatCheckbox"
               label="Via Slack"
               size="md"
-              handleChange={() => {
-                setSlackState(!isViaSlackActive);
-              }}
             />
             <Checkbox
-              checked={isEmailActive}
+              checked={schedulingData?.viaEmail}
               disabled={!isReminderActive}
+              handleChange={handleEmailChange}
               id="repeatCheckbox"
               label="Via Email"
               size="md"
-              handleChange={() => {
-                setEmailState(!isEmailActive);
-              }}
             />
             <Checkbox
-              checked={isPrefillingActive}
+              checked={schedulingData?.prefillingCards}
               disabled={!isReminderActive}
+              handleChange={handlePrefillingCardChange}
               id="repeatCheckbox"
               label="Remind prefilling the cards"
               size="md"
-              handleChange={() => {
-                setPrefillingState(!isPrefillingActive);
-              }}
             />
           </Flex>
         </Flex>

@@ -25,7 +25,7 @@ import useBoard from '@/hooks/useBoard';
 import SchemaUpdateBoard from '@/schema/schemaUpdateBoardForm';
 import { boardInfoState, deletedColumnsState } from '@/store/board/atoms/board.atom';
 import { FlexForm } from '@/styles/pages/pages.styles';
-import { UpdateBoardType } from '@/types/board/board';
+import { UpdateBoardType, UpdateScheduleType } from '@/types/board/board';
 import { BoardUserToAdd } from '@/types/board/board.user';
 import ColumnType, { CreateColumn } from '@/types/column';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
@@ -117,10 +117,8 @@ const BoardSettings = ({
     postAnonymously: initialData.postAnonymously,
   });
 
-  //scheduling props
-  const [schedulingDate, setSchedulingDate] = useState<Date>();
-  const [repeatDate, setRepeatDate] = useState<Date>();
-  const [reminderDate, setReminderDate] = useState<Date>();
+  //state used for scheduling
+  const [schedulingData, setSchedulingData] = useState<UpdateScheduleType>();
 
   // User Board Hook
   const {
@@ -375,16 +373,13 @@ const BoardSettings = ({
                     />
                   )}
                 </ConfigurationSettings>
-                {/* TODO: ADD SCHEDULING */}
-                <SchedulingSettings
-                  reminderDate={reminderDate}
-                  repeatDate={repeatDate}
-                  schedulingDate={schedulingDate}
-                  setReminderDate={setReminderDate}
-                  setRepeatDate={setRepeatDate}
-                  setSchedulingDate={setSchedulingDate}
-                />
 
+                {!isSubBoard && hasPermissions && (
+                  <SchedulingSettings
+                    schedulingData={schedulingData}
+                    setSchedulingData={setSchedulingData}
+                  />
+                )}
                 {isSubBoard && hasPermissions && (
                   <TeamResponsibleSettings>
                     <ConfigurationSwitch
