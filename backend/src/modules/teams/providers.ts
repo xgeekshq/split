@@ -1,9 +1,11 @@
+import { CreateTeamUseCase } from './applications/create-team.use-case';
 import { CreateTeamApplication } from './applications/create.team.application';
 import { DeleteTeamApplication } from './applications/delete.team.application';
 import { GetTeamApplication } from './applications/get.team.application';
 import {
 	CREATE_TEAM_APPLICATION,
 	CREATE_TEAM_SERVICE,
+	CREATE_TEAM_USE_CASE,
 	DELETE_TEAM_APPLICATION,
 	DELETE_TEAM_SERVICE,
 	GET_TEAM_APPLICATION,
@@ -23,6 +25,11 @@ export const createTeamService = {
 export const createTeamApplication = {
 	provide: CREATE_TEAM_APPLICATION,
 	useClass: CreateTeamApplication
+};
+
+export const createTeamUseCase = {
+	provide: CREATE_TEAM_USE_CASE,
+	useClass: CreateTeamUseCase
 };
 
 export const getTeamService = {
