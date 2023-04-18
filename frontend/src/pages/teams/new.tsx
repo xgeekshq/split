@@ -11,11 +11,11 @@ import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Dots from '@/components/Primitives/Loading/Dots/Dots';
 import LoadingPage from '@/components/Primitives/Loading/Page/Page';
 import CreateTeam from '@/components/Teams/CreateTeam/CreateTeam';
+import { USERS_KEY } from '@/constants/react-query/keys';
 import useCurrentSession from '@/hooks/useCurrentSession';
 import useUsers from '@/hooks/users/useUsers';
 import { createTeamState } from '@/store/team.atom';
 import { usersListState } from '@/store/user.atom';
-import { USERS_KEY } from '@/utils/constants/reactQueryKeys';
 import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 import { ROUTES } from '@/utils/routes';
 

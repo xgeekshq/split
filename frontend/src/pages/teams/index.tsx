@@ -13,9 +13,9 @@ import ScrollableContent from '@/components/Primitives/Layout/ScrollableContent/
 import Dots from '@/components/Primitives/Loading/Dots/Dots';
 import LoadingPage from '@/components/Primitives/Loading/Page/Page';
 import TeamsList from '@/components/Teams/TeamsList/TeamList';
+import { TEAMS_KEY } from '@/constants/react-query/keys';
 import useTeams from '@/hooks/teams/useTeams';
 import useCurrentSession from '@/hooks/useCurrentSession';
-import { TEAMS_KEY } from '@/utils/constants/reactQueryKeys';
 import { ROUTES } from '@/utils/routes';
 
 const Teams = () => {

@@ -3,9 +3,10 @@ import { setCookie } from 'cookies-next';
 import { useSetRecoilState } from 'recoil';
 
 import { registerGuest } from '@/api/authService';
+import { createErrorMessage } from '@/constants/toasts';
+import { ErrorMessages } from '@/constants/toasts/auth-messages';
 import { toastState } from '@/store/toast/atom/toast.atom';
 import { GUEST_USER_COOKIE } from '@/utils/constants';
-import { ToastStateEnum } from '@/utils/enums/toast-types';
 
 const useRegisterGuestUser = () => {
   const setToastState = useSetRecoilState(toastState);
@@ -15,11 +16,7 @@ const useRegisterGuestUser = () => {
       setCookie(GUEST_USER_COOKIE, data);
     },
     onError: () => {
-      setToastState({
-        open: true,
-        type: ToastStateEnum.ERROR,
-        content: 'Error login guest user',
-      });
+      setToastState(createErrorMessage(ErrorMessages.GUEST_USER));
     },
   });
 };

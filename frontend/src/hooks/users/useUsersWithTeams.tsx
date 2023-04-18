@@ -2,10 +2,10 @@ import { useInfiniteQuery } from '@tanstack/react-query';
 import { useSetRecoilState } from 'recoil';
 
 import { getUsersWithTeams } from '@/api/userService';
+import { TEAMS_KEY, USERS_KEY } from '@/constants/react-query/keys';
 import { createErrorMessage } from '@/constants/toasts';
 import { ErrorMessages } from '@/constants/toasts/users-messages';
 import { toastState } from '@/store/toast/atom/toast.atom';
-import { TEAMS_KEY, USERS_KEY } from '@/utils/constants/reactQueryKeys';
 
 const useUsersWithTeams = (searchParam?: string) => {
   const setToastState = useSetRecoilState(toastState);

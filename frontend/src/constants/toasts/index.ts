@@ -1,3 +1,6 @@
+// This might not be the final location of this file
+// Since this is a 'Helper' or 'Util'
+
 import { ToastStateEnum } from '@/utils/enums/toast-types';
 
 const createToastObject = (content: string, type: ToastStateEnum) => {

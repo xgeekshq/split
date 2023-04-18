@@ -20,6 +20,7 @@ import CreateHeader from '@/components/Primitives/Layout/CreateHeader/CreateHead
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import TipBar from '@/components/Primitives/Layout/TipBar/TipBar';
 import LoadingPage from '@/components/Primitives/Loading/Page/Page';
+import { TEAMS_KEY } from '@/constants/react-query/keys';
 import { defaultSplitColumns } from '@/helper/board/defaultColumns';
 import useTeams from '@/hooks/teams/useTeams';
 import useBoard from '@/hooks/useBoard';
@@ -33,7 +34,6 @@ import {
 import { toastState } from '@/store/toast/atom/toast.atom';
 import { StyledForm } from '@/styles/pages/pages.styles';
 import { CreateBoardDto } from '@/types/board/board';
-import { TEAMS_KEY } from '@/utils/constants/reactQueryKeys';
 import { BoardPhases } from '@/utils/enums/board.phases';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import { ToastStateEnum } from '@/utils/enums/toast-types';

@@ -2,11 +2,12 @@ import { renderHook, waitFor } from '@testing-library/react';
 import { setCookie } from 'cookies-next';
 
 import { registerGuest } from '@/api/authService';
+import { createErrorMessage } from '@/constants/toasts';
+import { ErrorMessages } from '@/constants/toasts/auth-messages';
 import useRegisterGuestUser from '@/hooks/auth/useRegisterGuestUser';
 import { toastState } from '@/store/toast/atom/toast.atom';
 import { GuestUser } from '@/types/user/user';
 import { GUEST_USER_COOKIE } from '@/utils/constants';
-import { ToastStateEnum } from '@/utils/enums/toast-types';
 import { BoardFactory } from '@/utils/factories/board';
 import { UserFactory } from '@/utils/factories/user';
 import {
@@ -77,11 +78,7 @@ describe('hooks/auth/useRegisterGuestUser', () => {
     await waitFor(() => {
       expect(result.current.isError).toBeTruthy();
       expect(result.current.data).not.toBeDefined();
-      expect(recoilHandler).toHaveBeenCalledWith({
-        open: true,
-        content: 'Error login guest user',
-        type: ToastStateEnum.ERROR,
-      });
+      expect(recoilHandler).toHaveBeenCalledWith(createErrorMessage(ErrorMessages.GUEST_USER));
     });
   });
 });
