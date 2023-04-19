@@ -14,9 +14,9 @@ import LoadingPage from '@/components/Primitives/Loading/Page/Page';
 import TeamsList from '@/components/Teams/TeamsList/TeamList';
 import UserHeader from '@/components/Users/User/UserHeader/UserHeader';
 import { TEAMS_KEY, USERS_KEY } from '@/constants/react-query/keys';
+import { ROUTES } from '@/constants/routes';
 import useUserTeams from '@/hooks/teams/useUserTeams';
 import useUser from '@/hooks/users/useUser';
-import { ROUTES } from '@/utils/routes';
 
 const UserDetails = () => {
   const {

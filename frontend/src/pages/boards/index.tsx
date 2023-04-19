@@ -12,8 +12,8 @@ import MainPageHeader from '@/components/layouts/Layout/MainPageHeader/MainPageH
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import LoadingPage from '@/components/Primitives/Loading/Page/Page';
 import { TEAMS_KEY } from '@/constants/react-query/keys';
+import { ROUTES } from '@/constants/routes';
 import useCurrentSession from '@/hooks/useCurrentSession';
-import { ROUTES } from '@/utils/routes';
 
 const Boards = () => {
   const { session, userId, isSAdmin } = useCurrentSession({ required: true });

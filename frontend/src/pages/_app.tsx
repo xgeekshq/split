@@ -18,9 +18,9 @@ import { RecoilRoot } from 'recoil';
 import Sprite from '@/components/icons/Sprite';
 import Toast, { ToastProvider, ToastViewport } from '@/components/Primitives/Toast/Toast';
 import RecoilDevTools from '@/components/RecoilDevTools/RecoilDevTools';
+import { JWT_EXPIRATION_TIME, RECOIL_DEV_TOOLS } from '@/constants';
+import { ROUTES } from '@/constants/routes';
 import globalStyles from '@/styles/globals';
-import { JWT_EXPIRATION_TIME, RECOIL_DEV_TOOLS } from '@/utils/constants';
-import { ROUTES } from '@/utils/routes';
 
 type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
   getLayout?: (page: ReactElement) => ReactNode;

@@ -13,7 +13,7 @@ import MainPageHeader from '@/components/layouts/Layout/MainPageHeader/MainPageH
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import LoadingPage from '@/components/Primitives/Loading/Page/Page';
 import Text from '@/components/Primitives/Text/Text';
-import { ROUTES } from '@/utils/routes';
+import { ROUTES } from '@/constants/routes';
 
 export const getServerSideProps: GetServerSideProps = requireAuthentication(async () => ({
   props: {},

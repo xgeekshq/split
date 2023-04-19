@@ -3,8 +3,8 @@ import { fireEvent, waitFor } from '@testing-library/react';
 import MemberTitle, {
   MemberTitleProps,
 } from '@/components/Teams/Team/TeamMemberItem/MemberTitle/MemberTitle';
+import { ROUTES } from '@/constants/routes';
 import { UserFactory } from '@/utils/factories/user';
-import { ROUTES } from '@/utils/routes';
 import { libraryMocks } from '@/utils/testing/mocks';
 import { renderWithProviders } from '@/utils/testing/renderWithProviders';
 

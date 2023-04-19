@@ -2,8 +2,8 @@ import { GetServerSidePropsContext } from 'next';
 import { getSession } from 'next-auth/react';
 import axios, { AxiosRequestConfig } from 'axios';
 
+import { NEXT_PUBLIC_BACKEND_URL } from '@/constants';
 import { GuestUser } from '@/types/user/user';
-import { NEXT_PUBLIC_BACKEND_URL } from '@/utils/constants';
 import { getGuestUserCookies } from '@/utils/getGuestUserCookies';
 
 export const instance = axios.create({

@@ -19,8 +19,10 @@ import CreateHeader from '@/components/Primitives/Layout/CreateHeader/CreateHead
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import TipBar from '@/components/Primitives/Layout/TipBar/TipBar';
 import LoadingPage from '@/components/Primitives/Loading/Page/Page';
+import { defaultRegularColumns } from '@/constants/boards/defaultColumns';
 import { TEAMS_KEY } from '@/constants/react-query/keys';
-import { defaultRegularColumns } from '@/helper/board/defaultColumns';
+import { DASHBOARD_ROUTE } from '@/constants/routes';
+import REGULAR_BOARD_TIPS from '@/constants/tips/regularBoard';
 import useTeams from '@/hooks/teams/useTeams';
 import useBoard from '@/hooks/useBoard';
 import useCurrentSession from '@/hooks/useCurrentSession';
@@ -33,7 +35,6 @@ import { BoardUserDto } from '@/types/board/board.user';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
 import isEmpty from '@/utils/isEmpty';
-import { DASHBOARD_ROUTE } from '@/utils/routes';
 
 const defaultBoard = {
   users: [],
@@ -76,23 +77,6 @@ const NewRegularBoard: NextPage = () => {
 
   // Team  Hook
   const { data: userBasedTeams } = useTeams(isSAdmin);
-
-  const regularBoardTips = [
-    {
-      title: 'Quick create board',
-      description: [
-        'If you want to jump the settings you can just hit the button Create board.',
-        'You can still adjust all the settings later on inside the board itself.',
-      ],
-    },
-    {
-      title: 'Columns',
-      description: [
-        'We will set the columns by default to 3.',
-        'If you want to have more or less you can later, inside the actual board, still adjust the columns.',
-      ],
-    },
-  ];
 
   const { data: allUsers } = useQuery(['users'], () => getAllUsers(), {
     enabled: true,
@@ -268,7 +252,7 @@ const NewRegularBoard: NextPage = () => {
                       </FormProvider>
                     </Flex>
                   </StyledForm>
-                  <TipBar tips={regularBoardTips} />
+                  <TipBar tips={REGULAR_BOARD_TIPS} />
                 </Flex>
               </Flex>
               <CreateFooter

@@ -14,9 +14,9 @@ import Dots from '@/components/Primitives/Loading/Dots/Dots';
 import LoadingPage from '@/components/Primitives/Loading/Page/Page';
 import TeamsList from '@/components/Teams/TeamsList/TeamList';
 import { TEAMS_KEY } from '@/constants/react-query/keys';
+import { ROUTES } from '@/constants/routes';
 import useTeams from '@/hooks/teams/useTeams';
 import useCurrentSession from '@/hooks/useCurrentSession';
-import { ROUTES } from '@/utils/routes';
 
 const Teams = () => {
   const { isSAdmin } = useCurrentSession();

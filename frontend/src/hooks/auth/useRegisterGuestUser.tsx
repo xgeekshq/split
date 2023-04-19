@@ -3,10 +3,10 @@ import { setCookie } from 'cookies-next';
 import { useSetRecoilState } from 'recoil';
 
 import { registerGuest } from '@/api/authService';
+import { GUEST_USER_COOKIE } from '@/constants';
 import { createErrorMessage } from '@/constants/toasts';
 import { ErrorMessages } from '@/constants/toasts/auth-messages';
 import { toastState } from '@/store/toast/atom/toast.atom';
-import { GUEST_USER_COOKIE } from '@/utils/constants';
 
 const useRegisterGuestUser = () => {
   const setToastState = useSetRecoilState(toastState);

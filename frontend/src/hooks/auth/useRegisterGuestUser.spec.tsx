@@ -2,12 +2,12 @@ import { renderHook, waitFor } from '@testing-library/react';
 import { setCookie } from 'cookies-next';
 
 import { registerGuest } from '@/api/authService';
+import { GUEST_USER_COOKIE } from '@/constants';
 import { createErrorMessage } from '@/constants/toasts';
 import { ErrorMessages } from '@/constants/toasts/auth-messages';
 import useRegisterGuestUser from '@/hooks/auth/useRegisterGuestUser';
 import { toastState } from '@/store/toast/atom/toast.atom';
 import { GuestUser } from '@/types/user/user';
-import { GUEST_USER_COOKIE } from '@/utils/constants';
 import { BoardFactory } from '@/utils/factories/board';
 import { UserFactory } from '@/utils/factories/user';
 import {
