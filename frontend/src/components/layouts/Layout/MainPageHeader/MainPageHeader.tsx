@@ -14,7 +14,7 @@ const MainPageHeader = ({ title, button }: MainPagerHeaderProps) => (
   <Flex data-testid="MainPageHeader" justify="between">
     <Text heading="1">{title}</Text>
     {button && (
-      <Link href={button.link ?? '#'}>
+      <Link href={button.link ?? '#'} style={{ height: 'fit-content' }}>
         <Button size="sm">
           <Icon name="plus" />
           {button.label}
