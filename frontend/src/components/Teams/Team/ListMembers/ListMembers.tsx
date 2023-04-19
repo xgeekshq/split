@@ -15,13 +15,13 @@ import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
 import { verifyIfIsNewJoiner } from '@/utils/verifyIfIsNewJoiner';
 
-type Props = {
+export type ListMembersProps = {
   setIsOpen: Dispatch<SetStateAction<boolean>>;
   isOpen: boolean;
   isTeamPage?: boolean;
 };
 
-const ListMembers = ({ isOpen, setIsOpen, isTeamPage }: Props) => {
+const ListMembers = ({ isOpen, setIsOpen, isTeamPage }: ListMembersProps) => {
   const {
     query: { teamId },
   } = useRouter();
@@ -84,14 +84,12 @@ const ListMembers = ({ isOpen, setIsOpen, isTeamPage }: Props) => {
     const updatedListWithAdded = selectedUsers.map((user) => {
       const isNewJoiner = verifyIfIsNewJoiner(user.joinedAt, user.providerAccountCreatedAt);
 
-      return (
-        createTeamMembers.find((member) => member.user._id === user._id) || {
-          user,
-          role: TeamUserRoles.MEMBER,
-          isNewJoiner,
-          canBeResponsible: !isNewJoiner,
-        }
-      );
+      return {
+        user,
+        role: TeamUserRoles.MEMBER,
+        isNewJoiner,
+        canBeResponsible: !isNewJoiner,
+      };
     });
 
     // Sort by Name
