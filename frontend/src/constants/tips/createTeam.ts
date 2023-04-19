@@ -1,4 +1,4 @@
-export const CREATE_TEAM_TIPS = [
+const CREATE_TEAM_TIPS = [
   {
     title: 'Team Admin',
     description: [
@@ -17,3 +17,5 @@ export const CREATE_TEAM_TIPS = [
     description: ['The new joiner will not be selected as a responsible for the SPLIT sub-teams.'],
   },
 ];
+
+export default CREATE_TEAM_TIPS;

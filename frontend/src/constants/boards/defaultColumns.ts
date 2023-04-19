@@ -1,4 +1,4 @@
-import { CARD_TEXT_DEFAULT, CARD_TEXT_TO_IMPROVE_SPLIT_COLUMN } from '@/utils/constants';
+import { CARD_TEXT_DEFAULT, CARD_TEXT_TO_IMPROVE_SPLIT_COLUMN } from '@/constants';
 
 export const defaultRegularColumns = [
   {

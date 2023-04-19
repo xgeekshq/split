@@ -17,7 +17,6 @@ import * as SchedulesType from 'src/modules/schedules/interfaces/types';
 import * as Boards from 'src/modules/boards/interfaces/types';
 import * as BoardUsers from 'src/modules/boardUsers/interfaces/types';
 import { GetTeamServiceInterface } from 'src/modules/teams/interfaces/services/get.team.service.interface';
-import * as TeamUsers from 'src/modules/teamUsers/interfaces/types';
 import TeamUser from 'src/modules/teamUsers/entities/team.user.schema';
 import User from 'src/modules/users/entities/user.schema';
 import BoardDto from '../dto/board.dto';
@@ -38,6 +37,7 @@ import { Configs } from '../dto/configs.dto';
 import { TEAM_NOT_FOUND, TEAM_USERS_NOT_FOUND } from 'src/libs/exceptions/messages';
 import { CreateFailedException } from 'src/libs/exceptions/createFailedBadRequestException';
 import { GET_TEAM_SERVICE } from 'src/modules/teams/constants';
+import { GET_TEAM_USER_SERVICE, UPDATE_TEAM_USER_SERVICE } from 'src/modules/teamUsers/constants';
 
 type CreateBoardAndUsers = {
 	boardData: BoardDto;
@@ -50,19 +50,19 @@ export default class CreateBoardService implements CreateBoardServiceInterface {
 
 	constructor(
 		@Inject(forwardRef(() => GET_TEAM_SERVICE))
-		private getTeamService: GetTeamServiceInterface,
-		@Inject(TeamUsers.TYPES.services.GetTeamUserService)
-		private getTeamUserService: GetTeamUserServiceInterface,
-		@Inject(TeamUsers.TYPES.services.UpdateTeamUserService)
-		private updateTeamUserService: UpdateTeamUserServiceInterface,
+		private readonly getTeamService: GetTeamServiceInterface,
+		@Inject(GET_TEAM_USER_SERVICE)
+		private readonly getTeamUserService: GetTeamUserServiceInterface,
+		@Inject(UPDATE_TEAM_USER_SERVICE)
+		private readonly updateTeamUserService: UpdateTeamUserServiceInterface,
 		@Inject(SchedulesType.TYPES.services.CreateSchedulesService)
-		private createSchedulesService: CreateSchedulesServiceInterface,
+		private readonly createSchedulesService: CreateSchedulesServiceInterface,
 		@Inject(CommunicationsType.TYPES.services.SlackCommunicationService)
-		private slackCommunicationService: CommunicationServiceInterface,
+		private readonly slackCommunicationService: CommunicationServiceInterface,
 		@Inject(Boards.TYPES.repositories.BoardRepository)
 		private readonly boardRepository: BoardRepositoryInterface,
 		@Inject(BoardUsers.TYPES.services.CreateBoardUserService)
-		private createBoardUserService: CreateBoardUserServiceInterface
+		private readonly createBoardUserService: CreateBoardUserServiceInterface
 	) {}
 
 	async create(boardData: BoardDto, userId: string, fromSchedule = false): Promise<Board> {

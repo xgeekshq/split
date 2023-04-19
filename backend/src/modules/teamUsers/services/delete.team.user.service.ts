@@ -1,13 +1,13 @@
 import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { DELETE_FAILED } from 'src/libs/exceptions/messages';
 import { DeleteTeamUserServiceInterface } from '../interfaces/services/delete.team.user.service.interface';
-import { TYPES } from '../interfaces/types';
+import { TEAM_USER_REPOSITORY } from '../constants';
 import { TeamUserRepositoryInterface } from '../interfaces/repositories/team-user.repository.interface';
 
 @Injectable()
 export default class DeleteTeamUserService implements DeleteTeamUserServiceInterface {
 	constructor(
-		@Inject(TYPES.repositories.TeamUserRepository)
+		@Inject(TEAM_USER_REPOSITORY)
 		private readonly teamUserRepository: TeamUserRepositoryInterface
 	) {}
 

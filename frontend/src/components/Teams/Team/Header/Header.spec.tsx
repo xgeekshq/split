@@ -2,8 +2,8 @@ import React from 'react';
 import { fireEvent, waitFor } from '@testing-library/react';
 
 import TeamHeader, { TeamHeaderProps } from '@/components/Teams/Team/Header/Header';
+import { TEAMS_ROUTE } from '@/constants/routes';
 import { TeamFactory } from '@/utils/factories/team';
-import { TEAMS_ROUTE } from '@/utils/routes';
 import { libraryMocks } from '@/utils/testing/mocks';
 import { renderWithProviders } from '@/utils/testing/renderWithProviders';
 

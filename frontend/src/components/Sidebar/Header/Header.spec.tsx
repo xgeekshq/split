@@ -1,8 +1,8 @@
 import { fireEvent, waitFor } from '@testing-library/react';
 
 import Header, { SidebarHeaderProps } from '@/components/Sidebar/Header/Header';
+import { DASHBOARD_ROUTE } from '@/constants/routes';
 import { getInitials } from '@/utils/getInitials';
-import { DASHBOARD_ROUTE } from '@/utils/routes';
 import { libraryMocks } from '@/utils/testing/mocks';
 import { renderWithProviders } from '@/utils/testing/renderWithProviders';
 

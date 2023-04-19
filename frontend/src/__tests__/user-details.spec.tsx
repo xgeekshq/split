@@ -1,6 +1,7 @@
 import { UseQueryResult } from '@tanstack/react-query';
 import { waitFor } from '@testing-library/react';
 
+import { ROUTES } from '@/constants/routes';
 import useTeamsWithoutUser from '@/hooks/teams/useTeamsWithoutUser';
 import useUserTeams from '@/hooks/teams/useUserTeams';
 import useUser from '@/hooks/users/useUser';
@@ -9,7 +10,6 @@ import { Team } from '@/types/team/team';
 import { User } from '@/types/user/user';
 import { TeamCheckedFactory, TeamFactory } from '@/utils/factories/team';
 import { UserFactory } from '@/utils/factories/user';
-import { ROUTES } from '@/utils/routes';
 import { libraryMocks } from '@/utils/testing/mocks';
 import { renderWithProviders } from '@/utils/testing/renderWithProviders';
 
