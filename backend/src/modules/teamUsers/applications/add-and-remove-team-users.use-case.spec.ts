@@ -1,8 +1,6 @@
-import { addAndRemoveTeamUsersUseCase } from './../teamusers.providers';
 import { Test, TestingModule } from '@nestjs/testing';
 import { DeepMocked, createMock } from '@golevelup/ts-jest';
 import { UseCase } from 'src/libs/interfaces/use-case.interface';
-import * as TeamUsers from 'src/modules/teamUsers/interfaces/types';
 import TeamUserDto from '../dto/team.user.dto';
 import TeamUser from '../entities/team.user.schema';
 import { BadRequestException } from '@nestjs/common';
@@ -12,6 +10,11 @@ import UpdateTeamUserDto from '../dto/update.team.user.dto';
 import { CreateTeamUserServiceInterface } from '../interfaces/services/create.team.user.service.interface';
 import { DeleteTeamUserServiceInterface } from '../interfaces/services/delete.team.user.service.interface';
 import faker from '@faker-js/faker';
+import { AddAndRemoveTeamUsersUseCase } from 'src/modules/teamUsers/applications/add-and-remove-team-users.use-case';
+import {
+	CREATE_TEAM_USER_SERVICE,
+	DELETE_TEAM_USER_SERVICE
+} from 'src/modules/teamUsers/constants';
 
 const createTeamUserDtos: TeamUserDto[] = TeamUserDtoFactory.createMany(4);
 
@@ -46,24 +49,22 @@ describe('AddAndRemoveTeamUsersUseCase', () => {
 	beforeAll(async () => {
 		const module: TestingModule = await Test.createTestingModule({
 			providers: [
-				addAndRemoveTeamUsersUseCase,
+				AddAndRemoveTeamUsersUseCase,
 				{
-					provide: TeamUsers.TYPES.services.CreateTeamUserService,
+					provide: CREATE_TEAM_USER_SERVICE,
 					useValue: createMock<CreateTeamUserServiceInterface>()
 				},
 				{
-					provide: TeamUsers.TYPES.services.DeleteTeamUserService,
+					provide: DELETE_TEAM_USER_SERVICE,
 					useValue: createMock<DeleteTeamUserServiceInterface>()
 				}
 			]
 		}).compile();
 
-		addAndRemoveTeamUser = module.get<UseCase<UpdateTeamUserDto, TeamUser[]>>(
-			addAndRemoveTeamUsersUseCase.provide
-		);
+		addAndRemoveTeamUser = module.get(AddAndRemoveTeamUsersUseCase);
 
-		createTeamUserServiceMock = module.get(TeamUsers.TYPES.services.CreateTeamUserService);
-		deleteTeamUserServiceMock = module.get(TeamUsers.TYPES.services.DeleteTeamUserService);
+		createTeamUserServiceMock = module.get(CREATE_TEAM_USER_SERVICE);
+		deleteTeamUserServiceMock = module.get(DELETE_TEAM_USER_SERVICE);
 	});
 
 	beforeEach(() => {

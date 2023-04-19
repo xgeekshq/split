@@ -2,14 +2,14 @@ import { UpdateTeamUserServiceInterface } from '../interfaces/services/update.te
 import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import TeamUserDto from '../dto/team.user.dto';
 import TeamUser from '../entities/team.user.schema';
-import { TYPES } from '../interfaces/types';
+import { TEAM_USER_REPOSITORY } from '../constants';
 import { TeamUserRepositoryInterface } from '../interfaces/repositories/team-user.repository.interface';
 import { UPDATE_FAILED } from 'src/libs/exceptions/messages';
 
 @Injectable()
 export default class UpdateTeamUserService implements UpdateTeamUserServiceInterface {
 	constructor(
-		@Inject(TYPES.repositories.TeamUserRepository)
+		@Inject(TEAM_USER_REPOSITORY)
 		private readonly teamUserRepository: TeamUserRepositoryInterface
 	) {}
 

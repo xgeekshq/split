@@ -1,5 +1,5 @@
 import { CreateTeamUserServiceInterface } from '../interfaces/services/create.team.user.service.interface';
-import { TYPES } from '../interfaces/types';
+import { TEAM_USER_REPOSITORY } from '../constants';
 import { TeamUserRepositoryInterface } from '../interfaces/repositories/team-user.repository.interface';
 import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import TeamUserDto from '../dto/team.user.dto';
@@ -9,7 +9,7 @@ import TeamUser from '../entities/team.user.schema';
 @Injectable()
 export default class CreateTeamUserService implements CreateTeamUserServiceInterface {
 	constructor(
-		@Inject(TYPES.repositories.TeamUserRepository)
+		@Inject(TEAM_USER_REPOSITORY)
 		private readonly teamUserRepository: TeamUserRepositoryInterface
 	) {}
 
