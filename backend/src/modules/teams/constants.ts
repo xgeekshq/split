@@ -16,4 +16,6 @@ export const DELETE_TEAM_USE_CASE = 'DeleteTeamUseCase';
 
 export const GET_TEAMS_USER_IS_NOT_MEMBER_USE_CASE = 'GetTeamsUserIsNotMemberUseCase';
 
+export const GET_ALL_TEAMS_USE_CASE = 'GetAllTeamsUseCase';
+
 export const TEAM_REPOSITORY = 'TeamRepository';
