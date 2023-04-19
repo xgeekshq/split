@@ -7,19 +7,19 @@ import { TeamFactory } from 'src/libs/test-utils/mocks/factories/team-factory.mo
 import GetBoardsUseCaseDto from '../dto/useCase/get-boards.use-case.dto';
 import BoardsPaginatedPresenter from '../presenter/boards-paginated.presenter';
 import { UseCase } from 'src/libs/interfaces/use-case.interface';
-import { GetBoardsForDashboardUseCase } from './get-boards-for-dashboard.use-case';
+import { GetDashboardBoardsUseCase } from './get-dashboard-boards.use-case';
 import { GET_BOARD_SERVICE } from 'src/modules/boards/constants';
 
 const userId = faker.datatype.uuid();
 
-describe('GetBoardsForDashboardUseCase', () => {
+describe('GetDashboardBoardsUseCase', () => {
 	let useCase: UseCase<GetBoardsUseCaseDto, BoardsPaginatedPresenter>;
 	let getBoardServiceMock: DeepMocked<GetBoardServiceInterface>;
 
 	beforeAll(async () => {
 		const module: TestingModule = await Test.createTestingModule({
 			providers: [
-				GetBoardsForDashboardUseCase,
+				GetDashboardBoardsUseCase,
 				{
 					provide: GET_BOARD_SERVICE,
 					useValue: createMock<GetBoardServiceInterface>()
@@ -27,7 +27,7 @@ describe('GetBoardsForDashboardUseCase', () => {
 			]
 		}).compile();
 
-		useCase = module.get(GetBoardsForDashboardUseCase);
+		useCase = module.get(GetDashboardBoardsUseCase);
 		getBoardServiceMock = module.get(GET_BOARD_SERVICE);
 	});
 

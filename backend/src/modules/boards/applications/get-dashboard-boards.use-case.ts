@@ -6,7 +6,7 @@ import { GET_BOARD_SERVICE } from '../constants';
 import BoardsPaginatedPresenter from '../presenter/boards-paginated.presenter';
 
 @Injectable()
-export class GetBoardsForDashboardUseCase
+export class GetDashboardBoardsUseCase
 	implements UseCase<GetBoardsUseCaseDto, BoardsPaginatedPresenter>
 {
 	constructor(
