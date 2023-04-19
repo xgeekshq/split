@@ -1,11 +1,11 @@
 import { UseQueryResult } from '@tanstack/react-query';
 import { waitFor } from '@testing-library/react';
 
+import { ROUTES } from '@/constants/routes';
 import useUsers from '@/hooks/users/useUsers';
 import NewTeam from '@/pages/teams/new';
 import { User } from '@/types/user/user';
 import { UserFactory } from '@/utils/factories/user';
-import { ROUTES } from '@/utils/routes';
 import { libraryMocks } from '@/utils/testing/mocks';
 import { renderWithProviders } from '@/utils/testing/renderWithProviders';
 

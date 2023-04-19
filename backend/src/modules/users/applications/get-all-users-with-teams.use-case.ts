@@ -3,10 +3,10 @@ import { Inject, Injectable } from '@nestjs/common';
 import { GetAllUsersWithTeamsUseCaseInterface } from '../interfaces/applications/get-all-users-with-teams.use-case.interface';
 import { UserWithTeams } from '../interfaces/type-user-with-teams';
 import { TYPES } from '../interfaces/types';
-import * as TeamUsers from 'src/modules/teamUsers/interfaces/types';
 import { UserRepositoryInterface } from '../repository/user.repository.interface';
 import { sortAlphabetically } from '../utils/sortings';
 import { GetUserServiceInterface } from '../interfaces/services/get.user.service.interface';
+import { GET_TEAM_USER_SERVICE } from 'src/modules/teamUsers/constants';
 
 @Injectable()
 export default class GetAllUsersWithTeamsUseCase implements GetAllUsersWithTeamsUseCaseInterface {
@@ -15,8 +15,8 @@ export default class GetAllUsersWithTeamsUseCase implements GetAllUsersWithTeams
 		private readonly userRepository: UserRepositoryInterface,
 		@Inject(TYPES.services.GetUserService)
 		private readonly getUserService: GetUserServiceInterface,
-		@Inject(TeamUsers.TYPES.services.GetTeamUserService)
-		private getTeamUserService: GetTeamUserServiceInterface
+		@Inject(GET_TEAM_USER_SERVICE)
+		private readonly getTeamUserService: GetTeamUserServiceInterface
 	) {}
 
 	async execute(page = 0, size = 15, searchUser?: string) {

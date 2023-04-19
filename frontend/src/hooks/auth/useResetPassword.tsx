@@ -2,27 +2,20 @@ import { useMutation } from '@tanstack/react-query';
 import { useSetRecoilState } from 'recoil';
 
 import { resetUserPassword } from '@/api/authService';
+import { USERS_KEY } from '@/constants/react-query/keys';
+import { createErrorMessage, createSuccessMessage } from '@/constants/toasts';
+import { ErrorMessages, SuccessMessages } from '@/constants/toasts/auth-messages';
 import { toastState } from '@/store/toast/atom/toast.atom';
-import { USERS_KEY } from '@/utils/constants/reactQueryKeys';
-import { ToastStateEnum } from '@/utils/enums/toast-types';
 
 const useResetPassword = () => {
   const setToastState = useSetRecoilState(toastState);
 
   return useMutation([USERS_KEY, 'resetPassword'], resetUserPassword, {
     onSuccess: () => {
-      setToastState({
-        open: true,
-        type: ToastStateEnum.SUCCESS,
-        content: 'Password updated successfully',
-      });
+      setToastState(createSuccessMessage(SuccessMessages.RESET_PASSWORD));
     },
     onError: () => {
-      setToastState({
-        open: true,
-        type: ToastStateEnum.ERROR,
-        content: 'Something went wrong, please try again.',
-      });
+      setToastState(createErrorMessage(ErrorMessages.RESET_PASSWORD));
     },
   });
 };

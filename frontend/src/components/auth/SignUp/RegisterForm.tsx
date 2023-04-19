@@ -13,12 +13,12 @@ import Button from '@/components/Primitives/Inputs/Button/Button';
 import Input from '@/components/Primitives/Inputs/Input/Input';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Text from '@/components/Primitives/Text/Text';
+import { DASHBOARD_ROUTE } from '@/constants/routes';
 import SchemaRegisterForm from '@/schema/schemaRegisterForm';
 import { toastState } from '@/store/toast/atom/toast.atom';
 import { FlexForm } from '@/styles/pages/pages.styles';
 import { RegisterUser } from '@/types/user/user';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
-import { DASHBOARD_ROUTE } from '@/utils/routes';
 import { SignUpEnum } from '@/utils/signUp.enum';
 
 interface RegisterFormProps {

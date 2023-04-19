@@ -2,9 +2,10 @@ import { useQuery } from '@tanstack/react-query';
 import { useSetRecoilState } from 'recoil';
 
 import { getTeam } from '@/api/teamService';
+import { TEAMS_KEY } from '@/constants/react-query/keys';
+import { createErrorMessage } from '@/constants/toasts';
+import { ErrorMessages } from '@/constants/toasts/teams-messages';
 import { toastState } from '@/store/toast/atom/toast.atom';
-import { TEAMS_KEY } from '@/utils/constants/reactQueryKeys';
-import { ToastStateEnum } from '@/utils/enums/toast-types';
 
 const useTeam = (teamId: string) => {
   const setToastState = useSetRecoilState(toastState);
@@ -14,11 +15,7 @@ const useTeam = (teamId: string) => {
     refetchOnMount: false,
     refetchOnWindowFocus: false,
     onError: () => {
-      setToastState({
-        open: true,
-        content: 'Error getting the team',
-        type: ToastStateEnum.ERROR,
-      });
+      setToastState(createErrorMessage(ErrorMessages.GET_ONE));
     },
   });
 };

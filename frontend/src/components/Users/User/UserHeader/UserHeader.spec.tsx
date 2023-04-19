@@ -3,10 +3,10 @@ import { UseQueryResult } from '@tanstack/react-query';
 import { fireEvent, waitFor } from '@testing-library/react';
 
 import UserHeader, { UserHeaderProps } from '@/components/Users/User/UserHeader/UserHeader';
+import { USERS_ROUTE } from '@/constants/routes';
 import useTeamsWithoutUser from '@/hooks/teams/useTeamsWithoutUser';
 import { TeamCheckedFactory } from '@/utils/factories/team';
 import { UserFactory } from '@/utils/factories/user';
-import { USERS_ROUTE } from '@/utils/routes';
 import { libraryMocks } from '@/utils/testing/mocks';
 import { renderWithProviders } from '@/utils/testing/renderWithProviders';
 
