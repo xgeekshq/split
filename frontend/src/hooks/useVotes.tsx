@@ -3,12 +3,12 @@ import { useMutation } from '@tanstack/react-query';
 import { useSetRecoilState } from 'recoil';
 
 import { handleVotes } from '@/api/boardService';
+import { ToastStateEnum } from '@/enums/toasts/toast-types';
 import useBoardUtils from '@/hooks/useBoardUtils';
 import { operationsQueueAtom } from '@/store/operations/atom/operations-queue.atom';
 import BoardType from '@/types/board/board';
 import { CardItemType } from '@/types/card/cardItem';
 import VoteDto from '@/types/vote/vote.dto';
-import { ToastStateEnum } from '@/utils/enums/toast-types';
 import { getRemainingVotes } from '@/utils/getRemainingVotes';
 import isEmpty from '@/utils/isEmpty';
 

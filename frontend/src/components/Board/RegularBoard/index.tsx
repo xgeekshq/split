@@ -9,10 +9,10 @@ import Icon from '@/components/Primitives/Icons/Icon/Icon';
 import Button from '@/components/Primitives/Inputs/Button/Button';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import LoadingPage from '@/components/Primitives/Loading/Page/Page';
+import { BoardUserRoles } from '@/enums/boards/userRoles';
 import { boardInfoState } from '@/store/board/atoms/board.atom';
 import { EmitEvent } from '@/types/events/emit-event.type';
 import { ListenEvent } from '@/types/events/listen-event.type';
-import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 
 type RegularBoardProps = {
   socketId?: string;

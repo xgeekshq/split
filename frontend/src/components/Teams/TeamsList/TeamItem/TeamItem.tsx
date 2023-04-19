@@ -11,13 +11,13 @@ import Text from '@/components/Primitives/Text/Text';
 import RoleSelector from '@/components/Teams/Team/TeamMemberItem/RoleSelector/RoleSelector';
 import TeamBoards from '@/components/Teams/TeamsList/TeamItem/TeamBoards/TeamBoards';
 import TeamTitle from '@/components/Teams/TeamsList/TeamItem/TeamTitle/TeamTitle';
+import { TeamUserRoles } from '@/enums/teams/userRoles';
 import useDeleteTeam from '@/hooks/teams/useDeleteTeam';
 import useDeleteTeamUser from '@/hooks/teams/useDeleteTeamUser';
 import useUpdateTeamUser from '@/hooks/teams/useUpdateTeamUser';
 import { InnerContainer } from '@/styles/pages/pages.styles';
 import { Team } from '@/types/team/team';
 import { TeamUserUpdate } from '@/types/team/team.user';
-import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 
 export type TeamItemProps = {
   team: Team;

@@ -23,6 +23,8 @@ import { defaultRegularColumns } from '@/constants/boards/defaultColumns';
 import { TEAMS_KEY } from '@/constants/react-query/keys';
 import { DASHBOARD_ROUTE } from '@/constants/routes';
 import REGULAR_BOARD_TIPS from '@/constants/tips/regularBoard';
+import { BoardUserRoles } from '@/enums/boards/userRoles';
+import { ToastStateEnum } from '@/enums/toasts/toast-types';
 import useTeams from '@/hooks/teams/useTeams';
 import useBoard from '@/hooks/useBoard';
 import useCurrentSession from '@/hooks/useCurrentSession';
@@ -32,8 +34,6 @@ import { toastState } from '@/store/toast/atom/toast.atom';
 import { usersListState } from '@/store/user.atom';
 import { StyledForm } from '@/styles/pages/pages.styles';
 import { BoardUser, BoardUserDto } from '@/types/board/board.user';
-import { BoardUserRoles } from '@/utils/enums/board.user.roles';
-import { ToastStateEnum } from '@/utils/enums/toast-types';
 import isEmpty from '@/utils/isEmpty';
 
 const defaultBoard = {

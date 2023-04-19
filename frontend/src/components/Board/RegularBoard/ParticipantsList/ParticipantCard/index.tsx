@@ -6,9 +6,9 @@ import ConfigurationSwitch from '@/components/Primitives/Inputs/Switches/Configu
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Text from '@/components/Primitives/Text/Text';
 import Tooltip from '@/components/Primitives/Tooltips/Tooltip/Tooltip';
+import { BoardUserRoles } from '@/enums/boards/userRoles';
 import { InnerContainer } from '@/styles/pages/pages.styles';
 import { BoardUser } from '@/types/board/board.user';
-import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 
 type CardBodyProps = {
   participant: BoardUser;

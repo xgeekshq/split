@@ -7,6 +7,8 @@ import ParticipantsTab from '@/components/CreateBoard/RegularBoard/ParticipantsT
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Tab, { TabList } from '@/components/Primitives/Tab/Tab';
 import Text from '@/components/Primitives/Text/Text';
+import { BoardUserRoles } from '@/enums/boards/userRoles';
+import { ToastStateEnum } from '@/enums/toasts/toast-types';
 import useCurrentSession from '@/hooks/useCurrentSession';
 import {
   createBoardDataState,
@@ -14,8 +16,6 @@ import {
 } from '@/store/createBoard/atoms/create-board.atom';
 import { toastState } from '@/store/toast/atom/toast.atom';
 import { usersListState } from '@/store/user.atom';
-import { BoardUserRoles } from '@/utils/enums/board.user.roles';
-import { ToastStateEnum } from '@/utils/enums/toast-types';
 
 type SettingsTabsProps = {
   isPageLoading: boolean;
