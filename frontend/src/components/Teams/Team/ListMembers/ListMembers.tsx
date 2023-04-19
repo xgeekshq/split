@@ -84,12 +84,14 @@ const ListMembers = ({ isOpen, setIsOpen, isTeamPage }: ListMembersProps) => {
     const updatedListWithAdded = selectedUsers.map((user) => {
       const isNewJoiner = verifyIfIsNewJoiner(user.joinedAt, user.providerAccountCreatedAt);
 
-      return {
-        user,
-        role: TeamUserRoles.MEMBER,
-        isNewJoiner,
-        canBeResponsible: !isNewJoiner,
-      };
+      return (
+        createTeamMembers.find((member) => member.user._id === user._id) || {
+          user,
+          role: TeamUserRoles.MEMBER,
+          isNewJoiner,
+          canBeResponsible: !isNewJoiner,
+        }
+      );
     });
 
     // Sort by Name
