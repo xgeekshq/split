@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { TYPES } from '../interfaces/types';
+import { TYPES } from '../types';
 import { UseCase } from 'src/libs/interfaces/use-case.interface';
 import Board from '../entities/board.schema';
 import { CreateBoardServiceInterface } from '../interfaces/services/create.board.service.interface';

@@ -7,7 +7,7 @@ import {
 	Injectable,
 	NotFoundException
 } from '@nestjs/common';
-import * as Boards from 'src/modules/boards/interfaces/types';
+import * as Boards from 'src/modules/boards/types';
 import User from 'src/modules/users/entities/user.schema';
 import UpdateBoardUserDto from 'src/modules/boardUsers/dto/update-board-user.dto';
 

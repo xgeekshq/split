@@ -15,7 +15,7 @@ import { GetUserServiceInterface } from 'src/modules/users/interfaces/services/g
 import * as Users from 'src/modules/users/interfaces/types';
 import Board from '../entities/board.schema';
 import { GetBoardServiceInterface } from '../interfaces/services/get.board.service.interface';
-import { TYPES } from '../interfaces/types';
+import { TYPES } from '../types';
 import { BoardRepositoryInterface } from '../repositories/board.repository.interface';
 
 export type DuplicateBoardDto = { boardId: string; userId: string; boardTitle: string };

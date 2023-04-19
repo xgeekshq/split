@@ -3,7 +3,7 @@ import { OnEvent } from '@nestjs/event-emitter';
 import { BOARD_TIMER_USER_STOPPED } from 'src/libs/constants/timer';
 import BoardTimerDto from 'src/libs/dto/board-timer.dto';
 import StopBoardTimerServiceInterface from 'src/modules/boards/interfaces/services/stop-board-timer.service.interface';
-import { TYPES } from 'src/modules/boards/interfaces/types';
+import { TYPES } from 'src/modules/boards/types';
 
 @Injectable()
 export default class AfterUserStoppedTimerSubscriber {

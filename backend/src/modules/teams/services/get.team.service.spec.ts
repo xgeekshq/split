@@ -12,7 +12,7 @@ import { TeamFactory } from 'src/libs/test-utils/mocks/factories/team-factory.mo
 import Team from 'src/modules/teams/entities/team.schema';
 import { Test, TestingModule } from '@nestjs/testing';
 import { DeepMocked, createMock } from '@golevelup/ts-jest';
-import * as Boards from 'src/modules/boards/interfaces/types';
+import * as Boards from 'src/modules/boards/types';
 import { TeamUserFactory } from 'src/libs/test-utils/mocks/factories/teamUser-factory.mock';
 import { TeamRepositoryInterface } from '../interfaces/repositories/team.repository.interface';
 import { TEAM_REPOSITORY } from 'src/modules/teams/constants';

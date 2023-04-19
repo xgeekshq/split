@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import * as BoardUsers from 'src/modules/boardUsers/interfaces/types';
-import * as Boards from 'src/modules/boards/interfaces/types';
+import * as Boards from 'src/modules/boards/types';
 import * as Users from 'src/modules/users/interfaces/types';
 import { DeepMocked, createMock } from '@golevelup/ts-jest';
 import { UseCase } from 'src/libs/interfaces/use-case.interface';

@@ -4,7 +4,7 @@ import { BOARD_TIMER_SERVER_SENT_TIMER_STATE } from 'src/libs/constants/timer';
 import BoardTimerDto from 'src/libs/dto/board-timer.dto';
 import ServerSentTimerStateEvent from 'src/modules/boards/events/server-sent-timer-state.event';
 import SendBoardTimerStateServiceInterface from 'src/modules/boards/interfaces/services/send-board-timer-state.service.interface';
-import { TYPES } from 'src/modules/boards/interfaces/types';
+import { TYPES } from 'src/modules/boards/types';
 import { BoardTimerRepositoryInterface } from 'src/modules/boards/repositories/board-timer.repository.interface';
 
 @Injectable()

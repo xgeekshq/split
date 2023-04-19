@@ -3,7 +3,7 @@ import { OnEvent } from '@nestjs/event-emitter';
 import { BOARD_TIMER_USER_STARTED } from 'src/libs/constants/timer';
 import BoardTimerDurationDto from 'src/libs/dto/board-timer-duration.dto';
 import StartBoardTimerServiceInterface from 'src/modules/boards/interfaces/services/start-board-timer.service.interface';
-import { TYPES } from 'src/modules/boards/interfaces/types';
+import { TYPES } from 'src/modules/boards/types';
 
 @Injectable()
 export default class AfterUserStartedTimerSubscriber {

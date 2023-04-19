@@ -1,6 +1,6 @@
 import { BadRequestException, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { COLUMN_NOT_FOUND, UPDATE_FAILED } from 'src/libs/exceptions/messages';
-import * as Boards from 'src/modules/boards/interfaces/types';
+import * as Boards from 'src/modules/boards/types';
 import * as Votes from 'src/modules/votes/interfaces/types';
 import * as Columns from '../interfaces/types';
 import { UpdateColumnServiceInterface } from '../interfaces/services/update.column.service.interface';

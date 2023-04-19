@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import * as Boards from 'src/modules/boards/interfaces/types';
+import * as Boards from 'src/modules/boards/types';
 import * as BoardUsers from 'src/modules/boardUsers/interfaces/types';
 import * as Auth from 'src/modules/auth/interfaces/types';
 import * as Users from 'src/modules/users/interfaces/types';

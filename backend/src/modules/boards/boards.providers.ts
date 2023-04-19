@@ -18,7 +18,7 @@ import { GetBoardUseCase } from './applications/get-board.use-case';
 import { GetBoardsForDashboardUseCase } from './applications/get-boards-for-dashboard.use-case';
 import { GetPersonalBoardsUseCase } from './applications/get-personal-boards.use-case';
 import { IsBoardPublicUseCase } from './applications/is-board-public.use-case';
-import { TYPES } from './interfaces/types';
+import { TYPES } from './types';
 import { BoardRepository } from './repositories/board.repository';
 import CreateBoardService from './services/create.board.service';
 import DeleteBoardService from './services/delete.board.service';

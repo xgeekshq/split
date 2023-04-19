@@ -3,7 +3,7 @@ import { DELETE_FAILED } from 'src/libs/exceptions/messages';
 import { DeleteTeamServiceInterface } from '../interfaces/services/delete.team.service.interface';
 import { TEAM_REPOSITORY } from '../constants';
 import { TeamRepositoryInterface } from '../interfaces/repositories/team.repository.interface';
-import * as Boards from '../../boards/interfaces/types';
+import * as Boards from '../../boards/types';
 import { DeleteBoardServiceInterface } from 'src/modules/boards/interfaces/services/delete.board.service.interface';
 import { DeleteTeamUserServiceInterface } from 'src/modules/teamUsers/interfaces/services/delete.team.user.service.interface';
 import { DELETE_TEAM_USER_SERVICE } from 'src/modules/teamUsers/constants';

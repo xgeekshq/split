@@ -1,7 +1,7 @@
 import { DeepMocked, createMock } from '@golevelup/ts-jest';
 import { Test, TestingModule } from '@nestjs/testing';
 import { TYPES } from 'src/modules/communication/interfaces/types';
-import { TYPES as BOARD_TYPES } from 'src/modules/boards/interfaces/types';
+import { TYPES as BOARD_TYPES } from 'src/modules/boards/types';
 import { BoardType } from '../dto/types';
 import { Job } from 'bull';
 import { SlackCommunicationConsumer } from './slack-communication.consumer';

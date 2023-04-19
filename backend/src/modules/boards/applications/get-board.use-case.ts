@@ -1,6 +1,6 @@
 import { UseCase } from 'src/libs/interfaces/use-case.interface';
 import { BadRequestException, Inject, Injectable, NotFoundException } from '@nestjs/common';
-import { TYPES } from '../interfaces/types';
+import { TYPES } from '../types';
 import * as BoardUsers from 'src/modules/boardUsers/interfaces/types';
 import * as Auth from 'src/modules/auth/interfaces/types';
 import * as Users from 'src/modules/users/interfaces/types';

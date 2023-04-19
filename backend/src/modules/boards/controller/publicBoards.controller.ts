@@ -11,7 +11,7 @@ import {
 	ApiParam,
 	ApiTags
 } from '@nestjs/swagger';
-import { TYPES } from '../interfaces/types';
+import { TYPES } from '../types';
 import { UseCase } from 'src/libs/interfaces/use-case.interface';
 
 @ApiTags('PublicBoards')

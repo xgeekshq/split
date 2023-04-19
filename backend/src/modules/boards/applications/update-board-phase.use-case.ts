@@ -13,7 +13,7 @@ import { SlackMessageDto } from 'src/modules/communication/dto/slack.message.dto
 import { SendMessageServiceInterface } from 'src/modules/communication/interfaces/send-message.service.interface';
 import * as CommunicationsType from 'src/modules/communication/interfaces/types';
 import PhaseChangeEvent from 'src/modules/socket/events/user-updated-phase.event';
-import { TYPES } from '../interfaces/types';
+import { TYPES } from '../types';
 import { BoardRepositoryInterface } from '../repositories/board.repository.interface';
 
 @Injectable()

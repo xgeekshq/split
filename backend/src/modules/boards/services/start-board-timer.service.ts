@@ -11,7 +11,7 @@ import ServerStartedTimerEvent from 'src/modules/boards/events/server-started-ti
 import SendBoardTimerTimeLeftServiceInterface from 'src/modules/boards/interfaces/services/send-board-time-left.service.interface';
 import StartBoardTimerServiceInterface from 'src/modules/boards/interfaces/services/start-board-timer.service.interface';
 import StopBoardTimerServiceInterface from 'src/modules/boards/interfaces/services/stop-board-timer.service.interface';
-import { TYPES } from 'src/modules/boards/interfaces/types';
+import { TYPES } from 'src/modules/boards/types';
 import { BoardTimerRepositoryInterface } from 'src/modules/boards/repositories/board-timer.repository.interface';
 
 @Injectable()

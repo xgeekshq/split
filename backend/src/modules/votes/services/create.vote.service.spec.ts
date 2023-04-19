@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { TYPES } from '../interfaces/types';
 import * as BoardUsers from 'src/modules/boardUsers/interfaces/types';
-import * as Boards from 'src/modules/boards/interfaces/types';
+import * as Boards from 'src/modules/boards/types';
 import { DeepMocked, createMock } from '@golevelup/ts-jest';
 import CreateVoteService from './create.vote.service';
 import { CreateVoteServiceInterface } from '../interfaces/services/create.vote.service.interface';

@@ -3,7 +3,7 @@ import { OnEvent } from '@nestjs/event-emitter';
 import { BOARD_TIMER_USER_DURATION_UPDATED } from 'src/libs/constants/timer';
 import BoardTimerDurationDto from 'src/libs/dto/board-timer-duration.dto';
 import UpdateBoardTimerDurationServiceInterface from 'src/modules/boards/interfaces/services/update-board-timer-duration.service.interface';
-import { TYPES } from 'src/modules/boards/interfaces/types';
+import { TYPES } from 'src/modules/boards/types';
 
 @Injectable()
 export default class AfterUserUpdatedDurationSubscriber {

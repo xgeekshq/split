@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import * as Boards from 'src/modules/boards/interfaces/types';
+import * as Boards from 'src/modules/boards/types';
 import { DeepMocked, createMock } from '@golevelup/ts-jest';
 import { GetBoardServiceInterface } from '../interfaces/services/get.board.service.interface';
 import faker from '@faker-js/faker';

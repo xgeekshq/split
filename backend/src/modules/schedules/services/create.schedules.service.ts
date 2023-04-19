@@ -4,7 +4,7 @@ import { CronJob } from 'cron';
 import { getDay, getNextMonth } from 'src/libs/utils/dates';
 import { CreateBoardServiceInterface } from 'src/modules/boards/interfaces/services/create.board.service.interface';
 import { GetBoardServiceInterface } from 'src/modules/boards/interfaces/services/get.board.service.interface';
-import * as BoardTypes from 'src/modules/boards/interfaces/types';
+import * as BoardTypes from 'src/modules/boards/types';
 import Board from 'src/modules/boards/entities/board.schema';
 import { ArchiveChannelDataOptions } from 'src/modules/communication/dto/types';
 import { ArchiveChannelServiceInterface } from 'src/modules/communication/interfaces/archive-channel.service.interface';

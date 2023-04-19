@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { UseCase } from 'src/libs/interfaces/use-case.interface';
 import GetBoardsUseCaseDto from '../dto/useCase/get-boards.use-case.dto';
 import { GetBoardServiceInterface } from '../interfaces/services/get.board.service.interface';
-import { TYPES } from '../interfaces/types';
+import { TYPES } from '../types';
 import BoardsPaginatedPresenter from '../presenter/boards-paginated.presenter';
 
 @Injectable()

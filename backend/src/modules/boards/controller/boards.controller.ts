@@ -61,7 +61,7 @@ import GetBoardUseCaseDto from '../dto/useCase/get-board.use-case.dto';
 import GetBoardsUseCaseDto from '../dto/useCase/get-boards.use-case.dto';
 import MergeBoardUseCaseDto from '../dto/useCase/merge-board.use-case.dto';
 import Board from '../entities/board.schema';
-import { TYPES } from '../interfaces/types';
+import { TYPES } from '../types';
 import BoardUseCasePresenter from '../presenter/board.use-case.presenter';
 import DeleteBoardUseCaseDto from 'src/modules/boards/dto/useCase/delete-board.use-case';
 import BoardsPaginatedPresenter from 'src/modules/boards/presenter/boards-paginated.presenter';

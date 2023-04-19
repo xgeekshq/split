@@ -3,7 +3,7 @@ import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { BOARD_NOT_FOUND, INSERT_VOTE_FAILED } from 'src/libs/exceptions/messages';
 import { CreateVoteServiceInterface } from '../interfaces/services/create.vote.service.interface';
 import * as BoardUsers from 'src/modules/boardUsers/interfaces/types';
-import * as Boards from 'src/modules/boards/interfaces/types';
+import * as Boards from 'src/modules/boards/types';
 import { UpdateBoardUserServiceInterface } from 'src/modules/boardUsers/interfaces/services/update.board.user.service.interface';
 import { InsertFailedException } from 'src/libs/exceptions/insertFailedBadRequestException';
 import { UpdateFailedException } from 'src/libs/exceptions/updateFailedBadRequestException';

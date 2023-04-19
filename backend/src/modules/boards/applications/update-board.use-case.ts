@@ -18,7 +18,7 @@ import * as Votes from 'src/modules/votes/interfaces/types';
 import { UpdateBoardDto } from '../dto/update-board.dto';
 import Board from '../entities/board.schema';
 import { ResponsibleType } from '../interfaces/responsible.interface';
-import { TYPES } from '../interfaces/types';
+import { TYPES } from '../types';
 import { BoardRepositoryInterface } from '../repositories/board.repository.interface';
 
 @Injectable()

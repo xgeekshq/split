@@ -4,7 +4,7 @@ import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { GetTeamServiceInterface } from '../interfaces/services/get.team.service.interface';
 import Team from '../entities/team.schema';
 import { TEAM_REPOSITORY } from '../constants';
-import * as Boards from 'src/modules/boards/interfaces/types';
+import * as Boards from 'src/modules/boards/types';
 import { TeamRepositoryInterface } from '../interfaces/repositories/team.repository.interface';
 import { GetBoardServiceInterface } from 'src/modules/boards/interfaces/services/get.board.service.interface';
 import { GetTeamUserServiceInterface } from 'src/modules/teamUsers/interfaces/services/get.team.user.service.interface';

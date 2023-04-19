@@ -6,7 +6,7 @@ import { CommunicationServiceInterface } from 'src/modules/communication/interfa
 import * as CommunicationsType from 'src/modules/communication/interfaces/types';
 import MergeBoardUseCaseDto from '../dto/useCase/merge-board.use-case.dto';
 import Board from '../entities/board.schema';
-import { TYPES } from '../interfaces/types';
+import { TYPES } from '../types';
 import { BoardRepositoryInterface } from '../repositories/board.repository.interface';
 import { generateNewSubColumns } from '../utils/generate-subcolumns';
 import { mergeCardsFromSubBoardColumnsIntoMainBoard } from '../utils/merge-cards-from-subboard';

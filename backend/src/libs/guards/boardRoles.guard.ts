@@ -9,7 +9,7 @@ import {
 	Injectable
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import * as Boards from 'src/modules/boards/interfaces/types';
+import * as Boards from 'src/modules/boards/types';
 import * as BoardUsers from 'src/modules/boardUsers/interfaces/types';
 import TeamUser from 'src/modules/teamUsers/entities/team.user.schema';
 import { GET_TEAM_USER_SERVICE } from 'src/modules/teamUsers/constants';
