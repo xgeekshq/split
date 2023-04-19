@@ -4,6 +4,7 @@ import { useSetRecoilState } from 'recoil';
 
 import { handleVotes } from '@/api/boardService';
 import { ToastStateEnum } from '@/enums/toasts/toast-types';
+import { Action } from '@/enums/votes/actions';
 import useBoardUtils from '@/hooks/useBoardUtils';
 import { operationsQueueAtom } from '@/store/operations/atom/operations-queue.atom';
 import BoardType from '@/types/board/board';
@@ -11,11 +12,6 @@ import { CardItemType } from '@/types/card/cardItem';
 import VoteDto from '@/types/vote/vote.dto';
 import { getRemainingVotes } from '@/utils/getRemainingVotes';
 import isEmpty from '@/utils/isEmpty';
-
-enum Action {
-  Add = 'add',
-  Remove = 'remove',
-}
 
 type QueryKeyType = (string | { id: string })[];
 
