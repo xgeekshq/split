@@ -28,7 +28,7 @@ import { createBoardDataState, createBoardTeam } from '@/store/createBoard/atoms
 import { toastState } from '@/store/toast/atom/toast.atom';
 import { usersListState } from '@/store/user.atom';
 import { StyledForm } from '@/styles/pages/pages.styles';
-import { BoardUserDto } from '@/types/board/board.user';
+import { BoardUser, BoardUserDto } from '@/types/board/board.user';
 import { TEAMS_KEY } from '@/utils/constants/reactQueryKeys';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
@@ -66,7 +66,7 @@ const NewRegularBoard: NextPage = () => {
   const { session, userId, isSAdmin } = useCurrentSession({ required: true });
 
   const [isBackButtonDisable, setBackButtonState] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isPageLoading, setIsPageLoading] = useState(false);
   const [createBoard, setCreateBoard] = useState(false);
 
   const setToastState = useSetRecoilState(toastState);
@@ -147,7 +147,7 @@ const NewRegularBoard: NextPage = () => {
 
   // Handle back to boards list page
   const handleBack = useCallback(() => {
-    setIsLoading(true);
+    setIsPageLoading(true);
     resetListUsersState();
     setBackButtonState(true);
     router.back();
@@ -155,19 +155,28 @@ const NewRegularBoard: NextPage = () => {
 
   const handleCancelBtn = () => {
     resetListUsersState();
-    setIsLoading(true);
+    setIsPageLoading(true);
     router.push(DASHBOARD_ROUTE);
   };
 
+  const filterResponsibles = (users: BoardUser[]) =>
+    users.flatMap((member) => {
+      if (member.role === BoardUserRoles.RESPONSIBLE) {
+        return [member.user._id];
+      }
+      return [];
+    });
+
   const saveBoard = (title?: string, maxVotes?: number, slackEnable?: boolean) => {
     const users: BoardUserDto[] = [];
-    const responsibles: string[] = [];
-    const responsible = boardState.users.find((user) => user.role === BoardUserRoles.RESPONSIBLE);
 
+    let responsibles: string[] = [];
+
+    const responsiblesFiltered = filterResponsibles(boardState.users);
     if (!session) return;
 
-    if (!isEmpty(responsible)) {
-      responsibles.push(responsible.user._id);
+    if (!isEmpty(responsiblesFiltered)) {
+      responsibles = [...responsiblesFiltered];
     }
 
     if (isEmpty(boardState.users)) {
@@ -207,12 +216,15 @@ const NewRegularBoard: NextPage = () => {
       dividedBoards: [],
       maxUsers: boardState.count.maxUsersCount,
       recurrent: false,
+      responsibles: [userId],
     });
   };
 
+  const hasResponsibles = !isEmpty(filterResponsibles(boardState.users));
+
   useEffect(() => {
     if (status === 'success') {
-      setIsLoading(true);
+      setIsPageLoading(true);
       setToastState({
         open: true,
         content: 'Board created with success!',
@@ -236,7 +248,7 @@ const NewRegularBoard: NextPage = () => {
     <Suspense fallback={<LoadingPage />}>
       <QueryError>
         <Flex
-          css={{ height: '100vh', backgroundColor: '$primary50', opacity: isLoading ? 0.5 : 1 }}
+          css={{ height: '100vh', backgroundColor: '$primary50', opacity: isPageLoading ? 0.5 : 1 }}
           direction="column"
         >
           <CreateHeader
@@ -264,7 +276,7 @@ const NewRegularBoard: NextPage = () => {
                           description="Make it short and descriptive. It well help you to distinguish retrospectives from each other."
                           title="Board Name"
                         />
-                        <SettingsTabs />
+                        <SettingsTabs isPageLoading />
                       </FormProvider>
                     </Flex>
                   </StyledForm>
@@ -273,7 +285,7 @@ const NewRegularBoard: NextPage = () => {
               </Flex>
               <CreateFooter
                 confirmationLabel="Create board"
-                disableButton={isBackButtonDisable}
+                disableButton={isBackButtonDisable || !hasResponsibles}
                 formId="hook-form"
                 handleBack={handleCancelBtn}
               />

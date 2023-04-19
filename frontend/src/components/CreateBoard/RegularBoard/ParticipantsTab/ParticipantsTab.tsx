@@ -5,9 +5,13 @@ import RadioGroupParticipants from '@/components/CreateBoard/RegularBoard/Partic
 import SelectTeam from '@/components/CreateBoard/RegularBoard/ParticipantsTab/SelectTeam/SelectTeam';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 
-type Props = { optionSelected: string; setOptionSelected: Dispatch<SetStateAction<string>> };
+type Props = {
+  optionSelected: string;
+  setOptionSelected: Dispatch<SetStateAction<string>>;
+  isPageLoading: boolean;
+};
 
-const ParticipantsTab = ({ optionSelected, setOptionSelected }: Props) => {
+const ParticipantsTab = ({ optionSelected, setOptionSelected, isPageLoading }: Props) => {
   const handleChangeOption = (value: string) => {
     setOptionSelected(value);
   };
@@ -18,7 +22,11 @@ const ParticipantsTab = ({ optionSelected, setOptionSelected }: Props) => {
         handleSelection={handleChangeOption}
         optionSelected={optionSelected}
       />
-      {optionSelected === 'team' ? <SelectTeam /> : <BoardParticipantsList />}
+      {optionSelected === 'team' ? (
+        <SelectTeam />
+      ) : (
+        <BoardParticipantsList isPageLoading={isPageLoading} />
+      )}
     </Flex>
   );
 };

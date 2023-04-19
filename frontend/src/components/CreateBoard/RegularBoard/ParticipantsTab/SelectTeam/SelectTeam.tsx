@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import { useRouter } from 'next/router';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 
@@ -57,7 +57,11 @@ const SelectTeam = () => {
     }
 
     const users = selectedTeam.users.flatMap((teamUser) => {
-      if (teamUser.role === TeamUserRoles.STAKEHOLDER || teamUser.user._id === userId)
+      if (
+        teamUser.role === TeamUserRoles.STAKEHOLDER ||
+        teamUser.user._id === userId ||
+        teamUser.role === TeamUserRoles.ADMIN
+      )
         return [
           {
             user: teamUser.user,
