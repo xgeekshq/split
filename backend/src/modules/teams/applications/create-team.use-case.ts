@@ -18,7 +18,7 @@ export class CreateTeamUseCase implements UseCase<CreateTeamDto, Team> {
 		@Inject(TEAM_REPOSITORY)
 		private readonly teamRepository: TeamRepositoryInterface,
 		@Inject(TeamUsers.TYPES.services.CreateTeamUserService)
-		private readonly createTeamUserService: CreateTeamUserServiceInterface // @Inject(TYPES.services.CreateTeamUserService) // private createTeamUserService: CreateTeamUserServiceInterface, // @Inject(TYPES.services.DeleteTeamUserService) // private deleteTeamUserService: DeleteTeamUserServiceInterface
+		private readonly createTeamUserService: CreateTeamUserServiceInterface
 	) {}
 
 	async execute({ users, name }: CreateTeamDto) {
