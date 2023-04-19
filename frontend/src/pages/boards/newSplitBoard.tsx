@@ -190,8 +190,6 @@ const NewSplitBoard: NextPage = () => {
       role: boardUser.role,
     }));
 
-    console.log(newDividedBoards);
-
     mutate({
       ...boardState.board,
       users: boardUsersDtos,
