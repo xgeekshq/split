@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 
@@ -17,7 +17,11 @@ import { usersListState } from '@/store/user.atom';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
 
-const SettingsTabs = () => {
+type SettingsTabsProps = {
+  isPageLoading: boolean;
+};
+
+const SettingsTabs = ({ isPageLoading }: SettingsTabsProps) => {
   const { userId } = useCurrentSession();
 
   // Recoil Atoms
@@ -33,7 +37,11 @@ const SettingsTabs = () => {
       value: 'participants',
       label: 'Participants',
       content: (
-        <ParticipantsTab optionSelected={optionSelected} setOptionSelected={setOptionSelected} />
+        <ParticipantsTab
+          isPageLoading={isPageLoading}
+          optionSelected={optionSelected}
+          setOptionSelected={setOptionSelected}
+        />
       ),
     },
     {
