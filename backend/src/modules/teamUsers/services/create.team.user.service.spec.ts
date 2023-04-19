@@ -7,9 +7,9 @@ import TeamUser from 'src/modules/teamUsers/entities/team.user.schema';
 import { Test, TestingModule } from '@nestjs/testing';
 import { DeepMocked, createMock } from '@golevelup/ts-jest';
 import { CreateTeamUserServiceInterface } from 'src/modules/teamUsers/interfaces/services/create.team.user.service.interface';
-import * as TeamUsers from 'src/modules/teamUsers/interfaces/types';
 import { TeamUserRepositoryInterface } from 'src/modules/teamUsers/interfaces/repositories/team-user.repository.interface';
 import { TeamUserDtoFactory } from 'src/libs/test-utils/mocks/factories/dto/teamUserDto-factory.mock';
+import { TEAM_USER_REPOSITORY } from 'src/modules/teamUsers/constants';
 
 const createTeamUserDtos: TeamUserDto[] = TeamUserDtoFactory.createMany(4);
 
@@ -31,14 +31,14 @@ describe('CreateTeamUserService', () => {
 			providers: [
 				createTeamUserService,
 				{
-					provide: TeamUsers.TYPES.repositories.TeamUserRepository,
+					provide: TEAM_USER_REPOSITORY,
 					useValue: createMock<TeamUserRepositoryInterface>()
 				}
 			]
 		}).compile();
 
-		teamUserService = module.get<CreateTeamUserServiceInterface>(createTeamUserService.provide);
-		teamUserRepositoryMock = module.get(TeamUsers.TYPES.repositories.TeamUserRepository);
+		teamUserService = module.get(createTeamUserService.provide);
+		teamUserRepositoryMock = module.get(TEAM_USER_REPOSITORY);
 	});
 
 	beforeEach(() => {

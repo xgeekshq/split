@@ -1,14 +1,14 @@
-import { createTeamUserUseCase } from './../teamusers.providers';
 import { Test, TestingModule } from '@nestjs/testing';
 import { DeepMocked, createMock } from '@golevelup/ts-jest';
 import { UseCase } from 'src/libs/interfaces/use-case.interface';
-import * as TeamUsers from 'src/modules/teamUsers/interfaces/types';
 import { TeamUserRepositoryInterface } from 'src/modules/teamUsers/interfaces/repositories/team-user.repository.interface';
 import TeamUserDto from '../dto/team.user.dto';
 import TeamUser from '../entities/team.user.schema';
 import { BadRequestException } from '@nestjs/common';
 import { TeamUserDtoFactory } from 'src/libs/test-utils/mocks/factories/dto/teamUserDto-factory.mock';
 import { TeamUserFactory } from 'src/libs/test-utils/mocks/factories/teamUser-factory.mock';
+import { CreateTeamUserUseCase } from 'src/modules/teamUsers/applications/create-team-user.use-case';
+import { TEAM_USER_REPOSITORY } from 'src/modules/teamUsers/constants';
 
 const createTeamUserDto: TeamUserDto = TeamUserDtoFactory.create();
 
@@ -21,17 +21,17 @@ describe('CreateTeamUserUseCase', () => {
 	beforeAll(async () => {
 		const module: TestingModule = await Test.createTestingModule({
 			providers: [
-				createTeamUserUseCase,
+				CreateTeamUserUseCase,
 				{
-					provide: TeamUsers.TYPES.repositories.TeamUserRepository,
+					provide: TEAM_USER_REPOSITORY,
 					useValue: createMock<TeamUserRepositoryInterface>()
 				}
 			]
 		}).compile();
 
-		createTeamUser = module.get<UseCase<TeamUserDto, TeamUser>>(createTeamUserUseCase.provide);
+		createTeamUser = module.get(CreateTeamUserUseCase);
 
-		teamUserRepositoryMock = module.get(TeamUsers.TYPES.repositories.TeamUserRepository);
+		teamUserRepositoryMock = module.get(TEAM_USER_REPOSITORY);
 	});
 
 	beforeEach(() => {
