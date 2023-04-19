@@ -18,7 +18,19 @@ import { GetBoardUseCase } from './applications/get-board.use-case';
 import { GetBoardsForDashboardUseCase } from './applications/get-boards-for-dashboard.use-case';
 import { GetPersonalBoardsUseCase } from './applications/get-personal-boards.use-case';
 import { IsBoardPublicUseCase } from './applications/is-board-public.use-case';
-import { TYPES } from './types';
+import {
+	CREATE_BOARD_SERVICE,
+	DELETE_BOARD_SERVICE,
+	GET_BOARD_SERVICE,
+	PAUSE_BOARD_TIMER_SERVICE,
+	SEND_BOARD_TIMER_STATE_SERVICE,
+	SEND_BOARD_TIMER_TIME_LEFT_SERVICE,
+	START_BOARD_TIMER_SERVICE,
+	STOP_BOARD_TIMER_SERVICE,
+	TYPES,
+	UPDATE_BOARD_SERVICE,
+	UPDATE_BOARD_TIMER_DURATION_SERVICE
+} from './constants';
 import { BoardRepository } from './repositories/board.repository';
 import CreateBoardService from './services/create.board.service';
 import DeleteBoardService from './services/delete.board.service';
@@ -30,22 +42,22 @@ import { MergeBoardUseCase } from './applications/merge-board.use-case';
 import { UpdateBoardPhaseUseCase } from './applications/update-board-phase.use-case';
 
 export const createBoardService = {
-	provide: TYPES.services.CreateBoardService,
+	provide: CREATE_BOARD_SERVICE,
 	useClass: CreateBoardService
 };
 
 export const getBoardService = {
-	provide: TYPES.services.GetBoardService,
+	provide: GET_BOARD_SERVICE,
 	useClass: GetBoardService
 };
 
 export const updateBoardService = {
-	provide: TYPES.services.UpdateBoardService,
+	provide: UPDATE_BOARD_SERVICE,
 	useClass: UpdateBoardService
 };
 
 export const deleteBoardService = {
-	provide: TYPES.services.DeleteBoardService,
+	provide: DELETE_BOARD_SERVICE,
 	useClass: DeleteBoardService
 };
 
@@ -110,32 +122,32 @@ export const boardTimerRepository = {
 };
 
 export const sendBoardTimerStateService = {
-	provide: TYPES.services.SendBoardTimerStateService,
+	provide: SEND_BOARD_TIMER_STATE_SERVICE,
 	useClass: SendBoardTimerStateService
 };
 
 export const startBoardTimerService = {
-	provide: TYPES.services.StartBoardTimerService,
+	provide: START_BOARD_TIMER_SERVICE,
 	useClass: StartBoardTimerService
 };
 
 export const pauseBoardTimerService = {
-	provide: TYPES.services.PauseBoardTimerService,
+	provide: PAUSE_BOARD_TIMER_SERVICE,
 	useClass: PauseBoardTimerService
 };
 
 export const stopBoardTimerService = {
-	provide: TYPES.services.StopBoardTimerService,
+	provide: STOP_BOARD_TIMER_SERVICE,
 	useClass: StopBoardTimerService
 };
 
 export const updateBoardTimerDurationService = {
-	provide: TYPES.services.UpdateBoardTimerDurationService,
+	provide: UPDATE_BOARD_TIMER_DURATION_SERVICE,
 	useClass: UpdateBoardTimerDurationService
 };
 
 export const sendBoardTimerTimeLeftService = {
-	provide: TYPES.services.SendBardTimerTimeLeftService,
+	provide: SEND_BOARD_TIMER_TIME_LEFT_SERVICE,
 	useClass: SendBoardTimerTimeLeftService
 };
 

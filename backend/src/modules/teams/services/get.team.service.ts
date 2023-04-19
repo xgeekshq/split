@@ -4,11 +4,11 @@ import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { GetTeamServiceInterface } from '../interfaces/services/get.team.service.interface';
 import Team from '../entities/team.schema';
 import { TEAM_REPOSITORY } from '../constants';
-import * as Boards from 'src/modules/boards/types';
 import { TeamRepositoryInterface } from '../interfaces/repositories/team.repository.interface';
 import { GetBoardServiceInterface } from 'src/modules/boards/interfaces/services/get.board.service.interface';
 import { GetTeamUserServiceInterface } from 'src/modules/teamUsers/interfaces/services/get.team.user.service.interface';
 import { GET_TEAM_USER_SERVICE } from 'src/modules/teamUsers/constants';
+import { GET_BOARD_SERVICE } from 'src/modules/boards/constants';
 
 @Injectable()
 export default class GetTeamService implements GetTeamServiceInterface {
@@ -17,7 +17,7 @@ export default class GetTeamService implements GetTeamServiceInterface {
 		private readonly teamRepository: TeamRepositoryInterface,
 		@Inject(GET_TEAM_USER_SERVICE)
 		private readonly getTeamUserService: GetTeamUserServiceInterface,
-		@Inject(Boards.TYPES.services.GetBoardService)
+		@Inject(GET_BOARD_SERVICE)
 		private readonly getBoardService: GetBoardServiceInterface
 	) {}
 

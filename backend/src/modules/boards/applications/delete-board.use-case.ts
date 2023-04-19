@@ -1,6 +1,6 @@
 import { UseCase } from 'src/libs/interfaces/use-case.interface';
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
-import { TYPES } from '../types';
+import { DELETE_BOARD_SERVICE, TYPES } from '../constants';
 import { BoardRepositoryInterface } from '../repositories/board.repository.interface';
 import { BOARD_NOT_FOUND } from 'src/libs/exceptions/messages';
 import { ObjectId } from 'mongoose';
@@ -13,7 +13,7 @@ export class DeleteBoardUseCase implements UseCase<DeleteBoardUseCaseDto, boolea
 	constructor(
 		@Inject(TYPES.repositories.BoardRepository)
 		private readonly boardRepository: BoardRepositoryInterface,
-		@Inject(TYPES.services.DeleteBoardService)
+		@Inject(DELETE_BOARD_SERVICE)
 		private readonly deleteBoardService: DeleteBoardServiceInterface
 	) {}
 

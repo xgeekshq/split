@@ -3,11 +3,11 @@ import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { BOARD_NOT_FOUND, INSERT_VOTE_FAILED } from 'src/libs/exceptions/messages';
 import { CreateVoteServiceInterface } from '../interfaces/services/create.vote.service.interface';
 import * as BoardUsers from 'src/modules/boardUsers/interfaces/types';
-import * as Boards from 'src/modules/boards/types';
 import { UpdateBoardUserServiceInterface } from 'src/modules/boardUsers/interfaces/services/update.board.user.service.interface';
 import { InsertFailedException } from 'src/libs/exceptions/insertFailedBadRequestException';
 import { UpdateFailedException } from 'src/libs/exceptions/updateFailedBadRequestException';
 import { GetBoardServiceInterface } from 'src/modules/boards/interfaces/services/get.board.service.interface';
+import { GET_BOARD_SERVICE } from 'src/modules/boards/constants';
 
 @Injectable()
 export default class CreateVoteService implements CreateVoteServiceInterface {
@@ -16,7 +16,7 @@ export default class CreateVoteService implements CreateVoteServiceInterface {
 		private readonly getBoardUserService: GetBoardUserServiceInterface,
 		@Inject(BoardUsers.TYPES.services.UpdateBoardUserService)
 		private readonly updateBoardUserService: UpdateBoardUserServiceInterface,
-		@Inject(Boards.TYPES.services.GetBoardService)
+		@Inject(GET_BOARD_SERVICE)
 		private readonly getBoardService: GetBoardServiceInterface
 	) {}
 

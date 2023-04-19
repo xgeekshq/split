@@ -4,7 +4,7 @@ import { UpdateBoardServiceInterface } from '../interfaces/services/update.board
 import { BoardRepositoryInterface } from '../repositories/board.repository.interface';
 import { TeamCommunicationDtoFactory } from 'src/libs/test-utils/mocks/factories/dto/teamDto-factory';
 import { DeepMocked, createMock } from '@golevelup/ts-jest';
-import * as Boards from 'src/modules/boards/types';
+import * as Boards from 'src/modules/boards/constants';
 import UpdateBoardService from './update.board.service';
 import Board from '../entities/board.schema';
 import { BoardFactory } from 'src/libs/test-utils/mocks/factories/board-factory.mock';

@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import * as Boards from 'src/modules/boards/types';
+import * as Boards from 'src/modules/boards/constants';
 import { DeepMocked, createMock } from '@golevelup/ts-jest';
 import { BoardFactory } from 'src/libs/test-utils/mocks/factories/board-factory.mock';
 import { UseCase } from 'src/libs/interfaces/use-case.interface';
@@ -24,7 +24,7 @@ describe('DeleteBoardUseCase', () => {
 			providers: [
 				deleteBoardUseCase,
 				{
-					provide: Boards.TYPES.services.DeleteBoardService,
+					provide: Boards.DELETE_BOARD_SERVICE,
 					useValue: createMock<DeleteBoardServiceInterface>()
 				},
 				{
@@ -35,7 +35,7 @@ describe('DeleteBoardUseCase', () => {
 		}).compile();
 
 		useCase = module.get(Boards.TYPES.applications.DeleteBoardUseCase);
-		deleteBoardServiceMock = module.get(Boards.TYPES.services.DeleteBoardService);
+		deleteBoardServiceMock = module.get(Boards.DELETE_BOARD_SERVICE);
 		boardRepositoryMock = module.get(Boards.TYPES.repositories.BoardRepository);
 	});
 

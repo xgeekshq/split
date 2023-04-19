@@ -11,7 +11,11 @@ import ServerStartedTimerEvent from 'src/modules/boards/events/server-started-ti
 import SendBoardTimerTimeLeftServiceInterface from 'src/modules/boards/interfaces/services/send-board-time-left.service.interface';
 import StartBoardTimerServiceInterface from 'src/modules/boards/interfaces/services/start-board-timer.service.interface';
 import StopBoardTimerServiceInterface from 'src/modules/boards/interfaces/services/stop-board-timer.service.interface';
-import { TYPES } from 'src/modules/boards/types';
+import {
+	SEND_BOARD_TIMER_TIME_LEFT_SERVICE,
+	STOP_BOARD_TIMER_SERVICE,
+	TYPES
+} from 'src/modules/boards/constants';
 import { BoardTimerRepositoryInterface } from 'src/modules/boards/repositories/board-timer.repository.interface';
 
 @Injectable()
@@ -22,10 +26,10 @@ export default class StartBoardTimerService implements StartBoardTimerServiceInt
 		@Inject(TYPES.repositories.BoardTimerRepository)
 		private boardTimerRepository: BoardTimerRepositoryInterface,
 
-		@Inject(TYPES.services.StopBoardTimerService)
+		@Inject(STOP_BOARD_TIMER_SERVICE)
 		private stopBoardTimerService: StopBoardTimerServiceInterface,
 
-		@Inject(TYPES.services.SendBardTimerTimeLeftService)
+		@Inject(SEND_BOARD_TIMER_TIME_LEFT_SERVICE)
 		private updateBoardTimerService: SendBoardTimerTimeLeftServiceInterface,
 
 		private eventEmitter: EventEmitter2

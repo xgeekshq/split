@@ -4,7 +4,7 @@ import { BOARD_TIMER_SERVER_DURATION_UPDATED } from 'src/libs/constants/timer';
 import BoardTimerDurationDto from 'src/libs/dto/board-timer-duration.dto';
 import ServerUpdatedTimerDurationEvent from 'src/modules/boards/events/server-updated-timer-duration.event';
 import UpdateBoardTimerDurationServiceInterface from 'src/modules/boards/interfaces/services/update-board-timer-duration.service.interface';
-import { TYPES } from 'src/modules/boards/types';
+import { TYPES } from 'src/modules/boards/constants';
 import { BoardTimerRepositoryInterface } from '../repositories/board-timer.repository.interface';
 
 @Injectable()

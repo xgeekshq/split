@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import * as CommunicationsType from 'src/modules/communication/interfaces/types';
-import * as Boards from 'src/modules/boards/types';
+import * as Boards from 'src/modules/boards/constants';
 import * as BoardUsers from 'src/modules/boardUsers/interfaces/types';
 import * as Votes from 'src/modules/votes/interfaces/types';
 import { boardRepository } from '../boards.providers';

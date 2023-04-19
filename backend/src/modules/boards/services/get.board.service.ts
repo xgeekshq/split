@@ -6,7 +6,7 @@ import * as BoardUsers from 'src/modules/boardUsers/interfaces/types';
 import { QueryType } from '../interfaces/findQuery';
 import { GetBoardServiceInterface } from '../interfaces/services/get.board.service.interface';
 import { cleanBoard } from '../utils/clean-board';
-import { TYPES } from '../types';
+import { TYPES } from '../constants';
 import { BoardRepositoryInterface } from '../repositories/board.repository.interface';
 import UserDto from 'src/modules/users/dto/user.dto';
 import { GET_TEAM_SERVICE } from 'src/modules/teams/constants';

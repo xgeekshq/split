@@ -1,16 +1,4 @@
 export const TYPES = {
-	services: {
-		CreateBoardService: 'CreateBoardService',
-		DeleteBoardService: 'DeleteBoardService',
-		UpdateBoardService: 'UpdateBoardService',
-		GetBoardService: 'GetBoardService',
-		SendBoardTimerStateService: 'SendBoardTimerStateService',
-		StartBoardTimerService: 'StartBoardTimerService',
-		PauseBoardTimerService: 'PauseBoardTimerService',
-		StopBoardTimerService: 'StopBoardTimerService',
-		SendBardTimerTimeLeftService: 'SendBardTimerTimeLeftService',
-		UpdateBoardTimerDurationService: 'UpdateBoardTimerDurationService'
-	},
 	applications: {
 		DuplicateBoardUseCase: 'DuplicateBoardUseCase',
 		GetBoardsForDashboardUseCase: 'GetBoardsForDashboardUseCase',
@@ -37,3 +25,23 @@ export const TYPES = {
 		AfterUserRequestedTimerStateSubscriber: 'AfterUserRequestedTimerStateSubscriber'
 	}
 };
+
+export const CREATE_BOARD_SERVICE = 'CreateBoardService';
+
+export const DELETE_BOARD_SERVICE = 'DeleteBoardService';
+
+export const UPDATE_BOARD_SERVICE = 'UpdateBoardService';
+
+export const GET_BOARD_SERVICE = 'GetBoardService';
+
+export const SEND_BOARD_TIMER_STATE_SERVICE = 'SendBoardTimerStateService';
+
+export const START_BOARD_TIMER_SERVICE = 'StartBoardTimerService';
+
+export const PAUSE_BOARD_TIMER_SERVICE = 'PauseBoardTimerService';
+
+export const STOP_BOARD_TIMER_SERVICE = 'StopBoardTimerService';
+
+export const SEND_BOARD_TIMER_TIME_LEFT_SERVICE = 'SendBoardTimerTimeLeftService';
+
+export const UPDATE_BOARD_TIMER_DURATION_SERVICE = 'UpdateBoardTimerDurationService';

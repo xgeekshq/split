@@ -8,7 +8,7 @@ import { updateUserService } from 'src/modules/users/users.providers';
 import { boardRepository } from '../boards.providers';
 import SocketGateway from 'src/modules/socket/gateway/socket.gateway';
 import { DeepMocked, createMock } from '@golevelup/ts-jest';
-import * as Boards from 'src/modules/boards/types';
+import * as Boards from 'src/modules/boards/constants';
 import * as BoardUsers from 'src/modules/boardUsers/interfaces/types';
 import faker from '@faker-js/faker';
 import { BoardUserFactory } from 'src/libs/test-utils/mocks/factories/boardUser-factory.mock';

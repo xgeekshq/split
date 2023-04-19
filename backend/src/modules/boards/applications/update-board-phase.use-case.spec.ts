@@ -10,7 +10,7 @@ import { UpdateFailedException } from 'src/libs/exceptions/updateFailedBadReques
 import { UseCase } from 'src/libs/interfaces/use-case.interface';
 import { BoardFactory } from 'src/libs/test-utils/mocks/factories/board-factory.mock';
 import { TeamFactory } from 'src/libs/test-utils/mocks/factories/team-factory.mock';
-import * as Boards from 'src/modules/boards/types';
+import * as Boards from 'src/modules/boards/constants';
 import { SendMessageServiceInterface } from 'src/modules/communication/interfaces/send-message.service.interface';
 import * as CommunicationsType from 'src/modules/communication/interfaces/types';
 import { boardRepository } from '../boards.providers';

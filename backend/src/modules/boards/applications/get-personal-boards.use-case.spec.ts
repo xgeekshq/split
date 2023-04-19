@@ -1,5 +1,4 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import * as Boards from 'src/modules/boards/types';
 import { DeepMocked, createMock } from '@golevelup/ts-jest';
 import { GetBoardServiceInterface } from '../interfaces/services/get.board.service.interface';
 import faker from '@faker-js/faker';
@@ -9,6 +8,7 @@ import GetBoardsUseCaseDto from '../dto/useCase/get-boards.use-case.dto';
 import BoardsPaginatedPresenter from '../presenter/boards-paginated.presenter';
 import { UseCase } from 'src/libs/interfaces/use-case.interface';
 import { GetPersonalBoardsUseCase } from './get-personal-boards.use-case';
+import { GET_BOARD_SERVICE } from 'src/modules/boards/constants';
 
 const userId = faker.datatype.uuid();
 
@@ -21,14 +21,14 @@ describe('GetPersonalBoardsUseCase', () => {
 			providers: [
 				GetPersonalBoardsUseCase,
 				{
-					provide: Boards.TYPES.services.GetBoardService,
+					provide: GET_BOARD_SERVICE,
 					useValue: createMock<GetBoardServiceInterface>()
 				}
 			]
 		}).compile();
 
 		useCase = module.get(GetPersonalBoardsUseCase);
-		getBoardServiceMock = module.get(Boards.TYPES.services.GetBoardService);
+		getBoardServiceMock = module.get(GET_BOARD_SERVICE);
 	});
 
 	beforeEach(() => {

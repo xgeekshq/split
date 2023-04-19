@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { TeamDto } from 'src/modules/communication/dto/team.dto';
-import * as Boards from 'src/modules/boards/types';
+import * as Boards from 'src/modules/boards/constants';
 import { UpdateBoardServiceInterface } from '../interfaces/services/update.board.service.interface';
 import { BoardRepositoryInterface } from '../repositories/board.repository.interface';
 

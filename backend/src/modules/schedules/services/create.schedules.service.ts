@@ -4,7 +4,6 @@ import { CronJob } from 'cron';
 import { getDay, getNextMonth } from 'src/libs/utils/dates';
 import { CreateBoardServiceInterface } from 'src/modules/boards/interfaces/services/create.board.service.interface';
 import { GetBoardServiceInterface } from 'src/modules/boards/interfaces/services/get.board.service.interface';
-import * as BoardTypes from 'src/modules/boards/types';
 import Board from 'src/modules/boards/entities/board.schema';
 import { ArchiveChannelDataOptions } from 'src/modules/communication/dto/types';
 import { ArchiveChannelServiceInterface } from 'src/modules/communication/interfaces/archive-channel.service.interface';
@@ -20,6 +19,7 @@ import Schedules from '../entities/schedules.schema';
 import { Configs } from 'src/modules/boards/dto/configs.dto';
 import { ScheduleRepositoryInterface } from '../repository/schedule.repository.interface';
 import Team from 'src/modules/teams/entities/team.schema';
+import { CREATE_BOARD_SERVICE, GET_BOARD_SERVICE } from 'src/modules/boards/constants';
 
 @Injectable()
 export class CreateSchedulesService implements CreateSchedulesServiceInterface {
@@ -27,14 +27,14 @@ export class CreateSchedulesService implements CreateSchedulesServiceInterface {
 
 	constructor(
 		@Inject(forwardRef(() => TYPES.services.DeleteSchedulesService))
-		private deleteSchedulesService: DeleteSchedulesServiceInterface,
-		@Inject(forwardRef(() => BoardTypes.TYPES.services.CreateBoardService))
-		private createBoardService: CreateBoardServiceInterface,
-		@Inject(forwardRef(() => BoardTypes.TYPES.services.GetBoardService))
-		private getBoardService: GetBoardServiceInterface,
-		private schedulerRegistry: SchedulerRegistry,
+		private readonly deleteSchedulesService: DeleteSchedulesServiceInterface,
+		@Inject(forwardRef(() => CREATE_BOARD_SERVICE))
+		private readonly createBoardService: CreateBoardServiceInterface,
+		@Inject(forwardRef(() => GET_BOARD_SERVICE))
+		private readonly getBoardService: GetBoardServiceInterface,
+		private readonly schedulerRegistry: SchedulerRegistry,
 		@Inject(CommunicationTypes.TYPES.services.SlackArchiveChannelService)
-		private archiveChannelService: ArchiveChannelServiceInterface,
+		private readonly archiveChannelService: ArchiveChannelServiceInterface,
 		@Inject(TYPES.repository.ScheduleRepository)
 		private readonly scheduleRepository: ScheduleRepositoryInterface
 	) {

@@ -1,7 +1,7 @@
 import { faker } from '@faker-js/faker';
 import { Test, TestingModule } from '@nestjs/testing';
 import { DeleteBoardServiceInterface } from '../interfaces/services/delete.board.service.interface';
-import * as Boards from 'src/modules/boards/types';
+import * as Boards from 'src/modules/boards/constants';
 import * as CommunicationTypes from 'src/modules/communication/interfaces/types';
 import * as Schedules from 'src/modules/schedules/interfaces/types';
 import * as BoardUsers from 'src/modules/boardUsers/interfaces/types';

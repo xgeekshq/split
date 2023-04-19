@@ -5,7 +5,7 @@ import { DeleteSchedulesServiceInterface } from 'src/modules/schedules/interface
 import * as Schedules from 'src/modules/schedules/interfaces/types';
 import { DeleteBoardServiceInterface } from '../interfaces/services/delete.board.service.interface';
 import Board from '../entities/board.schema';
-import * as Boards from 'src/modules/boards/types';
+import * as Boards from 'src/modules/boards/constants';
 import * as BoardUsers from 'src/modules/boardUsers/interfaces/types';
 import * as CommunicationTypes from 'src/modules/communication/interfaces/types';
 import { ArchiveChannelServiceInterface } from 'src/modules/communication/interfaces/archive-channel.service.interface';

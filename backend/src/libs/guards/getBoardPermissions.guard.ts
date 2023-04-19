@@ -5,7 +5,6 @@ import {
 	Inject,
 	Injectable
 } from '@nestjs/common';
-import * as Boards from 'src/modules/boards/types';
 import * as BoardUsers from 'src/modules/boardUsers/interfaces/types';
 import TeamUser from 'src/modules/teamUsers/entities/team.user.schema';
 import Team from 'src/modules/teams/entities/team.schema';
@@ -13,15 +12,16 @@ import User from 'src/modules/users/entities/user.schema';
 import { Reflector } from '@nestjs/core';
 import { GetBoardServiceInterface } from 'src/modules/boards/interfaces/services/get.board.service.interface';
 import { GetBoardUserServiceInterface } from 'src/modules/boardUsers/interfaces/services/get.board.user.service.interface';
+import { GET_BOARD_SERVICE } from 'src/modules/boards/constants';
 
 @Injectable()
 export class GetBoardGuard implements CanActivate {
 	constructor(
 		private readonly reflector: Reflector,
-		@Inject(Boards.TYPES.services.GetBoardService)
-		private getBoardService: GetBoardServiceInterface,
+		@Inject(GET_BOARD_SERVICE)
+		private readonly getBoardService: GetBoardServiceInterface,
 		@Inject(BoardUsers.TYPES.services.GetBoardUserService)
-		private getBoardUserService: GetBoardUserServiceInterface
+		private readonly getBoardUserService: GetBoardUserServiceInterface
 	) {}
 
 	async canActivate(context: ExecutionContext) {

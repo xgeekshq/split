@@ -14,7 +14,7 @@ import * as CommunicationsType from 'src/modules/communication/interfaces/types'
 import { AddCronJobDto } from 'src/modules/schedules/dto/add.cronjob.dto';
 import { CreateSchedulesServiceInterface } from 'src/modules/schedules/interfaces/services/create.schedules.service.interface';
 import * as SchedulesType from 'src/modules/schedules/interfaces/types';
-import * as Boards from 'src/modules/boards/types';
+import * as Boards from 'src/modules/boards/constants';
 import * as BoardUsers from 'src/modules/boardUsers/interfaces/types';
 import { GetTeamServiceInterface } from 'src/modules/teams/interfaces/services/get.team.service.interface';
 import TeamUser from 'src/modules/teamUsers/entities/team.user.schema';
