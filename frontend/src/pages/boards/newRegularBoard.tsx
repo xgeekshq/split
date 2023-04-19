@@ -110,13 +110,12 @@ const NewRegularBoard: NextPage = () => {
     setCreateBoard(true);
   };
 
-  const methods = useForm<{ text?: string; maxVotes?: number; slackEnable?: boolean }>({
+  const methods = useForm<{ text?: string; maxVotes?: number }>({
     mode: 'onChange',
     reValidateMode: 'onChange',
     defaultValues: {
       text: '',
       maxVotes: boardState.board.maxVotes,
-      slackEnable: false,
     },
     resolver: joiResolver(SchemaCreateRegularBoard),
   });
@@ -151,7 +150,7 @@ const NewRegularBoard: NextPage = () => {
       return [];
     });
 
-  const saveBoard = (title?: string, maxVotes?: number, slackEnable?: boolean) => {
+  const saveBoard = (title?: string, maxVotes?: number) => {
     const users: BoardUserDto[] = [];
 
     let responsibles: string[] = [];
@@ -178,7 +177,6 @@ const NewRegularBoard: NextPage = () => {
       title: title || defaultBoard.board.title,
       dividedBoards: [],
       maxVotes,
-      slackEnable,
       maxUsers: boardState.count.maxUsersCount,
       recurrent: false,
       responsibles,
@@ -250,8 +248,8 @@ const NewRegularBoard: NextPage = () => {
                   <StyledForm
                     direction="column"
                     id="hook-form"
-                    onSubmit={methods.handleSubmit(({ text, maxVotes, slackEnable }) => {
-                      saveBoard(text, maxVotes, slackEnable);
+                    onSubmit={methods.handleSubmit(({ text, maxVotes }) => {
+                      saveBoard(text, maxVotes);
                     })}
                   >
                     <Flex direction="column">
