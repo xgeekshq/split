@@ -173,8 +173,13 @@ const NewSplitBoard: NextPage = () => {
       const responsible = newSubBoard.users.find(
         (user) => user.role === BoardUserRoles.RESPONSIBLE,
       );
+
       if (!isEmpty(responsible)) {
         responsibles.push(responsible.user);
+      }
+
+      if (responsible) {
+        newSubBoard.responsibles = [responsible.user];
       }
 
       return newSubBoard;
@@ -184,6 +189,8 @@ const NewSplitBoard: NextPage = () => {
       user: boardUser.user._id,
       role: boardUser.role,
     }));
+
+    console.log(newDividedBoards);
 
     mutate({
       ...boardState.board,
