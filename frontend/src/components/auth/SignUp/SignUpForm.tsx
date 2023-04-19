@@ -8,11 +8,11 @@ import { checkUserExists, checkUserExistsAD } from '@/api/authService';
 import Button from '@/components/Primitives/Inputs/Button/Button';
 import Input from '@/components/Primitives/Inputs/Input/Input';
 import Text from '@/components/Primitives/Text/Text';
+import { NEXT_PUBLIC_ENABLE_AZURE } from '@/constants';
 import SchemaEmail from '@/schema/schemaEmail';
 import { toastState } from '@/store/toast/atom/toast.atom';
 import { FlexForm } from '@/styles/pages/pages.styles';
 import { EmailUser } from '@/types/user/user';
-import { NEXT_PUBLIC_ENABLE_AZURE } from '@/utils/constants';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
 import { SignUpEnum } from '@/utils/signUp.enum';
 

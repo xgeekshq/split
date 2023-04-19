@@ -8,9 +8,9 @@ import SignUpTabContent from '@/components/auth/SignUp/SignUpTabContent';
 import AccessLayout from '@/components/layouts/AccessLayout/AccessLayout';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Text from '@/components/Primitives/Text/Text';
+import { NEXT_PUBLIC_LOGIN_SSO_ONLY } from '@/constants';
+import { DASHBOARD_ROUTE } from '@/constants/routes';
 import { styled } from '@/styles/stitches/stitches.config';
-import { NEXT_PUBLIC_LOGIN_SSO_ONLY } from '@/utils/constants';
-import { DASHBOARD_ROUTE } from '@/utils/routes';
 
 const StyledImage = styled('img', {});
 

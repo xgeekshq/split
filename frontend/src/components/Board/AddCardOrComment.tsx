@@ -7,6 +7,7 @@ import Button from '@/components/Primitives/Inputs/Button/Button';
 import Checkbox from '@/components/Primitives/Inputs/Checkboxes/Checkbox/Checkbox';
 import TextArea from '@/components/Primitives/Inputs/TextArea/TextArea';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
+import { CARD_TEXT_DEFAULT } from '@/constants';
 import useCards from '@/hooks/useCards';
 import useComments from '@/hooks/useComments';
 import { SchemaAddCommentForm } from '@/schema/schemaAddCommentForm';
@@ -16,7 +17,6 @@ import { CardToAdd } from '@/types/card/card';
 import UpdateCardDto from '@/types/card/updateCard.dto';
 import AddCommentDto from '@/types/comment/addComment.dto';
 import UpdateCommentDto from '@/types/comment/updateComment.dto';
-import { CARD_TEXT_DEFAULT } from '@/utils/constants';
 
 type AddCardProps = {
   isUpdate: boolean;
