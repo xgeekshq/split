@@ -117,8 +117,23 @@ const BoardSettings = ({
     postAnonymously: initialData.postAnonymously,
   });
 
+  // State used to change values
+  const initialSchedulingData: UpdateScheduleType = {
+    scheduleDate: undefined,
+    startTime: undefined,
+    endTime: undefined,
+    repeatUntil: undefined,
+    repeatTimeRange: undefined,
+    repeatTimeUnit: undefined,
+    reminderTimeRange: undefined,
+    reminderTimeUnit: undefined,
+    viaSlack: undefined,
+    viaEmail: undefined,
+    prefillingCards: undefined,
+  };
+
   //state used for scheduling
-  const [schedulingData, setSchedulingData] = useState<UpdateScheduleType>();
+  const [schedulingData, setSchedulingData] = useState<UpdateScheduleType>(initialSchedulingData);
 
   // User Board Hook
   const {

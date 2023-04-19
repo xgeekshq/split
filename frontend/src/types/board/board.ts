@@ -89,16 +89,17 @@ export type UpdateBoardType = {
 };
 
 export type UpdateScheduleType = {
-  scheduleDate: Date;
-  startTime: string;
-  endTime: string;
-  repeatDate: Date;
-  repeatTimeUnit: string;
-  reminderDate: Date;
-  reminderTimeUnit: string;
-  viaSlack: boolean;
-  viaEmail: boolean;
-  prefillingCards: boolean;
+  scheduleDate?: Date;
+  startTime?: string;
+  endTime?: string;
+  repeatUntil?: Date;
+  repeatTimeRange?: string;
+  repeatTimeUnit?: string;
+  reminderTimeRange?: string;
+  reminderTimeUnit?: string;
+  viaSlack?: boolean;
+  viaEmail?: boolean;
+  prefillingCards?: boolean;
 };
 
 export type TimeSlot = {

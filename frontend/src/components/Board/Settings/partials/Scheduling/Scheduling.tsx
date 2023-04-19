@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { Dispatch, SetStateAction, useState } from 'react';
 
 import {
   StyledAccordionContent,
@@ -11,25 +11,26 @@ import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Text from '@/components/Primitives/Text/Text';
 import { UpdateScheduleType } from '@/types/board/board';
 import { DateAndTimePicker } from '@components/Board/Settings/partials/Scheduling/DateAndTime';
+import { RepeatSchedule } from '@components/Board/Settings/partials/Scheduling/Repeat';
 import { SelectDateUnit } from '@components/Board/Settings/partials/Scheduling/SelectDateUnit';
 import Checkbox from '@components/Primitives/Inputs/Checkboxes/Checkbox/Checkbox';
 import Separator from '@components/Primitives/Separator/Separator';
 
 export type SchedulingProps = {
-  schedulingData?: UpdateScheduleType;
-  setSchedulingData: (data: any) => void;
+  schedulingData: UpdateScheduleType;
+  setSchedulingData: Dispatch<SetStateAction<UpdateScheduleType>>;
 };
 
 const SchedulingSettings = ({ schedulingData, setSchedulingData }: SchedulingProps) => {
   const [isReminderActive, setReminderState] = useState<boolean>(false);
-  const [isRepeatActive, setRepeatState] = useState<boolean>(false);
 
-  const handleRepeatTimeUnitChange = (timeUnit: string) => {
+  const handleReminderTimeRangeChange = (timeRange: string) => {
     setSchedulingData((prev: UpdateScheduleType) => ({
       ...prev,
-      repeatTimeUnit: timeUnit,
+      reminderTimeRange: timeRange,
     }));
   };
+
   const handleReminderTimeUnitChange = (timeUnit: string) => {
     setSchedulingData((prev: UpdateScheduleType) => ({
       ...prev,
@@ -62,18 +63,6 @@ const SchedulingSettings = ({ schedulingData, setSchedulingData }: SchedulingPro
       scheduleDate: scheduleDate,
     }));
   };
-  const handleRepeatDateChange = (repeatDate: Date) => {
-    setSchedulingData((prev: UpdateScheduleType) => ({
-      ...prev,
-      repeatDate: repeatDate,
-    }));
-  };
-  const handleReminderDateChange = (reminderDate: Date) => {
-    setSchedulingData((prev: UpdateScheduleType) => ({
-      ...prev,
-      reminderDate: reminderDate,
-    }));
-  };
 
   return (
     <StyledAccordionItem value="Scheduling" variant="first">
@@ -86,31 +75,27 @@ const SchedulingSettings = ({ schedulingData, setSchedulingData }: SchedulingPro
       <StyledAccordionContent>
         <Flex direction="column" gap={16}>
           <DateAndTimePicker
-            currentDate={schedulingData?.scheduleDate}
+            currentDate={schedulingData.scheduleDate}
             setDate={handleScheduleDateChange}
           ></DateAndTimePicker>
           <Separator></Separator>
-          <SelectDateUnit
-            isChecked={isRepeatActive}
-            setCheckboxState={setRepeatState}
-            setUnitTime={handleRepeatTimeUnitChange}
-            title="Repeat"
-            unitTime={schedulingData?.repeatTimeUnit}
-            description="Repeat minutes/days/weeks 
-"
-          />
+          {/* REPEAT */}
+          <RepeatSchedule schedulingData={schedulingData} setSchedulingData={setSchedulingData} />
           <Separator></Separator>
+          {/*Reminder */}
           <SelectDateUnit
             description="Send reminder minutes/days/weeks before"
             isChecked={isReminderActive}
             setCheckboxState={setReminderState}
+            setTimeRange={handleReminderTimeRangeChange}
             setUnitTime={handleReminderTimeUnitChange}
+            timeRange={schedulingData.reminderTimeRange}
+            timeUnit={schedulingData.reminderTimeUnit}
             title="Reminder"
-            unitTime={schedulingData?.reminderTimeUnit}
           />
           <Flex direction="column" style={{ marginLeft: '35px' }}>
             <Checkbox
-              checked={schedulingData?.viaSlack}
+              checked={schedulingData.viaSlack}
               disabled={!isReminderActive}
               handleChange={handleSlackChange}
               id="repeatCheckbox"
@@ -118,7 +103,7 @@ const SchedulingSettings = ({ schedulingData, setSchedulingData }: SchedulingPro
               size="md"
             />
             <Checkbox
-              checked={schedulingData?.viaEmail}
+              checked={schedulingData.viaEmail}
               disabled={!isReminderActive}
               handleChange={handleEmailChange}
               id="repeatCheckbox"
@@ -126,7 +111,7 @@ const SchedulingSettings = ({ schedulingData, setSchedulingData }: SchedulingPro
               size="md"
             />
             <Checkbox
-              checked={schedulingData?.prefillingCards}
+              checked={schedulingData.prefillingCards}
               disabled={!isReminderActive}
               handleChange={handlePrefillingCardChange}
               id="repeatCheckbox"

@@ -14,19 +14,22 @@ export type RepeatProps = {
   title: string;
   isChecked: boolean;
   description: string;
-  unitTime?: string;
+  timeRange?: string;
+  timeUnit?: string;
   setCheckboxState: (value: boolean) => void;
-  setUnitTime: (unitTime: string) => void;
+  setUnitTime: (timeUnit: string) => void;
+  setTimeRange: (timeRange: string) => void;
 };
 
 const SelectDateUnit = ({
   isChecked,
   title,
   description,
-  unitTime,
-
+  timeUnit,
+  timeRange,
   setUnitTime,
   setCheckboxState,
+  setTimeRange,
 }: RepeatProps) => {
   const options = [];
 
@@ -60,7 +63,12 @@ const SelectDateUnit = ({
 
         {/* <DatePicker currentDate={currentDate} disabled={!isChecked} setDate={setDate} /> */}
 
-        <Select css={{ width: '50%', height: '$60' }} disabled={!isChecked}>
+        <Select
+          css={{ width: '50%', height: '$60' }}
+          disabled={!isChecked}
+          onValueChange={setTimeRange}
+          value={timeRange}
+        >
           <SelectTrigger css={{ padding: '$24' }}>
             <Flex direction="column">
               <Text color="primary300">Select time range</Text>
@@ -76,7 +84,7 @@ const SelectDateUnit = ({
           css={{ width: '50%', height: '$60' }}
           disabled={!isChecked}
           onValueChange={setUnitTime}
-          value={unitTime}
+          value={timeUnit}
         >
           <SelectTrigger css={{ padding: '$24' }}>
             <Flex direction="column">
