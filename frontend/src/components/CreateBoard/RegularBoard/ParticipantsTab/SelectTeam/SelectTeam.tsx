@@ -77,10 +77,12 @@ const SelectTeam = () => {
         ];
       });
 
+      console.log(users);
+
       setBoardState((prev) => ({
         ...prev,
         team: selectedTeam,
-        users,
+        users: users,
         board: { ...prev.board, team: selectedTeam.id },
       }));
 
