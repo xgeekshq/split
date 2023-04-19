@@ -9,13 +9,13 @@ import Input from '@/components/Primitives/Inputs/Input/Input';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Separator from '@/components/Primitives/Separator/Separator';
 import Text from '@/components/Primitives/Text/Text';
+import { START_PAGE_ROUTE } from '@/constants/routes';
 import useRegisterGuestUser from '@/hooks/auth/useRegisterGuestUser';
 import SchemaLoginGuestForm from '@/schema/schemaLoginGuestForm';
 import { FlexForm } from '@/styles/pages/pages.styles';
 import { CreateGuestUser } from '@/types/user/create-login.user';
 import { LoginGuestUser } from '@/types/user/user';
 import { getUsername } from '@/utils/getUsername';
-import { START_PAGE_ROUTE } from '@/utils/routes';
 
 const LoginGuestUserPage = () => {
   const router = useRouter();

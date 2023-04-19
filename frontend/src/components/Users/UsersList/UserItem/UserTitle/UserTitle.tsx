@@ -2,8 +2,8 @@
 import Link from 'next/link';
 
 import Text from '@/components/Primitives/Text/Text';
+import { ROUTES } from '@/constants/routes';
 import { User } from '@/types/user/user';
-import { ROUTES } from '@/utils/routes';
 
 export type UserTitleProps = {
   user: User;

@@ -3,12 +3,12 @@ import { GetTeamUserServiceInterface } from 'src/modules/teamUsers/interfaces/se
 import { Inject, Injectable } from '@nestjs/common';
 import { UserWithTeams } from '../interfaces/type-user-with-teams';
 import { TYPES } from '../interfaces/types';
-import * as TeamUsers from 'src/modules/teamUsers/interfaces/types';
 import { UserRepositoryInterface } from '../repository/user.repository.interface';
 import { sortTeamUserListAlphabetically } from '../utils/sortings';
 import { GetUserServiceInterface } from '../interfaces/services/get.user.service.interface';
 import GetAllUsersWithTeamsUseCaseDto from '../dto/useCase/get-all-users-with-teams.use-case.dto';
 import { UseCase } from 'src/libs/interfaces/use-case.interface';
+import { GET_TEAM_USER_SERVICE } from 'src/modules/teamUsers/constants';
 
 @Injectable()
 export default class GetAllUsersWithTeamsUseCase
@@ -19,8 +19,8 @@ export default class GetAllUsersWithTeamsUseCase
 		private readonly userRepository: UserRepositoryInterface,
 		@Inject(TYPES.services.GetUserService)
 		private readonly getUserService: GetUserServiceInterface,
-		@Inject(TeamUsers.TYPES.services.GetTeamUserService)
-		private getTeamUserService: GetTeamUserServiceInterface
+		@Inject(GET_TEAM_USER_SERVICE)
+		private readonly getTeamUserService: GetTeamUserServiceInterface
 	) {}
 
 	async execute({ page, size, searchUser }: GetAllUsersWithTeamsUseCaseDto) {

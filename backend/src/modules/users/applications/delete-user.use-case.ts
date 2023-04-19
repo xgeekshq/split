@@ -2,19 +2,19 @@ import { UseCase } from 'src/libs/interfaces/use-case.interface';
 import { Inject, Injectable } from '@nestjs/common';
 import { TYPES } from '../interfaces/types';
 import { DeleteTeamUserServiceInterface } from 'src/modules/teamUsers/interfaces/services/delete.team.user.service.interface';
-import * as TeamUser from 'src/modules/teamUsers/interfaces/types';
 import { GetTeamUserServiceInterface } from '../../teamUsers/interfaces/services/get.team.user.service.interface';
 import { UserRepositoryInterface } from '../repository/user.repository.interface';
 import { DeleteFailedException } from 'src/libs/exceptions/deleteFailedBadRequestException';
+import { DELETE_TEAM_USER_SERVICE, GET_TEAM_USER_SERVICE } from 'src/modules/teamUsers/constants';
 
 @Injectable()
 export class DeleteUserUseCase implements UseCase<string, boolean> {
 	constructor(
 		@Inject(TYPES.repository) private readonly userRepository: UserRepositoryInterface,
-		@Inject(TeamUser.TYPES.services.DeleteTeamUserService)
-		private deleteTeamUserService: DeleteTeamUserServiceInterface,
-		@Inject(TeamUser.TYPES.services.GetTeamUserService)
-		private getTeamUserService: GetTeamUserServiceInterface
+		@Inject(DELETE_TEAM_USER_SERVICE)
+		private readonly deleteTeamUserService: DeleteTeamUserServiceInterface,
+		@Inject(GET_TEAM_USER_SERVICE)
+		private readonly getTeamUserService: GetTeamUserServiceInterface
 	) {}
 
 	async execute(userId: string) {

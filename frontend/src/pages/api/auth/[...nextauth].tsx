@@ -4,9 +4,6 @@ import AzureADProvider from 'next-auth/providers/azure-ad';
 import CredentialsProvider from 'next-auth/providers/credentials';
 
 import { createOrLoginUserAzure, login, refreshAccessToken } from '@/api/authService';
-import { getAuthError } from '@/errors/auth-messages';
-import { Token } from '@/types/token';
-import { LoginUser } from '@/types/user/user';
 import {
   CLIENT_ID,
   CLIENT_SECRET,
@@ -15,8 +12,11 @@ import {
   SECRET,
   TENANT_ID,
   UNDEFINED,
-} from '@/utils/constants';
-import { DASHBOARD_ROUTE, ERROR_500_PAGE, START_PAGE_ROUTE } from '@/utils/routes';
+} from '@/constants';
+import { DASHBOARD_ROUTE, ERROR_500_PAGE, START_PAGE_ROUTE } from '@/constants/routes';
+import { ErrorMessages } from '@/constants/toasts/auth-messages';
+import { Token } from '@/types/token';
+import { LoginUser } from '@/types/user/user';
 
 async function getNewAccessToken(prevToken: JWT): Promise<JWT> {
   try {
@@ -75,10 +75,8 @@ export default NextAuth({
           return token;
         } catch (error: any) {
           const code = error.response.status;
-          throw Error(getAuthError(code));
+          throw Error(ErrorMessages.AUTH(code));
         }
-
-        // getAuthError(result.status),
       },
     }),
   ],

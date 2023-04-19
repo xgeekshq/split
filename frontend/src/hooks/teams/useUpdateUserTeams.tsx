@@ -2,10 +2,11 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useSetRecoilState } from 'recoil';
 
 import { updateAddTeamsToUser } from '@/api/teamService';
+import { TEAMS_KEY, USERS_KEY } from '@/constants/react-query/keys';
+import { createErrorMessage, createSuccessMessage } from '@/constants/toasts';
+import { ErrorMessages, SuccessMessages } from '@/constants/toasts/teams-messages';
 import { toastState } from '@/store/toast/atom/toast.atom';
 import { Team } from '@/types/team/team';
-import { TEAMS_KEY, USERS_KEY } from '@/utils/constants/reactQueryKeys';
-import { ToastStateEnum } from '@/utils/enums/toast-types';
 
 const useUpdateUserTeams = (userId: string) => {
   const queryClient = useQueryClient();
@@ -27,20 +28,12 @@ const useUpdateUserTeams = (userId: string) => {
     onSuccess: () => {
       queryClient.invalidateQueries([TEAMS_KEY, USERS_KEY, userId]);
 
-      setToastState({
-        open: true,
-        content: 'The team(s) was successfully added to the user.',
-        type: ToastStateEnum.SUCCESS,
-      });
+      setToastState(createSuccessMessage(SuccessMessages.UPDATE_TEAM));
     },
     onError: () => {
       queryClient.invalidateQueries([TEAMS_KEY, USERS_KEY, userId]);
       queryClient.invalidateQueries([TEAMS_KEY, 'not', USERS_KEY, userId]);
-      setToastState({
-        open: true,
-        content: 'Error while adding team(s) to the user',
-        type: ToastStateEnum.ERROR,
-      });
+      setToastState(createErrorMessage(ErrorMessages.UPDATE_TEAM));
     },
   });
 };

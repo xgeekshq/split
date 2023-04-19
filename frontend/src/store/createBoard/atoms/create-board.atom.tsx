@@ -1,6 +1,6 @@
 import { atom } from 'recoil';
 
-import { defaultSplitColumns } from '@/helper/board/defaultColumns';
+import { defaultSplitColumns } from '@/constants/boards/defaultColumns';
 import { BoardToAdd } from '@/types/board/board';
 import { BoardUser } from '@/types/board/board.user';
 import { Team } from '@/types/team/team';

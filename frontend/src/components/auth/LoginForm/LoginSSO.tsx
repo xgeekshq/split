@@ -2,8 +2,8 @@ import Icon from '@/components/Primitives/Icons/Icon/Icon';
 import Button from '@/components/Primitives/Inputs/Button/Button';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Text from '@/components/Primitives/Text/Text';
+import { NEXT_PUBLIC_ENABLE_AZURE } from '@/constants';
 import { styled } from '@/styles/stitches/stitches.config';
-import { NEXT_PUBLIC_ENABLE_AZURE } from '@/utils/constants';
 
 const StyledFlex = styled(Flex, { width: '100%' });
 
