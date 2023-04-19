@@ -1,5 +1,4 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import * as Boards from 'src/modules/boards/constants';
 import * as BoardUsers from 'src/modules/boardUsers/interfaces/types';
 import * as Auth from 'src/modules/auth/interfaces/types';
 import * as Users from 'src/modules/users/interfaces/types';
@@ -20,6 +19,7 @@ import { BoardUserFactory } from 'src/libs/test-utils/mocks/factories/boardUser-
 import { Tokens } from 'src/libs/interfaces/jwt/tokens.interface';
 import { hideVotesFromColumns } from '../utils/hideVotesFromColumns';
 import { GetBoardUseCase } from './get-board.use-case';
+import { BOARD_REPOSITORY } from 'src/modules/boards/constants';
 
 const mainBoard = BoardFactory.create({ isSubBoard: false, isPublic: false });
 const subBoard = BoardFactory.create({ isSubBoard: true, isPublic: false });
@@ -37,7 +37,7 @@ describe('GetBoardUseCase', () => {
 			providers: [
 				GetBoardUseCase,
 				{
-					provide: Boards.TYPES.repositories.BoardRepository,
+					provide: BOARD_REPOSITORY,
 					useValue: createMock<BoardRepositoryInterface>()
 				},
 				{
@@ -60,7 +60,7 @@ describe('GetBoardUseCase', () => {
 		}).compile();
 
 		useCase = module.get(GetBoardUseCase);
-		boardRepositoryMock = module.get(Boards.TYPES.repositories.BoardRepository);
+		boardRepositoryMock = module.get(BOARD_REPOSITORY);
 		getBoardUserServiceMock = module.get(BoardUsers.TYPES.services.GetBoardUserService);
 		getTokenAuthServiceMock = module.get(Auth.TYPES.services.GetTokenAuthService);
 	});

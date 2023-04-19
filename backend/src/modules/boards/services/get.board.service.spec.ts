@@ -1,14 +1,10 @@
 import { GetBoardUserServiceInterface } from 'src/modules/boardUsers/interfaces/services/get.board.user.service.interface';
-import { getBoardUserService } from '../../boardUsers/boardusers.providers';
-import { getBoardService } from './../boards.providers';
-import { getTokenAuthService } from './../../auth/auth.providers';
 import { Test, TestingModule } from '@nestjs/testing';
 import { BoardFactory } from 'src/libs/test-utils/mocks/factories/board-factory.mock';
-import { updateUserService } from 'src/modules/users/users.providers';
-import { boardRepository } from '../boards.providers';
 import SocketGateway from 'src/modules/socket/gateway/socket.gateway';
 import { DeepMocked, createMock } from '@golevelup/ts-jest';
-import * as Boards from 'src/modules/boards/constants';
+import * as Users from 'src/modules/users/interfaces/types';
+import * as Auth from 'src/modules/auth/interfaces/types';
 import * as BoardUsers from 'src/modules/boardUsers/interfaces/types';
 import faker from '@faker-js/faker';
 import { BoardUserFactory } from 'src/libs/test-utils/mocks/factories/boardUser-factory.mock';
@@ -19,11 +15,12 @@ import { UpdateUserServiceInterface } from 'src/modules/users/interfaces/service
 import { BoardRepositoryInterface } from '../repositories/board.repository.interface';
 import { GetBoardServiceInterface } from '../interfaces/services/get.board.service.interface';
 import { CreateBoardUserServiceInterface } from 'src/modules/boardUsers/interfaces/services/create.board.user.service.interface';
-import { createBoardUserService } from 'src/modules/boardUsers/boardusers.providers';
 import { UserDtoFactory } from 'src/libs/test-utils/mocks/factories/dto/userDto-factory.mock';
 import { NotFoundException } from '@nestjs/common';
 import { hideVotesFromColumns } from '../utils/hideVotesFromColumns';
 import { GET_TEAM_SERVICE } from 'src/modules/teams/constants';
+import { BOARD_REPOSITORY } from 'src/modules/boards/constants';
+import GetBoardService from 'src/modules/boards/services/get.board.service';
 
 const userId = faker.datatype.uuid();
 const mainBoard = BoardFactory.create({ isSubBoard: false, isPublic: false });
@@ -45,29 +42,29 @@ describe('GetBoardService', () => {
 	beforeAll(async () => {
 		const module: TestingModule = await Test.createTestingModule({
 			providers: [
-				getBoardService,
+				GetBoardService,
 				{
 					provide: GET_TEAM_SERVICE,
 					useValue: createMock<GetTeamServiceInterface>()
 				},
 				{
-					provide: createBoardUserService.provide,
+					provide: BoardUsers.TYPES.services.CreateBoardUserService,
 					useValue: createMock<CreateBoardUserServiceInterface>()
 				},
 				{
-					provide: getTokenAuthService.provide,
+					provide: Auth.TYPES.services.GetTokenAuthService,
 					useValue: createMock<GetTokenAuthServiceInterface>()
 				},
 				{
-					provide: updateUserService.provide,
+					provide: Users.TYPES.services.UpdateUserService,
 					useValue: createMock<UpdateUserServiceInterface>()
 				},
 				{
-					provide: getBoardUserService.provide,
+					provide: BoardUsers.TYPES.services.GetBoardUserService,
 					useValue: createMock<GetBoardUserServiceInterface>()
 				},
 				{
-					provide: boardRepository.provide,
+					provide: BOARD_REPOSITORY,
 					useValue: createMock<BoardRepositoryInterface>()
 				},
 				{
@@ -77,8 +74,8 @@ describe('GetBoardService', () => {
 			]
 		}).compile();
 
-		boardService = module.get<GetBoardServiceInterface>(getBoardService.provide);
-		boardRepositoryMock = module.get(Boards.TYPES.repositories.BoardRepository);
+		boardService = module.get(GetBoardService);
+		boardRepositoryMock = module.get(BOARD_REPOSITORY);
 		getBoardUserServiceMock = module.get(BoardUsers.TYPES.services.GetBoardUserService);
 		getTeamServiceMock = module.get(GET_TEAM_SERVICE);
 	});

@@ -19,7 +19,7 @@ import { UseCase } from 'src/libs/interfaces/use-case.interface';
 export default class PublicBoardsController {
 	constructor(
 		@Inject(IS_BOARD_PUBLIC_USE_CASE)
-		private isBoardPublicUseCase: UseCase<string, boolean>
+		private readonly isBoardPublicUseCase: UseCase<string, boolean>
 	) {}
 
 	@ApiOperation({ summary: 'Check if board is public' })

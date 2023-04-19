@@ -1,31 +1,3 @@
-export const TYPES = {
-	applications: {
-		//DuplicateBoardUseCase: 'DuplicateBoardUseCase',
-		//GetBoardsForDashboardUseCase: 'GetBoardsForDashboardUseCase',
-		//GetAllBoardsUseCase: 'GetAllBoardUseCase',
-		//GetPersonalBoardsUseCase: 'GetPersonalBoardsUseCase',
-		//GetBoardUseCase: 'GetBoardUseCase',
-		//CreateBoardUseCase: 'CreateBoardUseCase',
-		//IsBoardPublicUseCase: 'IsBoardPublicUseCase',
-		//DeleteBoardUseCase: 'DeleteBoardUseCase',
-		//UpdateBoardUseCase: 'UpdateBoardUseCase',
-		//UpdateBoardParticipantsUseCase: 'UpdateBoardParticipantsUseCase',
-		//MergeBoardUseCase: 'MergeBoardUseCase',
-		//UpdateBoardPhaseUseCase: 'UpdateBoardPhaseUseCase'
-	},
-	repositories: {
-		BoardTimerRepository: 'BoardTimerRepository',
-		BoardRepository: 'BoardRepository'
-	},
-	subscribers: {
-		AfterUserPausedTimerSubscriber: 'AfterUserPausedTimerSubscriber',
-		AfterUserStartedTimerSubscriber: 'AfterUserStartedTimerSubscriber',
-		AfterUserStoppedTimerSubscriber: 'AfterUserStoppedTimerSubscriber',
-		AfterUserUpdatedDurationSubscriber: 'AfterUserUpdatedDurationSubscriber',
-		AfterUserRequestedTimerStateSubscriber: 'AfterUserRequestedTimerStateSubscriber'
-	}
-};
-
 /* SERVICES */
 
 export const CREATE_BOARD_SERVICE = 'CreateBoardService';
@@ -73,3 +45,21 @@ export const UPDATE_BOARD_PARTICIPANTS_USE_CASE = 'UpdateBoardParticipantsUseCas
 export const MERGE_BOARD_USE_CASE = 'MergeBoardUseCase';
 
 export const UPDATE_BOARD_PHASE_USE_CASE = 'UpdateBoardPhaseUseCase';
+
+/* REPOSITORIES */
+
+export const BOARD_TIMER_REPOSITORY = 'BoardTimerRepository';
+
+export const BOARD_REPOSITORY = 'BoardRepository';
+
+/* SUBSCRIBERS */
+
+export const AFTER_USER_PAUSED_TIMER_SUBSCRIBER = 'AfterUserPausedTimerSubscriber';
+
+export const AFTER_USER_STARTED_TIMER_SUBSCRIBER = 'AfterUserStartedTimerSubscriber';
+
+export const AFTER_USER_STOPPED_TIMER_SUBSCRIBER = 'AfterUserStoppedTimerSubscriber';
+
+export const AFTER_USER_UPDATED_DURATION_SUBSCRIBER = 'AfterUserUpdatedDurationSubscriber';
+
+export const AFTER_USER_REQUESTED_TIMER_STATE_SUBSCRIBER = 'AfterUserRequestedTimerStateSubscriber';

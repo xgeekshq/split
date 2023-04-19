@@ -15,7 +15,7 @@ import { GetUserServiceInterface } from 'src/modules/users/interfaces/services/g
 import * as Users from 'src/modules/users/interfaces/types';
 import Board from '../entities/board.schema';
 import { GetBoardServiceInterface } from '../interfaces/services/get.board.service.interface';
-import { GET_BOARD_SERVICE, TYPES } from '../constants';
+import { BOARD_REPOSITORY, GET_BOARD_SERVICE } from '../constants';
 import { BoardRepositoryInterface } from '../repositories/board.repository.interface';
 
 export type DuplicateBoardDto = { boardId: string; userId: string; boardTitle: string };
@@ -27,7 +27,7 @@ export class DuplicateBoardUseCase implements UseCase<DuplicateBoardDto, Board> 
 		private readonly getBoardService: GetBoardServiceInterface,
 		@Inject(Users.TYPES.services.GetUserService)
 		private readonly getUserService: GetUserServiceInterface,
-		@Inject(TYPES.repositories.BoardRepository)
+		@Inject(BOARD_REPOSITORY)
 		private readonly boardRepository: BoardRepositoryInterface,
 		@Inject(BoardUsers.TYPES.services.CreateBoardUserService)
 		private readonly createBoardUserService: CreateBoardUserServiceInterface

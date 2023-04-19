@@ -19,6 +19,13 @@ import { GetDashboardBoardsUseCase } from './applications/get-dashboard-boards.u
 import { GetPersonalBoardsUseCase } from './applications/get-personal-boards.use-case';
 import { IsBoardPublicUseCase } from './applications/is-board-public.use-case';
 import {
+	AFTER_USER_PAUSED_TIMER_SUBSCRIBER,
+	AFTER_USER_REQUESTED_TIMER_STATE_SUBSCRIBER,
+	AFTER_USER_STARTED_TIMER_SUBSCRIBER,
+	AFTER_USER_STOPPED_TIMER_SUBSCRIBER,
+	AFTER_USER_UPDATED_DURATION_SUBSCRIBER,
+	BOARD_REPOSITORY,
+	BOARD_TIMER_REPOSITORY,
 	CREATE_BOARD_SERVICE,
 	CREATE_BOARD_USE_CASE,
 	DELETE_BOARD_SERVICE,
@@ -36,7 +43,6 @@ import {
 	SEND_BOARD_TIMER_TIME_LEFT_SERVICE,
 	START_BOARD_TIMER_SERVICE,
 	STOP_BOARD_TIMER_SERVICE,
-	TYPES,
 	UPDATE_BOARD_PARTICIPANTS_USE_CASE,
 	UPDATE_BOARD_PHASE_USE_CASE,
 	UPDATE_BOARD_SERVICE,
@@ -167,37 +173,41 @@ export const updateBoardPhaseUseCase = {
 	useClass: UpdateBoardPhaseUseCase
 };
 
+/* REPOSITORIES */
+
 export const boardTimerRepository = {
-	provide: TYPES.repositories.BoardTimerRepository,
+	provide: BOARD_TIMER_REPOSITORY,
 	useClass: BoardTimerRepository
 };
 
+export const boardRepository = {
+	provide: BOARD_REPOSITORY,
+	useClass: BoardRepository
+};
+
+/* SUBSCRIBERS */
+
 export const afterUserUpdatedDurationSubscriber = {
-	provide: TYPES.subscribers.AfterUserUpdatedDurationSubscriber,
+	provide: AFTER_USER_UPDATED_DURATION_SUBSCRIBER,
 	useClass: AfterUserUpdatedDurationSubscriber
 };
 
 export const afterUserPausedTimerSubscriber = {
-	provide: TYPES.subscribers.AfterUserPausedTimerSubscriber,
+	provide: AFTER_USER_PAUSED_TIMER_SUBSCRIBER,
 	useClass: AfterUserPausedTimerSubscriber
 };
 
 export const afterUserStartedTimerSubscriber = {
-	provide: TYPES.subscribers.AfterUserStartedTimerSubscriber,
+	provide: AFTER_USER_STARTED_TIMER_SUBSCRIBER,
 	useClass: AfterUserStartedTimerSubscriber
 };
 
 export const afterUserStoppedTimerSubscriber = {
-	provide: TYPES.subscribers.AfterUserStoppedTimerSubscriber,
+	provide: AFTER_USER_STOPPED_TIMER_SUBSCRIBER,
 	useClass: AfterUserStoppedTimerSubscriber
 };
 
 export const afterUserRequestedTimerStateSubscriber = {
-	provide: TYPES.subscribers.AfterUserRequestedTimerStateSubscriber,
+	provide: AFTER_USER_REQUESTED_TIMER_STATE_SUBSCRIBER,
 	useClass: AfterUserRequestedTimerStateSubscriber
-};
-
-export const boardRepository = {
-	provide: TYPES.repositories.BoardRepository,
-	useClass: BoardRepository
 };

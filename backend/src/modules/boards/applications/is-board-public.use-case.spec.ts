@@ -1,11 +1,11 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import * as Boards from 'src/modules/boards/constants';
 import { DeepMocked, createMock } from '@golevelup/ts-jest';
 import { BoardFactory } from 'src/libs/test-utils/mocks/factories/board-factory.mock';
 import { UseCase } from 'src/libs/interfaces/use-case.interface';
 import { BoardRepositoryInterface } from '../repositories/board.repository.interface';
 import { NotFoundException } from '@nestjs/common';
 import { IsBoardPublicUseCase } from './is-board-public.use-case';
+import { BOARD_REPOSITORY } from 'src/modules/boards/constants';
 
 const mainBoard = BoardFactory.create({ isSubBoard: false, isPublic: false });
 
@@ -18,14 +18,14 @@ describe('IsBoardPublicUseCase', () => {
 			providers: [
 				IsBoardPublicUseCase,
 				{
-					provide: Boards.TYPES.repositories.BoardRepository,
+					provide: BOARD_REPOSITORY,
 					useValue: createMock<BoardRepositoryInterface>()
 				}
 			]
 		}).compile();
 
 		useCase = module.get(IsBoardPublicUseCase);
-		boardRepositoryMock = module.get(Boards.TYPES.repositories.BoardRepository);
+		boardRepositoryMock = module.get(BOARD_REPOSITORY);
 	});
 
 	beforeEach(() => {

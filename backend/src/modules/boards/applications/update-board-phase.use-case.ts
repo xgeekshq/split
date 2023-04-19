@@ -13,13 +13,13 @@ import { SlackMessageDto } from 'src/modules/communication/dto/slack.message.dto
 import { SendMessageServiceInterface } from 'src/modules/communication/interfaces/send-message.service.interface';
 import * as CommunicationsType from 'src/modules/communication/interfaces/types';
 import PhaseChangeEvent from 'src/modules/socket/events/user-updated-phase.event';
-import { TYPES } from '../constants';
+import { BOARD_REPOSITORY } from '../constants';
 import { BoardRepositoryInterface } from '../repositories/board.repository.interface';
 
 @Injectable()
 export class UpdateBoardPhaseUseCase implements UseCase<BoardPhaseDto, void> {
 	constructor(
-		@Inject(TYPES.repositories.BoardRepository)
+		@Inject(BOARD_REPOSITORY)
 		private readonly boardRepository: BoardRepositoryInterface,
 		@Inject(CommunicationsType.TYPES.services.SlackSendMessageService)
 		private readonly slackSendMessageService: SendMessageServiceInterface,

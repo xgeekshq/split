@@ -4,7 +4,7 @@ import { BOARD_TIMER_SERVER_PAUSED } from 'src/libs/constants/timer';
 import BoardTimerTimeLeftDto from 'src/libs/dto/board-timer-time-left.dto';
 import ServerPausedTimerEvent from 'src/modules/boards/events/server-paused-timer.event';
 import PauseBoardTimerServiceInterface from 'src/modules/boards/interfaces/services/pause-board-timer.service.interface';
-import { TYPES } from 'src/modules/boards/constants';
+import { BOARD_TIMER_REPOSITORY } from 'src/modules/boards/constants';
 import { BoardTimerRepositoryInterface } from 'src/modules/boards/repositories/board-timer.repository.interface';
 
 @Injectable()
@@ -12,10 +12,10 @@ export default class PauseBoardTimerService implements PauseBoardTimerServiceInt
 	private logger: Logger = new Logger(PauseBoardTimerService.name);
 
 	constructor(
-		@Inject(TYPES.repositories.BoardTimerRepository)
-		private boardTimerRepository: BoardTimerRepositoryInterface,
+		@Inject(BOARD_TIMER_REPOSITORY)
+		private readonly boardTimerRepository: BoardTimerRepositoryInterface,
 
-		private eventEmitter: EventEmitter2
+		private readonly eventEmitter: EventEmitter2
 	) {}
 
 	pauseTimer(boardTimeLeftDto: BoardTimerTimeLeftDto) {

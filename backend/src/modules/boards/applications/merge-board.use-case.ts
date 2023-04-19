@@ -6,7 +6,7 @@ import { CommunicationServiceInterface } from 'src/modules/communication/interfa
 import * as CommunicationsType from 'src/modules/communication/interfaces/types';
 import MergeBoardUseCaseDto from '../dto/useCase/merge-board.use-case.dto';
 import Board from '../entities/board.schema';
-import { TYPES } from '../constants';
+import { BOARD_REPOSITORY } from '../constants';
 import { BoardRepositoryInterface } from '../repositories/board.repository.interface';
 import { generateNewSubColumns } from '../utils/generate-subcolumns';
 import { mergeCardsFromSubBoardColumnsIntoMainBoard } from '../utils/merge-cards-from-subboard';
@@ -16,7 +16,7 @@ export class MergeBoardUseCase implements UseCase<MergeBoardUseCaseDto, Board> {
 	private logger = new Logger(MergeBoardUseCase.name);
 
 	constructor(
-		@Inject(TYPES.repositories.BoardRepository)
+		@Inject(BOARD_REPOSITORY)
 		private readonly boardRepository: BoardRepositoryInterface,
 		@Inject(CommunicationsType.TYPES.services.SlackCommunicationService)
 		private readonly slackCommunicationService: CommunicationServiceInterface

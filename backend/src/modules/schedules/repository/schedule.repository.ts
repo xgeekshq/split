@@ -8,7 +8,7 @@ import { ScheduleRepositoryInterface } from './schedule.repository.interface';
 
 @Injectable()
 export class ScheduleRepository
-	extends MongoGenericRepository<Schedules>
+	extends MongoGenericRepository<SchedulesDocument>
 	implements ScheduleRepositoryInterface
 {
 	constructor(@InjectModel(Schedules.name) private model: Model<SchedulesDocument>) {
