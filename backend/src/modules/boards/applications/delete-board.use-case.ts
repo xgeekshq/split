@@ -6,9 +6,10 @@ import { BOARD_NOT_FOUND } from 'src/libs/exceptions/messages';
 import { ObjectId } from 'mongoose';
 import isEmpty from 'src/libs/utils/isEmpty';
 import { DeleteBoardServiceInterface } from '../interfaces/services/delete.board.service.interface';
+import DeleteBoardUseCaseDto from 'src/modules/boards/dto/useCase/delete-board.use-case';
 
 @Injectable()
-export class DeleteBoardUseCase implements UseCase<string, boolean> {
+export class DeleteBoardUseCase implements UseCase<DeleteBoardUseCaseDto, boolean> {
 	constructor(
 		@Inject(TYPES.repositories.BoardRepository)
 		private readonly boardRepository: BoardRepositoryInterface,
@@ -16,7 +17,7 @@ export class DeleteBoardUseCase implements UseCase<string, boolean> {
 		private readonly deleteBoardService: DeleteBoardServiceInterface
 	) {}
 
-	async execute(boardId) {
+	async execute({ boardId, completionHandler }: DeleteBoardUseCaseDto) {
 		const board = await this.boardRepository.getBoard(boardId);
 
 		if (!board) {
@@ -32,6 +33,14 @@ export class DeleteBoardUseCase implements UseCase<string, boolean> {
 			boardIdsToDelete.push(...dividedBoards);
 		}
 
-		return this.deleteBoardService.deleteBoardBoardUsersAndSchedules(boardIdsToDelete);
+		const wasDeleted = await this.deleteBoardService.deleteBoardBoardUsersAndSchedules(
+			boardIdsToDelete
+		);
+
+		if (wasDeleted) {
+			completionHandler(boardIdsToDelete);
+		}
+
+		return wasDeleted;
 	}
 }

@@ -47,7 +47,7 @@ describe('Components/Users/User/TeamsDialog', () => {
 
     // Assert
     expect(getAllByTestId('checkboxTeamItem')).toHaveLength(teamsList.length);
-    expect(getByTestId('searchInput')).toBeInTheDocument();
+    expect(getByTestId('uncontrolledInput')).toBeInTheDocument();
   });
 
   it('should call useUpdateUserTeams mutate function', async () => {

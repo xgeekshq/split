@@ -30,14 +30,17 @@ import {
 	getBoardsForDashboardUseCase,
 	getPersonalBoardsUseCase,
 	isBoardPublicUseCase,
+	mergeBoardUseCase,
 	pauseBoardTimerService,
 	sendBoardTimerStateService,
 	sendBoardTimerTimeLeftService,
 	startBoardTimerService,
 	stopBoardTimerService,
-	updateBoardApplication,
+	updateBoardParticipantsUseCase,
+	updateBoardPhaseUseCase,
 	updateBoardService,
-	updateBoardTimerDurationService
+	updateBoardTimerDurationService,
+	updateBoardUseCase
 } from './boards.providers';
 import BoardsController from './controller/boards.controller';
 import TeamUsersModule from 'src/modules/teamUsers/teamusers.module';
@@ -71,7 +74,10 @@ import { VotesModule } from '../votes/votes.module';
 		getBoardUseCase,
 		createBoardUseCase,
 		isBoardPublicUseCase,
-		updateBoardApplication,
+		updateBoardUseCase,
+		updateBoardParticipantsUseCase,
+		updateBoardPhaseUseCase,
+		mergeBoardUseCase,
 		deleteBoardUseCase,
 		boardTimerRepository,
 		sendBoardTimerStateService,
