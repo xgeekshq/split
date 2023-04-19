@@ -3,15 +3,15 @@ import { InjectModel } from '@nestjs/mongoose';
 import { DeleteResult } from 'mongodb';
 import { Model } from 'mongoose';
 import { MongoGenericRepository } from 'src/libs/repositories/mongo/mongo-generic.repository';
-import Schedules, { SchedulesDocument } from '../entities/schedules.schema';
+import Schedules from '../entities/schedules.schema';
 import { ScheduleRepositoryInterface } from './schedule.repository.interface';
 
 @Injectable()
 export class ScheduleRepository
-	extends MongoGenericRepository<SchedulesDocument>
+	extends MongoGenericRepository<Schedules>
 	implements ScheduleRepositoryInterface
 {
-	constructor(@InjectModel(Schedules.name) private model: Model<SchedulesDocument>) {
+	constructor(@InjectModel(Schedules.name) private model: Model<Schedules>) {
 		super(model);
 	}
 	getSchedules(): Promise<Schedules[]> {
