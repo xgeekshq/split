@@ -7,6 +7,7 @@ import ParticipantsTab from '@/components/CreateBoard/RegularBoard/ParticipantsT
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Tab, { TabList } from '@/components/Primitives/Tab/Tab';
 import Text from '@/components/Primitives/Text/Text';
+import { createErrorMessage } from '@/constants/toasts';
 import useCurrentSession from '@/hooks/useCurrentSession';
 import {
   createBoardDataState,
@@ -15,7 +16,6 @@ import {
 import { toastState } from '@/store/toast/atom/toast.atom';
 import { usersListState } from '@/store/user.atom';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
-import { ToastStateEnum } from '@/utils/enums/toast-types';
 
 type SettingsTabsProps = {
   isPageLoading: boolean;
@@ -69,11 +69,9 @@ const SettingsTabs = ({ isPageLoading }: SettingsTabsProps) => {
 
     if (errors.team && activeTab === 'config') {
       handleTabChange('participants');
-      setToastState({
-        open: true,
-        content: 'Please choose a team in the "Team/-Sub-teams configuration" tab',
-        type: ToastStateEnum.ERROR,
-      });
+      setToastState(
+        createErrorMessage('Please choose a team in the "Team/-Sub-teams configuration" tab'),
+      );
     }
   }, [activeTab, errors.maxVotes, errors.team, setToastState]);
 

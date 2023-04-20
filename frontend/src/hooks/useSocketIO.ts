@@ -6,6 +6,7 @@ import { io, Socket } from 'socket.io-client';
 
 import { BOARD_PHASE_SERVER_SENT, NEXT_PUBLIC_BACKEND_URL } from '@/constants';
 import { ROUTES } from '@/constants/routes';
+import { createErrorMessage } from '@/constants/toasts';
 import useBoard from '@/hooks/useBoard';
 import useCards from '@/hooks/useCards';
 import useComments from '@/hooks/useComments';
@@ -28,7 +29,6 @@ import EventCallback from '@/types/events/event-callback.type';
 import { ListenEvent } from '@/types/events/listen-event.type';
 import VoteDto from '@/types/vote/vote.dto';
 import isEmpty from '@/utils/isEmpty';
-import { ToastStateEnum } from '@utils/enums/toast-types';
 
 enum BoardAction {
   UPDATECARDPOSITION,
@@ -96,11 +96,7 @@ export const useSocketIO = (boardId: string): SocketInterface => {
 
     socket?.on('deleteBoard', () => {
       router.replace(ROUTES.Boards);
-      setToastState({
-        open: true,
-        content: 'The board was deleted by a board admin.',
-        type: ToastStateEnum.ERROR,
-      });
+      setToastState(createErrorMessage('The board was deleted by a board admin.'));
     });
 
     socket?.on('board', (board: BoardType) => {
