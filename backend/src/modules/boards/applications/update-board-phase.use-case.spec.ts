@@ -10,12 +10,11 @@ import { UpdateFailedException } from 'src/libs/exceptions/updateFailedBadReques
 import { UseCase } from 'src/libs/interfaces/use-case.interface';
 import { BoardFactory } from 'src/libs/test-utils/mocks/factories/board-factory.mock';
 import { TeamFactory } from 'src/libs/test-utils/mocks/factories/team-factory.mock';
-import * as Boards from 'src/modules/boards/interfaces/types';
 import { SendMessageServiceInterface } from 'src/modules/communication/interfaces/send-message.service.interface';
 import * as CommunicationsType from 'src/modules/communication/interfaces/types';
-import { boardRepository } from '../boards.providers';
 import { BoardRepositoryInterface } from '../repositories/board.repository.interface';
 import { UpdateBoardPhaseUseCase } from './update-board-phase.use-case';
+import { BOARD_REPOSITORY } from 'src/modules/boards/constants';
 
 describe('UpdateBoardPhaseUseCase', () => {
 	let useCase: UseCase<BoardPhaseDto, void>;
@@ -33,7 +32,7 @@ describe('UpdateBoardPhaseUseCase', () => {
 					useValue: createMock<SendMessageServiceInterface>()
 				},
 				{
-					provide: boardRepository.provide,
+					provide: BOARD_REPOSITORY,
 					useValue: createMock<BoardRepositoryInterface>()
 				},
 				{
@@ -48,7 +47,7 @@ describe('UpdateBoardPhaseUseCase', () => {
 		}).compile();
 
 		useCase = module.get(UpdateBoardPhaseUseCase);
-		boardRepositoryMock = module.get(Boards.TYPES.repositories.BoardRepository);
+		boardRepositoryMock = module.get(BOARD_REPOSITORY);
 		eventEmitterMock = module.get(EventEmitter2);
 		configServiceMock = module.get(ConfigService);
 		slackSendMessageServiceMock = module.get(

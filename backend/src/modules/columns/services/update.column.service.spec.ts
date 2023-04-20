@@ -8,13 +8,13 @@ import { BoardFactory } from 'src/libs/test-utils/mocks/factories/board-factory.
 import SocketGateway from 'src/modules/socket/gateway/socket.gateway';
 import { updateColumnService } from '../columns.providers';
 import * as Columns from '../interfaces/types';
-import * as Boards from 'src/modules/boards/interfaces/types';
 import * as Votes from 'src/modules/votes/interfaces/types';
 import { ColumnRepository } from '../repositories/column.repository';
 import GetBoardService from 'src/modules/boards/services/get.board.service';
 import UpdateColumnService from './update.column.service';
 import DeleteVoteService from 'src/modules/votes/services/delete.vote.service';
 import { DeleteVoteServiceInterface } from 'src/modules/votes/interfaces/services/delete.vote.service.interface';
+import { GET_BOARD_SERVICE } from 'src/modules/boards/constants';
 
 const fakeBoards = BoardFactory.createMany(2);
 
@@ -43,17 +43,17 @@ describe('UpdateColumnService', () => {
 					useValue: createMock<DeleteVoteServiceInterface>()
 				},
 				{
-					provide: Boards.TYPES.services.GetBoardService,
+					provide: GET_BOARD_SERVICE,
 					useValue: createMock<GetBoardServiceInterface>()
 				}
 			]
 		}).compile();
 
-		columnService = module.get<UpdateColumnService>(Columns.TYPES.services.UpdateColumnService);
-		deleteVoteService = module.get<DeleteVoteService>(Votes.TYPES.services.DeleteVoteService);
-		repositoryColumn = module.get<ColumnRepository>(Columns.TYPES.repositories.ColumnRepository);
-		socketService = module.get<SocketGateway>(SocketGateway);
-		getBoardServiceImpl = module.get<GetBoardService>(Boards.TYPES.services.GetBoardService);
+		columnService = module.get(Columns.TYPES.services.UpdateColumnService);
+		deleteVoteService = module.get(Votes.TYPES.services.DeleteVoteService);
+		repositoryColumn = module.get(Columns.TYPES.repositories.ColumnRepository);
+		socketService = module.get(SocketGateway);
+		getBoardServiceImpl = module.get(GET_BOARD_SERVICE);
 
 		jest.spyOn(Logger.prototype, 'error').mockImplementation(jest.fn);
 	});

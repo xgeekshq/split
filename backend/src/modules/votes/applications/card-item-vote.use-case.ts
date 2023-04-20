@@ -1,6 +1,5 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { TYPES } from '../interfaces/types';
-import * as BoardUsers from 'src/modules/boardUsers/interfaces/types';
 import { UseCase } from 'src/libs/interfaces/use-case.interface';
 import { CreateVoteServiceInterface } from '../interfaces/services/create.vote.service.interface';
 import { UpdateBoardUserServiceInterface } from 'src/modules/boardUsers/interfaces/services/update.board.user.service.interface';
@@ -12,6 +11,7 @@ import CardItemVoteUseCaseDto from '../dto/useCase/card-item-vote.use-case.dto';
 import { DeleteVoteServiceInterface } from '../interfaces/services/delete.vote.service.interface';
 import { getVotesFromCardItem } from '../utils/getVotesFromCardItem';
 import { DeleteFailedException } from 'src/libs/exceptions/deleteFailedBadRequestException';
+import { UPDATE_BOARD_USER_SERVICE } from 'src/modules/boardUsers/constants';
 
 @Injectable()
 export class CardItemVoteUseCase implements UseCase<CardItemVoteUseCaseDto, void> {
@@ -23,7 +23,7 @@ export class CardItemVoteUseCase implements UseCase<CardItemVoteUseCaseDto, void
 		private readonly deleteVoteService: DeleteVoteServiceInterface,
 		@Inject(TYPES.repositories.VoteRepository)
 		private readonly voteRepository: VoteRepositoryInterface,
-		@Inject(BoardUsers.TYPES.services.UpdateBoardUserService)
+		@Inject(UPDATE_BOARD_USER_SERVICE)
 		private readonly updateBoardUserService: UpdateBoardUserServiceInterface
 	) {}
 

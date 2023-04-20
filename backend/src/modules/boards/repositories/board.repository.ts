@@ -4,7 +4,7 @@ import { FilterQuery, ObjectId } from 'mongoose';
 import { Model, PopulateOptions } from 'mongoose';
 import { BoardPhases } from 'src/libs/enum/board.phases';
 import { MongoGenericRepository } from 'src/libs/repositories/mongo/mongo-generic.repository';
-import Board, { BoardDocument } from 'src/modules/boards/entities/board.schema';
+import Board from 'src/modules/boards/entities/board.schema';
 import Column from 'src/modules/columns/entities/column.schema';
 import { QueryType } from '../interfaces/findQuery';
 import { BoardDataPopulate, GetBoardDataPopulate } from '../utils/populate-board';
@@ -12,10 +12,10 @@ import { BoardRepositoryInterface } from './board.repository.interface';
 
 @Injectable()
 export class BoardRepository
-	extends MongoGenericRepository<BoardDocument>
+	extends MongoGenericRepository<Board>
 	implements BoardRepositoryInterface
 {
-	constructor(@InjectModel(Board.name) private model: Model<BoardDocument>) {
+	constructor(@InjectModel(Board.name) private model: Model<Board>) {
 		super(model);
 	}
 

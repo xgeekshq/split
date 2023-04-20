@@ -11,15 +11,15 @@ import {
 	ApiParam,
 	ApiTags
 } from '@nestjs/swagger';
-import { TYPES } from '../interfaces/types';
+import { IS_BOARD_PUBLIC_USE_CASE } from '../constants';
 import { UseCase } from 'src/libs/interfaces/use-case.interface';
 
 @ApiTags('PublicBoards')
 @Controller('publicBoards')
 export default class PublicBoardsController {
 	constructor(
-		@Inject(TYPES.applications.IsBoardPublicUseCase)
-		private isBoardPublicUseCase: UseCase<string, boolean>
+		@Inject(IS_BOARD_PUBLIC_USE_CASE)
+		private readonly isBoardPublicUseCase: UseCase<string, boolean>
 	) {}
 
 	@ApiOperation({ summary: 'Check if board is public' })
