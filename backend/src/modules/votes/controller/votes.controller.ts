@@ -21,7 +21,7 @@ import { UnauthorizedResponse } from 'src/libs/swagger/errors/unauthorized.swagg
 import BoardDto from 'src/modules/boards/dto/board.dto';
 import SocketGateway from 'src/modules/socket/gateway/socket.gateway';
 import VoteDto from '../dto/vote.dto';
-import { TYPES } from '../constants';
+import { CARD_GROUP_VOTE_USE_CASE, CARD_ITEM_VOTE_USE_CASE } from '../constants';
 import { UseCase } from 'src/libs/interfaces/use-case.interface';
 import CardItemVoteUseCaseDto from '../dto/useCase/card-item-vote.use-case.dto';
 import CardGroupVoteUseCaseDto from '../dto/useCase/card-group-vote.use-case.dto';
@@ -32,9 +32,9 @@ import CardGroupVoteUseCaseDto from '../dto/useCase/card-group-vote.use-case.dto
 @Controller('boards')
 export default class VotesController {
 	constructor(
-		@Inject(TYPES.applications.CardItemVoteUseCase)
+		@Inject(CARD_ITEM_VOTE_USE_CASE)
 		private readonly cardItemVoteUseCase: UseCase<CardItemVoteUseCaseDto, void>,
-		@Inject(TYPES.applications.CardGroupVoteUseCase)
+		@Inject(CARD_GROUP_VOTE_USE_CASE)
 		private readonly cardGroupVoteUseCase: UseCase<CardGroupVoteUseCaseDto, void>,
 		private readonly socketService: SocketGateway
 	) {}

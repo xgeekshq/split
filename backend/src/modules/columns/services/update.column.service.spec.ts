@@ -6,15 +6,14 @@ import { BadRequestException, Logger, NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { BoardFactory } from 'src/libs/test-utils/mocks/factories/board-factory.mock';
 import SocketGateway from 'src/modules/socket/gateway/socket.gateway';
-import { updateColumnService } from '../columns.providers';
 import * as Columns from '../interfaces/types';
-import * as Votes from 'src/modules/votes/constants';
 import { ColumnRepository } from '../repositories/column.repository';
 import GetBoardService from 'src/modules/boards/services/get.board.service';
 import UpdateColumnService from './update.column.service';
 import DeleteVoteService from 'src/modules/votes/services/delete.vote.service';
 import { DeleteVoteServiceInterface } from 'src/modules/votes/interfaces/services/delete.vote.service.interface';
 import { GET_BOARD_SERVICE } from 'src/modules/boards/constants';
+import { DELETE_VOTE_SERVICE } from 'src/modules/votes/constants';
 
 const fakeBoards = BoardFactory.createMany(2);
 
@@ -29,7 +28,7 @@ describe('UpdateColumnService', () => {
 		const module: TestingModule = await Test.createTestingModule({
 			imports: [EventEmitterModule.forRoot()],
 			providers: [
-				updateColumnService,
+				UpdateColumnService,
 				{
 					provide: Columns.TYPES.repositories.ColumnRepository,
 					useValue: createMock<ColumnRepository>()
@@ -39,7 +38,7 @@ describe('UpdateColumnService', () => {
 					useValue: createMock<SocketGateway>()
 				},
 				{
-					provide: Votes.TYPES.services.DeleteVoteService,
+					provide: DELETE_VOTE_SERVICE,
 					useValue: createMock<DeleteVoteServiceInterface>()
 				},
 				{
@@ -49,8 +48,8 @@ describe('UpdateColumnService', () => {
 			]
 		}).compile();
 
-		columnService = module.get(Columns.TYPES.services.UpdateColumnService);
-		deleteVoteService = module.get(Votes.TYPES.services.DeleteVoteService);
+		columnService = module.get(UpdateColumnService);
+		deleteVoteService = module.get(DELETE_VOTE_SERVICE);
 		repositoryColumn = module.get(Columns.TYPES.repositories.ColumnRepository);
 		socketService = module.get(SocketGateway);
 		getBoardServiceImpl = module.get(GET_BOARD_SERVICE);
