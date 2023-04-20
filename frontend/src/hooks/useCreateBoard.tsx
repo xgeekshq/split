@@ -248,14 +248,14 @@ const useCreateBoard = (team?: Team) => {
   return {
     createBoardData,
     setCreateBoardData,
-    handleAddTeam,
-    handleRemoveTeam,
-    canAdd,
-    canReduce,
+    resetBoardState,
+    teamMembers,
     generateSubBoard,
     handleSplitBoards,
-    teamMembers,
-    resetBoardState,
+    canAdd,
+    canReduce,
+    handleAddTeam,
+    handleRemoveTeam,
   };
 };
 

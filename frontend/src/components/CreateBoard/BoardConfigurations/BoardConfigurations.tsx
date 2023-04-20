@@ -1,11 +1,10 @@
 import { useFormContext } from 'react-hook-form';
-import { useRecoilState } from 'recoil';
 
 import Input from '@/components/Primitives/Inputs/Input/Input';
 import ConfigurationSwitch from '@/components/Primitives/Inputs/Switches/ConfigurationSwitch/ConfigurationSwitch';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Text from '@/components/Primitives/Text/Text';
-import { createBoardDataState } from '@/store/createBoard/atoms/create-board.atom';
+import useCreateBoard from '@hooks/useCreateBoard';
 
 const DEFAULT_MAX_VOTES = 6;
 
@@ -16,7 +15,7 @@ type BoardConfigurationsProps = {
 };
 
 const BoardConfigurations = ({ isRegularBoard }: BoardConfigurationsProps) => {
-  const [createBoardData, setCreateBoardData] = useRecoilState(createBoardDataState);
+  const { createBoardData, setCreateBoardData } = useCreateBoard();
   const { board } = createBoardData;
   const { register, unregister, clearErrors, setValue } = useFormContext();
 

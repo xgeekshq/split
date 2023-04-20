@@ -27,7 +27,7 @@ import useTeams from '@/hooks/teams/useTeams';
 import useBoard from '@/hooks/useBoard';
 import useCurrentSession from '@/hooks/useCurrentSession';
 import SchemaCreateRegularBoard from '@/schema/schemaCreateRegularBoard';
-import { createBoardDataState, createBoardTeam } from '@/store/createBoard/atoms/create-board.atom';
+import { createBoardTeam } from '@/store/createBoard/atoms/create-board.atom';
 import { toastState } from '@/store/toast/atom/toast.atom';
 import { usersListState } from '@/store/user.atom';
 import { StyledForm } from '@/styles/pages/pages.styles';
@@ -35,32 +35,7 @@ import { BoardUser, BoardUserDto } from '@/types/board/board.user';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
 import isEmpty from '@/utils/isEmpty';
-
-const defaultBoard = {
-  users: [],
-  team: null,
-  count: {
-    teamsCount: 2,
-    maxUsersCount: 2,
-  },
-  board: {
-    title: 'Default Board',
-    columns: defaultRegularColumns,
-    isPublic: false,
-    maxVotes: undefined,
-    dividedBoards: [],
-    recurrent: true,
-    users: [],
-    team: null,
-    isSubBoard: false,
-    boardNumber: 0,
-    hideCards: false,
-    hideVotes: false,
-    slackEnable: false,
-    addCards: true,
-    postAnonymously: false,
-  },
-};
+import useCreateBoard from '@hooks/useCreateBoard';
 
 const NewRegularBoard: NextPage = () => {
   const router = useRouter();
@@ -71,7 +46,6 @@ const NewRegularBoard: NextPage = () => {
   const [createBoard, setCreateBoard] = useState(false);
 
   const setToastState = useSetRecoilState(toastState);
-  const [boardState, setBoardState] = useRecoilState(createBoardDataState);
   const [usersList, setUsersList] = useRecoilState(usersListState);
   const setSelectedTeam = useSetRecoilState(createBoardTeam);
 
@@ -102,6 +76,7 @@ const NewRegularBoard: NextPage = () => {
   }, [allUsers, setUsersList, userId]);
 
   // Board Hook
+  const { createBoardData, resetBoardState } = useCreateBoard();
   const {
     createBoard: { status, mutate },
   } = useBoard({ autoFetchBoard: false });
@@ -115,7 +90,7 @@ const NewRegularBoard: NextPage = () => {
     reValidateMode: 'onChange',
     defaultValues: {
       text: '',
-      maxVotes: boardState.board.maxVotes,
+      maxVotes: createBoardData.board.maxVotes,
     },
     resolver: joiResolver(SchemaCreateRegularBoard),
   });
@@ -155,29 +130,29 @@ const NewRegularBoard: NextPage = () => {
 
     let responsibles: string[] = [];
 
-    const responsiblesFiltered = filterResponsibles(boardState.users);
+    const responsiblesFiltered = filterResponsibles(createBoardData.users);
     if (!session) return;
 
     if (!isEmpty(responsiblesFiltered)) {
       responsibles = [...responsiblesFiltered];
     }
 
-    if (isEmpty(boardState.users)) {
+    if (isEmpty(createBoardData.users)) {
       users.push({ role: BoardUserRoles.RESPONSIBLE, user: userId });
     } else {
-      boardState.users.forEach((boardUser) => {
+      createBoardData.users.forEach((boardUser) => {
         users.push({ role: boardUser.role, user: boardUser.user._id });
       });
     }
 
     mutate({
-      ...boardState.board,
+      ...createBoardData.board,
       columns: defaultRegularColumns,
       users,
-      title: title || defaultBoard.board.title,
+      title: title || 'Default Board',
       dividedBoards: [],
       maxVotes,
-      maxUsers: boardState.count.maxUsersCount,
+      maxUsers: createBoardData.count.maxUsersCount,
       recurrent: false,
       responsibles,
       phase: undefined,
@@ -191,18 +166,18 @@ const NewRegularBoard: NextPage = () => {
     }
 
     mutate({
-      ...boardState.board,
+      ...createBoardData.board,
       columns: defaultRegularColumns,
       users,
-      title: defaultBoard.board.title,
+      title: 'Default Board',
       dividedBoards: [],
-      maxUsers: boardState.count.maxUsersCount,
+      maxUsers: createBoardData.count.maxUsersCount,
       recurrent: false,
       responsibles: [userId],
     });
   };
 
-  const hasResponsibles = !isEmpty(filterResponsibles(boardState.users));
+  const hasResponsibles = !isEmpty(filterResponsibles(createBoardData.users));
 
   useEffect(() => {
     if (status === 'success') {
@@ -213,16 +188,16 @@ const NewRegularBoard: NextPage = () => {
         type: ToastStateEnum.SUCCESS,
       });
 
-      setBoardState(defaultBoard);
+      resetBoardState();
       setSelectedTeam(undefined);
       router.push('/boards');
     }
 
     return () => {
-      setBoardState(defaultBoard);
+      resetBoardState();
       setSelectedTeam(undefined);
     };
-  }, [router, setToastState, setSelectedTeam, setBoardState, status]);
+  }, [router, setToastState, setSelectedTeam, resetBoardState, status]);
 
   if (!session || !userBasedTeams) return null;
 

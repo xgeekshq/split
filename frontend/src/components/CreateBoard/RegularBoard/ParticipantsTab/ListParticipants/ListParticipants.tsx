@@ -3,12 +3,12 @@ import { useRecoilState, useSetRecoilState } from 'recoil';
 
 import UserListDialog from '@/components/Primitives/Dialogs/UserListDialog/UserListDialog';
 import useCurrentSession from '@/hooks/useCurrentSession';
-import { createBoardDataState } from '@/store/createBoard/atoms/create-board.atom';
 import { toastState } from '@/store/toast/atom/toast.atom';
 import { usersListState } from '@/store/user.atom';
 import { UserList } from '@/types/team/userList';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
+import useCreateBoard from '@hooks/useCreateBoard';
 
 type ListParticipantsProps = {
   setIsOpen: Dispatch<SetStateAction<boolean>>;
@@ -19,8 +19,8 @@ const ListParticipants = ({ isOpen, setIsOpen }: ListParticipantsProps) => {
   const { userId } = useCurrentSession();
 
   const [usersList, setUsersList] = useRecoilState(usersListState);
-  const [createBoardData, setCreateBoardData] = useRecoilState(createBoardDataState);
   const setToastState = useSetRecoilState(toastState);
+  const { createBoardData, setCreateBoardData } = useCreateBoard();
 
   const saveParticipants = (checkedUserList: UserList[]) => {
     const checkedUsersListToBeSorted = [...checkedUserList];

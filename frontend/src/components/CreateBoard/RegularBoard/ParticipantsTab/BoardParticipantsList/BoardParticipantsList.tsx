@@ -1,5 +1,5 @@
 import { MouseEvent, useState } from 'react';
-import { useRecoilState, useSetRecoilState } from 'recoil';
+import { useSetRecoilState } from 'recoil';
 
 import ParticipantCard from '@/components/Board/RegularBoard/ParticipantsList/ParticipantCard';
 import ListParticipants from '@/components/CreateBoard/RegularBoard/ParticipantsTab/ListParticipants/ListParticipants';
@@ -8,11 +8,11 @@ import Button from '@/components/Primitives/Inputs/Button/Button';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Text from '@/components/Primitives/Text/Text';
 import useCurrentSession from '@/hooks/useCurrentSession';
-import { createBoardDataState } from '@/store/createBoard/atoms/create-board.atom';
 import { usersListState } from '@/store/user.atom';
 import { BoardUser } from '@/types/board/board.user';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import isEmpty from '@/utils/isEmpty';
+import useCreateBoard from '@hooks/useCreateBoard';
 
 type BoardParticipantsListProps = {
   isPageLoading: boolean;
@@ -21,7 +21,7 @@ type BoardParticipantsListProps = {
 const BoardParticipantsList = ({ isPageLoading }: BoardParticipantsListProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const { userId, isSAdmin } = useCurrentSession();
-  const [createBoardData, setCreateBoardData] = useRecoilState(createBoardDataState);
+  const { createBoardData, setCreateBoardData } = useCreateBoard();
   const setUsersList = useSetRecoilState(usersListState);
 
   const handleOpen = (event: MouseEvent) => {

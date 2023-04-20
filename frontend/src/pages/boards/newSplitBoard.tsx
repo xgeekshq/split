@@ -20,7 +20,6 @@ import CreateHeader from '@/components/Primitives/Layout/CreateHeader/CreateHead
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import TipBar from '@/components/Primitives/Layout/TipBar/TipBar';
 import LoadingPage from '@/components/Primitives/Loading/Page/Page';
-import { defaultSplitColumns } from '@/constants/boards/defaultColumns';
 import { TEAMS_KEY } from '@/constants/react-query/keys';
 import { DASHBOARD_ROUTE, ROUTES } from '@/constants/routes';
 import SPLIT_BOARD_TIPS from '@/constants/tips/splitBoard';
@@ -28,11 +27,7 @@ import useTeams from '@/hooks/teams/useTeams';
 import useBoard from '@/hooks/useBoard';
 import useCurrentSession from '@/hooks/useCurrentSession';
 import SchemaCreateBoard from '@/schema/schemaCreateBoardForm';
-import {
-  createBoardDataState,
-  createBoardError,
-  createBoardTeam,
-} from '@/store/createBoard/atoms/create-board.atom';
+import { createBoardError, createBoardTeam } from '@/store/createBoard/atoms/create-board.atom';
 import { toastState } from '@/store/toast/atom/toast.atom';
 import { StyledForm } from '@/styles/pages/pages.styles';
 import { CreateBoardDto } from '@/types/board/board';
@@ -40,32 +35,7 @@ import { BoardPhases } from '@/utils/enums/board.phases';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
 import isEmpty from '@/utils/isEmpty';
-
-const defaultBoard = {
-  users: [],
-  team: null,
-  count: {
-    teamsCount: 2,
-    maxUsersCount: 2,
-  },
-  board: {
-    title: 'Main Board -',
-    columns: defaultSplitColumns,
-    isPublic: false,
-    maxVotes: undefined,
-    dividedBoards: [],
-    recurrent: true,
-    users: [],
-    team: null,
-    isSubBoard: false,
-    boardNumber: 0,
-    hideCards: false,
-    hideVotes: false,
-    slackEnable: false,
-    addCards: true,
-    postAnonymously: false,
-  },
-};
+import useCreateBoard from '@hooks/useCreateBoard';
 
 const NewSplitBoard: NextPage = () => {
   const router = useRouter();
@@ -78,11 +48,11 @@ const NewSplitBoard: NextPage = () => {
 
   // Recoil Atoms
   const setToastState = useSetRecoilState(toastState);
-  const [boardState, setBoardState] = useRecoilState(createBoardDataState);
   const [haveError, setHaveError] = useRecoilState(createBoardError);
   const [selectedTeam, setSelectedTeam] = useRecoilState(createBoardTeam);
 
   // User Board Hook
+  const { createBoardData, resetBoardState } = useCreateBoard();
   const {
     createBoard: { status, mutate },
   } = useBoard({ autoFetchBoard: false });
@@ -104,9 +74,9 @@ const NewSplitBoard: NextPage = () => {
     reValidateMode: 'onChange',
     defaultValues: {
       text: '',
-      maxVotes: boardState.board.maxVotes,
+      maxVotes: createBoardData.board.maxVotes,
       team: undefined,
-      slackEnable: boardState.board.slackEnable,
+      slackEnable: createBoardData.board.slackEnable,
       maxTeams: undefined,
       maxUsers: undefined,
     },
@@ -138,34 +108,36 @@ const NewSplitBoard: NextPage = () => {
     maxVotes?: number,
   ) => {
     const responsibles: string[] = [];
-    const newDividedBoards: CreateBoardDto[] = boardState.board.dividedBoards.map((subBoard) => {
-      const newSubBoard: CreateBoardDto = { ...subBoard, users: [], dividedBoards: [] };
-      newSubBoard.hideCards = boardState.board.hideCards;
-      newSubBoard.hideVotes = boardState.board.hideVotes;
-      newSubBoard.maxVotes = maxVotes;
+    const newDividedBoards: CreateBoardDto[] = createBoardData.board.dividedBoards.map(
+      (subBoard) => {
+        const newSubBoard: CreateBoardDto = { ...subBoard, users: [], dividedBoards: [] };
+        newSubBoard.hideCards = createBoardData.board.hideCards;
+        newSubBoard.hideVotes = createBoardData.board.hideVotes;
+        newSubBoard.maxVotes = maxVotes;
 
-      newSubBoard.users = subBoard.users.map((boardUser) => ({
-        user: boardUser.user._id,
-        role: boardUser.role,
-      }));
+        newSubBoard.users = subBoard.users.map((boardUser) => ({
+          user: boardUser.user._id,
+          role: boardUser.role,
+        }));
 
-      const responsible = newSubBoard.users.find(
-        (user) => user.role === BoardUserRoles.RESPONSIBLE,
-      );
-      if (!isEmpty(responsible)) {
-        responsibles.push(responsible.user);
-      }
+        const responsible = newSubBoard.users.find(
+          (user) => user.role === BoardUserRoles.RESPONSIBLE,
+        );
+        if (!isEmpty(responsible)) {
+          responsibles.push(responsible.user);
+        }
 
-      return newSubBoard;
-    });
+        return newSubBoard;
+      },
+    );
 
-    const boardUsersDtos = boardState.users.map((boardUser) => ({
+    const boardUsersDtos = createBoardData.users.map((boardUser) => ({
       user: boardUser.user._id,
       role: boardUser.role,
     }));
 
     mutate({
-      ...boardState.board,
+      ...createBoardData.board,
       users: boardUsersDtos,
       title,
       dividedBoards: newDividedBoards,
@@ -187,17 +159,17 @@ const NewSplitBoard: NextPage = () => {
         type: ToastStateEnum.SUCCESS,
       });
 
-      setBoardState(defaultBoard);
+      resetBoardState();
       setSelectedTeam(undefined);
       router.push('/boards');
     }
 
     return () => {
-      setBoardState(defaultBoard);
+      resetBoardState();
       setSelectedTeam(undefined);
       setHaveError(false);
     };
-  }, [status, router, setToastState, setSelectedTeam, setBoardState, setHaveError]);
+  }, [status, router, setToastState, setSelectedTeam, resetBoardState, setHaveError]);
 
   if (!session || !userBasedTeams) return null;
 

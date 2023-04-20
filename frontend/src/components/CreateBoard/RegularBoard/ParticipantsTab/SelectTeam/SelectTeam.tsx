@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo } from 'react';
 import { useRouter } from 'next/router';
-import { useRecoilState, useSetRecoilState } from 'recoil';
+import { useSetRecoilState } from 'recoil';
 
 import Icon from '@/components/Primitives/Icons/Icon/Icon';
 import {
@@ -14,12 +14,12 @@ import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Text from '@/components/Primitives/Text/Text';
 import useTeams from '@/hooks/teams/useTeams';
 import useCurrentSession from '@/hooks/useCurrentSession';
-import { createBoardDataState } from '@/store/createBoard/atoms/create-board.atom';
 import { usersListState } from '@/store/user.atom';
 import { Team } from '@/types/team/team';
 import { UserList } from '@/types/team/userList';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import { TeamUserRoles } from '@/utils/enums/team.user.roles';
+import useCreateBoard from '@hooks/useCreateBoard';
 
 const SelectTeam = () => {
   const { userId, isSAdmin } = useCurrentSession();
@@ -27,7 +27,7 @@ const SelectTeam = () => {
   const routerTeam = router.query.team as string;
 
   const setUsersList = useSetRecoilState(usersListState);
-  const [boardState, setBoardState] = useRecoilState(createBoardDataState);
+  const { createBoardData, setCreateBoardData } = useCreateBoard();
   const teamsQuery = useTeams(isSAdmin);
   const teams = teamsQuery.data ?? [];
 
@@ -79,7 +79,7 @@ const SelectTeam = () => {
 
       console.log(users);
 
-      setBoardState((prev) => ({
+      setCreateBoardData((prev) => ({
         ...prev,
         team: selectedTeam,
         users: users,
@@ -93,7 +93,7 @@ const SelectTeam = () => {
         })),
       );
     },
-    [userId, setBoardState, setUsersList],
+    [userId, setCreateBoardData, setUsersList],
   );
 
   const handleTeamChange = (value: string) => {
@@ -115,7 +115,7 @@ const SelectTeam = () => {
     <Flex css={{ flex: 1 }} direction="column">
       <Select
         css={{ width: '100%', height: '$64' }}
-        defaultValue={teamsNames.find((option) => option.value === boardState.team?.id)?.value}
+        defaultValue={teamsNames.find((option) => option.value === createBoardData.team?.id)?.value}
         disabled={availableTeams.length === 0}
         onValueChange={(selectedOption: string) => {
           handleTeamChange(selectedOption);
@@ -123,7 +123,7 @@ const SelectTeam = () => {
       >
         <SelectTrigger css={{ padding: '$24' }}>
           <Flex direction="column">
-            <Text color="primary300" size={boardState.team ? 'sm' : 'md'}>
+            <Text color="primary300" size={createBoardData.team ? 'sm' : 'md'}>
               {availableTeams.length === 0 ? 'No teams available' : 'Select Team'}
             </Text>
             <SelectValue />
