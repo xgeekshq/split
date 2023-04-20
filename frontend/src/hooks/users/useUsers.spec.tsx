@@ -1,10 +1,11 @@
 import { renderHook, waitFor } from '@testing-library/react';
 
 import { getAllUsers } from '@/api/userService';
+import { createSuccessMessage } from '@/constants/toasts';
+import { ErrorMessages } from '@/constants/toasts/users-messages';
 import useUsers from '@/hooks/users/useUsers';
 import { toastState } from '@/store/toast/atom/toast.atom';
 import { User } from '@/types/user/user';
-import { ToastStateEnum } from '@/utils/enums/toast-types';
 import { UserFactory } from '@/utils/factories/user';
 import {
   renderHookWithProviders,
@@ -49,11 +50,7 @@ describe('hooks/users/useUsers', () => {
     await waitFor(() => {
       expect(result.current.isError).toBeTruthy();
       expect(result.current.data).not.toBeDefined();
-      expect(recoilHandler).toHaveBeenCalledWith({
-        open: true,
-        content: 'Error getting the users',
-        type: ToastStateEnum.ERROR,
-      });
+      expect(recoilHandler).toHaveBeenCalledWith(createSuccessMessage(ErrorMessages.GET));
     });
   });
 });

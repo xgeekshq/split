@@ -29,6 +29,7 @@ const TeamRolePopover = React.memo(({ handleRoleChange }: TeamRolePopoverProps) 
         <PopoverItem
           align="end"
           css={{ pr: '$16', height: '$100' }}
+          data-testid="teamMemberPopover"
           direction="column"
           onClick={() => {
             handleRoleChange(TeamUserRoles.MEMBER);
@@ -47,6 +48,7 @@ const TeamRolePopover = React.memo(({ handleRoleChange }: TeamRolePopoverProps) 
         <PopoverItem
           align="end"
           css={{ pr: '$16', height: '$100' }}
+          data-testid="teamAdminPopover"
           direction="column"
           onClick={() => {
             handleRoleChange(TeamUserRoles.ADMIN);
@@ -65,6 +67,7 @@ const TeamRolePopover = React.memo(({ handleRoleChange }: TeamRolePopoverProps) 
         <PopoverItem
           align="end"
           css={{ pr: '$16', height: '$100' }}
+          data-testid="teamStakeholderPopover"
           direction="column"
           onClick={() => {
             handleRoleChange(TeamUserRoles.STAKEHOLDER);

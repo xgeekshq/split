@@ -7,11 +7,11 @@ import Button from '@/components/Primitives/Inputs/Button/Button';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Text from '@/components/Primitives/Text/Text';
 import TeamsDialog from '@/components/Users/User/TeamsDialog/TeamsDialog';
+import { ROUTES } from '@/constants/routes';
 import useTeamsWithoutUser from '@/hooks/teams/useTeamsWithoutUser';
 import { BreadcrumbType } from '@/types/board/Breadcrumb';
 import { TeamChecked } from '@/types/team/team';
 import { User } from '@/types/user/user';
-import { ROUTES } from '@/utils/routes';
 
 export type UserHeaderProps = {
   user: User;

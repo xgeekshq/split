@@ -1,9 +1,9 @@
 import { fireEvent, waitFor } from '@testing-library/react';
 
 import TeamsList, { TeamsListProps } from '@/components/Teams/TeamsList/TeamList';
+import { ROUTES } from '@/constants/routes';
 import { Team } from '@/types/team/team';
 import { TeamFactory } from '@/utils/factories/team';
-import { ROUTES } from '@/utils/routes';
 import { libraryMocks } from '@/utils/testing/mocks';
 import { renderWithProviders } from '@/utils/testing/renderWithProviders';
 

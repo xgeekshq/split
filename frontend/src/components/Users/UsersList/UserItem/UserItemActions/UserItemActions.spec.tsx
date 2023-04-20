@@ -5,10 +5,10 @@ import { fireEvent, waitFor } from '@testing-library/react';
 import UserItemActions, {
   UserItemActionsProps,
 } from '@/components/Users/UsersList/UserItem/UserItemActions/UserItemActions';
+import { ROUTES } from '@/constants/routes';
 import useDeleteUser from '@/hooks/users/useDeleteUser';
 import useUpdateUser from '@/hooks/users/useUpdateUser';
 import { UserFactory } from '@/utils/factories/user';
-import { ROUTES } from '@/utils/routes';
 import { libraryMocks } from '@/utils/testing/mocks';
 import { renderWithProviders } from '@/utils/testing/renderWithProviders';
 

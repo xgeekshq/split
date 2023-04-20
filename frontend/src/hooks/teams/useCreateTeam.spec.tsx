@@ -1,10 +1,11 @@
 import { renderHook, waitFor } from '@testing-library/react';
 
 import { createTeamRequest } from '@/api/teamService';
+import { createErrorMessage, createSuccessMessage } from '@/constants/toasts';
+import { ErrorMessages, SuccessMessages } from '@/constants/toasts/teams-messages';
 import useCreateTeam from '@/hooks/teams/useCreateTeam';
 import { toastState } from '@/store/toast/atom/toast.atom';
 import { Team } from '@/types/team/team';
-import { ToastStateEnum } from '@/utils/enums/toast-types';
 import { CreateTeamFactory, TeamFactory } from '@/utils/factories/team';
 import {
   renderHookWithProviders,
@@ -40,11 +41,7 @@ describe('Hooks/Teams/useCreateTeam', () => {
     await waitFor(() => expect(result.current.isSuccess).toBeTruthy());
 
     expect(mockCreateTeam).toBeCalledWith(teamToCreate);
-    expect(recoilHandler).toHaveBeenCalledWith({
-      open: true,
-      content: 'The team was successfully created.',
-      type: ToastStateEnum.SUCCESS,
-    });
+    expect(recoilHandler).toHaveBeenCalledWith(createSuccessMessage(SuccessMessages.CREATE));
   });
 
   it('should set toast error', async () => {
@@ -65,11 +62,7 @@ describe('Hooks/Teams/useCreateTeam', () => {
     await waitFor(() => {
       expect(result.current.isError).toBeTruthy();
       expect(result.current.data).not.toBeDefined();
-      expect(recoilHandler).toHaveBeenCalledWith({
-        open: true,
-        content: 'Error creating the team',
-        type: ToastStateEnum.ERROR,
-      });
+      expect(recoilHandler).toHaveBeenCalledWith(createErrorMessage(ErrorMessages.CREATE));
     });
   });
 });

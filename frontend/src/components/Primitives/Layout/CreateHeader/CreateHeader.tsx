@@ -21,7 +21,7 @@ const CreateHeader = ({ title, disableBack, handleBack }: CreateHeaderProps) => 
     <Text color="primary800" fontWeight="bold" heading={3}>
       {title}
     </Text>
-    <Button isIcon disabled={disableBack} onClick={handleBack} size="lg">
+    <Button isIcon data-testid="backButton" disabled={disableBack} onClick={handleBack} size="lg">
       <Icon css={{ color: '$primaryBase' }} name="close" />
     </Button>
   </Header>
