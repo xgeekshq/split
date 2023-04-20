@@ -14,16 +14,10 @@ import Input from '@/components/Primitives/Inputs/Input/Input';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Text from '@/components/Primitives/Text/Text';
 import useCreateBoard from '@/hooks/useCreateBoard';
-import { Team } from '@/types/team/team';
 
-type QuickEditSubTeamsProps = {
-  team: Team;
-};
-
-const QuickEditSubTeams = ({ team }: QuickEditSubTeamsProps) => {
+const QuickEditSubTeams = () => {
   const { register, getValues, setValue } = useFormContext();
-  const { createBoardData, setCreateBoardData, handleSplitBoards, teamMembers } =
-    useCreateBoard(team);
+  const { createBoardData, setCreateBoardData, handleSplitBoards, teamMembers } = useCreateBoard();
   const {
     count: { teamsCount, maxUsersCount },
   } = createBoardData;

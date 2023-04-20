@@ -7,23 +7,20 @@ import SubTeamsConfigurations from '@/components/CreateBoard/SplitBoard/SubTeams
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Tab, { TabList } from '@/components/Primitives/Tab/Tab';
 import Text from '@/components/Primitives/Text/Text';
-import { createBoardError, createBoardTeam } from '@/store/createBoard/atoms/create-board.atom';
+import { createBoardError } from '@/store/createBoard/atoms/create-board.atom';
 import { toastState } from '@/store/toast/atom/toast.atom';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
-import { usePrevious } from '@/utils/previousState';
 
 const SettingsTabs = () => {
   // Recoil Atoms
   const haveError = useRecoilValue(createBoardError);
   const setToastState = useSetRecoilState(toastState);
-  const selectedTeam = useRecoilValue(createBoardTeam);
-  const prevTeam = usePrevious(selectedTeam?.id);
 
   const tabList: TabList[] = [
     {
       value: 'teams',
       label: 'Team/Sub-teams configurations',
-      content: <SubTeamsConfigurations previousTeam={prevTeam} />,
+      content: <SubTeamsConfigurations />,
     },
     {
       value: 'config',

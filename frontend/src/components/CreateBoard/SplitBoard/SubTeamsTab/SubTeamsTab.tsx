@@ -9,10 +9,11 @@ import SelectTeam from '@/components/CreateBoard/SplitBoard/SubTeamsTab/SelectTe
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import useTeams from '@/hooks/teams/useTeams';
 import useCurrentSession from '@/hooks/useCurrentSession';
-import { createBoardError, createBoardTeam } from '@/store/createBoard/atoms/create-board.atom';
+import { createBoardError } from '@/store/createBoard/atoms/create-board.atom';
 import { TeamUser } from '@/types/team/team.user';
 import { User } from '@/types/user/user';
 import { TeamUserRoles } from '@/utils/enums/team.user.roles';
+import useCreateBoard from '@hooks/useCreateBoard';
 
 type SubTeamsTabProps = {
   previousTeam?: string;
@@ -21,17 +22,19 @@ type SubTeamsTabProps = {
 const SubTeamsTab = React.memo<SubTeamsTabProps>(({ previousTeam }) => {
   const { isSAdmin } = useCurrentSession();
   const [stakeholders, setStakeholders] = useState<User[]>([]);
-  const selectedTeam = useRecoilValue(createBoardTeam);
   const haveError = useRecoilValue(createBoardError);
 
+  const { createBoardData } = useCreateBoard();
   const { data: teams } = useTeams(isSAdmin);
 
   useEffect(() => {
-    if (selectedTeam) {
+    if (createBoardData.team) {
       const isStakeholder = (userTeam: TeamUser): boolean =>
         userTeam.role === TeamUserRoles.STAKEHOLDER;
       const getStakeholder = ({ user }: TeamUser): User => user;
-      const stakeholdersFound = selectedTeam.users.filter(isStakeholder).map(getStakeholder);
+      const stakeholdersFound = createBoardData.team.users
+        .filter(isStakeholder)
+        .map(getStakeholder);
 
       const stakeholdersNames = stakeholdersFound.map((stakeholderList) => ({
         ...stakeholderList,
@@ -47,7 +50,7 @@ const SubTeamsTab = React.memo<SubTeamsTabProps>(({ previousTeam }) => {
     }
 
     return () => setStakeholders([]);
-  }, [teams, selectedTeam]);
+  }, [teams, createBoardData.team]);
 
   return (
     <Flex direction="column">
@@ -55,12 +58,12 @@ const SubTeamsTab = React.memo<SubTeamsTabProps>(({ previousTeam }) => {
         <SelectTeam previousTeam={previousTeam} />
         <BoardUsersDropdown haveError={haveError} title="Stakeholders" users={stakeholders} />
       </Flex>
-      {!haveError && selectedTeam ? (
+      {!haveError && createBoardData.team ? (
         <>
           <Flex justify="end">
-            <QuickEditSubTeams team={selectedTeam} />
+            <QuickEditSubTeams />
           </Flex>
-          <BoardSection team={selectedTeam} />
+          <BoardSection />
         </>
       ) : (
         <Flex css={{ mt: '$36' }}>

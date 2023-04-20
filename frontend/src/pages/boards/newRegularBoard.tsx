@@ -27,7 +27,6 @@ import useTeams from '@/hooks/teams/useTeams';
 import useBoard from '@/hooks/useBoard';
 import useCurrentSession from '@/hooks/useCurrentSession';
 import SchemaCreateRegularBoard from '@/schema/schemaCreateRegularBoard';
-import { createBoardTeam } from '@/store/createBoard/atoms/create-board.atom';
 import { toastState } from '@/store/toast/atom/toast.atom';
 import { usersListState } from '@/store/user.atom';
 import { StyledForm } from '@/styles/pages/pages.styles';
@@ -47,7 +46,6 @@ const NewRegularBoard: NextPage = () => {
 
   const setToastState = useSetRecoilState(toastState);
   const [usersList, setUsersList] = useRecoilState(usersListState);
-  const setSelectedTeam = useSetRecoilState(createBoardTeam);
 
   // Team  Hook
   const { data: userBasedTeams } = useTeams(isSAdmin);
@@ -189,15 +187,13 @@ const NewRegularBoard: NextPage = () => {
       });
 
       resetBoardState();
-      setSelectedTeam(undefined);
       router.push('/boards');
     }
 
     return () => {
       resetBoardState();
-      setSelectedTeam(undefined);
     };
-  }, [router, setToastState, setSelectedTeam, resetBoardState, status]);
+  }, [router, setToastState, resetBoardState, status]);
 
   if (!session || !userBasedTeams) return null;
 

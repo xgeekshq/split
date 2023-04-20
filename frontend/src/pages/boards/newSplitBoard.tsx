@@ -27,7 +27,7 @@ import useTeams from '@/hooks/teams/useTeams';
 import useBoard from '@/hooks/useBoard';
 import useCurrentSession from '@/hooks/useCurrentSession';
 import SchemaCreateBoard from '@/schema/schemaCreateBoardForm';
-import { createBoardError, createBoardTeam } from '@/store/createBoard/atoms/create-board.atom';
+import { createBoardError } from '@/store/createBoard/atoms/create-board.atom';
 import { toastState } from '@/store/toast/atom/toast.atom';
 import { StyledForm } from '@/styles/pages/pages.styles';
 import { CreateBoardDto } from '@/types/board/board';
@@ -49,10 +49,9 @@ const NewSplitBoard: NextPage = () => {
   // Recoil Atoms
   const setToastState = useSetRecoilState(toastState);
   const [haveError, setHaveError] = useRecoilState(createBoardError);
-  const [selectedTeam, setSelectedTeam] = useRecoilState(createBoardTeam);
 
   // User Board Hook
-  const { createBoardData, resetBoardState } = useCreateBoard();
+  const { createBoardData, setCreateBoardData, resetBoardState } = useCreateBoard();
   const {
     createBoard: { status, mutate },
   } = useBoard({ autoFetchBoard: false });
@@ -83,9 +82,15 @@ const NewSplitBoard: NextPage = () => {
     resolver: joiResolver(SchemaCreateBoard),
   });
 
-  if (routerTeam && !selectedTeam) {
+  if (routerTeam && !createBoardData.team) {
     const foundTeam = userBasedTeams.find((team) => team.id === routerTeam);
-    setSelectedTeam(foundTeam);
+    if (foundTeam) {
+      setCreateBoardData((prev) => ({
+        ...prev,
+        team: foundTeam,
+        board: { ...prev.board, team: foundTeam.id },
+      }));
+    }
   }
 
   // Handle back to boards list page
@@ -160,16 +165,14 @@ const NewSplitBoard: NextPage = () => {
       });
 
       resetBoardState();
-      setSelectedTeam(undefined);
       router.push('/boards');
     }
 
     return () => {
       resetBoardState();
-      setSelectedTeam(undefined);
       setHaveError(false);
     };
-  }, [status, router, setToastState, setSelectedTeam, resetBoardState, setHaveError]);
+  }, [status, router, setToastState, resetBoardState, setHaveError]);
 
   if (!session || !userBasedTeams) return null;
 

@@ -10,11 +10,6 @@ export const createBoardError = atom({
   default: false,
 });
 
-export const createBoardTeam = atom<Team | undefined>({
-  key: 'createBoardTeam',
-  default: undefined,
-});
-
 export interface CreateBoardData {
   count: {
     teamsCount: number;

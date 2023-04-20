@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useMemo } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { useRouter } from 'next/router';
-import { useRecoilState, useSetRecoilState } from 'recoil';
+import { useSetRecoilState } from 'recoil';
 
 import Icon from '@/components/Primitives/Icons/Icon/Icon';
 import {
@@ -17,7 +17,7 @@ import { MIN_MEMBERS } from '@/constants';
 import useTeams from '@/hooks/teams/useTeams';
 import useCreateBoard from '@/hooks/useCreateBoard';
 import useCurrentSession from '@/hooks/useCurrentSession';
-import { createBoardError, createBoardTeam } from '@/store/createBoard/atoms/create-board.atom';
+import { createBoardError } from '@/store/createBoard/atoms/create-board.atom';
 import { Team } from '@/types/team/team';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import { TeamUserRoles } from '@/utils/enums/team.user.roles';
@@ -32,9 +32,8 @@ const SelectTeam = ({ previousTeam }: SelectTeamProps) => {
   const router = useRouter();
   const routerTeam = router.query.team as string;
 
-  const [selectedTeam, setSelectedTeam] = useRecoilState(createBoardTeam);
   const setHaveError = useSetRecoilState(createBoardError);
-  const { handleSplitBoards, setCreateBoardData, teamMembers } = useCreateBoard(selectedTeam);
+  const { handleSplitBoards, createBoardData, setCreateBoardData } = useCreateBoard();
   const teamsQuery = useTeams(isSAdmin);
   const teams = teamsQuery.data ?? [];
 
@@ -54,7 +53,6 @@ const SelectTeam = ({ previousTeam }: SelectTeamProps) => {
     );
   const availableTeams = teams.filter((team) => hasPermissions(team));
 
-  const teamMembersCount = teamMembers?.length ?? 0;
   const message =
     availableTeams.length === 0
       ? ' In order to create a team board, you must be team-admin or stakeholder of at least one team.'
@@ -70,16 +68,6 @@ const SelectTeam = ({ previousTeam }: SelectTeamProps) => {
     return undefined;
   }, [message, isValueEmpty]);
 
-  const handleTeamChange = (value: string) => {
-    clearErrors();
-    const foundTeam = teams.find((team) => team.id === value);
-
-    if (!foundTeam) return;
-
-    setValue('team', foundTeam.id);
-    setSelectedTeam(foundTeam);
-  };
-
   const teamsNames = useMemo(
     () =>
       availableTeams.map((team) => ({
@@ -89,60 +77,83 @@ const SelectTeam = ({ previousTeam }: SelectTeamProps) => {
     [availableTeams],
   );
 
-  const verifyIfCanCreateBoard = () => {
-    if (!selectedTeam) {
-      return false;
-    }
-
-    const haveMinMembers =
-      selectedTeam.users.filter((user) => user.role !== TeamUserRoles.STAKEHOLDER).length >=
-      MIN_MEMBERS;
-
-    return haveMinMembers;
-  };
-
   const createBoard = useCallback(() => {
-    if (!selectedTeam) return;
-
+    const teamMembersCount = createBoardData.team?.users.length ?? 0;
     const maxUsersCount = Math.ceil(teamMembersCount / 2);
     const teamsCount = Math.ceil(teamMembersCount / maxUsersCount);
 
-    const users = selectedTeam.users.flatMap((teamUser) => {
-      if (teamUser.role !== TeamUserRoles.STAKEHOLDER) return [];
+    const users =
+      createBoardData.team?.users.flatMap((teamUser) => {
+        if (teamUser.role !== TeamUserRoles.STAKEHOLDER) return [];
 
-      return [
-        {
-          user: teamUser.user,
-          role: BoardUserRoles.MEMBER,
-          votesCount: 0,
-        },
-      ];
-    });
+        return [
+          {
+            user: teamUser.user,
+            role: BoardUserRoles.MEMBER,
+            votesCount: 0,
+          },
+        ];
+      }) ?? [];
 
-    if (previousTeam !== selectedTeam.id) {
-      setCreateBoardData((prev) => ({
-        ...prev,
-        users,
-        board: { ...prev.board, dividedBoards: handleSplitBoards(2) },
-        count: {
-          ...prev.count,
-          teamsCount,
-          maxUsersCount,
-        },
-      }));
-    }
-  }, [handleSplitBoards, previousTeam, selectedTeam, setCreateBoardData, teamMembersCount]);
+    console.log('4 -> ', users);
+    console.log(previousTeam, createBoardData.team);
+
+    // if (previousTeam !== createBoardData.team?.id) {
+    setCreateBoardData((prev) => ({
+      ...prev,
+      users,
+      board: { ...prev.board, dividedBoards: handleSplitBoards(2) },
+      count: {
+        ...prev.count,
+        teamsCount,
+        maxUsersCount,
+      },
+    }));
+    // }
+  }, [handleSplitBoards, previousTeam, setCreateBoardData, createBoardData.team]);
+
+  const handleTeamChange = (value: string) => {
+    clearErrors();
+    const foundTeam = teams.find((team) => team.id === value);
+
+    if (!foundTeam) return;
+
+    setValue('team', foundTeam.id);
+    setCreateBoardData((prev) => ({
+      ...prev,
+      team: foundTeam,
+      board: { ...prev.board, team: foundTeam.id },
+    }));
+
+    console.log('1 -> ', foundTeam);
+  };
+
+  // useEffect(() => {
+  //   if (selectedTeam) {
+  //     const canCreateBoard = verifyIfCanCreateBoard();
+  //     setHaveError(!canCreateBoard);
+
+  //     if (canCreateBoard) {
+  //       createBoard();
+  //     }
+  //   }
+  // }, [routerTeam, selectedTeam, verifyIfCanCreateBoard, createBoard]);
 
   useEffect(() => {
-    if (selectedTeam) {
-      const canCreateBoard = verifyIfCanCreateBoard();
-      setHaveError(!canCreateBoard);
+    if (!createBoardData.team) return;
 
-      if (canCreateBoard) {
-        createBoard();
-      }
-    }
-  }, [routerTeam, selectedTeam, verifyIfCanCreateBoard, createBoard]);
+    console.log('2 -> ', createBoardData.team);
+
+    const haveMinMembers =
+      createBoardData.team.users.filter((user) => user.role !== TeamUserRoles.STAKEHOLDER).length >=
+      MIN_MEMBERS;
+    setHaveError(!haveMinMembers);
+
+    console.log('3 -> ', haveMinMembers);
+
+    if (haveMinMembers) createBoard();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [createBoardData.team]);
 
   useEffect(() => {
     if (routerTeam) {
@@ -157,7 +168,7 @@ const SelectTeam = ({ previousTeam }: SelectTeamProps) => {
     <Flex css={{ flex: 1 }} direction="column">
       <Select
         css={{ width: '100%', height: '$64' }}
-        defaultValue={teamsNames.find((option) => option.value === selectedTeam?.id)?.value}
+        defaultValue={teamsNames.find((option) => option.value === createBoardData.team?.id)?.value}
         disabled={availableTeams.length === 0}
         hasError={currentSelectTeamState === 'error'}
         onValueChange={(selectedOption: string) => {
@@ -166,7 +177,7 @@ const SelectTeam = ({ previousTeam }: SelectTeamProps) => {
       >
         <SelectTrigger css={{ padding: '$24' }}>
           <Flex direction="column">
-            <Text color="primary300" size={selectedTeam ? 'sm' : 'md'}>
+            <Text color="primary300" size={createBoardData.team ? 'sm' : 'md'}>
               {availableTeams.length === 0 ? 'No teams available' : 'Select Team'}
             </Text>
             <SelectValue />
