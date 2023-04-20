@@ -8,11 +8,11 @@ import ConfigurationSwitch from '@/components/Primitives/Inputs/Switches/Configu
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Separator from '@/components/Primitives/Separator/Separator';
 import Text from '@/components/Primitives/Text/Text';
+import { ROUTES } from '@/constants/routes';
 import useCurrentSession from '@/hooks/useCurrentSession';
 import useDeleteUser from '@/hooks/users/useDeleteUser';
 import useUpdateUser from '@/hooks/users/useUpdateUser';
 import { UpdateUserIsAdmin, User } from '@/types/user/user';
-import { ROUTES } from '@/utils/routes';
 
 export type UserItemActionsProps = {
   user: User;

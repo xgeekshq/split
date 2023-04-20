@@ -10,7 +10,7 @@ import MainPageHeader from '@/components/layouts/Layout/MainPageHeader/MainPageH
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import LoadingPage from '@/components/Primitives/Loading/Page/Page';
 import UsersList from '@/components/Users/UsersList/UsersList';
-import { TEAMS_KEY, USERS_KEY } from '@/utils/constants/reactQueryKeys';
+import { TEAMS_KEY, USERS_KEY } from '@/constants/react-query/keys';
 
 const Users = () => (
   <Flex css={{ width: '100%' }} direction="column" gap="16">

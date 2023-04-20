@@ -8,7 +8,7 @@ import BannerIcon from '@/components/Sidebar/Banner/Banner';
 import { BannerContainer, MenuButton } from '@/components/Sidebar/Header/styles';
 import { CollapsibleContent } from '@/components/Sidebar/styles';
 import { CollapsibleProps } from '@/components/Sidebar/types';
-import { DASHBOARD_ROUTE } from '@/utils/routes';
+import { DASHBOARD_ROUTE } from '@/constants/routes';
 
 export interface SidebarHeaderProps extends CollapsibleProps {
   firstName: string;

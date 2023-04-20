@@ -1,7 +1,7 @@
 import { fireEvent, waitFor } from '@testing-library/react';
 
+import { ROUTES } from '@/constants/routes';
 import Custom404 from '@/pages/404';
-import { ROUTES } from '@/utils/routes';
 import { libraryMocks } from '@/utils/testing/mocks';
 import { renderWithProviders } from '@/utils/testing/renderWithProviders';
 

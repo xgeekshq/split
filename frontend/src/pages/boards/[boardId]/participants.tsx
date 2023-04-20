@@ -10,6 +10,7 @@ import RegularBoardHeader from '@/components/Board/RegularBoard/RegularHeader';
 import QueryError from '@/components/Errors/QueryError';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import LoadingPage from '@/components/Primitives/Loading/Page/Page';
+import { DASHBOARD_ROUTE } from '@/constants/routes';
 import useBoard from '@/hooks/useBoard';
 import { boardInfoState, boardParticipantsState } from '@/store/board/atoms/board.atom';
 import { toastState } from '@/store/toast/atom/toast.atom';
@@ -18,7 +19,6 @@ import { BoardUser } from '@/types/board/board.user';
 import { UserList } from '@/types/team/userList';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
-import { DASHBOARD_ROUTE } from '@/utils/routes';
 
 // Sorts participants list to show responsibles first and then regular board members
 export const sortParticipantsList = (

@@ -18,6 +18,7 @@ import Icon from '@/components/Primitives/Icons/Icon/Icon';
 import Button from '@/components/Primitives/Inputs/Button/Button';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import LoadingPage from '@/components/Primitives/Loading/Page/Page';
+import { BOARDS_ROUTE } from '@/constants/routes';
 import useBoard from '@/hooks/useBoard';
 import useCards from '@/hooks/useCards';
 import { useSocketIO } from '@/hooks/useSocketIO';
@@ -36,7 +37,6 @@ import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 import { getGuestUserCookies } from '@/utils/getGuestUserCookies';
 import isEmpty from '@/utils/isEmpty';
-import { BOARDS_ROUTE } from '@/utils/routes';
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const boardId = String(context.query.boardId);

@@ -1,7 +1,7 @@
 import { useCallback, useMemo } from 'react';
 import { useRecoilState, useResetRecoilState } from 'recoil';
 
-import { defaultSplitColumns } from '@/helper/board/defaultColumns';
+import { defaultSplitColumns } from '@/constants/boards/defaultColumns';
 import { createBoardDataState } from '@/store/createBoard/atoms/create-board.atom';
 import { BoardToAdd } from '@/types/board/board';
 import { BoardUserToAdd } from '@/types/board/board.user';

@@ -14,6 +14,8 @@ import TipBar from '@/components/Primitives/Layout/TipBar/TipBar';
 import Text from '@/components/Primitives/Text/Text';
 import ListMembers from '@/components/Teams/Team/ListMembers/ListMembers';
 import TeamMembersList from '@/components/Teams/Team/TeamMembersList';
+import { ROUTES } from '@/constants/routes';
+import CREATE_TEAM_TIPS from '@/constants/tips/createTeam';
 import useCreateTeam from '@/hooks/teams/useCreateTeam';
 import useCurrentSession from '@/hooks/useCurrentSession';
 import SchemaCreateTeam from '@/schema/schemaCreateTeamForm';
@@ -21,8 +23,6 @@ import { createTeamState } from '@/store/team.atom';
 import { usersListState } from '@/store/user.atom';
 import { StyledForm } from '@/styles/pages/pages.styles';
 import { CreateTeamUser } from '@/types/team/team.user';
-import { ROUTES } from '@/utils/routes';
-import { CREATE_TEAM_TIPS } from '@/utils/tips';
 
 const CreateTeam = () => {
   const { userId } = useCurrentSession();

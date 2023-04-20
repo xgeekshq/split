@@ -97,7 +97,7 @@ const TeamMemberItem = React.memo<TeamMemberItemProps>(
           <Flex align="center" css={{ flex: '4' }} gap="8">
             <Icon name="blob-personal" size={32} />
             <MemberTitle
-              hasPermissions={isSAdmin!}
+              hasPermissions={isSAdmin}
               name={`${member.user.firstName} ${member.user.lastName}`}
               userId={member.user._id}
             />

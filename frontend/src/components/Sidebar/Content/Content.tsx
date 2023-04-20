@@ -15,7 +15,7 @@ import {
   START_PAGE_ROUTE,
   TEAMS_ROUTE,
   USERS_ROUTE,
-} from '@/utils/routes';
+} from '@/constants/routes';
 
 export interface SidebarContentProps extends CollapsibleProps {
   strategy: string;
