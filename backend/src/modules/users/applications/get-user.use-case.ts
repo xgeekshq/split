@@ -1,11 +1,11 @@
 import { Inject, Injectable } from '@nestjs/common';
 import User from '../entities/user.schema';
-import { GetUserUseCaseInterface } from '../interfaces/applications/get-user.use-case.interface';
 import { GetUserServiceInterface } from '../interfaces/services/get.user.service.interface';
 import { TYPES } from '../interfaces/types';
+import { UseCase } from 'src/libs/interfaces/use-case.interface';
 
 @Injectable()
-export class GetUserUseCase implements GetUserUseCaseInterface {
+export class GetUserUseCase implements UseCase<string, User> {
 	constructor(
 		@Inject(TYPES.services.GetUserService)
 		private readonly getUserService: GetUserServiceInterface
