@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { isEmpty } from 'class-validator';
 import { GetCardServiceInterface } from '../interfaces/services/get.card.service.interface';
-import * as Cards from 'src/modules/cards/interfaces/types';
+import * as Cards from 'src/modules/cards/constants';
 import { CardRepositoryInterface } from '../repository/card.repository.interface';
 
 @Injectable()

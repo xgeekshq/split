@@ -1,5 +1,5 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
-import { TYPES } from '../../interfaces/types';
+import { TYPES } from '../../constants';
 import { CardRepositoryInterface } from '../../repository/card.repository.interface';
 import { UseCase } from 'src/libs/interfaces/use-case.interface';
 import UpdateCardTextUseCaseDto from '../../dto/useCase/update-card-text.use-case.dto';

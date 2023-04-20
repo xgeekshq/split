@@ -1,7 +1,7 @@
 import { DeepMocked, createMock } from '@golevelup/ts-jest';
 import { Test, TestingModule } from '@nestjs/testing';
 import { CardRepositoryInterface } from '../repository/card.repository.interface';
-import { TYPES } from '../interfaces/types';
+import { TYPES } from '../constants';
 import { GetCardServiceInterface } from '../interfaces/services/get.card.service.interface';
 import { UpdateBoardUserServiceInterface } from 'src/modules/boardUsers/interfaces/services/update.board.user.service.interface';
 import faker from '@faker-js/faker';

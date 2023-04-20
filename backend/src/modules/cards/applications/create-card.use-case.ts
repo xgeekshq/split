@@ -1,5 +1,5 @@
 import { BadRequestException, HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
-import { TYPES } from '../interfaces/types';
+import { TYPES } from '../constants';
 import { UseCase } from 'src/libs/interfaces/use-case.interface';
 import CreateCardUseCaseDto from '../dto/useCase/create-card.use-case.dto';
 import { CardRepositoryInterface } from '../repository/card.repository.interface';

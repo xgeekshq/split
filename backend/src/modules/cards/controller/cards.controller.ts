@@ -39,7 +39,7 @@ import DeleteCardDto from '../dto/delete.card.dto';
 import UnmergeCardsDto from '../dto/unmerge.dto';
 import UpdateCardDto from '../dto/update.card.dto';
 import { UpdateCardPositionDto } from '../dto/update-position.card.dto';
-import { TYPES } from '../interfaces/types';
+import { TYPES } from '../constants';
 import { MergeCardDto } from '../dto/group/merge.card.dto';
 import CreateCardUseCaseDto from '../dto/useCase/create-card.use-case.dto';
 import { UseCase } from 'src/libs/interfaces/use-case.interface';

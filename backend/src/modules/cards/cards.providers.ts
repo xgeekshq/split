@@ -3,22 +3,28 @@ import { DeleteCardUseCase } from './applications/delete-card.use-case';
 import { DeleteFromCardGroupUseCase } from './applications/delete-from-card-group.use-case';
 import { UnmergeCardUseCase } from './applications/unmerge-card.use-case';
 import { MergeCardUseCase } from './applications/merge-card.use-case';
-import { TYPES } from './interfaces/types';
+import { GET_CARD_SERVICE, TYPES } from './constants';
 import { CardRepository } from './repository/card.repository';
 import GetCardService from './services/get.card.service';
 import { UpdateCardPositionUseCase } from './applications/update/update-card-position.use-case';
 import { UpdateCardTextUseCase } from './applications/update/update-card-text.use-case';
 import { UpdateCardGroupTextUseCase } from './applications/update/update-card-group-text.use-case';
 
+/* SERVICE */
+
 export const getCardService = {
-	provide: TYPES.services.GetCardService,
+	provide: GET_CARD_SERVICE,
 	useClass: GetCardService
 };
+
+/* REPOSITORY */
 
 export const cardRepository = {
 	provide: TYPES.repository.CardRepository,
 	useClass: CardRepository
 };
+
+/* USE CASES */
 
 export const createCardUseCase = {
 	provide: TYPES.applications.CreateCardUseCase,
