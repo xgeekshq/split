@@ -3,13 +3,13 @@ import { UseCase } from 'src/libs/interfaces/use-case.interface';
 import { UserRepositoryInterface } from '../repository/user.repository.interface';
 import { deleteUserUseCase } from '../users.providers';
 import * as Users from 'src/modules/users/interfaces/types';
-import * as TeamUsers from 'src/modules/teamUsers/interfaces/types';
 import { Test, TestingModule } from '@nestjs/testing';
 import { DeleteTeamUserServiceInterface } from 'src/modules/teamUsers/interfaces/services/delete.team.user.service.interface';
 import { GetTeamUserServiceInterface } from 'src/modules/teamUsers/interfaces/services/get.team.user.service.interface';
 import { UserFactory } from 'src/libs/test-utils/mocks/factories/user-factory';
 import faker from '@faker-js/faker';
 import { DeleteFailedException } from 'src/libs/exceptions/deleteFailedBadRequestException';
+import { DELETE_TEAM_USER_SERVICE, GET_TEAM_USER_SERVICE } from 'src/modules/teamUsers/constants';
 
 const userId = faker.datatype.uuid();
 const userDeleted = UserFactory.create({ _id: userId });
@@ -30,11 +30,11 @@ describe('DeleteUserUseCase', () => {
 					useValue: createMock<UserRepositoryInterface>()
 				},
 				{
-					provide: TeamUsers.TYPES.services.DeleteTeamUserService,
+					provide: DELETE_TEAM_USER_SERVICE,
 					useValue: createMock<DeleteTeamUserServiceInterface>()
 				},
 				{
-					provide: TeamUsers.TYPES.services.GetTeamUserService,
+					provide: GET_TEAM_USER_SERVICE,
 					useValue: createMock<GetTeamUserServiceInterface>()
 				}
 			]
@@ -43,8 +43,8 @@ describe('DeleteUserUseCase', () => {
 		deleteUser = module.get<UseCase<string, boolean>>(deleteUserUseCase.provide);
 
 		userRepositoryMock = module.get(Users.TYPES.repository);
-		deleteTeamUserServiceMock = module.get(TeamUsers.TYPES.services.DeleteTeamUserService);
-		getTeamUserServiceMock = module.get(TeamUsers.TYPES.services.GetTeamUserService);
+		deleteTeamUserServiceMock = module.get(DELETE_TEAM_USER_SERVICE);
+		getTeamUserServiceMock = module.get(GET_TEAM_USER_SERVICE);
 	});
 
 	beforeEach(() => {

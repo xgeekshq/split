@@ -3,7 +3,6 @@ import { UseCase } from 'src/libs/interfaces/use-case.interface';
 import { UserRepositoryInterface } from '../repository/user.repository.interface';
 import { getAllUsersWithTeamsUseCase } from '../users.providers';
 import * as Users from 'src/modules/users/interfaces/types';
-import * as TeamUsers from 'src/modules/teamUsers/interfaces/types';
 import { Test, TestingModule } from '@nestjs/testing';
 import { GetUserServiceInterface } from '../interfaces/services/get.user.service.interface';
 import { GetTeamUserServiceInterface } from 'src/modules/teamUsers/interfaces/services/get.team.user.service.interface';
@@ -13,6 +12,7 @@ import { UserWithTeams } from '../interfaces/type-user-with-teams';
 import GetAllUsersWithTeamsUseCaseDto from '../dto/useCase/get-all-users-with-teams.use-case.dto';
 import { GetAllUsersWithTeamsPresenter } from 'src/modules/users/presenter/get-all-users-with-teams.presenter';
 import { sortTeamUserListAlphabetically } from '../utils/sortings';
+import { GET_TEAM_USER_SERVICE } from 'src/modules/teamUsers/constants';
 
 const users = UserFactory.createMany(10);
 const teams = TeamFactory.createMany(5);
@@ -49,7 +49,7 @@ describe('GetAllUsersWithTeamsUseCase', () => {
 					useValue: createMock<GetUserServiceInterface>()
 				},
 				{
-					provide: TeamUsers.TYPES.services.GetTeamUserService,
+					provide: GET_TEAM_USER_SERVICE,
 					useValue: createMock<GetTeamUserServiceInterface>()
 				}
 			]
@@ -61,7 +61,7 @@ describe('GetAllUsersWithTeamsUseCase', () => {
 
 		userRepositoryMock = module.get(Users.TYPES.repository);
 		getUserServiceMock = module.get(Users.TYPES.services.GetUserService);
-		getTeamUserServiceMock = module.get(TeamUsers.TYPES.services.GetTeamUserService);
+		getTeamUserServiceMock = module.get(GET_TEAM_USER_SERVICE);
 	});
 
 	beforeEach(() => {
