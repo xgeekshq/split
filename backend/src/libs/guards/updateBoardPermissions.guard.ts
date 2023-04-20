@@ -7,14 +7,14 @@ import {
 	Injectable,
 	NotFoundException
 } from '@nestjs/common';
-import * as Boards from 'src/modules/boards/interfaces/types';
 import User from 'src/modules/users/entities/user.schema';
 import UpdateBoardUserDto from 'src/modules/boardUsers/dto/update-board-user.dto';
+import { GET_BOARD_SERVICE } from 'src/modules/boards/constants';
 
 @Injectable()
 export class UpdateBoardPermissionsGuard implements CanActivate {
 	constructor(
-		@Inject(Boards.TYPES.services.GetBoardService)
+		@Inject(GET_BOARD_SERVICE)
 		private readonly getBoardService: GetBoardServiceInterface
 	) {}
 

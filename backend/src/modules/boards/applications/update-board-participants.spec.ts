@@ -1,11 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import * as BoardUsers from 'src/modules/boardUsers/interfaces/types';
 import { BoardUserFactory } from 'src/libs/test-utils/mocks/factories/boardUser-factory.mock';
-import {
-	createBoardUserService,
-	deleteBoardUserService,
-	updateBoardUserService
-} from 'src/modules/boardUsers/boardusers.providers';
 import { UpdateBoardUserServiceInterface } from 'src/modules/boardUsers/interfaces/services/update.board.user.service.interface';
 import { BoardRoles } from 'src/libs/enum/board.roles';
 import { BoardUserDtoFactory } from 'src/libs/test-utils/mocks/factories/dto/boardUserDto-factory.mock';
@@ -36,15 +31,15 @@ describe('UpdateBoardParticipantsUseCase', () => {
 			providers: [
 				UpdateBoardParticipantsUseCase,
 				{
-					provide: createBoardUserService.provide,
+					provide: BoardUsers.TYPES.services.CreateBoardUserService,
 					useValue: createMock<CreateBoardUserServiceInterface>()
 				},
 				{
-					provide: deleteBoardUserService.provide,
+					provide: BoardUsers.TYPES.services.DeleteBoardUserService,
 					useValue: createMock<DeleteBoardUserServiceInterface>()
 				},
 				{
-					provide: updateBoardUserService.provide,
+					provide: BoardUsers.TYPES.services.UpdateBoardUserService,
 					useValue: createMock<UpdateBoardUserServiceInterface>()
 				}
 			]

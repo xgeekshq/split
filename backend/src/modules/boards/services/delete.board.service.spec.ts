@@ -1,7 +1,6 @@
 import { faker } from '@faker-js/faker';
 import { Test, TestingModule } from '@nestjs/testing';
 import { DeleteBoardServiceInterface } from '../interfaces/services/delete.board.service.interface';
-import * as Boards from 'src/modules/boards/interfaces/types';
 import * as CommunicationTypes from 'src/modules/communication/interfaces/types';
 import * as Schedules from 'src/modules/schedules/interfaces/types';
 import * as BoardUsers from 'src/modules/boardUsers/interfaces/types';
@@ -13,6 +12,7 @@ import { BoardFactory } from 'src/libs/test-utils/mocks/factories/board-factory.
 import { DeleteBoardUserServiceInterface } from 'src/modules/boardUsers/interfaces/services/delete.board.user.service.interface';
 import { DeleteSchedulesServiceInterface } from 'src/modules/schedules/interfaces/services/delete.schedules.service.interface';
 import { ArchiveChannelServiceInterface } from 'src/modules/communication/interfaces/archive-channel.service.interface';
+import { BOARD_REPOSITORY } from 'src/modules/boards/constants';
 
 const boards = BoardFactory.createMany(2, [{ slackEnable: true }, { slackEnable: true }]);
 const board = BoardFactory.create({
@@ -41,7 +41,7 @@ describe('DeleteBoardService', () => {
 			providers: [
 				deleteBoardService,
 				{
-					provide: Boards.TYPES.repositories.BoardRepository,
+					provide: BOARD_REPOSITORY,
 					useValue: createMock<BoardRepositoryInterface>()
 				},
 				{
@@ -58,8 +58,8 @@ describe('DeleteBoardService', () => {
 				}
 			]
 		}).compile();
-		service = module.get<DeleteBoardServiceInterface>(deleteBoardService.provide);
-		boardRepositoryMock = module.get(Boards.TYPES.repositories.BoardRepository);
+		service = module.get(deleteBoardService.provide);
+		boardRepositoryMock = module.get(BOARD_REPOSITORY);
 		deleteBoardUserServiceMock = module.get(BoardUsers.TYPES.services.DeleteBoardUserService);
 		deleteSchedulesServiceMock = module.get(Schedules.TYPES.services.DeleteSchedulesService);
 		archiveChannelServiceMock = module.get(
