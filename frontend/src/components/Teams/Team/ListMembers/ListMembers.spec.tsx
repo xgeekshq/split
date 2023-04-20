@@ -1,6 +1,7 @@
 import { UseMutationResult, UseQueryResult } from '@tanstack/react-query';
 import { fireEvent, waitFor } from '@testing-library/react';
 
+import { ROUTES } from '@/constants/routes';
 import useTeam from '@/hooks/teams/useTeam';
 import { createTeamState } from '@/store/team.atom';
 import { usersListState } from '@/store/user.atom';
@@ -14,7 +15,6 @@ import useCurrentSession, { UseCurrentSessionResult } from '@hooks/useCurrentSes
 import { TeamUserRoles } from '@utils/enums/team.user.roles';
 import { TeamFactory } from '@utils/factories/team';
 import { UserListFactory } from '@utils/factories/user';
-import { ROUTES } from '@utils/routes';
 import { libraryMocks } from '@utils/testing/mocks';
 import { verifyIfIsNewJoiner } from '@utils/verifyIfIsNewJoiner';
 

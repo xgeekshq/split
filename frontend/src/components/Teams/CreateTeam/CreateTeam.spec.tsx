@@ -3,9 +3,9 @@ import { fireEvent, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import CreateTeam from '@/components/Teams/CreateTeam/CreateTeam';
+import { ROUTES } from '@/constants/routes';
 import { renderWithProviders } from '@/utils/testing/renderWithProviders';
 import useCreateTeam from '@hooks/teams/useCreateTeam';
-import { ROUTES } from '@utils/routes';
 import { libraryMocks } from '@utils/testing/mocks';
 
 const { mockRouter } = libraryMocks.mockNextRouter({ pathname: ROUTES.NewTeam });
