@@ -1,5 +1,5 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
-import { TYPES } from '../interfaces/types';
+import { CREATE_VOTE_SERVICE, TYPES } from '../constants';
 import { UseCase } from 'src/libs/interfaces/use-case.interface';
 import { CreateVoteServiceInterface } from '../interfaces/services/create.vote.service.interface';
 import { UpdateBoardUserServiceInterface } from 'src/modules/boardUsers/interfaces/services/update.board.user.service.interface';
@@ -17,7 +17,7 @@ import { UPDATE_BOARD_USER_SERVICE } from 'src/modules/boardUsers/constants';
 export class CardItemVoteUseCase implements UseCase<CardItemVoteUseCaseDto, void> {
 	private logger: Logger = new Logger('CreateVoteService');
 	constructor(
-		@Inject(TYPES.services.CreateVoteService)
+		@Inject(CREATE_VOTE_SERVICE)
 		private readonly createVoteService: CreateVoteServiceInterface,
 		@Inject(TYPES.services.DeleteVoteService)
 		private readonly deleteVoteService: DeleteVoteServiceInterface,

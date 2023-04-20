@@ -3,7 +3,7 @@ import { DELETE_VOTE_FAILED, UPDATE_FAILED } from 'src/libs/exceptions/messages'
 import isEmpty from 'src/libs/utils/isEmpty';
 import { GetCardServiceInterface } from 'src/modules/cards/interfaces/services/get.card.service.interface';
 import { DeleteVoteServiceInterface } from '../interfaces/services/delete.vote.service.interface';
-import { TYPES } from '../interfaces/types';
+import { TYPES } from '../constants';
 import { VoteRepositoryInterface } from '../interfaces/repositories/vote.repository.interface';
 import { UpdateBoardUserServiceInterface } from 'src/modules/boardUsers/interfaces/services/update.board.user.service.interface';
 import { GetBoardUserServiceInterface } from 'src/modules/boardUsers/interfaces/services/get.board.user.service.interface';

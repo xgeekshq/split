@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import * as CommunicationsType from 'src/modules/communication/interfaces/types';
-import * as Votes from 'src/modules/votes/interfaces/types';
+import * as Votes from 'src/modules/votes/constants';
 import { BoardRepositoryInterface } from '../repositories/board.repository.interface';
 import { CommunicationServiceInterface } from 'src/modules/communication/interfaces/slack-communication.service.interface';
 import { BoardFactory } from 'src/libs/test-utils/mocks/factories/board-factory.mock';

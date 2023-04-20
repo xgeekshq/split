@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { TYPES } from '../interfaces/types';
+import { CREATE_VOTE_SERVICE, TYPES } from '../constants';
 import { DeepMocked, createMock } from '@golevelup/ts-jest';
 import { CreateVoteServiceInterface } from '../interfaces/services/create.vote.service.interface';
 import { VoteRepositoryInterface } from '../interfaces/repositories/vote.repository.interface';
@@ -51,7 +51,7 @@ describe('CardGroupVoteUseCase', () => {
 					useValue: createMock<DeleteVoteServiceInterface>()
 				},
 				{
-					provide: TYPES.services.CreateVoteService,
+					provide: CREATE_VOTE_SERVICE,
 					useValue: createMock<CreateVoteServiceInterface>()
 				},
 				{
@@ -63,7 +63,7 @@ describe('CardGroupVoteUseCase', () => {
 
 		useCase = module.get(CardGroupVoteUseCase);
 		voteRepositoryMock = module.get(TYPES.repositories.VoteRepository);
-		createVoteServiceMock = module.get(TYPES.services.CreateVoteService);
+		createVoteServiceMock = module.get(CREATE_VOTE_SERVICE);
 		deleteVoteServiceMock = module.get(TYPES.services.DeleteVoteService);
 	});
 

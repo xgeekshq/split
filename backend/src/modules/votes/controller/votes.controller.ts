@@ -21,7 +21,7 @@ import { UnauthorizedResponse } from 'src/libs/swagger/errors/unauthorized.swagg
 import BoardDto from 'src/modules/boards/dto/board.dto';
 import SocketGateway from 'src/modules/socket/gateway/socket.gateway';
 import VoteDto from '../dto/vote.dto';
-import { TYPES } from '../interfaces/types';
+import { TYPES } from '../constants';
 import { UseCase } from 'src/libs/interfaces/use-case.interface';
 import CardItemVoteUseCaseDto from '../dto/useCase/card-item-vote.use-case.dto';
 import CardGroupVoteUseCaseDto from '../dto/useCase/card-group-vote.use-case.dto';

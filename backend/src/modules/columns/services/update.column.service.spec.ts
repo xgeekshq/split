@@ -8,7 +8,7 @@ import { BoardFactory } from 'src/libs/test-utils/mocks/factories/board-factory.
 import SocketGateway from 'src/modules/socket/gateway/socket.gateway';
 import { updateColumnService } from '../columns.providers';
 import * as Columns from '../interfaces/types';
-import * as Votes from 'src/modules/votes/interfaces/types';
+import * as Votes from 'src/modules/votes/constants';
 import { ColumnRepository } from '../repositories/column.repository';
 import GetBoardService from 'src/modules/boards/services/get.board.service';
 import UpdateColumnService from './update.column.service';

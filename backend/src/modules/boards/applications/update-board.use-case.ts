@@ -13,7 +13,7 @@ import { CommunicationServiceInterface } from 'src/modules/communication/interfa
 import * as CommunicationsType from 'src/modules/communication/interfaces/types';
 import User from 'src/modules/users/entities/user.schema';
 import { DeleteVoteServiceInterface } from 'src/modules/votes/interfaces/services/delete.vote.service.interface';
-import * as Votes from 'src/modules/votes/interfaces/types';
+import * as Votes from 'src/modules/votes/constants';
 import { UpdateBoardDto } from '../dto/update-board.dto';
 import Board from '../entities/board.schema';
 import { ResponsibleType } from '../interfaces/responsible.interface';
