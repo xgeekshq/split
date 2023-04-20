@@ -7,6 +7,12 @@ import Text from '@/components/Primitives/Text/Text';
 import { UpdateScheduleType } from '@/types/board/board';
 import { SelectDateUnit } from '@components/Board/Settings/partials/Scheduling/SelectDateUnit';
 import Calendar from '@components/Primitives/Calendar/Calendar';
+import {
+  Label,
+  RadioGroup,
+  RadioGroupIndicator,
+  RadioGroupItem,
+} from '@components/Primitives/Inputs/RadioGroup/RadioGroup';
 import Flex from '@components/Primitives/Layout/Flex/Flex';
 
 export type SchedulingProps = {
@@ -23,6 +29,8 @@ const StyledDropDownTrigger = styled(DropdownMenu.Trigger, {
 const RepeatSchedule = ({ schedulingData, setSchedulingData }: SchedulingProps) => {
   const [isRepeatActive, setRepeatState] = useState<boolean>(false);
 
+  const showRadioGroup = schedulingData.scheduleDate && schedulingData.repeatTimeUnit === 'Month';
+
   //State handlers
   const handleRepeatTimeUnitChange = (timeUnit: string) => {
     setSchedulingData((prev: UpdateScheduleType) => ({
@@ -32,7 +40,6 @@ const RepeatSchedule = ({ schedulingData, setSchedulingData }: SchedulingProps) 
   };
 
   const handleRepeatUnitChange = (date: Date) => {
-    console.log(date);
     setSchedulingData((prev: UpdateScheduleType) => ({
       ...prev,
       repeatUntil: date,
@@ -66,8 +73,32 @@ const RepeatSchedule = ({ schedulingData, setSchedulingData }: SchedulingProps) 
 "
       />
 
-      {schedulingData.repeatTimeRange && schedulingData.repeatTimeUnit && (
+      {schedulingData.repeatTimeRange && (
         <Flex align="start" direction="column">
+          {showRadioGroup && schedulingData?.scheduleDate && (
+            <RadioGroup
+              defaultValue="default"
+              direction="column"
+              style={{ paddingLeft: '23px', paddingBottom: '15px' }}
+            >
+              <Flex align="center">
+                <RadioGroupItem id="r1" value="default">
+                  <RadioGroupIndicator />
+                </RadioGroupItem>
+                <Label color="primary500" fontWeight="regular" htmlFor="r1" size="sm">
+                  WIP
+                </Label>
+              </Flex>
+              <Flex align="center">
+                <RadioGroupItem id="r3" value="compact">
+                  <RadioGroupIndicator />
+                </RadioGroupItem>
+                <Label color="primary500" fontWeight="regular" htmlFor="r3" size="sm">
+                  WIP
+                </Label>
+              </Flex>
+            </RadioGroup>
+          )}
           <Text color="primary500">
             Occurs every {schedulingData.repeatTimeRange}{' '}
             {schedulingData.repeatTimeUnit === 'Day'
