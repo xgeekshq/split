@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { TYPES } from '../constants';
+import { CARD_REPOSITORY, GET_CARD_SERVICE } from '../constants';
 import { UseCase } from 'src/libs/interfaces/use-case.interface';
 import { CardRepositoryInterface } from '../repository/card.repository.interface';
 import { GetCardServiceInterface } from '../interfaces/services/get.card.service.interface';
@@ -15,9 +15,9 @@ import { UpdateFailedException } from 'src/libs/exceptions/updateFailedBadReques
 @Injectable()
 export class UnmergeCardUseCase implements UseCase<UnmergeCardUseCaseDto, string> {
 	constructor(
-		@Inject(TYPES.services.GetCardService)
+		@Inject(GET_CARD_SERVICE)
 		private readonly cardService: GetCardServiceInterface,
-		@Inject(TYPES.repository.CardRepository)
+		@Inject(CARD_REPOSITORY)
 		private readonly cardRepository: CardRepositoryInterface
 	) {}
 

@@ -1,5 +1,5 @@
 import { BadRequestException, HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
-import { TYPES } from '../constants';
+import { CARD_REPOSITORY } from '../constants';
 import { UseCase } from 'src/libs/interfaces/use-case.interface';
 import CreateCardUseCaseDto from '../dto/useCase/create-card.use-case.dto';
 import { CardRepositoryInterface } from '../repository/card.repository.interface';
@@ -15,7 +15,7 @@ import CardDto from '../dto/card.dto';
 @Injectable()
 export class CreateCardUseCase implements UseCase<CreateCardUseCaseDto, CardCreationPresenter> {
 	constructor(
-		@Inject(TYPES.repository.CardRepository)
+		@Inject(CARD_REPOSITORY)
 		private readonly cardRepository: CardRepositoryInterface
 	) {}
 

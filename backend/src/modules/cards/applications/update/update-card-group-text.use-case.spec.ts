@@ -1,15 +1,15 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { TYPES } from '../../constants';
+import { CARD_REPOSITORY } from '../../constants';
 import { DeepMocked, createMock } from '@golevelup/ts-jest';
 import { CardRepositoryInterface } from '../../repository/card.repository.interface';
 import { UseCase } from 'src/libs/interfaces/use-case.interface';
-import { updateCardGroupTextUseCase } from '../../cards.providers';
 import faker from '@faker-js/faker';
 import { UpdateResult } from 'mongodb';
 import { BoardFactory } from 'src/libs/test-utils/mocks/factories/board-factory.mock';
 import { UpdateFailedException } from 'src/libs/exceptions/updateFailedBadRequestException';
 import { Logger } from '@nestjs/common';
 import UpdateCardGroupTextUseCaseDto from '../../dto/useCase/update-card-group-text.use-case.dto';
+import { UpdateCardGroupTextUseCase } from 'src/modules/cards/applications/update/update-card-group-text.use-case';
 
 const updateCardGroupTextDto: UpdateCardGroupTextUseCaseDto = {
 	boardId: faker.datatype.uuid(),
@@ -38,17 +38,15 @@ describe('UpdateCardGroupTextUseCase', () => {
 	beforeAll(async () => {
 		const module: TestingModule = await Test.createTestingModule({
 			providers: [
-				updateCardGroupTextUseCase,
+				UpdateCardGroupTextUseCase,
 				{
-					provide: TYPES.repository.CardRepository,
+					provide: CARD_REPOSITORY,
 					useValue: createMock<CardRepositoryInterface>()
 				}
 			]
 		}).compile();
-		useCase = module.get<UseCase<UpdateCardGroupTextUseCaseDto, void>>(
-			TYPES.applications.UpdateCardGroupTextUseCase
-		);
-		cardRepositoryMock = module.get(TYPES.repository.CardRepository);
+		useCase = module.get(UpdateCardGroupTextUseCase);
+		cardRepositoryMock = module.get(CARD_REPOSITORY);
 		cardRepositoryMock.updateCardGroupText.mockResolvedValue(board);
 
 		jest.spyOn(Logger.prototype, 'error').mockImplementation(jest.fn);

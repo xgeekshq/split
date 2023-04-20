@@ -1,6 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { TYPES } from '../interfaces/types';
-import * as Cards from 'src/modules/cards/constants';
 import { DeepMocked, createMock } from '@golevelup/ts-jest';
 import { VoteRepositoryInterface } from '../interfaces/repositories/vote.repository.interface';
 import { GetBoardUserServiceInterface } from 'src/modules/boardUsers/interfaces/services/get.board.user.service.interface';
@@ -26,6 +25,7 @@ import {
 	GET_BOARD_USER_SERVICE,
 	UPDATE_BOARD_USER_SERVICE
 } from 'src/modules/boardUsers/constants';
+import { GET_CARD_SERVICE } from 'src/modules/cards/constants';
 
 const userId: string = faker.datatype.uuid();
 const board: Board = BoardFactory.create({ maxVotes: 3 });
@@ -59,7 +59,7 @@ describe('DeleteVoteService', () => {
 					useValue: createMock<UpdateBoardServiceInterface>()
 				},
 				{
-					provide: Cards.TYPES.services.GetCardService,
+					provide: GET_CARD_SERVICE,
 					useValue: createMock<GetCardServiceInterface>()
 				},
 				{
@@ -68,11 +68,11 @@ describe('DeleteVoteService', () => {
 				}
 			]
 		}).compile();
-		voteService = module.get<DeleteVoteServiceInterface>(DeleteVoteService);
+		voteService = module.get(DeleteVoteService);
 		voteRepositoryMock = module.get(TYPES.repositories.VoteRepository);
 		getBoardServiceMock = module.get(GET_BOARD_SERVICE);
 		getBoardUserServiceMock = module.get(GET_BOARD_USER_SERVICE);
-		getCardServiceMock = module.get(Cards.TYPES.services.GetCardService);
+		getCardServiceMock = module.get(GET_CARD_SERVICE);
 		updateBoardUserServiceMock = module.get(UPDATE_BOARD_USER_SERVICE);
 	});
 

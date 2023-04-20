@@ -1,20 +1,20 @@
 export const TYPES = {
 	services: {
 		//GetCardService: 'GetCardService',
-		DeleteFromCardGroupUseCase: 'DeleteFromCardGroupUseCase'
+		//DeleteFromCardGroupUseCase: 'DeleteFromCardGroupUseCase'
 	},
 	applications: {
-		CreateCardUseCase: 'CreateCardUseCase',
-		UnmergeCardUseCase: 'UnmergeCardUseCase',
-		MergeCardUseCase: 'MergeCardUseCase',
-		UpdateCardPositionUseCase: 'UpdateCardPositionUseCase',
-		UpdateCardTextUseCase: 'UpdateCardTextUseCase',
-		UpdateCardGroupTextUseCase: 'UpdateCardGroupTextUseCase',
-		DeleteCardUseCase: 'DeleteCardUseCase',
-		DeleteFromCardGroupUseCase: 'DeleteFromCardGroupUseCase'
+		//CreateCardUseCase: 'CreateCardUseCase',
+		//UnmergeCardUseCase: 'UnmergeCardUseCase',
+		//MergeCardUseCase: 'MergeCardUseCase',
+		//UpdateCardPositionUseCase: 'UpdateCardPositionUseCase',
+		//UpdateCardTextUseCase: 'UpdateCardTextUseCase',
+		//UpdateCardGroupTextUseCase: 'UpdateCardGroupTextUseCase',
+		//DeleteCardUseCase: 'DeleteCardUseCase',
+		//DeleteFromCardGroupUseCase: 'DeleteFromCardGroupUseCase'
 	},
 	repository: {
-		CardRepository: 'CardRepository'
+		//CardRepository: 'CardRepository'
 	}
 };
 
@@ -23,8 +23,6 @@ export const TYPES = {
 export const GET_CARD_SERVICE = 'GetCardService';
 
 /* USE CASES */
-
-export const DELETE_FROM_CARD_GROUP_USE_CASE = 'DeleteFromCardGroupUseCase';
 
 export const CREATE_CARD_USE_CASE = 'CreateCardUseCase';
 

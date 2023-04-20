@@ -1,7 +1,7 @@
 import { DeepMocked, createMock } from '@golevelup/ts-jest';
 import { Test, TestingModule } from '@nestjs/testing';
 import { CardRepositoryInterface } from '../repository/card.repository.interface';
-import { TYPES } from '../constants';
+import { CARD_REPOSITORY, GET_CARD_SERVICE } from '../constants';
 import { GetCardServiceInterface } from '../interfaces/services/get.card.service.interface';
 import MergeCardUseCaseDto from '../dto/useCase/merge-card.use-case.dto';
 import faker from '@faker-js/faker';
@@ -10,7 +10,7 @@ import { CardFactory } from 'src/libs/test-utils/mocks/factories/card-factory.mo
 import { UpdateResult } from 'mongodb';
 import { CardItemFactory } from 'src/libs/test-utils/mocks/factories/cardItem-factory.mock';
 import { UseCase } from 'src/libs/interfaces/use-case.interface';
-import { mergeCardUseCase } from '../cards.providers';
+import { MergeCardUseCase } from 'src/modules/cards/applications/merge-card.use-case';
 
 const mergeCardDtoMock: MergeCardUseCaseDto = {
 	boardId: faker.datatype.uuid(),
@@ -36,22 +36,20 @@ describe('MergeCardUseCase', () => {
 	beforeAll(async () => {
 		const module: TestingModule = await Test.createTestingModule({
 			providers: [
-				mergeCardUseCase,
+				MergeCardUseCase,
 				{
-					provide: TYPES.services.GetCardService,
+					provide: GET_CARD_SERVICE,
 					useValue: createMock<GetCardServiceInterface>()
 				},
 				{
-					provide: TYPES.repository.CardRepository,
+					provide: CARD_REPOSITORY,
 					useValue: createMock<CardRepositoryInterface>()
 				}
 			]
 		}).compile();
-		useCase = module.get<UseCase<MergeCardUseCaseDto, boolean>>(
-			TYPES.applications.MergeCardUseCase
-		);
-		getCardServiceMock = module.get(TYPES.services.GetCardService);
-		cardRepositoryMock = module.get(TYPES.repository.CardRepository);
+		useCase = module.get(MergeCardUseCase);
+		getCardServiceMock = module.get(GET_CARD_SERVICE);
+		cardRepositoryMock = module.get(CARD_REPOSITORY);
 
 		getCardServiceMock.getCardFromBoard
 			.mockResolvedValue(cardMock[0])

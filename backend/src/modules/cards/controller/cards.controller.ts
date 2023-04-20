@@ -39,7 +39,16 @@ import DeleteCardDto from '../dto/delete.card.dto';
 import UnmergeCardsDto from '../dto/unmerge.dto';
 import UpdateCardDto from '../dto/update.card.dto';
 import { UpdateCardPositionDto } from '../dto/update-position.card.dto';
-import { TYPES } from '../constants';
+import {
+	CREATE_CARD_USE_CASE,
+	DELETE_CARD_FROM_GROUP_USE_CASE,
+	DELETE_CARD_USE_CASE,
+	MERGE_CARD_USE_CASE,
+	UNMERGE_CARD_USE_CASE,
+	UPDATE_CARD_GROUP_TEXT_USE_CASE,
+	UPDATE_CARD_POSITION_USE_CASE,
+	UPDATE_CARD_TEXT_USE_CASE
+} from '../constants';
 import { MergeCardDto } from '../dto/group/merge.card.dto';
 import CreateCardUseCaseDto from '../dto/useCase/create-card.use-case.dto';
 import { UseCase } from 'src/libs/interfaces/use-case.interface';
@@ -58,22 +67,22 @@ import DeleteFromCardGroupUseCaseDto from '../dto/useCase/delete-fom-card-group.
 @Controller('boards')
 export default class CardsController {
 	constructor(
-		@Inject(TYPES.applications.CreateCardUseCase)
+		@Inject(CREATE_CARD_USE_CASE)
 		private readonly createCardUseCase: UseCase<CreateCardUseCaseDto, CardCreationPresenter>,
-		@Inject(TYPES.applications.UpdateCardPositionUseCase)
+		@Inject(UPDATE_CARD_POSITION_USE_CASE)
 		private readonly updateCardPositionUseCase: UseCase<UpdateCardPositionUseCaseDto, void>,
-		@Inject(TYPES.applications.UpdateCardTextUseCase)
+		@Inject(UPDATE_CARD_TEXT_USE_CASE)
 		private readonly updateCardTextUseCase: UseCase<UpdateCardTextUseCaseDto, void>,
-		@Inject(TYPES.applications.UpdateCardGroupTextUseCase)
+		@Inject(UPDATE_CARD_GROUP_TEXT_USE_CASE)
 		private readonly updateCardGroupTextUseCase: UseCase<UpdateCardGroupTextUseCaseDto, void>,
-		@Inject(TYPES.applications.UnmergeCardUseCase)
+		@Inject(UNMERGE_CARD_USE_CASE)
 		private readonly unmergeCardUseCase: UseCase<UnmergeCardUseCaseDto, string>,
-		@Inject(TYPES.applications.MergeCardUseCase)
+		@Inject(MERGE_CARD_USE_CASE)
 		private readonly mergeCardUseCase: UseCase<MergeCardUseCaseDto, boolean>,
-		@Inject(TYPES.applications.DeleteCardUseCase)
+		@Inject(DELETE_CARD_USE_CASE)
 		private readonly deleteCardUseCase: UseCase<DeleteCardUseCaseDto, void>,
-		@Inject(TYPES.applications.DeleteFromCardGroupUseCase)
-		private readonly deleteFromCardGroupUseCase: UseCase<DeleteFromCardGroupUseCaseDto, void>,
+		@Inject(DELETE_CARD_FROM_GROUP_USE_CASE)
+		private readonly deleteCardFromGroupUseCase: UseCase<DeleteFromCardGroupUseCaseDto, void>,
 		private readonly socketService: SocketGateway
 	) {}
 
@@ -177,7 +186,7 @@ export default class CardsController {
 			this.socketService.sendDeleteCard(deleteCardDto.socketId, deleteCardDto);
 		};
 
-		return this.deleteFromCardGroupUseCase.execute({
+		return this.deleteCardFromGroupUseCase.execute({
 			boardId,
 			cardId,
 			cardItemId,
