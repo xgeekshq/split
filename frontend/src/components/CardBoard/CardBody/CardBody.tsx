@@ -17,14 +17,28 @@ import Tooltip from '@/components/Primitives/Tooltips/Tooltip/Tooltip';
 import { newBoardState } from '@/store/board/atoms/board.atom';
 import { styled } from '@/styles/stitches/stitches.config';
 import BoardType from '@/types/board/board';
-import ClickEvent from '@/types/events/clickEvent';
 import { Team } from '@/types/team/team';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 
 const InnerContainer = styled(Flex, Box, {
-  px: '$32',
+  px: '$18',
   backgroundColor: '$white',
   borderRadius: '$12',
+  position: 'relative',
+  flex: '1 1 0',
+  gap: '$12 $24',
+  py: '$22',
+
+  '@md': { px: '$32' },
+
+  variants: {
+    isSubBoard: {
+      true: {
+        ml: '$40',
+        py: '$16',
+      },
+    },
+  },
 });
 
 const NewCircleIndicator = styled('div', {
@@ -63,7 +77,7 @@ const NewLabelIndicator = styled(Flex, {
 });
 
 const RecurrentIconContainer = styled('div', {
-  width: '$12',
+  minWidth: '$12',
   height: '$12',
 
   display: 'inline-flex',
@@ -148,12 +162,7 @@ const CardBody = React.memo<CardBodyProps>(
       }
 
       return myUserIsOwnerBoard || myUserIsBoardResponsible;
-    }, [isSAdmin, board.createdBy, userId, team, mainBoardTeam]);
-
-    const handleOpenSubBoards = (e: ClickEvent<HTMLDivElement, MouseEvent>) => {
-      e.preventDefault();
-      setSubBoardsOpen(!openSubBoards);
-    };
+    }, [isSAdmin, board.createdBy, userId, users, team, mainBoardTeam]);
 
     const renderCardBody = useCallback(
       (subBoard: BoardType, idx: number) => (
@@ -195,17 +204,13 @@ const CardBody = React.memo<CardBodyProps>(
           <InnerContainer
             align="center"
             elevation="1"
+            isSubBoard={isSubBoard}
             justify="between"
-            css={{
-              position: 'relative',
-              flex: '1 1 0',
-              py: !isSubBoard ? '$22' : '$16',
-              maxHeight: isSubBoard ? '$64' : '$76',
-              ml: isSubBoard ? '$40' : 0,
-            }}
+            wrap="wrap"
           >
             {isANewBoard && <NewCircleIndicator position="absolute" />}
-            <Flex align="center">
+
+            <Flex align="center" gap="8" wrap="wrap">
               <Flex align="center" gap="8">
                 {!isSubBoard && (
                   <CardIcon
@@ -215,59 +220,61 @@ const CardBody = React.memo<CardBodyProps>(
                     toAdd={false}
                   />
                 )}
-                <Flex align="center" gap="8">
-                  <CardTitle
-                    boardId={id}
-                    havePermissions={havePermissions}
-                    isSubBoard={isSubBoard}
-                    mainBoardId={mainBoardId}
-                    mainBoardTitle={mainBoardTitle}
-                    title={board.title}
-                    userIsParticipating={userIsParticipating}
+                <CardTitle
+                  boardId={id}
+                  havePermissions={havePermissions}
+                  isSubBoard={isSubBoard}
+                  mainBoardId={mainBoardId}
+                  mainBoardTitle={mainBoardTitle}
+                  title={board.title}
+                  userIsParticipating={userIsParticipating}
+                />
+                {isSubBoard && (
+                  <Text color="primary300" css={{ whiteSpace: 'nowrap' }} size="xs">
+                    of {dividedBoardsCount}
+                  </Text>
+                )}
+                {iconLockConditions && (
+                  <Icon
+                    name="lock"
+                    css={{
+                      color: '$primary300',
+                      width: '17px',
+                      height: '$16',
+                    }}
                   />
-                  {isSubBoard && (
-                    <Text color="primary300" size="xs">
-                      of {dividedBoardsCount}
-                    </Text>
-                  )}
-                  {iconLockConditions && (
-                    <Icon
-                      name="lock"
-                      css={{
-                        color: '$primary300',
-                        width: '17px',
-                        height: '$16',
-                      }}
-                    />
-                  )}
-                  {board.recurrent && (
-                    <Tooltip content="Recurrs every month">
-                      <RecurrentIconContainer>
-                        <Icon name="recurring" />
-                      </RecurrentIconContainer>
-                    </Tooltip>
-                  )}
-
-                  {!isDashboard && isSubBoard && (
-                    <AvatarGroup listUsers={isSubBoard ? users : team.users} userId={userId} />
-                  )}
-                  {!isDashboard && !isSubBoard && countDividedBoards > 0 && (
-                    <CenterMainBoard
-                      countDividedBoards={countDividedBoards}
-                      handleOpenSubBoards={handleOpenSubBoards}
-                      openSubBoards={openSubBoards}
-                    />
-                  )}
-                </Flex>
+                )}
+                {board.recurrent && (
+                  <Tooltip content="Recurrs every month">
+                    <RecurrentIconContainer>
+                      <Icon name="recurring" />
+                    </RecurrentIconContainer>
+                  </Tooltip>
+                )}
+                {!isDashboard && isSubBoard && (
+                  <AvatarGroup
+                    css={{ minWidth: '$82' }}
+                    listUsers={isSubBoard ? users : team.users}
+                    userId={userId}
+                  />
+                )}
+                {!isDashboard && !isSubBoard && countDividedBoards > 0 && (
+                  <CenterMainBoard
+                    countDividedBoards={countDividedBoards}
+                    handleOpenSubBoards={() => setSubBoardsOpen(!openSubBoards)}
+                    openSubBoards={openSubBoards}
+                  />
+                )}
               </Flex>
+
               {isDashboard && <CountCards columns={columns} />}
+              {isANewBoard && (
+                <NewLabelIndicator>
+                  <NewCircleIndicator />
+                  <span>New Board</span>
+                </NewLabelIndicator>
+              )}
             </Flex>
-            {isANewBoard && (
-              <NewLabelIndicator>
-                <NewCircleIndicator />
-                <span>New Board</span>
-              </NewLabelIndicator>
-            )}
             <CardEnd
               board={board}
               havePermissions={havePermissions}
