@@ -3,7 +3,6 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { DeleteBoardServiceInterface } from '../interfaces/services/delete.board.service.interface';
 import * as CommunicationTypes from 'src/modules/communication/interfaces/types';
 import * as Schedules from 'src/modules/schedules/interfaces/types';
-import * as BoardUsers from 'src/modules/boardUsers/interfaces/types';
 import { DeepMocked, createMock } from '@golevelup/ts-jest';
 import { BoardRepositoryInterface } from '../repositories/board.repository.interface';
 import { BadRequestException } from '@nestjs/common';
@@ -13,6 +12,7 @@ import { DeleteBoardUserServiceInterface } from 'src/modules/boardUsers/interfac
 import { DeleteSchedulesServiceInterface } from 'src/modules/schedules/interfaces/services/delete.schedules.service.interface';
 import { ArchiveChannelServiceInterface } from 'src/modules/communication/interfaces/archive-channel.service.interface';
 import { BOARD_REPOSITORY } from 'src/modules/boards/constants';
+import { DELETE_BOARD_USER_SERVICE } from 'src/modules/boardUsers/constants';
 
 const boards = BoardFactory.createMany(2, [{ slackEnable: true }, { slackEnable: true }]);
 const board = BoardFactory.create({
@@ -45,7 +45,7 @@ describe('DeleteBoardService', () => {
 					useValue: createMock<BoardRepositoryInterface>()
 				},
 				{
-					provide: BoardUsers.TYPES.services.DeleteBoardUserService,
+					provide: DELETE_BOARD_USER_SERVICE,
 					useValue: createMock<DeleteBoardUserServiceInterface>()
 				},
 				{
@@ -60,7 +60,7 @@ describe('DeleteBoardService', () => {
 		}).compile();
 		service = module.get(deleteBoardService.provide);
 		boardRepositoryMock = module.get(BOARD_REPOSITORY);
-		deleteBoardUserServiceMock = module.get(BoardUsers.TYPES.services.DeleteBoardUserService);
+		deleteBoardUserServiceMock = module.get(DELETE_BOARD_USER_SERVICE);
 		deleteSchedulesServiceMock = module.get(Schedules.TYPES.services.DeleteSchedulesService);
 		archiveChannelServiceMock = module.get(
 			CommunicationTypes.TYPES.services.SlackArchiveChannelService

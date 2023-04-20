@@ -1,7 +1,7 @@
 import { DeleteBoardUserServiceInterface } from '../interfaces/services/delete.board.user.service.interface';
 import { Inject, Injectable } from '@nestjs/common';
 import { BoardUserRepositoryInterface } from '../interfaces/repositories/board-user.repository.interface';
-import { TYPES } from '../interfaces/types';
+import { BOARD_USER_REPOSITORY } from '../constants';
 import { Schema } from 'mongoose';
 import Board from 'src/modules/boards/entities/board.schema';
 import { DeleteResult } from 'mongodb';
@@ -9,7 +9,7 @@ import { DeleteResult } from 'mongodb';
 @Injectable()
 export default class DeleteBoardUserService implements DeleteBoardUserServiceInterface {
 	constructor(
-		@Inject(TYPES.repositories.BoardUserRepository)
+		@Inject(BOARD_USER_REPOSITORY)
 		private readonly boardUserRepository: BoardUserRepositoryInterface
 	) {}
 

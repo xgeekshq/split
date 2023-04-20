@@ -1,6 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { TYPES } from '../interfaces/types';
-import * as BoardUsers from 'src/modules/boardUsers/interfaces/types';
 import * as Cards from 'src/modules/cards/interfaces/types';
 import { DeepMocked, createMock } from '@golevelup/ts-jest';
 import { VoteRepositoryInterface } from '../interfaces/repositories/vote.repository.interface';
@@ -23,6 +22,10 @@ import { GetBoardServiceInterface } from 'src/modules/boards/interfaces/services
 import { DeleteFailedException } from 'src/libs/exceptions/deleteFailedBadRequestException';
 import { CardItemFactory } from 'src/libs/test-utils/mocks/factories/cardItem-factory.mock';
 import { GET_BOARD_SERVICE } from 'src/modules/boards/constants';
+import {
+	GET_BOARD_USER_SERVICE,
+	UPDATE_BOARD_USER_SERVICE
+} from 'src/modules/boardUsers/constants';
 
 const userId: string = faker.datatype.uuid();
 const board: Board = BoardFactory.create({ maxVotes: 3 });
@@ -48,11 +51,11 @@ describe('DeleteVoteService', () => {
 					useValue: createMock<VoteRepositoryInterface>()
 				},
 				{
-					provide: BoardUsers.TYPES.services.GetBoardUserService,
+					provide: GET_BOARD_USER_SERVICE,
 					useValue: createMock<GetBoardUserServiceInterface>()
 				},
 				{
-					provide: BoardUsers.TYPES.services.UpdateBoardUserService,
+					provide: UPDATE_BOARD_USER_SERVICE,
 					useValue: createMock<UpdateBoardServiceInterface>()
 				},
 				{
@@ -68,9 +71,9 @@ describe('DeleteVoteService', () => {
 		voteService = module.get<DeleteVoteServiceInterface>(DeleteVoteService);
 		voteRepositoryMock = module.get(TYPES.repositories.VoteRepository);
 		getBoardServiceMock = module.get(GET_BOARD_SERVICE);
-		getBoardUserServiceMock = module.get(BoardUsers.TYPES.services.GetBoardUserService);
+		getBoardUserServiceMock = module.get(GET_BOARD_USER_SERVICE);
 		getCardServiceMock = module.get(Cards.TYPES.services.GetCardService);
-		updateBoardUserServiceMock = module.get(BoardUsers.TYPES.services.UpdateBoardUserService);
+		updateBoardUserServiceMock = module.get(UPDATE_BOARD_USER_SERVICE);
 	});
 
 	beforeEach(() => {

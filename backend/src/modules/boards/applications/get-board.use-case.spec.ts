@@ -1,5 +1,4 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import * as BoardUsers from 'src/modules/boardUsers/interfaces/types';
 import * as Auth from 'src/modules/auth/interfaces/types';
 import * as Users from 'src/modules/users/interfaces/types';
 import { DeepMocked, createMock } from '@golevelup/ts-jest';
@@ -20,6 +19,10 @@ import { Tokens } from 'src/libs/interfaces/jwt/tokens.interface';
 import { hideVotesFromColumns } from '../utils/hideVotesFromColumns';
 import { GetBoardUseCase } from './get-board.use-case';
 import { BOARD_REPOSITORY } from 'src/modules/boards/constants';
+import {
+	CREATE_BOARD_USER_SERVICE,
+	GET_BOARD_USER_SERVICE
+} from 'src/modules/boardUsers/constants';
 
 const mainBoard = BoardFactory.create({ isSubBoard: false, isPublic: false });
 const subBoard = BoardFactory.create({ isSubBoard: true, isPublic: false });
@@ -41,11 +44,11 @@ describe('GetBoardUseCase', () => {
 					useValue: createMock<BoardRepositoryInterface>()
 				},
 				{
-					provide: BoardUsers.TYPES.services.GetBoardUserService,
+					provide: GET_BOARD_USER_SERVICE,
 					useValue: createMock<GetBoardUserServiceInterface>()
 				},
 				{
-					provide: BoardUsers.TYPES.services.CreateBoardUserService,
+					provide: CREATE_BOARD_USER_SERVICE,
 					useValue: createMock<CreateBoardUserServiceInterface>()
 				},
 				{
@@ -61,7 +64,7 @@ describe('GetBoardUseCase', () => {
 
 		useCase = module.get(GetBoardUseCase);
 		boardRepositoryMock = module.get(BOARD_REPOSITORY);
-		getBoardUserServiceMock = module.get(BoardUsers.TYPES.services.GetBoardUserService);
+		getBoardUserServiceMock = module.get(GET_BOARD_USER_SERVICE);
 		getTokenAuthServiceMock = module.get(Auth.TYPES.services.GetTokenAuthService);
 	});
 

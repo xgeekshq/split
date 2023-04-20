@@ -5,19 +5,19 @@ import { DeleteSchedulesServiceInterface } from 'src/modules/schedules/interface
 import * as Schedules from 'src/modules/schedules/interfaces/types';
 import { DeleteBoardServiceInterface } from '../interfaces/services/delete.board.service.interface';
 import Board from '../entities/board.schema';
-import * as BoardUsers from 'src/modules/boardUsers/interfaces/types';
 import * as CommunicationTypes from 'src/modules/communication/interfaces/types';
 import { ArchiveChannelServiceInterface } from 'src/modules/communication/interfaces/archive-channel.service.interface';
 import { ArchiveChannelDataOptions } from 'src/modules/communication/dto/types';
 import { BoardRepositoryInterface } from '../repositories/board.repository.interface';
 import { BOARD_REPOSITORY } from 'src/modules/boards/constants';
+import { DELETE_BOARD_USER_SERVICE } from 'src/modules/boardUsers/constants';
 
 @Injectable()
 export default class DeleteBoardService implements DeleteBoardServiceInterface {
 	constructor(
 		@Inject(BOARD_REPOSITORY)
 		private readonly boardRepository: BoardRepositoryInterface,
-		@Inject(BoardUsers.TYPES.services.DeleteBoardUserService)
+		@Inject(DELETE_BOARD_USER_SERVICE)
 		private readonly deleteBoardUserService: DeleteBoardUserServiceInterface,
 		@Inject(Schedules.TYPES.services.DeleteSchedulesService)
 		private readonly deleteScheduleService: DeleteSchedulesServiceInterface,
