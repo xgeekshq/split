@@ -22,7 +22,7 @@ const Calendar = ({ minDate, maxDate, tileContent, currentDate, setDate }: Calen
       tileContent={tileContent}
       value={currentDate}
       formatShortWeekday={(locale: string | undefined, date: Date) =>
-        ['Su', 'Mo', 'Th', 'We', 'Th', 'Fr', 'Sa'][date.getDay()]
+        ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'][date.getDay()]
       }
     />
   </Flex>
