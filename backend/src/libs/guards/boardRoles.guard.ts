@@ -9,10 +9,10 @@ import {
 	Injectable
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import * as BoardUsers from 'src/modules/boardUsers/interfaces/types';
 import TeamUser from 'src/modules/teamUsers/entities/team.user.schema';
 import { GET_TEAM_USER_SERVICE } from 'src/modules/teamUsers/constants';
 import { GET_BOARD_SERVICE } from 'src/modules/boards/constants';
+import { GET_BOARD_USER_SERVICE } from 'src/modules/boardUsers/constants';
 
 @Injectable()
 export class BoardUserGuard implements CanActivate {
@@ -22,7 +22,7 @@ export class BoardUserGuard implements CanActivate {
 		private readonly reflector: Reflector,
 		@Inject(GET_BOARD_SERVICE)
 		private readonly getBoardService: GetBoardServiceInterface,
-		@Inject(BoardUsers.TYPES.services.GetBoardUserService)
+		@Inject(GET_BOARD_USER_SERVICE)
 		private readonly getBoardUserService: GetBoardUserServiceInterface
 	) {}
 

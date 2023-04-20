@@ -1,13 +1,13 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { BoardUserRepositoryInterface } from '../interfaces/repositories/board-user.repository.interface';
-import { TYPES } from '../interfaces/types';
+import { BOARD_USER_REPOSITORY } from '../constants';
 import { UpdateBoardUserServiceInterface } from '../interfaces/services/update.board.user.service.interface';
 import BoardUser from 'src/modules/boardUsers/entities/board.user.schema';
 
 @Injectable()
 export default class UpdateBoardUserService implements UpdateBoardUserServiceInterface {
 	constructor(
-		@Inject(TYPES.repositories.BoardUserRepository)
+		@Inject(BOARD_USER_REPOSITORY)
 		private readonly boardUserRepository: BoardUserRepositoryInterface
 	) {}
 

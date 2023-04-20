@@ -5,7 +5,6 @@ import { GetCardServiceInterface } from 'src/modules/cards/interfaces/services/g
 import * as Cards from 'src/modules/cards/interfaces/types';
 import { DeleteVoteServiceInterface } from '../interfaces/services/delete.vote.service.interface';
 import { TYPES } from '../interfaces/types';
-import * as BoardUsers from 'src/modules/boardUsers/interfaces/types';
 import { VoteRepositoryInterface } from '../interfaces/repositories/vote.repository.interface';
 import { UpdateBoardUserServiceInterface } from 'src/modules/boardUsers/interfaces/services/update.board.user.service.interface';
 import { GetBoardUserServiceInterface } from 'src/modules/boardUsers/interfaces/services/get.board.user.service.interface';
@@ -19,15 +18,19 @@ import {
 } from 'src/modules/cards/utils/get-user-with-votes';
 import { votesArrayVerification } from '../utils/votesArrayVerification';
 import { GET_BOARD_SERVICE } from 'src/modules/boards/constants';
+import {
+	GET_BOARD_USER_SERVICE,
+	UPDATE_BOARD_USER_SERVICE
+} from 'src/modules/boardUsers/constants';
 
 @Injectable()
 export default class DeleteVoteService implements DeleteVoteServiceInterface {
 	constructor(
 		@Inject(TYPES.repositories.VoteRepository)
 		private readonly voteRepository: VoteRepositoryInterface,
-		@Inject(BoardUsers.TYPES.services.GetBoardUserService)
+		@Inject(GET_BOARD_USER_SERVICE)
 		private readonly getBoardUserService: GetBoardUserServiceInterface,
-		@Inject(BoardUsers.TYPES.services.UpdateBoardUserService)
+		@Inject(UPDATE_BOARD_USER_SERVICE)
 		private readonly updateBoardUserService: UpdateBoardUserServiceInterface,
 		@Inject(Cards.TYPES.services.GetCardService)
 		private readonly getCardService: GetCardServiceInterface,

@@ -1,5 +1,4 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import * as BoardUsers from 'src/modules/boardUsers/interfaces/types';
 import * as Users from 'src/modules/users/interfaces/types';
 import { DeepMocked, createMock } from '@golevelup/ts-jest';
 import { UseCase } from 'src/libs/interfaces/use-case.interface';
@@ -16,6 +15,7 @@ import { DuplicateBoardDto, DuplicateBoardUseCase } from './duplicate-board.use-
 import { BoardUserDtoFactory } from 'src/libs/test-utils/mocks/factories/dto/boardUserDto-factory.mock';
 import { CreateFailedException } from 'src/libs/exceptions/createFailedBadRequestException';
 import { BOARD_REPOSITORY, GET_BOARD_SERVICE } from 'src/modules/boards/constants';
+import { CREATE_BOARD_USER_SERVICE } from 'src/modules/boardUsers/constants';
 
 const DEFAULT_PROPS = {
 	boardId: faker.datatype.uuid(),
@@ -51,7 +51,7 @@ describe('DuplicateBoardUseCase', () => {
 					useValue: createMock<BoardRepositoryInterface>()
 				},
 				{
-					provide: BoardUsers.TYPES.services.CreateBoardUserService,
+					provide: CREATE_BOARD_USER_SERVICE,
 					useValue: createMock<CreateBoardUserServiceInterface>()
 				}
 			]
@@ -62,7 +62,7 @@ describe('DuplicateBoardUseCase', () => {
 		getUserServiceMock = module.get(Users.TYPES.services.GetUserService);
 		getBoardServiceMock = module.get(GET_BOARD_SERVICE);
 		boardRepositoryMock = module.get(BOARD_REPOSITORY);
-		createBoardUserServiceMock = module.get(BoardUsers.TYPES.services.CreateBoardUserService);
+		createBoardUserServiceMock = module.get(CREATE_BOARD_USER_SERVICE);
 	});
 
 	beforeEach(() => {

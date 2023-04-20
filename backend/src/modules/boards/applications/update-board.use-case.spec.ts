@@ -1,6 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import * as CommunicationsType from 'src/modules/communication/interfaces/types';
-import * as BoardUsers from 'src/modules/boardUsers/interfaces/types';
 import * as Votes from 'src/modules/votes/interfaces/types';
 import { BoardRepositoryInterface } from '../repositories/board.repository.interface';
 import { CommunicationServiceInterface } from 'src/modules/communication/interfaces/slack-communication.service.interface';
@@ -27,6 +26,10 @@ import { UpdateBoardDto } from '../dto/update-board.dto';
 import { UseCase } from 'src/libs/interfaces/use-case.interface';
 import { UpdateBoardUseCase } from './update-board.use-case';
 import { BOARD_REPOSITORY } from 'src/modules/boards/constants';
+import {
+	GET_BOARD_USER_SERVICE,
+	UPDATE_BOARD_USER_SERVICE
+} from 'src/modules/boardUsers/constants';
 
 const regularBoard = BoardFactory.create({ isSubBoard: false, dividedBoards: [] });
 const userId = faker.datatype.uuid();
@@ -111,11 +114,11 @@ describe('UpdateBoardUseCase', () => {
 					useValue: createMock<DeleteVoteServiceInterface>()
 				},
 				{
-					provide: BoardUsers.TYPES.services.GetBoardUserService,
+					provide: GET_BOARD_USER_SERVICE,
 					useValue: createMock<GetBoardUserServiceInterface>()
 				},
 				{
-					provide: BoardUsers.TYPES.services.UpdateBoardUserService,
+					provide: UPDATE_BOARD_USER_SERVICE,
 					useValue: createMock<UpdateBoardUserServiceInterface>()
 				},
 				{
@@ -127,8 +130,8 @@ describe('UpdateBoardUseCase', () => {
 
 		useCase = module.get(UpdateBoardUseCase);
 		boardRepositoryMock = module.get(BOARD_REPOSITORY);
-		updateBoardUserServiceMock = module.get(BoardUsers.TYPES.services.UpdateBoardUserService);
-		getBoardUserServiceMock = module.get(BoardUsers.TYPES.services.GetBoardUserService);
+		updateBoardUserServiceMock = module.get(UPDATE_BOARD_USER_SERVICE);
+		getBoardUserServiceMock = module.get(GET_BOARD_USER_SERVICE);
 		deleteVoteServiceMock = module.get(Votes.TYPES.services.DeleteVoteService);
 		slackCommunicationServiceMock = module.get(
 			CommunicationsType.TYPES.services.SlackCommunicationService

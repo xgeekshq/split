@@ -6,7 +6,6 @@ import { UserNotFoundException } from 'src/libs/exceptions/userNotFoundException
 import { UseCase } from 'src/libs/interfaces/use-case.interface';
 import BoardUserDto from 'src/modules/boardUsers/dto/board.user.dto';
 import { CreateBoardUserServiceInterface } from 'src/modules/boardUsers/interfaces/services/create.board.user.service.interface';
-import * as BoardUsers from 'src/modules/boardUsers/interfaces/types';
 import Card from 'src/modules/cards/entities/card.schema';
 import Column from 'src/modules/columns/entities/column.schema';
 import Team from 'src/modules/teams/entities/team.schema';
@@ -17,6 +16,7 @@ import Board from '../entities/board.schema';
 import { GetBoardServiceInterface } from '../interfaces/services/get.board.service.interface';
 import { BOARD_REPOSITORY, GET_BOARD_SERVICE } from '../constants';
 import { BoardRepositoryInterface } from '../repositories/board.repository.interface';
+import { CREATE_BOARD_USER_SERVICE } from 'src/modules/boardUsers/constants';
 
 export type DuplicateBoardDto = { boardId: string; userId: string; boardTitle: string };
 
@@ -29,7 +29,7 @@ export class DuplicateBoardUseCase implements UseCase<DuplicateBoardDto, Board> 
 		private readonly getUserService: GetUserServiceInterface,
 		@Inject(BOARD_REPOSITORY)
 		private readonly boardRepository: BoardRepositoryInterface,
-		@Inject(BoardUsers.TYPES.services.CreateBoardUserService)
+		@Inject(CREATE_BOARD_USER_SERVICE)
 		private readonly createBoardUserService: CreateBoardUserServiceInterface
 	) {}
 

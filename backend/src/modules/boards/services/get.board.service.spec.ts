@@ -1,26 +1,20 @@
 import { GetBoardUserServiceInterface } from 'src/modules/boardUsers/interfaces/services/get.board.user.service.interface';
 import { Test, TestingModule } from '@nestjs/testing';
 import { BoardFactory } from 'src/libs/test-utils/mocks/factories/board-factory.mock';
-import SocketGateway from 'src/modules/socket/gateway/socket.gateway';
 import { DeepMocked, createMock } from '@golevelup/ts-jest';
-import * as Users from 'src/modules/users/interfaces/types';
-import * as Auth from 'src/modules/auth/interfaces/types';
-import * as BoardUsers from 'src/modules/boardUsers/interfaces/types';
 import faker from '@faker-js/faker';
 import { BoardUserFactory } from 'src/libs/test-utils/mocks/factories/boardUser-factory.mock';
 import { TeamFactory } from 'src/libs/test-utils/mocks/factories/team-factory.mock';
 import { GetTeamServiceInterface } from 'src/modules/teams/interfaces/services/get.team.service.interface';
-import { GetTokenAuthServiceInterface } from 'src/modules/auth/interfaces/services/get-token.auth.service.interface';
-import { UpdateUserServiceInterface } from 'src/modules/users/interfaces/services/update.user.service.interface';
 import { BoardRepositoryInterface } from '../repositories/board.repository.interface';
 import { GetBoardServiceInterface } from '../interfaces/services/get.board.service.interface';
-import { CreateBoardUserServiceInterface } from 'src/modules/boardUsers/interfaces/services/create.board.user.service.interface';
 import { UserDtoFactory } from 'src/libs/test-utils/mocks/factories/dto/userDto-factory.mock';
 import { NotFoundException } from '@nestjs/common';
 import { hideVotesFromColumns } from '../utils/hideVotesFromColumns';
 import { GET_TEAM_SERVICE } from 'src/modules/teams/constants';
 import { BOARD_REPOSITORY } from 'src/modules/boards/constants';
 import GetBoardService from 'src/modules/boards/services/get.board.service';
+import { GET_BOARD_USER_SERVICE } from 'src/modules/boardUsers/constants';
 
 const userId = faker.datatype.uuid();
 const mainBoard = BoardFactory.create({ isSubBoard: false, isPublic: false });
@@ -47,36 +41,21 @@ describe('GetBoardService', () => {
 					provide: GET_TEAM_SERVICE,
 					useValue: createMock<GetTeamServiceInterface>()
 				},
+
 				{
-					provide: BoardUsers.TYPES.services.CreateBoardUserService,
-					useValue: createMock<CreateBoardUserServiceInterface>()
-				},
-				{
-					provide: Auth.TYPES.services.GetTokenAuthService,
-					useValue: createMock<GetTokenAuthServiceInterface>()
-				},
-				{
-					provide: Users.TYPES.services.UpdateUserService,
-					useValue: createMock<UpdateUserServiceInterface>()
-				},
-				{
-					provide: BoardUsers.TYPES.services.GetBoardUserService,
+					provide: GET_BOARD_USER_SERVICE,
 					useValue: createMock<GetBoardUserServiceInterface>()
 				},
 				{
 					provide: BOARD_REPOSITORY,
 					useValue: createMock<BoardRepositoryInterface>()
-				},
-				{
-					provide: SocketGateway,
-					useValue: createMock<SocketGateway>()
 				}
 			]
 		}).compile();
 
 		boardService = module.get(GetBoardService);
 		boardRepositoryMock = module.get(BOARD_REPOSITORY);
-		getBoardUserServiceMock = module.get(BoardUsers.TYPES.services.GetBoardUserService);
+		getBoardUserServiceMock = module.get(GET_BOARD_USER_SERVICE);
 		getTeamServiceMock = module.get(GET_TEAM_SERVICE);
 	});
 

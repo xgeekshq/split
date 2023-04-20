@@ -2,19 +2,22 @@ import { GetBoardUserServiceInterface } from '../../boardUsers/interfaces/servic
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { BOARD_NOT_FOUND, INSERT_VOTE_FAILED } from 'src/libs/exceptions/messages';
 import { CreateVoteServiceInterface } from '../interfaces/services/create.vote.service.interface';
-import * as BoardUsers from 'src/modules/boardUsers/interfaces/types';
 import { UpdateBoardUserServiceInterface } from 'src/modules/boardUsers/interfaces/services/update.board.user.service.interface';
 import { InsertFailedException } from 'src/libs/exceptions/insertFailedBadRequestException';
 import { UpdateFailedException } from 'src/libs/exceptions/updateFailedBadRequestException';
 import { GetBoardServiceInterface } from 'src/modules/boards/interfaces/services/get.board.service.interface';
 import { GET_BOARD_SERVICE } from 'src/modules/boards/constants';
+import {
+	GET_BOARD_USER_SERVICE,
+	UPDATE_BOARD_USER_SERVICE
+} from 'src/modules/boardUsers/constants';
 
 @Injectable()
 export default class CreateVoteService implements CreateVoteServiceInterface {
 	constructor(
-		@Inject(BoardUsers.TYPES.services.GetBoardUserService)
+		@Inject(GET_BOARD_USER_SERVICE)
 		private readonly getBoardUserService: GetBoardUserServiceInterface,
-		@Inject(BoardUsers.TYPES.services.UpdateBoardUserService)
+		@Inject(UPDATE_BOARD_USER_SERVICE)
 		private readonly updateBoardUserService: UpdateBoardUserServiceInterface,
 		@Inject(GET_BOARD_SERVICE)
 		private readonly getBoardService: GetBoardServiceInterface

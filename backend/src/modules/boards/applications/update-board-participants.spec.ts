@@ -1,5 +1,4 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import * as BoardUsers from 'src/modules/boardUsers/interfaces/types';
 import { BoardUserFactory } from 'src/libs/test-utils/mocks/factories/boardUser-factory.mock';
 import { UpdateBoardUserServiceInterface } from 'src/modules/boardUsers/interfaces/services/update.board.user.service.interface';
 import { BoardRoles } from 'src/libs/enum/board.roles';
@@ -14,6 +13,11 @@ import {
 import UpdateBoardUserDto from 'src/modules/boardUsers/dto/update-board-user.dto';
 import { CreateBoardUserServiceInterface } from 'src/modules/boardUsers/interfaces/services/create.board.user.service.interface';
 import { DeleteBoardUserServiceInterface } from 'src/modules/boardUsers/interfaces/services/delete.board.user.service.interface';
+import {
+	CREATE_BOARD_USER_SERVICE,
+	DELETE_BOARD_USER_SERVICE,
+	UPDATE_BOARD_USER_SERVICE
+} from 'src/modules/boardUsers/constants';
 
 const addUsers = BoardUserDtoFactory.createMany(2);
 const boardUserToRemove = BoardUserFactory.create();
@@ -31,24 +35,24 @@ describe('UpdateBoardParticipantsUseCase', () => {
 			providers: [
 				UpdateBoardParticipantsUseCase,
 				{
-					provide: BoardUsers.TYPES.services.CreateBoardUserService,
+					provide: CREATE_BOARD_USER_SERVICE,
 					useValue: createMock<CreateBoardUserServiceInterface>()
 				},
 				{
-					provide: BoardUsers.TYPES.services.DeleteBoardUserService,
+					provide: DELETE_BOARD_USER_SERVICE,
 					useValue: createMock<DeleteBoardUserServiceInterface>()
 				},
 				{
-					provide: BoardUsers.TYPES.services.UpdateBoardUserService,
+					provide: UPDATE_BOARD_USER_SERVICE,
 					useValue: createMock<UpdateBoardUserServiceInterface>()
 				}
 			]
 		}).compile();
 
 		useCase = module.get(UpdateBoardParticipantsUseCase);
-		updateBoardUserServiceMock = module.get(BoardUsers.TYPES.services.UpdateBoardUserService);
-		createBoardUserServiceMock = module.get(BoardUsers.TYPES.services.CreateBoardUserService);
-		deleteBoardUserServiceMock = module.get(BoardUsers.TYPES.services.DeleteBoardUserService);
+		updateBoardUserServiceMock = module.get(UPDATE_BOARD_USER_SERVICE);
+		createBoardUserServiceMock = module.get(CREATE_BOARD_USER_SERVICE);
+		deleteBoardUserServiceMock = module.get(DELETE_BOARD_USER_SERVICE);
 	});
 
 	beforeEach(() => {
