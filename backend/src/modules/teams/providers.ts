@@ -15,6 +15,8 @@ import CreateTeamService from './services/create.team.service';
 import DeleteTeamService from './services/delete.team.service';
 import GetTeamService from './services/get.team.service';
 
+/* SERVICES */
+
 export const createTeamService = {
 	provide: CREATE_TEAM_SERVICE,
 	useClass: CreateTeamService
@@ -30,6 +32,8 @@ export const getTeamService = {
 	useClass: GetTeamService
 };
 
+/* APPLICATIONS */
+
 export const getTeamApplication = {
 	provide: GET_TEAM_APPLICATION,
 	useClass: GetTeamApplication
@@ -44,6 +48,8 @@ export const deleteTeamApplication = {
 	provide: DELETE_TEAM_APPLICATION,
 	useClass: DeleteTeamApplication
 };
+
+/* REPOSITORY */
 
 export const teamRepository = {
 	provide: TEAM_REPOSITORY,

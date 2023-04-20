@@ -11,6 +11,8 @@ import DeleteBoardUserService from './services/delete.board.user.service';
 import GetBoardUserService from './services/get.board.user.service';
 import UpdateBoardUserService from './services/update.board.user.service';
 
+/* SERVICE */
+
 export const createBoardUserService = {
 	provide: CREATE_BOARD_USER_SERVICE,
 	useClass: CreateBoardUserService
@@ -30,6 +32,8 @@ export const deleteBoardUserService = {
 	provide: DELETE_BOARD_USER_SERVICE,
 	useClass: DeleteBoardUserService
 };
+
+/* REPOSITORY */
 
 export const boardUserRepository = {
 	provide: BOARD_USER_REPOSITORY,
