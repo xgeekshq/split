@@ -33,7 +33,11 @@ const SelectTeam = ({ previousTeam }: SelectTeamProps) => {
   const routerTeam = router.query.team as string;
 
   const setHaveError = useSetRecoilState(createBoardError);
-  const { handleSplitBoards, createBoardData, setCreateBoardData } = useCreateBoard();
+  const {
+    handleSplitBoards,
+    createBoardData: { team: createBoardTeam },
+    setCreateBoardData,
+  } = useCreateBoard();
   const teamsQuery = useTeams(isSAdmin);
   const teams = teamsQuery.data ?? [];
 
@@ -78,12 +82,12 @@ const SelectTeam = ({ previousTeam }: SelectTeamProps) => {
   );
 
   const createBoard = useCallback(() => {
-    const teamMembersCount = createBoardData.team?.users.length ?? 0;
+    const teamMembersCount = createBoardTeam?.users.length ?? 0;
     const maxUsersCount = Math.ceil(teamMembersCount / 2);
     const teamsCount = Math.ceil(teamMembersCount / maxUsersCount);
 
     const users =
-      createBoardData.team?.users.flatMap((teamUser) => {
+      createBoardTeam?.users.flatMap((teamUser) => {
         if (teamUser.role !== TeamUserRoles.STAKEHOLDER) return [];
 
         return [
@@ -95,10 +99,6 @@ const SelectTeam = ({ previousTeam }: SelectTeamProps) => {
         ];
       }) ?? [];
 
-    console.log('4 -> ', users);
-    console.log(previousTeam, createBoardData.team);
-
-    // if (previousTeam !== createBoardData.team?.id) {
     setCreateBoardData((prev) => ({
       ...prev,
       users,
@@ -109,8 +109,7 @@ const SelectTeam = ({ previousTeam }: SelectTeamProps) => {
         maxUsersCount,
       },
     }));
-    // }
-  }, [handleSplitBoards, previousTeam, setCreateBoardData, createBoardData.team]);
+  }, [handleSplitBoards, previousTeam, setCreateBoardData, createBoardTeam]);
 
   const handleTeamChange = (value: string) => {
     clearErrors();
@@ -124,36 +123,18 @@ const SelectTeam = ({ previousTeam }: SelectTeamProps) => {
       team: foundTeam,
       board: { ...prev.board, team: foundTeam.id },
     }));
-
-    console.log('1 -> ', foundTeam);
   };
 
-  // useEffect(() => {
-  //   if (selectedTeam) {
-  //     const canCreateBoard = verifyIfCanCreateBoard();
-  //     setHaveError(!canCreateBoard);
-
-  //     if (canCreateBoard) {
-  //       createBoard();
-  //     }
-  //   }
-  // }, [routerTeam, selectedTeam, verifyIfCanCreateBoard, createBoard]);
-
   useEffect(() => {
-    if (!createBoardData.team) return;
-
-    console.log('2 -> ', createBoardData.team);
+    if (!createBoardTeam) return;
 
     const haveMinMembers =
-      createBoardData.team.users.filter((user) => user.role !== TeamUserRoles.STAKEHOLDER).length >=
+      createBoardTeam.users.filter((user) => user.role !== TeamUserRoles.STAKEHOLDER).length >=
       MIN_MEMBERS;
     setHaveError(!haveMinMembers);
 
-    console.log('3 -> ', haveMinMembers);
-
     if (haveMinMembers) createBoard();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [createBoardData.team]);
+  }, [createBoardTeam]);
 
   useEffect(() => {
     if (routerTeam) {
@@ -168,7 +149,7 @@ const SelectTeam = ({ previousTeam }: SelectTeamProps) => {
     <Flex css={{ flex: 1 }} direction="column">
       <Select
         css={{ width: '100%', height: '$64' }}
-        defaultValue={teamsNames.find((option) => option.value === createBoardData.team?.id)?.value}
+        defaultValue={teamsNames.find((option) => option.value === createBoardTeam?.id)?.value}
         disabled={availableTeams.length === 0}
         hasError={currentSelectTeamState === 'error'}
         onValueChange={(selectedOption: string) => {
@@ -177,7 +158,7 @@ const SelectTeam = ({ previousTeam }: SelectTeamProps) => {
       >
         <SelectTrigger css={{ padding: '$24' }}>
           <Flex direction="column">
-            <Text color="primary300" size={createBoardData.team ? 'sm' : 'md'}>
+            <Text color="primary300" size={createBoardTeam ? 'sm' : 'md'}>
               {availableTeams.length === 0 ? 'No teams available' : 'Select Team'}
             </Text>
             <SelectValue />

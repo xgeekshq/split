@@ -20,7 +20,10 @@ const ListParticipants = ({ isOpen, setIsOpen }: ListParticipantsProps) => {
 
   const [usersList, setUsersList] = useRecoilState(usersListState);
   const setToastState = useSetRecoilState(toastState);
-  const { createBoardData, setCreateBoardData } = useCreateBoard();
+  const {
+    createBoardData: { users },
+    setCreateBoardData,
+  } = useCreateBoard();
 
   const saveParticipants = (checkedUserList: UserList[]) => {
     const checkedUsersListToBeSorted = [...checkedUserList];
@@ -32,7 +35,7 @@ const ListParticipants = ({ isOpen, setIsOpen }: ListParticipantsProps) => {
     );
 
     const addedUsers = selectedUsers
-      .filter((user) => !createBoardData.users.some((boardUser) => boardUser.user._id === user._id))
+      .filter((user) => !users.some((boardUser) => boardUser.user._id === user._id))
       .map((user) =>
         user._id === userId
           ? { role: BoardUserRoles.RESPONSIBLE, user, votesCount: 0 }
@@ -43,7 +46,7 @@ const ListParticipants = ({ isOpen, setIsOpen }: ListParticipantsProps) => {
             },
       );
 
-    const newBoardUsers = [...createBoardData.users, ...addedUsers].filter(
+    const newBoardUsers = [...users, ...addedUsers].filter(
       (boardUser) => !unselectedUsers.some((user) => boardUser?.user._id === user._id),
     );
 

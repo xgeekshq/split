@@ -21,7 +21,10 @@ type BoardParticipantsListProps = {
 const BoardParticipantsList = ({ isPageLoading }: BoardParticipantsListProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const { userId, isSAdmin } = useCurrentSession();
-  const { createBoardData, setCreateBoardData } = useCreateBoard();
+  const {
+    createBoardData: { users },
+    setCreateBoardData,
+  } = useCreateBoard();
   const setUsersList = useSetRecoilState(usersListState);
 
   const handleOpen = (event: MouseEvent) => {
@@ -68,9 +71,7 @@ const BoardParticipantsList = ({ isPageLoading }: BoardParticipantsListProps) =>
     }));
   };
 
-  const responsibles = createBoardData.users.filter(
-    (user) => user.role === BoardUserRoles.RESPONSIBLE,
-  );
+  const responsibles = users.filter((user) => user.role === BoardUserRoles.RESPONSIBLE);
 
   return (
     <Flex css={{ width: '100%' }} direction="column" gap={16}>
@@ -91,7 +92,7 @@ const BoardParticipantsList = ({ isPageLoading }: BoardParticipantsListProps) =>
         </Flex>
       </Flex>
       <Flex direction="column" gap="8">
-        {createBoardData.users.map((participant) => (
+        {users.map((participant) => (
           <ParticipantCard
             key={participant.user._id}
             isCurrentUserResponsible

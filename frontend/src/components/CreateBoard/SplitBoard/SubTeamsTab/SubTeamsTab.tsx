@@ -24,17 +24,17 @@ const SubTeamsTab = React.memo<SubTeamsTabProps>(({ previousTeam }) => {
   const [stakeholders, setStakeholders] = useState<User[]>([]);
   const haveError = useRecoilValue(createBoardError);
 
-  const { createBoardData } = useCreateBoard();
+  const {
+    createBoardData: { team },
+  } = useCreateBoard();
   const { data: teams } = useTeams(isSAdmin);
 
   useEffect(() => {
-    if (createBoardData.team) {
+    if (team) {
       const isStakeholder = (userTeam: TeamUser): boolean =>
         userTeam.role === TeamUserRoles.STAKEHOLDER;
       const getStakeholder = ({ user }: TeamUser): User => user;
-      const stakeholdersFound = createBoardData.team.users
-        .filter(isStakeholder)
-        .map(getStakeholder);
+      const stakeholdersFound = team.users.filter(isStakeholder).map(getStakeholder);
 
       const stakeholdersNames = stakeholdersFound.map((stakeholderList) => ({
         ...stakeholderList,
@@ -50,7 +50,7 @@ const SubTeamsTab = React.memo<SubTeamsTabProps>(({ previousTeam }) => {
     }
 
     return () => setStakeholders([]);
-  }, [teams, createBoardData.team]);
+  }, [teams, team]);
 
   return (
     <Flex direction="column">
@@ -58,7 +58,7 @@ const SubTeamsTab = React.memo<SubTeamsTabProps>(({ previousTeam }) => {
         <SelectTeam previousTeam={previousTeam} />
         <BoardUsersDropdown haveError={haveError} title="Stakeholders" users={stakeholders} />
       </Flex>
-      {!haveError && createBoardData.team ? (
+      {!haveError && team ? (
         <>
           <Flex justify="end">
             <QuickEditSubTeams />

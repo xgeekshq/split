@@ -17,10 +17,14 @@ import useCreateBoard from '@/hooks/useCreateBoard';
 
 const QuickEditSubTeams = () => {
   const { register, getValues, setValue } = useFormContext();
-  const { createBoardData, setCreateBoardData, handleSplitBoards, teamMembers } = useCreateBoard();
   const {
-    count: { teamsCount, maxUsersCount },
-  } = createBoardData;
+    createBoardData: {
+      count: { teamsCount, maxUsersCount },
+    },
+    setCreateBoardData,
+    handleSplitBoards,
+    teamMembers,
+  } = useCreateBoard();
 
   const teamLength = teamMembers?.length ?? 0;
   const minUsers = teamLength % 2 === 0 ? 2 : 3;

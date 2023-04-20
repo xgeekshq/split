@@ -48,8 +48,6 @@ const CreateBoardItem = React.memo(() => {
     canReduce,
   } = useCreateBoard();
 
-  console.log(board);
-
   return (
     team && (
       <Flex css={{ width: '100%', height: '100%' }} direction="column" gap={8}>

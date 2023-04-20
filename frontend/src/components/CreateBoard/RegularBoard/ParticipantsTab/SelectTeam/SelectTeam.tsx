@@ -27,7 +27,10 @@ const SelectTeam = () => {
   const routerTeam = router.query.team as string;
 
   const setUsersList = useSetRecoilState(usersListState);
-  const { createBoardData, setCreateBoardData } = useCreateBoard();
+  const {
+    createBoardData: { team },
+    setCreateBoardData,
+  } = useCreateBoard();
   const teamsQuery = useTeams(isSAdmin);
   const teams = teamsQuery.data ?? [];
 
@@ -77,8 +80,6 @@ const SelectTeam = () => {
         ];
       });
 
-      console.log(users);
-
       setCreateBoardData((prev) => ({
         ...prev,
         team: selectedTeam,
@@ -115,7 +116,7 @@ const SelectTeam = () => {
     <Flex css={{ flex: 1 }} direction="column">
       <Select
         css={{ width: '100%', height: '$64' }}
-        defaultValue={teamsNames.find((option) => option.value === createBoardData.team?.id)?.value}
+        defaultValue={teamsNames.find((option) => option.value === team?.id)?.value}
         disabled={availableTeams.length === 0}
         onValueChange={(selectedOption: string) => {
           handleTeamChange(selectedOption);
@@ -123,7 +124,7 @@ const SelectTeam = () => {
       >
         <SelectTrigger css={{ padding: '$24' }}>
           <Flex direction="column">
-            <Text color="primary300" size={createBoardData.team ? 'sm' : 'md'}>
+            <Text color="primary300" size={team ? 'sm' : 'md'}>
               {availableTeams.length === 0 ? 'No teams available' : 'Select Team'}
             </Text>
             <SelectValue />
