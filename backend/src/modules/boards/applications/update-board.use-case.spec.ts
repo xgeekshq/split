@@ -1,19 +1,13 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import * as CommunicationsType from 'src/modules/communication/interfaces/types';
-import * as Boards from 'src/modules/boards/interfaces/types';
 import * as BoardUsers from 'src/modules/boardUsers/interfaces/types';
 import * as Votes from 'src/modules/votes/interfaces/types';
-import { boardRepository } from '../boards.providers';
 import { BoardRepositoryInterface } from '../repositories/board.repository.interface';
 import { CommunicationServiceInterface } from 'src/modules/communication/interfaces/slack-communication.service.interface';
 import { BoardFactory } from 'src/libs/test-utils/mocks/factories/board-factory.mock';
 import { UpdateBoardDtoFactory } from 'src/libs/test-utils/mocks/factories/dto/updateBoardDto-factory.mock';
 import { BoardUserFactory } from 'src/libs/test-utils/mocks/factories/boardUser-factory.mock';
 import { NotFoundException } from '@nestjs/common';
-import {
-	getBoardUserService,
-	updateBoardUserService
-} from 'src/modules/boardUsers/boardusers.providers';
 import { UpdateBoardUserServiceInterface } from 'src/modules/boardUsers/interfaces/services/update.board.user.service.interface';
 import { GetBoardUserServiceInterface } from 'src/modules/boardUsers/interfaces/services/get.board.user.service.interface';
 import ColumnDto from 'src/modules/columns/dto/column.dto';
@@ -32,6 +26,7 @@ import Board from '../entities/board.schema';
 import { UpdateBoardDto } from '../dto/update-board.dto';
 import { UseCase } from 'src/libs/interfaces/use-case.interface';
 import { UpdateBoardUseCase } from './update-board.use-case';
+import { BOARD_REPOSITORY } from 'src/modules/boards/constants';
 
 const regularBoard = BoardFactory.create({ isSubBoard: false, dividedBoards: [] });
 const userId = faker.datatype.uuid();
@@ -116,22 +111,22 @@ describe('UpdateBoardUseCase', () => {
 					useValue: createMock<DeleteVoteServiceInterface>()
 				},
 				{
-					provide: getBoardUserService.provide,
+					provide: BoardUsers.TYPES.services.GetBoardUserService,
 					useValue: createMock<GetBoardUserServiceInterface>()
 				},
 				{
-					provide: updateBoardUserService.provide,
+					provide: BoardUsers.TYPES.services.UpdateBoardUserService,
 					useValue: createMock<UpdateBoardUserServiceInterface>()
 				},
 				{
-					provide: boardRepository.provide,
+					provide: BOARD_REPOSITORY,
 					useValue: createMock<BoardRepositoryInterface>()
 				}
 			]
 		}).compile();
 
 		useCase = module.get(UpdateBoardUseCase);
-		boardRepositoryMock = module.get(Boards.TYPES.repositories.BoardRepository);
+		boardRepositoryMock = module.get(BOARD_REPOSITORY);
 		updateBoardUserServiceMock = module.get(BoardUsers.TYPES.services.UpdateBoardUserService);
 		getBoardUserServiceMock = module.get(BoardUsers.TYPES.services.GetBoardUserService);
 		deleteVoteServiceMock = module.get(Votes.TYPES.services.DeleteVoteService);

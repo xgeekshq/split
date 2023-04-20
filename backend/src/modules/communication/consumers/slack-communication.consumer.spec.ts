@@ -1,7 +1,6 @@
 import { DeepMocked, createMock } from '@golevelup/ts-jest';
 import { Test, TestingModule } from '@nestjs/testing';
 import { TYPES } from 'src/modules/communication/interfaces/types';
-import { TYPES as BOARD_TYPES } from 'src/modules/boards/interfaces/types';
 import { BoardType } from '../dto/types';
 import { Job } from 'bull';
 import { SlackCommunicationConsumer } from './slack-communication.consumer';
@@ -10,6 +9,7 @@ import { UpdateBoardServiceInterface } from 'src/modules/boards/interfaces/servi
 import { Logger } from '@nestjs/common';
 import { UserFactory } from 'src/libs/test-utils/mocks/factories/user-factory';
 import { TeamDto } from 'src/modules/communication/dto/team.dto';
+import { UPDATE_BOARD_SERVICE } from 'src/modules/boards/constants';
 
 const BoardTypeMock = {
 	id: 1,
@@ -52,14 +52,14 @@ describe('SlackCommunicationConsumer', () => {
 					useValue: createMock<CommunicationApplicationInterface>()
 				},
 				{
-					provide: BOARD_TYPES.services.UpdateBoardService,
+					provide: UPDATE_BOARD_SERVICE,
 					useValue: createMock<UpdateBoardServiceInterface>()
 				}
 			]
 		}).compile();
-		consumer = module.get<SlackCommunicationConsumer>(SlackCommunicationConsumer);
+		consumer = module.get(SlackCommunicationConsumer);
 		communicationAppMock = module.get(TYPES.application.SlackCommunicationApplication);
-		updateBoardServiceMock = module.get(BOARD_TYPES.services.UpdateBoardService);
+		updateBoardServiceMock = module.get(UPDATE_BOARD_SERVICE);
 	});
 
 	beforeEach(() => {
