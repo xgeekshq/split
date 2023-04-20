@@ -6,11 +6,11 @@ import { useSetRecoilState } from 'recoil';
 import Button from '@/components/Primitives/Inputs/Button/Button';
 import Input from '@/components/Primitives/Inputs/Input/Input';
 import Text from '@/components/Primitives/Text/Text';
+import { createErrorMessage } from '@/constants/toasts';
 import SchemaEmail from '@/schema/schemaEmail';
 import { toastState } from '@/store/toast/atom/toast.atom';
 import { FlexForm } from '@/styles/pages/pages.styles';
 import { EmailUser } from '@/types/user/user';
-import { ToastStateEnum } from '@/utils/enums/toast-types';
 import { SignUpEnum } from '@/utils/signUp.enum';
 import useSignUp from '@hooks/auth/useSignUp';
 
@@ -43,7 +43,7 @@ const SignUpForm = ({ setShowSignUp, setEmailName, emailName }: SignUpFormProps)
         return;
       }
 
-      methods.setError('email', { type: 'custom', message: 'This email already exists' });
+      methods.setError('email', { type: 'custom', message: 'This email already exists!' });
     },
     onError: (error: Error) => {
       /**
@@ -66,11 +66,7 @@ const SignUpForm = ({ setShowSignUp, setEmailName, emailName }: SignUpFormProps)
         direction="column"
         onSubmit={methods.handleSubmit(({ email }) => {
           if (!email) {
-            setToastState({
-              open: true,
-              type: ToastStateEnum.ERROR,
-              content: 'Network error, please try again ',
-            });
+            setToastState(createErrorMessage('Network error, please try again!'));
             return;
           }
           handleCheckUserExists(email);
