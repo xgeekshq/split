@@ -10,6 +10,7 @@ import {
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Text from '@/components/Primitives/Text/Text';
 import { UpdateScheduleType } from '@/types/board/board';
+import { BoardCreation } from '@components/Board/Settings/partials/Scheduling/BoardCreation';
 import { DateAndTimePicker } from '@components/Board/Settings/partials/Scheduling/DateAndTime';
 import { ReminderSchedule } from '@components/Board/Settings/partials/Scheduling/Reminder';
 import { RepeatSchedule } from '@components/Board/Settings/partials/Scheduling/Repeat';
@@ -42,6 +43,8 @@ const SchedulingSettings = ({ schedulingData, setSchedulingData }: SchedulingPro
             currentDate={schedulingData.scheduleDate}
             setDate={handleScheduleDateChange}
           ></DateAndTimePicker>
+          <Separator />
+          <BoardCreation schedulingData={schedulingData} setSchedulingData={setSchedulingData} />
           <Separator />
           <RepeatSchedule schedulingData={schedulingData} setSchedulingData={setSchedulingData} />
           <Separator />

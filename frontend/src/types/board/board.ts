@@ -100,6 +100,8 @@ export type UpdateScheduleType = {
   viaSlack?: boolean;
   viaEmail?: boolean;
   prefillingCards?: boolean;
+  creationTimeUnit?: string;
+  timeBeforeReunion?: string;
 };
 
 export type TimeSlot = {
