@@ -15,13 +15,13 @@ import { CreateTeamUser, TeamUserAddAndRemove } from '@/types/team/team.user';
 import { UserList } from '@/types/team/userList';
 import { verifyIfIsNewJoiner } from '@/utils/verifyIfIsNewJoiner';
 
-type Props = {
+export type ListMembersProps = {
   setIsOpen: Dispatch<SetStateAction<boolean>>;
   isOpen: boolean;
   isTeamPage?: boolean;
 };
 
-const ListMembers = ({ isOpen, setIsOpen, isTeamPage }: Props) => {
+const ListMembers = ({ isOpen, setIsOpen, isTeamPage }: ListMembersProps) => {
   const {
     query: { teamId },
   } = useRouter();

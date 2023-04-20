@@ -152,8 +152,13 @@ const NewSplitBoard: NextPage = () => {
       const responsible = newSubBoard.users.find(
         (user) => user.role === BoardUserRoles.RESPONSIBLE,
       );
+
       if (!isEmpty(responsible)) {
         responsibles.push(responsible.user);
+      }
+
+      if (responsible) {
+        newSubBoard.responsibles = [responsible.user];
       }
 
       return newSubBoard;

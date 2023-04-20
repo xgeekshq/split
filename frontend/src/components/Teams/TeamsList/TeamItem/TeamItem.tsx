@@ -153,7 +153,7 @@ const TeamItem = React.memo(({ team, userId, isSAdmin }: TeamItemProps) => {
               title={isTeamPage ? 'Delete team' : 'Remove User'}
               tooltip={isTeamPage ? 'Delete team' : 'Remove user'}
             >
-              <Button isIcon size="sm">
+              <Button isIcon data-testid="deleteTeamButton" size="sm">
                 <Icon
                   name={isTeamPage ? 'trash-alt' : 'user-slash'}
                   css={{
