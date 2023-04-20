@@ -132,6 +132,10 @@ const NewSplitBoard: NextPage = () => {
           responsibles.push(responsible.user);
         }
 
+        if (responsible) {
+          newSubBoard.responsibles = [responsible.user];
+        }
+
         return newSubBoard;
       },
     );
