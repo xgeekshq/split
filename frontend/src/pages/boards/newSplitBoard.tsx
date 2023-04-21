@@ -25,6 +25,8 @@ import { TEAMS_KEY } from '@/constants/react-query/keys';
 import { DASHBOARD_ROUTE, ROUTES } from '@/constants/routes';
 import SPLIT_BOARD_TIPS from '@/constants/tips/splitBoard';
 import { createSuccessMessage } from '@/constants/toasts';
+import { BoardPhases } from '@/enums/boards/phases';
+import { BoardUserRoles } from '@/enums/boards/userRoles';
 import useTeams from '@/hooks/teams/useTeams';
 import useBoard from '@/hooks/useBoard';
 import useCurrentSession from '@/hooks/useCurrentSession';
@@ -37,8 +39,6 @@ import {
 import { toastState } from '@/store/toast/atom/toast.atom';
 import { StyledForm } from '@/styles/pages/pages.styles';
 import { CreateBoardDto } from '@/types/board/board';
-import { BoardPhases } from '@/utils/enums/board.phases';
-import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import isEmpty from '@/utils/isEmpty';
 
 const defaultBoard = {

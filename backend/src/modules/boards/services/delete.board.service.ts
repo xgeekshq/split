@@ -5,24 +5,24 @@ import { DeleteSchedulesServiceInterface } from 'src/modules/schedules/interface
 import * as Schedules from 'src/modules/schedules/interfaces/types';
 import { DeleteBoardServiceInterface } from '../interfaces/services/delete.board.service.interface';
 import Board from '../entities/board.schema';
-import * as Boards from 'src/modules/boards/interfaces/types';
-import * as BoardUsers from 'src/modules/boardUsers/interfaces/types';
 import * as CommunicationTypes from 'src/modules/communication/interfaces/types';
 import { ArchiveChannelServiceInterface } from 'src/modules/communication/interfaces/archive-channel.service.interface';
 import { ArchiveChannelDataOptions } from 'src/modules/communication/dto/types';
 import { BoardRepositoryInterface } from '../repositories/board.repository.interface';
+import { BOARD_REPOSITORY } from 'src/modules/boards/constants';
+import { DELETE_BOARD_USER_SERVICE } from 'src/modules/boardUsers/constants';
 
 @Injectable()
 export default class DeleteBoardService implements DeleteBoardServiceInterface {
 	constructor(
-		@Inject(Boards.TYPES.repositories.BoardRepository)
+		@Inject(BOARD_REPOSITORY)
 		private readonly boardRepository: BoardRepositoryInterface,
-		@Inject(BoardUsers.TYPES.services.DeleteBoardUserService)
-		private deleteBoardUserService: DeleteBoardUserServiceInterface,
+		@Inject(DELETE_BOARD_USER_SERVICE)
+		private readonly deleteBoardUserService: DeleteBoardUserServiceInterface,
 		@Inject(Schedules.TYPES.services.DeleteSchedulesService)
-		private deleteScheduleService: DeleteSchedulesServiceInterface,
+		private readonly deleteScheduleService: DeleteSchedulesServiceInterface,
 		@Inject(CommunicationTypes.TYPES.services.SlackArchiveChannelService)
-		private archiveChannelService: ArchiveChannelServiceInterface
+		private readonly archiveChannelService: ArchiveChannelServiceInterface
 	) {}
 
 	async deleteBoardsByTeamId(teamId: string) {

@@ -9,7 +9,7 @@ import {
   PopoverTrigger,
 } from '@/components/Primitives/Popovers/Popover/Popover';
 import Text from '@/components/Primitives/Text/Text';
-import { TeamUserRoles } from '@/utils/enums/team.user.roles';
+import { TeamUserRoles } from '@/enums/teams/userRoles';
 
 export type TeamRolePopoverProps = {
   handleRoleChange: (role: TeamUserRoles) => void;

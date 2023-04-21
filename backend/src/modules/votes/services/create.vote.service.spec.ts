@@ -1,7 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { TYPES } from '../interfaces/types';
-import * as BoardUsers from 'src/modules/boardUsers/interfaces/types';
-import * as Boards from 'src/modules/boards/interfaces/types';
 import { DeepMocked, createMock } from '@golevelup/ts-jest';
 import CreateVoteService from './create.vote.service';
 import { CreateVoteServiceInterface } from '../interfaces/services/create.vote.service.interface';
@@ -18,6 +16,11 @@ import BoardUser from 'src/modules/boardUsers/entities/board.user.schema';
 import { BoardUserFactory } from 'src/libs/test-utils/mocks/factories/boardUser-factory.mock';
 import { UpdateBoardUserServiceInterface } from 'src/modules/boardUsers/interfaces/services/update.board.user.service.interface';
 import { UpdateFailedException } from 'src/libs/exceptions/updateFailedBadRequestException';
+import { GET_BOARD_SERVICE } from 'src/modules/boards/constants';
+import {
+	GET_BOARD_USER_SERVICE,
+	UPDATE_BOARD_USER_SERVICE
+} from 'src/modules/boardUsers/constants';
 
 const userId: string = faker.datatype.uuid();
 const board: Board = BoardFactory.create({ maxVotes: 3 });
@@ -39,24 +42,24 @@ describe('CreateVoteService', () => {
 					useValue: createMock<VoteRepositoryInterface>()
 				},
 				{
-					provide: BoardUsers.TYPES.services.GetBoardUserService,
+					provide: GET_BOARD_USER_SERVICE,
 					useValue: createMock<GetBoardUserServiceInterface>()
 				},
 				{
-					provide: BoardUsers.TYPES.services.UpdateBoardUserService,
+					provide: UPDATE_BOARD_USER_SERVICE,
 					useValue: createMock<UpdateBoardServiceInterface>()
 				},
 				{
-					provide: Boards.TYPES.services.GetBoardService,
+					provide: GET_BOARD_SERVICE,
 					useValue: createMock<GetBoardServiceInterface>()
 				}
 			]
 		}).compile();
 		voteService = module.get<CreateVoteServiceInterface>(CreateVoteService);
 		voteRepositoryMock = module.get(TYPES.repositories.VoteRepository);
-		getBoardUserServiceMock = module.get(BoardUsers.TYPES.services.GetBoardUserService);
-		getBoardServiceMock = module.get(Boards.TYPES.services.GetBoardService);
-		updateBoardUserServiceMock = module.get(BoardUsers.TYPES.services.UpdateBoardUserService);
+		getBoardUserServiceMock = module.get(GET_BOARD_USER_SERVICE);
+		getBoardServiceMock = module.get(GET_BOARD_SERVICE);
+		updateBoardUserServiceMock = module.get(UPDATE_BOARD_USER_SERVICE);
 	});
 
 	beforeEach(() => {

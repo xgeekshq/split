@@ -4,6 +4,7 @@ import { useRecoilState, useSetRecoilState } from 'recoil';
 
 import UserListDialog from '@/components/Primitives/Dialogs/UserListDialog/UserListDialog';
 import { createSuccessMessage } from '@/constants/toasts';
+import { TeamUserRoles } from '@/enums/teams/userRoles';
 import useTeam from '@/hooks/teams/useTeam';
 import useUpdateTeamUsers from '@/hooks/teams/useUpdateTeamUsers';
 import useCurrentSession from '@/hooks/useCurrentSession';
@@ -12,7 +13,6 @@ import { toastState } from '@/store/toast/atom/toast.atom';
 import { usersListState } from '@/store/user.atom';
 import { CreateTeamUser, TeamUserAddAndRemove } from '@/types/team/team.user';
 import { UserList } from '@/types/team/userList';
-import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 import { verifyIfIsNewJoiner } from '@/utils/verifyIfIsNewJoiner';
 
 export type ListMembersProps = {

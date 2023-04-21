@@ -5,6 +5,7 @@ import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import Column from '@/components/Board/Column/Column';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import { createInfoMessage } from '@/constants/toasts';
+import { BoardUserRoles } from '@/enums/boards/userRoles';
 import { countBoardCards } from '@/helper/board/countCards';
 import useBoard from '@/hooks/useBoard';
 import useCards from '@/hooks/useCards';
@@ -17,7 +18,6 @@ import BoardType from '@/types/board/board';
 import MergeCardsDto from '@/types/board/mergeCard.dto';
 import UpdateCardPositionDto from '@/types/card/updateCardPosition.dto';
 import ColumnType from '@/types/column';
-import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 
 const Container = styled(Flex, {
   boxSizing: 'border-box',

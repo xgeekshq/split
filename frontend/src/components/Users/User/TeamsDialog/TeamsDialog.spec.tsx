@@ -3,8 +3,8 @@ import { UseMutationResult } from '@tanstack/react-query';
 import { fireEvent, waitFor } from '@testing-library/react';
 
 import TeamsDialog, { TeamsDialogProps } from '@/components/Users/User/TeamsDialog/TeamsDialog';
+import { TeamUserRoles } from '@/enums/teams/userRoles';
 import useUpdateUserTeams from '@/hooks/teams/useUpdateUserTeams';
-import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 import { TeamCheckedFactory } from '@/utils/factories/team';
 import { UserFactory } from '@/utils/factories/user';
 import { createMockRouter } from '@/utils/testing/mocks';

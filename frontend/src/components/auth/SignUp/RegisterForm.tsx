@@ -15,11 +15,11 @@ import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Text from '@/components/Primitives/Text/Text';
 import { DASHBOARD_ROUTE } from '@/constants/routes';
 import { createErrorMessage } from '@/constants/toasts';
+import { SignUpEnum } from '@/enums/auth/signUp';
 import SchemaRegisterForm from '@/schema/schemaRegisterForm';
 import { toastState } from '@/store/toast/atom/toast.atom';
 import { FlexForm } from '@/styles/pages/pages.styles';
 import { RegisterUser } from '@/types/user/user';
-import { SignUpEnum } from '@/utils/signUp.enum';
 
 interface RegisterFormProps {
   emailName: { email: string; goback: boolean };

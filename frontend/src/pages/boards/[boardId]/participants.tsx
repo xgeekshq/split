@@ -12,12 +12,12 @@ import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import LoadingPage from '@/components/Primitives/Loading/Page/Page';
 import { USERS_KEY } from '@/constants/react-query/keys';
 import { DASHBOARD_ROUTE } from '@/constants/routes';
+import { BoardUserRoles } from '@/enums/boards/userRoles';
 import useBoard from '@/hooks/useBoard';
 import { boardInfoState, boardParticipantsState } from '@/store/board/atoms/board.atom';
 import { usersListState } from '@/store/user.atom';
 import { BoardUser } from '@/types/board/board.user';
 import { UserList } from '@/types/team/userList';
-import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import useUsers from '@hooks/users/useUsers';
 
 // Sorts participants list to show responsibles first and then regular board members

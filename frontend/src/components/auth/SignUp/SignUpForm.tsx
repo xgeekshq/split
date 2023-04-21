@@ -7,11 +7,11 @@ import Button from '@/components/Primitives/Inputs/Button/Button';
 import Input from '@/components/Primitives/Inputs/Input/Input';
 import Text from '@/components/Primitives/Text/Text';
 import { createErrorMessage } from '@/constants/toasts';
+import { SignUpEnum } from '@/enums/auth/signUp';
 import SchemaEmail from '@/schema/schemaEmail';
 import { toastState } from '@/store/toast/atom/toast.atom';
 import { FlexForm } from '@/styles/pages/pages.styles';
 import { EmailUser } from '@/types/user/user';
-import { SignUpEnum } from '@/utils/signUp.enum';
 import useSignUp from '@hooks/auth/useSignUp';
 
 interface SignUpFormProps {

@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, ObjectId, Types } from 'mongoose';
 import { MongoGenericRepository } from 'src/libs/repositories/mongo/mongo-generic.repository';
-import Board, { BoardDocument } from 'src/modules/boards/entities/board.schema';
+import Board from 'src/modules/boards/entities/board.schema';
 import {
 	BoardDataPopulate,
 	GetCardFromBoardPopulate
@@ -17,10 +17,10 @@ import User from 'src/modules/users/entities/user.schema';
 
 @Injectable()
 export class CardRepository
-	extends MongoGenericRepository<BoardDocument>
+	extends MongoGenericRepository<Board>
 	implements CardRepositoryInterface
 {
-	constructor(@InjectModel(Board.name) private model: Model<BoardDocument>) {
+	constructor(@InjectModel(Board.name) private model: Model<Board>) {
 		super(model);
 	}
 

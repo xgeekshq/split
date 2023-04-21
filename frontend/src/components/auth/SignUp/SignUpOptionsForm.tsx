@@ -4,9 +4,9 @@ import Button from '@/components/Primitives/Inputs/Button/Button';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Separator from '@/components/Primitives/Separator/Separator';
 import Text from '@/components/Primitives/Text/Text';
+import { SignUpEnum } from '@/enums/auth/signUp';
 import loginWithAzure from '@/hooks/auth/loginWithAzure';
 import { styled } from '@/styles/stitches/stitches.config';
-import { SignUpEnum } from '@/utils/signUp.enum';
 
 const Container = styled(Flex, { width: '100%' });
 
