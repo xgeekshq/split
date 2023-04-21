@@ -22,11 +22,12 @@ import { getInitials } from '@/utils/getInitials';
 
 interface CreateSubBoardItemProps {
   index: number;
+  isLast: boolean;
   board: BoardToAdd;
   setBoard: SetterOrUpdater<CreateBoardData>;
 }
 
-const CreateSubBoardItem = ({ board, index, setBoard }: CreateSubBoardItemProps) => {
+const CreateSubBoardItem = ({ board, index, isLast, setBoard }: CreateSubBoardItemProps) => {
   const { users } = board;
   const responsible = users.find((user) => user.role === BoardUserRoles.RESPONSIBLE)?.user;
 
@@ -70,7 +71,7 @@ const CreateSubBoardItem = ({ board, index, setBoard }: CreateSubBoardItemProps)
 
   return (
     <Flex>
-      <LeftArrow index={index} isDashboard={false} />
+      <LeftArrow index={index} isDashboard={false} isLast={isLast} />
       <StyledSubBoardItem align="center" elevation="1" justify="between">
         <Flex css={{ flex: 2 }}>
           <Text heading="5">{board.title}</Text>
