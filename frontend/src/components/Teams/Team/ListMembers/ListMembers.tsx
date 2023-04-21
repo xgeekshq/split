@@ -3,8 +3,8 @@ import { useRouter } from 'next/router';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 
 import UserListDialog from '@/components/Primitives/Dialogs/UserListDialog/UserListDialog';
+import { createSuccessMessage } from '@/constants/toasts';
 import { TeamUserRoles } from '@/enums/teams/userRoles';
-import { ToastStateEnum } from '@/enums/toasts/toast-types';
 import useTeam from '@/hooks/teams/useTeam';
 import useUpdateTeamUsers from '@/hooks/teams/useUpdateTeamUsers';
 import useCurrentSession from '@/hooks/useCurrentSession';
@@ -107,11 +107,7 @@ const ListMembers = ({ isOpen, setIsOpen, isTeamPage }: ListMembersProps) => {
 
     updatedListWithAdded.unshift(updatedListWithAdded.splice(userAdminIndex, 1)[0]);
 
-    setToastState({
-      open: true,
-      content: 'Team member/s successfully updated',
-      type: ToastStateEnum.SUCCESS,
-    });
+    setToastState(createSuccessMessage('Team member/s successfully updated'));
 
     setCreateTeamMembers(updatedListWithAdded);
     setUsersList(checkedUserList);

@@ -4,8 +4,8 @@ import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 
 import Column from '@/components/Board/Column/Column';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
+import { createInfoMessage } from '@/constants/toasts';
 import { BoardUserRoles } from '@/enums/boards/userRoles';
-import { ToastStateEnum } from '@/enums/toasts/toast-types';
 import { countBoardCards } from '@/helper/board/countCards';
 import useBoard from '@/hooks/useBoard';
 import useCards from '@/hooks/useCards';
@@ -94,11 +94,7 @@ const DragDropArea: React.FC<Props> = ({
 
       mergeCards.mutate(changes);
     } else if (board.hideCards) {
-      setToastState({
-        open: true,
-        type: ToastStateEnum.INFO,
-        content: 'The merge is not possible. The cards are hidden',
-      });
+      setToastState(createInfoMessage('The merge is not possible. The cards are hidden.'));
     }
   };
 

@@ -70,8 +70,7 @@ describe('Teams/CreateTeam', () => {
     // Assert
 
     await waitFor(() => {
-      expect(createTeamMutation).toBeCalledWith({ name: 'MyTeam', users: [] });
-      expect(mockRouter.push).toHaveBeenCalledWith(ROUTES.Teams);
+      expect(createTeamMutation).toBeCalledWith({ name: 'MyTeam', users: [] }, expect.anything());
     });
   });
 

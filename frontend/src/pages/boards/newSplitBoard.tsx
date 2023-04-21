@@ -24,9 +24,9 @@ import { defaultSplitColumns } from '@/constants/boards/defaultColumns';
 import { TEAMS_KEY } from '@/constants/react-query/keys';
 import { DASHBOARD_ROUTE, ROUTES } from '@/constants/routes';
 import SPLIT_BOARD_TIPS from '@/constants/tips/splitBoard';
+import { createSuccessMessage } from '@/constants/toasts';
 import { BoardPhases } from '@/enums/boards/phases';
 import { BoardUserRoles } from '@/enums/boards/userRoles';
-import { ToastStateEnum } from '@/enums/toasts/toast-types';
 import useTeams from '@/hooks/teams/useTeams';
 import useBoard from '@/hooks/useBoard';
 import useCurrentSession from '@/hooks/useCurrentSession';
@@ -84,7 +84,7 @@ const NewSplitBoard: NextPage = () => {
 
   // User Board Hook
   const {
-    createBoard: { status, mutate },
+    createBoard: { mutate },
   } = useBoard({ autoFetchBoard: false });
 
   // Team  Hook
@@ -169,40 +169,39 @@ const NewSplitBoard: NextPage = () => {
       role: boardUser.role,
     }));
 
-    mutate({
-      ...boardState.board,
-      users: boardUsersDtos,
-      title,
-      dividedBoards: newDividedBoards,
-      maxVotes,
-      maxUsers,
-      team,
-      responsibles,
-      slackEnable,
-      phase: BoardPhases.ADDCARDS,
-    });
+    mutate(
+      {
+        ...boardState.board,
+        users: boardUsersDtos,
+        title,
+        dividedBoards: newDividedBoards,
+        maxVotes,
+        maxUsers,
+        team,
+        responsibles,
+        slackEnable,
+        phase: BoardPhases.ADDCARDS,
+      },
+      {
+        onSuccess: () => {
+          setIsLoading(true);
+          setToastState(createSuccessMessage('Board created with success!'));
+
+          setBoardState(defaultBoard);
+          setSelectedTeam(undefined);
+          router.push(ROUTES.Boards);
+        },
+      },
+    );
   };
 
   useEffect(() => {
-    if (status === 'success') {
-      setIsLoading(true);
-      setToastState({
-        open: true,
-        content: 'Board created with success!',
-        type: ToastStateEnum.SUCCESS,
-      });
-
-      setBoardState(defaultBoard);
-      setSelectedTeam(undefined);
-      router.push('/boards');
-    }
-
     return () => {
       setBoardState(defaultBoard);
       setSelectedTeam(undefined);
       setHaveError(false);
     };
-  }, [status, router, setToastState, setSelectedTeam, setBoardState, setHaveError]);
+  }, [setSelectedTeam, setBoardState, setHaveError]);
 
   if (!session || !userBasedTeams) return null;
 
