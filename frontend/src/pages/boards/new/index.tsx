@@ -5,13 +5,12 @@ import { useRouter } from 'next/router';
 
 import CreateHeader from '@/components/Primitives/Layout/CreateHeader/CreateHeader';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
-import LoadingPage from '@/components/Primitives/Loading/Page/Page';
 import Text from '@/components/Primitives/Text/Text';
 import { NEXT_PUBLIC_REGULAR_BOARD } from '@/constants';
 import { ROUTES } from '@/constants/routes';
 import useCurrentSession from '@/hooks/useCurrentSession';
 import CreateBoardBox from '@components/Primitives/Layout/CreateBoardBox/CreateBoardBox';
-import useCreateBoard from '@hooks/boards/useCreateBoard';
+import LoadingPage from '@components/Primitives/Loading/Page/Page';
 
 const NewBoard: NextPage = () => {
   const {
@@ -21,15 +20,13 @@ const NewBoard: NextPage = () => {
   const { session } = useCurrentSession({ required: true });
   const [isBackButtonDisable, setBackButtonState] = useState(false);
 
-  const { status } = useCreateBoard();
-
   // Handle back to boards list page
   const handleBack = useCallback(() => {
     setBackButtonState(true);
     back();
   }, [back]);
 
-  if (!session) return null;
+  if (!session) return <LoadingPage />;
 
   return (
     <Flex css={{ height: '100vh', backgroundColor: '$primary50' }} direction="column">
@@ -63,7 +60,6 @@ const NewBoard: NextPage = () => {
           </Link>
         </Flex>
       </Flex>
-      {status === 'loading' && <LoadingPage />}
     </Flex>
   );
 };
