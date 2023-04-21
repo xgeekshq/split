@@ -1,8 +1,6 @@
 import React from 'react';
 
 import LeftArrow from '@/components/CardBoard/CardBody/LeftArrow';
-import { StyledSubBoardItem } from '@/components/CreateBoard/SplitBoard/SubTeamsTab/CreateBoardItem/CreateSubBoardItem/styles';
-import { StyledMainBoardItem } from '@/components/CreateBoard/SplitBoard/SubTeamsTab/CreateBoardItem/styles';
 import FakeAvatarGroup from '@/components/CreateBoard/SplitBoard/SubTeamsTab/FakeBoardItem/FakeAvatarGroup/FakeAvatarGroup';
 import Avatar from '@/components/Primitives/Avatars/Avatar/Avatar';
 import Icon from '@/components/Primitives/Icons/Icon/Icon';
@@ -12,10 +10,11 @@ import Separator from '@/components/Primitives/Separator/Separator';
 import Text from '@/components/Primitives/Text/Text';
 import Tooltip from '@/components/Primitives/Tooltips/Tooltip/Tooltip';
 import { highlight2Colors } from '@/styles/stitches/partials/colors/highlight2.colors';
+import { InnerContainer } from '@styles/pages/pages.styles';
 
 const FakeBoardItem = () => (
   <Flex css={{ width: '100%', height: '100%' }} direction="column" gap={8}>
-    <StyledMainBoardItem align="center" css={{ opacity: '0.5' }} elevation="1" justify="between">
+    <InnerContainer align="center" css={{ opacity: '0.5' }} elevation="1" justify="between">
       <Flex align="center" css={{ flex: 2 }} gap={8}>
         <Tooltip content="It’s a main board. All sub-team boards got merged into this main board.">
           <div>
@@ -67,11 +66,17 @@ const FakeBoardItem = () => (
         </Text>
         <FakeAvatarGroup />
       </Flex>
-    </StyledMainBoardItem>
+    </InnerContainer>
     <Flex css={{ mb: '$50' }} direction="column" gap={8}>
-      <Flex>
+      <Flex direction="column">
         <LeftArrow index={0} isDashboard={false} />
-        <StyledSubBoardItem align="center" css={{ opacity: '0.5' }} elevation="1" justify="between">
+        <InnerContainer
+          align="center"
+          css={{ opacity: '0.5', ml: '$40' }}
+          elevation="1"
+          justify="between"
+          size="sm"
+        >
           <Flex css={{ flex: 2 }}>
             <Text heading="5">Sub-team board 1</Text>
           </Flex>
@@ -109,11 +114,17 @@ const FakeBoardItem = () => (
             <Text size="sm">-----</Text>
             <FakeAvatarGroup />
           </Flex>
-        </StyledSubBoardItem>
+        </InnerContainer>
       </Flex>
-      <Flex>
+      <Flex direction="column">
         <LeftArrow index={1} isDashboard={false} />
-        <StyledSubBoardItem align="center" css={{ opacity: '0.5' }} elevation="1" justify="between">
+        <InnerContainer
+          align="center"
+          css={{ opacity: '0.5', ml: '$40' }}
+          elevation="1"
+          justify="between"
+          size="sm"
+        >
           <Flex css={{ flex: 2 }}>
             <Text heading="5">Sub-team board 2</Text>
           </Flex>
@@ -151,7 +162,7 @@ const FakeBoardItem = () => (
             <Text size="sm">-----</Text>
             <FakeAvatarGroup />
           </Flex>
-        </StyledSubBoardItem>
+        </InnerContainer>
       </Flex>
     </Flex>
     <Tooltip color="primary800" content="First select a team">

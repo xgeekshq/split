@@ -16,4 +16,17 @@ export const InnerContainer = styled(Flex, Box, {
   borderRadius: '$12',
   position: 'relative',
   maxHeight: '$76',
+  variants: {
+    size: {
+      sm: {
+        maxHeight: '$64',
+      },
+      md: {
+        maxHeight: '$76',
+      },
+    },
+  },
+  defaultVariants: {
+    size: 'md',
+  },
 });

@@ -53,6 +53,7 @@ const SettingsTabs = () => {
         type: ToastStateEnum.ERROR,
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeTab, errors.maxVotes, errors.team, setToastState]);
 
   return (

@@ -3,10 +3,6 @@ import { deepClone } from 'fast-json-patch';
 import { SetterOrUpdater } from 'recoil';
 
 import LeftArrow from '@/components/CardBoard/CardBody/LeftArrow';
-import {
-  LotteryButton,
-  StyledSubBoardItem,
-} from '@/components/CreateBoard/SplitBoard/SubTeamsTab/CreateBoardItem/CreateSubBoardItem/styles';
 import Avatar from '@/components/Primitives/Avatars/Avatar/Avatar';
 import AvatarGroup from '@/components/Primitives/Avatars/AvatarGroup/AvatarGroup';
 import Icon from '@/components/Primitives/Icons/Icon/Icon';
@@ -19,6 +15,8 @@ import { BoardToAdd } from '@/types/board/board';
 import { BoardUserToAdd } from '@/types/board/board.user';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import { getInitials } from '@/utils/getInitials';
+import Button from '@components/Primitives/Inputs/Button/Button';
+import { InnerContainer } from '@styles/pages/pages.styles';
 
 interface CreateSubBoardItemProps {
   index: number;
@@ -69,9 +67,9 @@ const CreateSubBoardItem = ({ board, index, setBoard }: CreateSubBoardItemProps)
   };
 
   return (
-    <Flex>
+    <Flex direction="column">
       <LeftArrow index={index} isDashboard={false} />
-      <StyledSubBoardItem align="center" elevation="1" justify="between">
+      <InnerContainer align="center" css={{ ml: '$40' }} elevation="1" justify="between" size="sm">
         <Flex css={{ flex: 2 }}>
           <Text heading="5">{board.title}</Text>
         </Flex>
@@ -79,14 +77,21 @@ const CreateSubBoardItem = ({ board, index, setBoard }: CreateSubBoardItemProps)
           <Flex align="center" gap={8}>
             <Text>Responsible Lottery</Text>
             <Separator orientation="vertical" size="md" />
-            <LotteryButton
-              align="center"
+            <Button
+              css={{ borderRadius: '$round', borderWidth: '1px', px: '$6' }}
               disabled={users.length <= 1}
-              justify="center"
-              {...(users.length > 1 && { onClick: handleLottery })}
+              size="xs"
+              variant="lightOutline"
+              onClick={(e) => {
+                e.preventDefault();
+
+                if (users.length > 1) {
+                  handleLottery();
+                }
+              }}
             >
               <Icon name="wand" size={12} />
-            </LotteryButton>
+            </Button>
             <Flex>
               <Text
                 color="primary300"
@@ -118,7 +123,7 @@ const CreateSubBoardItem = ({ board, index, setBoard }: CreateSubBoardItemProps)
           <Text size="sm">Sub team {index + 1}</Text>
           <AvatarGroup hasDrawer listUsers={board.users} userId="1" />
         </Flex>
-      </StyledSubBoardItem>
+      </InnerContainer>
     </Flex>
   );
 };

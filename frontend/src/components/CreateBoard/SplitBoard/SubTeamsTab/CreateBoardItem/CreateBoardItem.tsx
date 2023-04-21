@@ -3,7 +3,6 @@ import { useFormContext, useWatch } from 'react-hook-form';
 import { SetterOrUpdater, useRecoilValue } from 'recoil';
 
 import CreateSubBoardItem from '@/components/CreateBoard/SplitBoard/SubTeamsTab/CreateBoardItem/CreateSubBoardItem/CreateSubBoardItem';
-import { StyledMainBoardItem } from '@/components/CreateBoard/SplitBoard/SubTeamsTab/CreateBoardItem/styles';
 import AvatarGroup from '@/components/Primitives/Avatars/AvatarGroup/AvatarGroup';
 import Icon from '@/components/Primitives/Icons/Icon/Icon';
 import Checkbox from '@/components/Primitives/Inputs/Checkboxes/Checkbox/Checkbox';
@@ -15,6 +14,7 @@ import Tooltip from '@/components/Primitives/Tooltips/Tooltip/Tooltip';
 import useCreateBoard from '@/hooks/useCreateBoard';
 import { CreateBoardData, createBoardError } from '@/store/createBoard/atoms/create-board.atom';
 import { BoardToAdd } from '@/types/board/board';
+import { InnerContainer } from '@styles/pages/pages.styles';
 
 interface SubBoardListProp {
   dividedBoards: BoardToAdd[];
@@ -51,7 +51,7 @@ const CreateBoardItem = React.memo(() => {
   return (
     team && (
       <Flex css={{ width: '100%', height: '100%' }} direction="column" gap={8}>
-        <StyledMainBoardItem align="center" elevation="1" gap={24} justify="between">
+        <InnerContainer align="center" elevation="1" gap={24} justify="between">
           <Flex align="center" css={{ flex: 2 }} gap={8}>
             <Tooltip content="It’s a main board. All sub-team boards got merged into this main board.">
               <div>
@@ -115,7 +115,7 @@ const CreateBoardItem = React.memo(() => {
             </Text>
             <AvatarGroup haveError={haveError} listUsers={team.users} userId="1" />
           </Flex>
-        </StyledMainBoardItem>
+        </InnerContainer>
         <SubBoardList dividedBoards={board.dividedBoards} setBoard={setCreateBoardData} />
         <Box>
           <Checkbox
