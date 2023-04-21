@@ -1,4 +1,4 @@
-import { Suspense, useCallback, useEffect, useState } from 'react';
+import { Suspense, useCallback, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { GetServerSideProps, GetServerSidePropsContext, NextPage } from 'next';
 import Link from 'next/link';
@@ -25,7 +25,6 @@ import { DASHBOARD_ROUTE, ROUTES } from '@/constants/routes';
 import SPLIT_BOARD_TIPS from '@/constants/tips/splitBoard';
 import { BoardPhases } from '@/enums/boards/phases';
 import { BoardUserRoles } from '@/enums/boards/userRoles';
-import { ToastStateEnum } from '@/enums/toasts/toast-types';
 import useTeams from '@/hooks/teams/useTeams';
 import useCurrentSession from '@/hooks/useCurrentSession';
 import SchemaCreateBoard from '@/schema/schemaCreateBoardForm';
@@ -48,11 +47,11 @@ const NewSplitBoard: NextPage = () => {
 
   // Recoil Atoms
   const setToastState = useSetRecoilState(toastState);
-  const [haveError, setHaveError] = useRecoilState(createBoardError);
+  const [haveError] = useRecoilState(createBoardError);
 
   // User Board Hook
   const { createBoardData, setCreateBoardData, resetBoardState } = useCreateBoardHelper();
-  const { status, mutate } = useCreateBoard();
+  const { mutate } = useCreateBoard();
 
   // Team  Hook
   const teamsQuery = useTeams(isSAdmin);
@@ -135,37 +134,27 @@ const NewSplitBoard: NextPage = () => {
       role: boardUser.role,
     }));
 
-    mutate({
-      ...createBoardData.board,
-      users: boardUsersDtos,
-      title,
-      dividedBoards: newDividedBoards,
-      maxVotes,
-      maxUsers,
-      responsibles,
-      slackEnable,
-      phase: BoardPhases.ADDCARDS,
-    });
+    mutate(
+      {
+        ...createBoardData.board,
+        users: boardUsersDtos,
+        title,
+        dividedBoards: newDividedBoards,
+        maxVotes,
+        maxUsers,
+        responsibles,
+        slackEnable,
+        phase: BoardPhases.ADDCARDS,
+      },
+      {
+        onSuccess: () => {
+          setIsLoading(true);
+          resetBoardState();
+          router.push(ROUTES.Boards);
+        },
+      },
+    );
   };
-
-  useEffect(() => {
-    if (status === 'success') {
-      setIsLoading(true);
-      setToastState({
-        open: true,
-        content: 'Board created with success!',
-        type: ToastStateEnum.SUCCESS,
-      });
-
-      resetBoardState();
-      router.push('/boards');
-    }
-
-    return () => {
-      resetBoardState();
-      setHaveError(false);
-    };
-  }, [status, router, setToastState, resetBoardState, setHaveError]);
 
   if (!session || !userBasedTeams) return null;
 

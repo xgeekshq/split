@@ -1,6 +1,6 @@
 import React, { Suspense, useCallback, useEffect } from 'react';
 import { GetServerSideProps } from 'next';
-import { dehydrate, QueryClient, useQuery } from '@tanstack/react-query';
+import { dehydrate, QueryClient } from '@tanstack/react-query';
 import { SetterOrUpdater, useRecoilState, useSetRecoilState } from 'recoil';
 
 import { getBoardRequest } from '@/api/boardService';
@@ -10,15 +10,15 @@ import RegularBoardHeader from '@/components/Board/RegularBoard/RegularHeader';
 import QueryError from '@/components/Errors/QueryError';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import LoadingPage from '@/components/Primitives/Loading/Page/Page';
+import { USERS_KEY } from '@/constants/react-query/keys';
 import { DASHBOARD_ROUTE } from '@/constants/routes';
 import { BoardUserRoles } from '@/enums/boards/userRoles';
-import { ToastStateEnum } from '@/enums/toasts/toast-types';
 import useBoard from '@/hooks/useBoard';
 import { boardInfoState, boardParticipantsState } from '@/store/board/atoms/board.atom';
-import { toastState } from '@/store/toast/atom/toast.atom';
 import { usersListState } from '@/store/user.atom';
 import { BoardUser } from '@/types/board/board.user';
 import { UserList } from '@/types/team/userList';
+import useUsers from '@hooks/users/useUsers';
 
 // Sorts participants list to show responsibles first and then regular board members
 export const sortParticipantsList = (
@@ -41,7 +41,6 @@ export const sortParticipantsList = (
 };
 
 const BoardParticipants = () => {
-  const setToastState = useSetRecoilState(toastState);
   const [boardParticipants, setBoardParticipants] = useRecoilState(boardParticipantsState);
   const [recoilBoard, setRecoilBoard] = useRecoilState(boardInfoState);
 
@@ -59,17 +58,7 @@ const BoardParticipants = () => {
     }
   }, [boardData, setBoardParticipants, setRecoilBoard]);
 
-  const usersData = useQuery(['users'], () => getAllUsers(), {
-    enabled: true,
-    refetchOnWindowFocus: false,
-    onError: () => {
-      setToastState({
-        open: true,
-        content: 'Error getting the users',
-        type: ToastStateEnum.ERROR,
-      });
-    },
-  }).data;
+  const { data: usersData } = useUsers();
 
   const setUsersListState = useSetRecoilState(usersListState);
 
@@ -109,17 +98,12 @@ const BoardParticipants = () => {
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const boardId = String(context.query.boardId);
 
-  if (boardId.includes('.map'))
-    return {
-      props: {},
-    };
-
   const queryClient = new QueryClient();
   try {
     await queryClient.fetchQuery(['board', { id: boardId }], () =>
       getBoardRequest(boardId, context),
     );
-    await queryClient.prefetchQuery(['users'], () => getAllUsers(context));
+    await queryClient.prefetchQuery([USERS_KEY], () => getAllUsers(context));
   } catch (e) {
     return {
       redirect: {

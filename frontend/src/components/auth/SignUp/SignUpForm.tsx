@@ -1,20 +1,18 @@
 import React, { Dispatch } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { joiResolver } from '@hookform/resolvers/joi';
-import { useQuery } from '@tanstack/react-query';
 import { useSetRecoilState } from 'recoil';
 
-import { checkUserExists, checkUserExistsAD } from '@/api/authService';
 import Button from '@/components/Primitives/Inputs/Button/Button';
 import Input from '@/components/Primitives/Inputs/Input/Input';
 import Text from '@/components/Primitives/Text/Text';
-import { NEXT_PUBLIC_ENABLE_AZURE } from '@/constants';
+import { createErrorMessage } from '@/constants/toasts';
 import { SignUpEnum } from '@/enums/auth/signUp';
-import { ToastStateEnum } from '@/enums/toasts/toast-types';
 import SchemaEmail from '@/schema/schemaEmail';
 import { toastState } from '@/store/toast/atom/toast.atom';
 import { FlexForm } from '@/styles/pages/pages.styles';
 import { EmailUser } from '@/types/user/user';
+import useSignUp from '@hooks/auth/useSignUp';
 
 interface SignUpFormProps {
   setShowSignUp: Dispatch<React.SetStateAction<SignUpEnum>>;
@@ -32,46 +30,30 @@ const SignUpForm = ({ setShowSignUp, setEmailName, emailName }: SignUpFormProps)
     },
     resolver: joiResolver(SchemaEmail),
   });
-  useQuery(
-    ['checkUserExists', emailName],
-    () =>
-      NEXT_PUBLIC_ENABLE_AZURE
-        ? checkUserExistsAD(emailName.email)
-        : checkUserExists(emailName.email),
-    {
-      enabled: !!emailName.email && !emailName.goback,
-      suspense: false,
-      onSuccess: (data) => {
-        if (data === 'az') {
-          setShowSignUp(SignUpEnum.SIGN_UP_OPTIONS);
-          return;
-        }
+  useSignUp(emailName, {
+    onSuccess: (data) => {
+      if (data === 'az') {
+        setShowSignUp(SignUpEnum.SIGN_UP_OPTIONS);
+        return;
+      }
 
-        if (!data) {
-          setShowSignUp(SignUpEnum.REGISTER);
-          return;
-        }
+      if (!data) {
+        setShowSignUp(SignUpEnum.REGISTER);
+        return;
+      }
 
-        methods.setError('email', { type: 'custom', message: 'This email already exists' });
-      },
-
-      onError: (error: Error) => {
-        /**
-         * When checkUserExistsAD returns 404, allow manual sign up
-         */
-        if (error.message.includes('404')) {
-          setShowSignUp(SignUpEnum.REGISTER);
-          return;
-        }
-
-        setToastState({
-          open: true,
-          type: ToastStateEnum.ERROR,
-          content: 'Connection error, please try again',
-        });
-      },
+      methods.setError('email', { type: 'custom', message: 'This email already exists!' });
     },
-  );
+    onError: (error: Error) => {
+      /**
+       * When checkUserExistsAD returns 404, allow manual sign up
+       */
+      if (error.message.includes('404')) {
+        setShowSignUp(SignUpEnum.REGISTER);
+        return;
+      }
+    },
+  });
 
   const handleCheckUserExists = async (email: string) => {
     setEmailName({ goback: false, email });
@@ -83,11 +65,7 @@ const SignUpForm = ({ setShowSignUp, setEmailName, emailName }: SignUpFormProps)
         direction="column"
         onSubmit={methods.handleSubmit(({ email }) => {
           if (!email) {
-            setToastState({
-              open: true,
-              type: ToastStateEnum.ERROR,
-              content: 'Network error, please try again ',
-            });
+            setToastState(createErrorMessage('Network error, please try again!'));
             return;
           }
           handleCheckUserExists(email);

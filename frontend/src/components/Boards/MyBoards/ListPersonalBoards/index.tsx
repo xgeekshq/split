@@ -6,7 +6,7 @@ import { getPersonalBoardsRequest } from '@/api/boardService';
 import ListBoards from '@/components/Boards/MyBoards/ListBoards';
 import EmptyPersonalBoards from '@/components/Boards/MyBoards/ListPersonalBoards/EmptyPersonalBoards';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
-import { ToastStateEnum } from '@/enums/toasts/toast-types';
+import { createErrorMessage } from '@/constants/toasts';
 import { toastState } from '@/store/toast/atom/toast.atom';
 import BoardType from '@/types/board/board';
 import { Team } from '@/types/team/team';
@@ -32,11 +32,7 @@ const ListPersonalBoards = ({ userId, isSuperAdmin }: ListBoardsByTeamProps) => 
         return undefined;
       },
       onError: () => {
-        setToastState({
-          open: true,
-          content: 'Error getting the boards',
-          type: ToastStateEnum.ERROR,
-        });
+        setToastState(createErrorMessage('Error getting the boards'));
       },
     },
   );

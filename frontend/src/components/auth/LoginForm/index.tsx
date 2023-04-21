@@ -24,7 +24,7 @@ import {
   NEXT_PUBLIC_LOGIN_SSO_ONLY,
 } from '@/constants';
 import { DASHBOARD_ROUTE } from '@/constants/routes';
-import { ToastStateEnum } from '@/enums/toasts/toast-types';
+import { createErrorMessage } from '@/constants/toasts';
 import loginWithAzure from '@/hooks/auth/loginWithAzure';
 import SchemaLoginForm from '@/schema/schemaLoginForm';
 import { toastState } from '@/store/toast/atom/toast.atom';
@@ -74,11 +74,7 @@ const LoginForm = ({ setShowTroubleLogin }: LoginFormProps) => {
 
     if (result.error) {
       methods.reset();
-      setToastState({
-        open: true,
-        type: ToastStateEnum.ERROR,
-        content: result.error,
-      });
+      setToastState(createErrorMessage(result.error));
     }
 
     setLoading((prevState) => ({ ...prevState, credentials: false }));

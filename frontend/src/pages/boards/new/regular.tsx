@@ -20,7 +20,7 @@ import TipBar from '@/components/Primitives/Layout/TipBar/TipBar';
 import LoadingPage from '@/components/Primitives/Loading/Page/Page';
 import { defaultRegularColumns } from '@/constants/boards/defaultColumns';
 import { TEAMS_KEY } from '@/constants/react-query/keys';
-import { DASHBOARD_ROUTE } from '@/constants/routes';
+import { DASHBOARD_ROUTE, ROUTES } from '@/constants/routes';
 import REGULAR_BOARD_TIPS from '@/constants/tips/regularBoard';
 import { BoardUserRoles } from '@/enums/boards/userRoles';
 import { ToastStateEnum } from '@/enums/toasts/toast-types';
@@ -121,6 +121,12 @@ const NewRegularBoard: NextPage = () => {
       return [];
     });
 
+  const onMutateSuccess = () => {
+    setIsPageLoading(true);
+    resetBoardState();
+    router.push(ROUTES.Boards);
+  };
+
   const saveBoard = (title?: string, maxVotes?: number) => {
     const users: BoardUserDto[] = [];
 
@@ -141,18 +147,23 @@ const NewRegularBoard: NextPage = () => {
       });
     }
 
-    mutate({
-      ...createBoardData.board,
-      columns: defaultRegularColumns,
-      users,
-      title: title || 'Default Board',
-      dividedBoards: [],
-      maxVotes,
-      maxUsers: createBoardData.count.maxUsersCount,
-      recurrent: false,
-      responsibles,
-      phase: undefined,
-    });
+    mutate(
+      {
+        ...createBoardData.board,
+        columns: defaultRegularColumns,
+        users,
+        title: title || 'Default Board',
+        dividedBoards: [],
+        maxVotes,
+        maxUsers: createBoardData.count.maxUsersCount,
+        recurrent: false,
+        responsibles,
+        phase: undefined,
+      },
+      {
+        onSuccess: onMutateSuccess,
+      },
+    );
   };
 
   const saveEmptyBoard = () => {
@@ -161,37 +172,24 @@ const NewRegularBoard: NextPage = () => {
       users.push({ role: BoardUserRoles.RESPONSIBLE, user: userId });
     }
 
-    mutate({
-      ...createBoardData.board,
-      columns: defaultRegularColumns,
-      users,
-      title: 'Default Board',
-      dividedBoards: [],
-      maxUsers: createBoardData.count.maxUsersCount,
-      recurrent: false,
-      responsibles: [userId],
-    });
+    mutate(
+      {
+        ...createBoardData.board,
+        columns: defaultRegularColumns,
+        users,
+        title: 'Default Board',
+        dividedBoards: [],
+        maxUsers: createBoardData.count.maxUsersCount,
+        recurrent: false,
+        responsibles: [userId],
+      },
+      {
+        onSuccess: onMutateSuccess,
+      },
+    );
   };
 
   const hasResponsibles = !isEmpty(filterResponsibles(createBoardData.users));
-
-  useEffect(() => {
-    if (status === 'success') {
-      setIsPageLoading(true);
-      setToastState({
-        open: true,
-        content: 'Board created with success!',
-        type: ToastStateEnum.SUCCESS,
-      });
-
-      resetBoardState();
-      router.push('/boards');
-    }
-
-    return () => {
-      resetBoardState();
-    };
-  }, [router, setToastState, resetBoardState, status]);
 
   if (!session || !userBasedTeams) return null;
 

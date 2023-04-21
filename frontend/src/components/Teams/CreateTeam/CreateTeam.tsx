@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useRouter } from 'next/router';
 import { joiResolver } from '@hookform/resolvers/joi';
@@ -15,6 +15,8 @@ import Text from '@/components/Primitives/Text/Text';
 import TeamMembersList from '@/components/Teams/Team/TeamMembersList';
 import { ROUTES } from '@/constants/routes';
 import CREATE_TEAM_TIPS from '@/constants/tips/createTeam';
+import { createSuccessMessage } from '@/constants/toasts';
+import { TeamUserRoles } from '@/enums/teams/userRoles';
 import useCreateTeam from '@/hooks/teams/useCreateTeam';
 import useCurrentSession from '@/hooks/useCurrentSession';
 import SchemaCreateTeam from '@/schema/schemaCreateTeamForm';
@@ -25,8 +27,6 @@ import { StyledForm } from '@/styles/pages/pages.styles';
 import { CreateTeamUser } from '@/types/team/team.user';
 import { UserList } from '@/types/team/userList';
 import UserListDialog from '@components/Primitives/Dialogs/UserListDialog/UserListDialog';
-import { TeamUserRoles } from '@utils/enums/team.user.roles';
-import { ToastStateEnum } from '@utils/enums/toast-types';
 import { verifyIfIsNewJoiner } from '@utils/verifyIfIsNewJoiner';
 
 const CreateTeam = () => {
@@ -34,7 +34,7 @@ const CreateTeam = () => {
   const { back, push } = useRouter();
   const setToastState = useSetRecoilState(toastState);
 
-  const { mutate: createTeam, status } = useCreateTeam();
+  const { mutate: createTeam } = useCreateTeam();
 
   const [disableButtons, setDisableButtons] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
@@ -65,7 +65,17 @@ const CreateTeam = () => {
       user: member.user._id,
     }));
 
-    createTeam({ name: title, users: membersListToSubmit });
+    createTeam(
+      { name: title, users: membersListToSubmit },
+      {
+        onSuccess: () => {
+          push(ROUTES.Teams);
+        },
+        onError: () => {
+          setDisableButtons(false);
+        },
+      },
+    );
     resetListUsersState();
   };
 
@@ -109,27 +119,13 @@ const CreateTeam = () => {
 
     updatedListWithAdded.unshift(updatedListWithAdded.splice(userAdminIndex, 1)[0]);
 
-    setToastState({
-      open: true,
-      content: 'Team member/s successfully updated',
-      type: ToastStateEnum.SUCCESS,
-    });
+    setToastState(createSuccessMessage('Team member/s successfully updated'));
 
     setCreateTeamMembers(updatedListWithAdded);
     setUsersList(checkedUserList);
 
     setIsOpen(false);
   };
-
-  useEffect(() => {
-    if (status === 'error') {
-      setDisableButtons(false);
-    }
-
-    if (status === 'success') {
-      push(ROUTES.Teams);
-    }
-  }, [status]);
 
   return (
     <Flex

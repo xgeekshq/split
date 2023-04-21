@@ -6,8 +6,8 @@ import Icon from '@/components/Primitives/Icons/Icon/Icon';
 import Button from '@/components/Primitives/Inputs/Button/Button';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Text from '@/components/Primitives/Text/Text';
+import { createSuccessMessage } from '@/constants/toasts';
 import { BoardUserRoles } from '@/enums/boards/userRoles';
-import { ToastStateEnum } from '@/enums/toasts/toast-types';
 import useCurrentSession from '@/hooks/useCurrentSession';
 import { toastState } from '@/store/toast/atom/toast.atom';
 import { usersListState } from '@/store/user.atom';
@@ -121,11 +121,7 @@ const BoardParticipantsList = ({ isPageLoading }: BoardParticipantsListProps) =>
       board: { ...prev.board, team: null },
     }));
 
-    setToastState({
-      open: true,
-      content: 'Board participant/s successfully updated',
-      type: ToastStateEnum.SUCCESS,
-    });
+    setToastState(createSuccessMessage('Board participant/s successfully updated'));
 
     setIsOpen(false);
   };
