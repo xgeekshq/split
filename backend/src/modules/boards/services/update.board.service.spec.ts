@@ -1,14 +1,13 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { boardRepository } from '../boards.providers';
 import { UpdateBoardServiceInterface } from '../interfaces/services/update.board.service.interface';
 import { BoardRepositoryInterface } from '../repositories/board.repository.interface';
 import { TeamCommunicationDtoFactory } from 'src/libs/test-utils/mocks/factories/dto/teamDto-factory';
 import { DeepMocked, createMock } from '@golevelup/ts-jest';
-import * as Boards from 'src/modules/boards/interfaces/types';
 import UpdateBoardService from './update.board.service';
 import Board from '../entities/board.schema';
 import { BoardFactory } from 'src/libs/test-utils/mocks/factories/board-factory.mock';
 import faker from '@faker-js/faker';
+import { BOARD_REPOSITORY } from 'src/modules/boards/constants';
 
 describe('UpdateBoardService', () => {
 	let boardService: UpdateBoardServiceInterface;
@@ -20,14 +19,14 @@ describe('UpdateBoardService', () => {
 				UpdateBoardService,
 
 				{
-					provide: boardRepository.provide,
+					provide: BOARD_REPOSITORY,
 					useValue: createMock<BoardRepositoryInterface>()
 				}
 			]
 		}).compile();
 
 		boardService = module.get(UpdateBoardService);
-		boardRepositoryMock = module.get(Boards.TYPES.repositories.BoardRepository);
+		boardRepositoryMock = module.get(BOARD_REPOSITORY);
 	});
 
 	beforeEach(() => {

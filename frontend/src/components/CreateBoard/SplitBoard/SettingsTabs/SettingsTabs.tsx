@@ -7,9 +7,9 @@ import SubTeamsConfigurations from '@/components/CreateBoard/SplitBoard/SubTeams
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Tab, { TabList } from '@/components/Primitives/Tab/Tab';
 import Text from '@/components/Primitives/Text/Text';
+import { ToastStateEnum } from '@/enums/toasts/toast-types';
 import { createBoardError } from '@/store/createBoard/atoms/create-board.atom';
 import { toastState } from '@/store/toast/atom/toast.atom';
-import { ToastStateEnum } from '@/utils/enums/toast-types';
 
 const SettingsTabs = () => {
   // Recoil Atoms

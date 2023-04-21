@@ -2,12 +2,12 @@ import { useCallback, useMemo } from 'react';
 import { useRecoilState, useResetRecoilState } from 'recoil';
 
 import { defaultSplitColumns } from '@/constants/boards/defaultColumns';
+import { BoardUserRoles } from '@/enums/boards/userRoles';
+import { TeamUserRoles } from '@/enums/teams/userRoles';
 import { createBoardDataState } from '@/store/createBoard/atoms/create-board.atom';
 import { BoardToAdd } from '@/types/board/board';
 import { BoardUserToAdd } from '@/types/board/board.user';
 import { TeamUser } from '@/types/team/team.user';
-import { BoardUserRoles } from '@/utils/enums/board.user.roles';
-import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 
 const useCreateBoardHelper = () => {
   const MIN_TEAMS = 2;

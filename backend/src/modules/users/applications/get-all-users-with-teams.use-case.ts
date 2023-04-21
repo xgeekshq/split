@@ -1,15 +1,19 @@
+import { GetAllUsersWithTeamsPresenter } from '../presenter/get-all-users-with-teams.presenter';
 import { GetTeamUserServiceInterface } from 'src/modules/teamUsers/interfaces/services/get.team.user.service.interface';
 import { Inject, Injectable } from '@nestjs/common';
-import { GetAllUsersWithTeamsUseCaseInterface } from '../interfaces/applications/get-all-users-with-teams.use-case.interface';
 import { UserWithTeams } from '../interfaces/type-user-with-teams';
 import { TYPES } from '../interfaces/types';
 import { UserRepositoryInterface } from '../repository/user.repository.interface';
-import { sortAlphabetically } from '../utils/sortings';
+import { sortTeamUserListAlphabetically } from '../utils/sortings';
 import { GetUserServiceInterface } from '../interfaces/services/get.user.service.interface';
+import GetAllUsersWithTeamsUseCaseDto from '../dto/useCase/get-all-users-with-teams.use-case.dto';
+import { UseCase } from 'src/libs/interfaces/use-case.interface';
 import { GET_TEAM_USER_SERVICE } from 'src/modules/teamUsers/constants';
 
 @Injectable()
-export default class GetAllUsersWithTeamsUseCase implements GetAllUsersWithTeamsUseCaseInterface {
+export default class GetAllUsersWithTeamsUseCase
+	implements UseCase<GetAllUsersWithTeamsUseCaseDto, GetAllUsersWithTeamsPresenter>
+{
 	constructor(
 		@Inject(TYPES.repository)
 		private readonly userRepository: UserRepositoryInterface,
@@ -19,7 +23,10 @@ export default class GetAllUsersWithTeamsUseCase implements GetAllUsersWithTeams
 		private readonly getTeamUserService: GetTeamUserServiceInterface
 	) {}
 
-	async execute(page = 0, size = 15, searchUser?: string) {
+	async execute({ page, size, searchUser }: GetAllUsersWithTeamsUseCaseDto) {
+		page = page ?? 0;
+		size = size ?? 15;
+
 		const [users, count] = await Promise.all([
 			this.getAllUsersWithPagination(page, size, searchUser),
 			this.getUserService.countUsers()
@@ -48,7 +55,7 @@ export default class GetAllUsersWithTeamsUseCase implements GetAllUsersWithTeams
 			page
 		};
 
-		results.userWithTeams.sort((a, b) => sortAlphabetically(a.user, b.user));
+		results.userWithTeams = sortTeamUserListAlphabetically(results.userWithTeams);
 
 		return results;
 	}

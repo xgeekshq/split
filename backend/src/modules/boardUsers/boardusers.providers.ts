@@ -1,31 +1,41 @@
 import { BoardUserRepository } from './repositories/board-user.repository';
 import CreateBoardUserService from './services/create.board.user.service';
-import { TYPES } from './interfaces/types';
+import {
+	BOARD_USER_REPOSITORY,
+	CREATE_BOARD_USER_SERVICE,
+	DELETE_BOARD_USER_SERVICE,
+	GET_BOARD_USER_SERVICE,
+	UPDATE_BOARD_USER_SERVICE
+} from './constants';
 import DeleteBoardUserService from './services/delete.board.user.service';
 import GetBoardUserService from './services/get.board.user.service';
 import UpdateBoardUserService from './services/update.board.user.service';
 
+/* SERVICE */
+
 export const createBoardUserService = {
-	provide: TYPES.services.CreateBoardUserService,
+	provide: CREATE_BOARD_USER_SERVICE,
 	useClass: CreateBoardUserService
 };
 
 export const getBoardUserService = {
-	provide: TYPES.services.GetBoardUserService,
+	provide: GET_BOARD_USER_SERVICE,
 	useClass: GetBoardUserService
 };
 
 export const updateBoardUserService = {
-	provide: TYPES.services.UpdateBoardUserService,
+	provide: UPDATE_BOARD_USER_SERVICE,
 	useClass: UpdateBoardUserService
 };
 
 export const deleteBoardUserService = {
-	provide: TYPES.services.DeleteBoardUserService,
+	provide: DELETE_BOARD_USER_SERVICE,
 	useClass: DeleteBoardUserService
 };
 
+/* REPOSITORY */
+
 export const boardUserRepository = {
-	provide: TYPES.repositories.BoardUserRepository,
+	provide: BOARD_USER_REPOSITORY,
 	useClass: BoardUserRepository
 };

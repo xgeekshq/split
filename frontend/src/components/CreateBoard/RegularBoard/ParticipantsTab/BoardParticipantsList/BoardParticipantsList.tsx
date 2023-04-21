@@ -6,16 +6,16 @@ import Icon from '@/components/Primitives/Icons/Icon/Icon';
 import Button from '@/components/Primitives/Inputs/Button/Button';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Text from '@/components/Primitives/Text/Text';
+import { BoardUserRoles } from '@/enums/boards/userRoles';
+import { ToastStateEnum } from '@/enums/toasts/toast-types';
 import useCurrentSession from '@/hooks/useCurrentSession';
 import { toastState } from '@/store/toast/atom/toast.atom';
 import { usersListState } from '@/store/user.atom';
 import { BoardUser } from '@/types/board/board.user';
 import { UserList } from '@/types/team/userList';
-import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import isEmpty from '@/utils/isEmpty';
 import UserListDialog from '@components/Primitives/Dialogs/UserListDialog/UserListDialog';
 import useCreateBoardHelper from '@hooks/useCreateBoardHelper';
-import { ToastStateEnum } from '@utils/enums/toast-types';
 
 type BoardParticipantsListProps = {
   isPageLoading: boolean;

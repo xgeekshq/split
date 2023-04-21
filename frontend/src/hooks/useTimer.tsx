@@ -24,10 +24,10 @@ import {
   BOARD_TIMER_USER_STOPPED,
   ONE_SECOND,
 } from '@/constants';
+import { TimerStatus } from '@/enums/timer/status';
 import { TimeDto } from '@/types/timer/time.dto';
 import { TimerProps } from '@/types/timer/timer-props.interface';
 import { TimerStateDto } from '@/types/timer/timer-state.dto';
-import { TimerStatus } from '@/types/timer/timer-status.enum';
 import { TimeWithTotalTime } from '@/types/timer/timer-with-total-time.type';
 import { inSeconds, timeToString } from '@/types/utils';
 

@@ -4,7 +4,7 @@ import { BOARD_TIMER_SERVER_DURATION_UPDATED } from 'src/libs/constants/timer';
 import BoardTimerDurationDto from 'src/libs/dto/board-timer-duration.dto';
 import ServerUpdatedTimerDurationEvent from 'src/modules/boards/events/server-updated-timer-duration.event';
 import UpdateBoardTimerDurationServiceInterface from 'src/modules/boards/interfaces/services/update-board-timer-duration.service.interface';
-import { TYPES } from 'src/modules/boards/interfaces/types';
+import { BOARD_TIMER_REPOSITORY } from 'src/modules/boards/constants';
 import { BoardTimerRepositoryInterface } from '../repositories/board-timer.repository.interface';
 
 @Injectable()
@@ -14,10 +14,10 @@ export default class UpdateBoardTimerDurationService
 	private logger: Logger = new Logger(UpdateBoardTimerDurationService.name);
 
 	constructor(
-		@Inject(TYPES.repositories.BoardTimerRepository)
-		private boardTimerRepository: BoardTimerRepositoryInterface,
+		@Inject(BOARD_TIMER_REPOSITORY)
+		private readonly boardTimerRepository: BoardTimerRepositoryInterface,
 
-		private eventEmitter: EventEmitter2
+		private readonly eventEmitter: EventEmitter2
 	) {}
 
 	updateDuration(boardTimerDuration: BoardTimerDurationDto) {

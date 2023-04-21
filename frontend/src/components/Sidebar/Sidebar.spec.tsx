@@ -1,6 +1,7 @@
-import Sidebar, { SidebarProps } from '@/components/Sidebar/Sidebar';
+import Sidebar from '@/components/Sidebar/Sidebar';
 import { libraryMocks } from '@/utils/testing/mocks';
 import { renderWithProviders } from '@/utils/testing/renderWithProviders';
+import { SidebarProps } from '@components/Sidebar/types';
 
 const DEFAULT_PROPS = {
   firstName: 'First',

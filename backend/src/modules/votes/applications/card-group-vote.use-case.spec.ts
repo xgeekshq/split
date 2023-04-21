@@ -1,6 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { TYPES } from '../interfaces/types';
-import * as BoardUsers from 'src/modules/boardUsers/interfaces/types';
 import { DeepMocked, createMock } from '@golevelup/ts-jest';
 import { CreateVoteServiceInterface } from '../interfaces/services/create.vote.service.interface';
 import { VoteRepositoryInterface } from '../interfaces/repositories/vote.repository.interface';
@@ -21,6 +20,7 @@ import { DeleteFailedException } from 'src/libs/exceptions/deleteFailedBadReques
 import CardItem from 'src/modules/cards/entities/card.item.schema';
 import { BoardUserFactory } from 'src/libs/test-utils/mocks/factories/boardUser-factory.mock';
 import BoardUser from 'src/modules/boardUsers/entities/board.user.schema';
+import { UPDATE_BOARD_USER_SERVICE } from 'src/modules/boardUsers/constants';
 
 const userId: string = faker.datatype.uuid();
 const board: Board = BoardFactory.create({ maxVotes: 3 });
@@ -55,7 +55,7 @@ describe('CardGroupVoteUseCase', () => {
 					useValue: createMock<CreateVoteServiceInterface>()
 				},
 				{
-					provide: BoardUsers.TYPES.services.UpdateBoardUserService,
+					provide: UPDATE_BOARD_USER_SERVICE,
 					useValue: createMock<UpdateBoardServiceInterface>()
 				}
 			]

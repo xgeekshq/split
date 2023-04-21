@@ -10,14 +10,14 @@ import {
   updateBoardPhaseRequest,
   updateBoardRequest,
 } from '@/api/boardService';
+import { BoardPhases } from '@/enums/boards/phases';
+import { ToastStateEnum } from '@/enums/toasts/toast-types';
 import { handleNewBoardUser } from '@/helper/board/transformBoard';
 import useBoardUtils from '@/hooks/useBoardUtils';
 import { operationsQueueAtom } from '@/store/operations/atom/operations-queue.atom';
 import BoardType, { InfiniteBoards, PhaseChangeEventType } from '@/types/board/board';
 import { BoardUser } from '@/types/board/board.user';
 import UseBoardType from '@/types/board/useBoard';
-import { BoardPhases } from '@/utils/enums/board.phases';
-import { ToastStateEnum } from '@/utils/enums/toast-types';
 
 interface AutoFetchProps {
   autoFetchBoard?: boolean;

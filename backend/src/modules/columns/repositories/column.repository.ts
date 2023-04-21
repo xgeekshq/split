@@ -2,17 +2,17 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { MongoGenericRepository } from 'src/libs/repositories/mongo/mongo-generic.repository';
-import Board, { BoardDocument } from 'src/modules/boards/entities/board.schema';
+import Board from 'src/modules/boards/entities/board.schema';
 import { GetBoardDataPopulate } from 'src/modules/boards/utils/populate-board';
 import { UpdateColumnDto } from '../dto/update-column.dto';
 import { ColumnRepositoryInterface } from './column.repository.interface';
 
 @Injectable()
 export class ColumnRepository
-	extends MongoGenericRepository<BoardDocument>
+	extends MongoGenericRepository<Board>
 	implements ColumnRepositoryInterface
 {
-	constructor(@InjectModel(Board.name) private model: Model<BoardDocument>) {
+	constructor(@InjectModel(Board.name) private model: Model<Board>) {
 		super(model);
 	}
 

@@ -13,11 +13,11 @@ import LoadingPage from '@/components/Primitives/Loading/Page/Page';
 import CreateTeam from '@/components/Teams/CreateTeam/CreateTeam';
 import { USERS_KEY } from '@/constants/react-query/keys';
 import { ROUTES } from '@/constants/routes';
+import { TeamUserRoles } from '@/enums/teams/userRoles';
 import useCurrentSession from '@/hooks/useCurrentSession';
 import useUsers from '@/hooks/users/useUsers';
 import { createTeamState } from '@/store/team.atom';
 import { usersListState } from '@/store/user.atom';
-import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 
 const NewTeam: NextPage = () => {
   const { session, userId } = useCurrentSession({ required: true });

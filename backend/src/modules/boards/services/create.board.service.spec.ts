@@ -1,7 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import * as CommunicationsType from 'src/modules/communication/interfaces/types';
-import * as Boards from 'src/modules/boards/interfaces/types';
-import * as BoardUsers from 'src/modules/boardUsers/interfaces/types';
 import * as Schedules from 'src/modules/schedules/interfaces/types';
 import { BoardRepositoryInterface } from '../repositories/board.repository.interface';
 import { CommunicationServiceInterface } from 'src/modules/communication/interfaces/slack-communication.service.interface';
@@ -33,6 +31,8 @@ import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { TeamRoles } from 'src/libs/enum/team.roles';
 import { GET_TEAM_SERVICE } from 'src/modules/teams/constants';
 import { GET_TEAM_USER_SERVICE, UPDATE_TEAM_USER_SERVICE } from 'src/modules/teamUsers/constants';
+import { BOARD_REPOSITORY } from 'src/modules/boards/constants';
+import { CREATE_BOARD_USER_SERVICE } from 'src/modules/boardUsers/constants';
 
 const userId: string = faker.datatype.uuid();
 
@@ -224,19 +224,19 @@ describe('CreateBoardService', () => {
 					useValue: createMock<CommunicationServiceInterface>()
 				},
 				{
-					provide: Boards.TYPES.repositories.BoardRepository,
+					provide: BOARD_REPOSITORY,
 					useValue: createMock<BoardRepositoryInterface>()
 				},
 				{
-					provide: BoardUsers.TYPES.services.CreateBoardUserService,
+					provide: CREATE_BOARD_USER_SERVICE,
 					useValue: createMock<CreateBoardUserServiceInterface>()
 				}
 			]
 		}).compile();
 
 		boardService = module.get(CreateBoardService);
-		boardRepositoryMock = module.get(Boards.TYPES.repositories.BoardRepository);
-		createBoardUserServiceMock = module.get(BoardUsers.TYPES.services.CreateBoardUserService);
+		boardRepositoryMock = module.get(BOARD_REPOSITORY);
+		createBoardUserServiceMock = module.get(CREATE_BOARD_USER_SERVICE);
 		getTeamServiceMock = module.get(GET_TEAM_SERVICE);
 		getTeamUserServiceMock = module.get(GET_TEAM_USER_SERVICE);
 		updateTeamUserServiceMock = module.get(UPDATE_TEAM_USER_SERVICE);

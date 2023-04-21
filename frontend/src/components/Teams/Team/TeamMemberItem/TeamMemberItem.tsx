@@ -7,12 +7,12 @@ import BoardRolePopover from '@/components/Primitives/Popovers/BoardRolePopover/
 import NewJoinerTooltip from '@/components/Primitives/Tooltips/NewJoinerTooltip/NewJoinerTooltip';
 import MemberTitle from '@/components/Teams/Team/TeamMemberItem/MemberTitle/MemberTitle';
 import RoleSelector from '@/components/Teams/Team/TeamMemberItem/RoleSelector/RoleSelector';
+import { TeamUserRoles } from '@/enums/teams/userRoles';
 import useUpdateTeamUser from '@/hooks/teams/useUpdateTeamUser';
 import useCurrentSession from '@/hooks/useCurrentSession';
 import { createTeamState } from '@/store/team.atom';
 import { InnerContainer } from '@/styles/pages/pages.styles';
 import { TeamUser, TeamUserUpdate } from '@/types/team/team.user';
-import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 
 export type TeamMemberItemProps = {
   member: TeamUser;
@@ -97,7 +97,7 @@ const TeamMemberItem = React.memo<TeamMemberItemProps>(
           <Flex align="center" css={{ flex: '4' }} gap="8">
             <Icon name="blob-personal" size={32} />
             <MemberTitle
-              hasPermissions={isSAdmin!}
+              hasPermissions={isSAdmin}
               name={`${member.user.firstName} ${member.user.lastName}`}
               userId={member.user._id}
             />

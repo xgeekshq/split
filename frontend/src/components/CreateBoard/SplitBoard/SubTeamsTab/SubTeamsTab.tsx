@@ -7,12 +7,12 @@ import FakeBoardItem from '@/components/CreateBoard/SplitBoard/SubTeamsTab/FakeB
 import QuickEditSubTeams from '@/components/CreateBoard/SplitBoard/SubTeamsTab/QuickEditSubTeams/QuickEditSubTeams';
 import SelectTeam from '@/components/CreateBoard/SplitBoard/SubTeamsTab/SelectTeam/SelectTeam';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
+import { TeamUserRoles } from '@/enums/teams/userRoles';
 import useTeams from '@/hooks/teams/useTeams';
 import useCurrentSession from '@/hooks/useCurrentSession';
 import { createBoardError } from '@/store/createBoard/atoms/create-board.atom';
 import { TeamUser } from '@/types/team/team.user';
 import { User } from '@/types/user/user';
-import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 import useCreateBoardHelper from '@hooks/useCreateBoardHelper';
 
 type SubTeamsTabProps = {

@@ -10,10 +10,10 @@ import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import LoadingPage from '@/components/Primitives/Loading/Page/Page';
 import Text from '@/components/Primitives/Text/Text';
 import { ROUTES } from '@/constants/routes';
+import { TeamUserRoles } from '@/enums/teams/userRoles';
 import useTeams from '@/hooks/teams/useTeams';
 import BoardType from '@/types/board/board';
 import { Team } from '@/types/team/team';
-import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 
 interface ListBoardsProps {
   userId: string;

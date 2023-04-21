@@ -5,8 +5,8 @@ import { useSetRecoilState } from 'recoil';
 import { getDashboardBoardsRequest } from '@/api/boardService';
 import EmptyBoards from '@/components/Dashboard/RecentRetros/partials/EmptyBoards';
 import ListOfCards from '@/components/Dashboard/RecentRetros/partials/ListOfCards';
+import { ToastStateEnum } from '@/enums/toasts/toast-types';
 import { toastState } from '@/store/toast/atom/toast.atom';
-import { ToastStateEnum } from '@/utils/enums/toast-types';
 import isEmpty from '@/utils/isEmpty';
 
 type RecentRetrosProp = {

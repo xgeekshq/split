@@ -3,7 +3,7 @@ import React from 'react';
 import RoleSelector, {
   RoleSelectorProps,
 } from '@/components/Teams/Team/TeamMemberItem/RoleSelector/RoleSelector';
-import { TeamUserRoles } from '@/utils/enums/team.user.roles';
+import { TeamUserRoles } from '@/enums/teams/userRoles';
 import { TeamFactory } from '@/utils/factories/team';
 import { getFormattedTeamUserRole } from '@/utils/getFormattedTeamUserRole';
 import { libraryMocks } from '@/utils/testing/mocks';

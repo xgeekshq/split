@@ -1,7 +1,7 @@
 import { ComponentStory } from '@storybook/react';
 
 import RoleSelector from '@/components/Teams/Team/TeamMemberItem/RoleSelector/RoleSelector';
-import { TeamUserRoles } from '@/utils/enums/team.user.roles';
+import { TeamUserRoles } from '@/enums/teams/userRoles';
 import { TeamFactory } from '@/utils/factories/team';
 import { UserFactory } from '@/utils/factories/user';
 
