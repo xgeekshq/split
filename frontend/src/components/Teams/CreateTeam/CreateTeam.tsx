@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useRouter } from 'next/router';
 import { joiResolver } from '@hookform/resolvers/joi';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilState, useSetRecoilState } from 'recoil';
 
 import Icon from '@/components/Primitives/Icons/Icon/Icon';
 import Button from '@/components/Primitives/Inputs/Button/Button';
@@ -12,7 +12,6 @@ import CreateHeader from '@/components/Primitives/Layout/CreateHeader/CreateHead
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import TipBar from '@/components/Primitives/Layout/TipBar/TipBar';
 import Text from '@/components/Primitives/Text/Text';
-import ListMembers from '@/components/Teams/Team/ListMembers/ListMembers';
 import TeamMembersList from '@/components/Teams/Team/TeamMembersList';
 import { ROUTES } from '@/constants/routes';
 import CREATE_TEAM_TIPS from '@/constants/tips/createTeam';
@@ -20,20 +19,27 @@ import useCreateTeam from '@/hooks/teams/useCreateTeam';
 import useCurrentSession from '@/hooks/useCurrentSession';
 import SchemaCreateTeam from '@/schema/schemaCreateTeamForm';
 import { createTeamState } from '@/store/team.atom';
+import { toastState } from '@/store/toast/atom/toast.atom';
 import { usersListState } from '@/store/user.atom';
 import { StyledForm } from '@/styles/pages/pages.styles';
 import { CreateTeamUser } from '@/types/team/team.user';
+import { UserList } from '@/types/team/userList';
+import UserListDialog from '@components/Primitives/Dialogs/UserListDialog/UserListDialog';
+import { TeamUserRoles } from '@utils/enums/team.user.roles';
+import { ToastStateEnum } from '@utils/enums/toast-types';
+import { verifyIfIsNewJoiner } from '@utils/verifyIfIsNewJoiner';
 
 const CreateTeam = () => {
   const { userId } = useCurrentSession();
   const { back, push } = useRouter();
+  const setToastState = useSetRecoilState(toastState);
 
   const { mutate: createTeam, status } = useCreateTeam();
 
   const [disableButtons, setDisableButtons] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
 
-  const createTeamMembers = useRecoilValue(createTeamState);
+  const [createTeamMembers, setCreateTeamMembers] = useRecoilState(createTeamState);
   const [usersList, setUsersList] = useRecoilState(usersListState);
 
   const methods = useForm<{ text: string }>({
@@ -72,6 +78,47 @@ const CreateTeam = () => {
   const handleOpen = (event: React.MouseEvent<HTMLElement>) => {
     event.preventDefault();
     setIsOpen(true);
+  };
+
+  const saveMembers = (checkedUserList: UserList[]) => {
+    const selectedUsers = checkedUserList.filter((user) => user.isChecked);
+
+    const updatedListWithAdded = selectedUsers.map((user) => {
+      const isNewJoiner = verifyIfIsNewJoiner(user.joinedAt, user.providerAccountCreatedAt);
+
+      return (
+        createTeamMembers.find((member) => member.user._id === user._id) || {
+          user,
+          role: TeamUserRoles.MEMBER,
+          isNewJoiner,
+          canBeResponsible: !isNewJoiner,
+        }
+      );
+    });
+
+    // Sort by Name
+    updatedListWithAdded.sort((a, b) => {
+      const aFullName = `${a.user.firstName.toLowerCase()} ${a.user.lastName.toLowerCase()}`;
+      const bFullName = `${b.user.firstName.toLowerCase()} ${b.user.lastName.toLowerCase()}`;
+
+      return aFullName < bFullName ? -1 : 1;
+    });
+
+    // this insures that the team creator stays always in first
+    const userAdminIndex = updatedListWithAdded.findIndex((member) => member.user._id === userId);
+
+    updatedListWithAdded.unshift(updatedListWithAdded.splice(userAdminIndex, 1)[0]);
+
+    setToastState({
+      open: true,
+      content: 'Team member/s successfully updated',
+      type: ToastStateEnum.SUCCESS,
+    });
+
+    setCreateTeamMembers(updatedListWithAdded);
+    setUsersList(checkedUserList);
+
+    setIsOpen(false);
   };
 
   useEffect(() => {
@@ -123,7 +170,14 @@ const CreateTeam = () => {
                 </Flex>
               </Flex>
               <TeamMembersList hasPermissions teamUsers={createTeamMembers} />
-              <ListMembers isOpen={isOpen} setIsOpen={setIsOpen} />
+              <UserListDialog
+                confirmationHandler={saveMembers}
+                confirmationLabel="Add/remove members"
+                isOpen={isOpen}
+                setIsOpen={setIsOpen}
+                title="Team Members"
+                usersList={usersList}
+              />
             </FormProvider>
           </StyledForm>
           <TipBar tips={CREATE_TEAM_TIPS} />
