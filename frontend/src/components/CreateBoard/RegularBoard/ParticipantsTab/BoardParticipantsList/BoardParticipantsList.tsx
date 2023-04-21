@@ -14,7 +14,7 @@ import { UserList } from '@/types/team/userList';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import isEmpty from '@/utils/isEmpty';
 import UserListDialog from '@components/Primitives/Dialogs/UserListDialog/UserListDialog';
-import useCreateBoard from '@hooks/useCreateBoard';
+import useCreateBoardHelper from '@hooks/useCreateBoardHelper';
 import { ToastStateEnum } from '@utils/enums/toast-types';
 
 type BoardParticipantsListProps = {
@@ -27,7 +27,7 @@ const BoardParticipantsList = ({ isPageLoading }: BoardParticipantsListProps) =>
   const {
     createBoardData: { users },
     setCreateBoardData,
-  } = useCreateBoard();
+  } = useCreateBoardHelper();
   const [usersList, setUsersList] = useRecoilState(usersListState);
   const setToastState = useSetRecoilState(toastState);
 

@@ -19,7 +19,7 @@ import { Team } from '@/types/team/team';
 import { UserList } from '@/types/team/userList';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import { TeamUserRoles } from '@/utils/enums/team.user.roles';
-import useCreateBoard from '@hooks/useCreateBoard';
+import useCreateBoardHelper from '@hooks/useCreateBoardHelper';
 
 const SelectTeam = () => {
   const { userId, isSAdmin } = useCurrentSession();
@@ -30,7 +30,7 @@ const SelectTeam = () => {
   const {
     createBoardData: { team },
     setCreateBoardData,
-  } = useCreateBoard();
+  } = useCreateBoardHelper();
   const teamsQuery = useTeams(isSAdmin);
   const teams = teamsQuery.data ?? [];
 

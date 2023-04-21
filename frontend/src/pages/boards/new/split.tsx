@@ -24,7 +24,6 @@ import { TEAMS_KEY } from '@/constants/react-query/keys';
 import { DASHBOARD_ROUTE, ROUTES } from '@/constants/routes';
 import SPLIT_BOARD_TIPS from '@/constants/tips/splitBoard';
 import useTeams from '@/hooks/teams/useTeams';
-import useBoard from '@/hooks/useBoard';
 import useCurrentSession from '@/hooks/useCurrentSession';
 import SchemaCreateBoard from '@/schema/schemaCreateBoardForm';
 import { createBoardError } from '@/store/createBoard/atoms/create-board.atom';
@@ -35,7 +34,8 @@ import { BoardPhases } from '@/utils/enums/board.phases';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
 import isEmpty from '@/utils/isEmpty';
-import useCreateBoard from '@hooks/useCreateBoard';
+import useCreateBoard from '@hooks/boards/useCreateBoard';
+import useCreateBoardHelper from '@hooks/useCreateBoardHelper';
 
 const NewSplitBoard: NextPage = () => {
   const router = useRouter();
@@ -51,10 +51,8 @@ const NewSplitBoard: NextPage = () => {
   const [haveError, setHaveError] = useRecoilState(createBoardError);
 
   // User Board Hook
-  const { createBoardData, setCreateBoardData, resetBoardState } = useCreateBoard();
-  const {
-    createBoard: { status, mutate },
-  } = useBoard({ autoFetchBoard: false });
+  const { createBoardData, setCreateBoardData, resetBoardState } = useCreateBoardHelper();
+  const { status, mutate } = useCreateBoard();
 
   // Team  Hook
   const teamsQuery = useTeams(isSAdmin);

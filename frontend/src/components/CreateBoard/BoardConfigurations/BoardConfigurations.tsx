@@ -4,7 +4,7 @@ import Input from '@/components/Primitives/Inputs/Input/Input';
 import ConfigurationSwitch from '@/components/Primitives/Inputs/Switches/ConfigurationSwitch/ConfigurationSwitch';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Text from '@/components/Primitives/Text/Text';
-import useCreateBoard from '@hooks/useCreateBoard';
+import useCreateBoardHelper from '@hooks/useCreateBoardHelper';
 
 const DEFAULT_MAX_VOTES = 6;
 
@@ -18,7 +18,7 @@ const BoardConfigurations = ({ isRegularBoard }: BoardConfigurationsProps) => {
   const {
     createBoardData: { board },
     setCreateBoardData,
-  } = useCreateBoard();
+  } = useCreateBoardHelper();
 
   const { register, unregister, clearErrors, setValue } = useFormContext();
 

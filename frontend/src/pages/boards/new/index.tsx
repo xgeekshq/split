@@ -9,9 +9,9 @@ import LoadingPage from '@/components/Primitives/Loading/Page/Page';
 import Text from '@/components/Primitives/Text/Text';
 import { NEXT_PUBLIC_REGULAR_BOARD } from '@/constants';
 import { ROUTES } from '@/constants/routes';
-import useBoard from '@/hooks/useBoard';
 import useCurrentSession from '@/hooks/useCurrentSession';
 import CreateBoardBox from '@components/Primitives/Layout/CreateBoardBox/CreateBoardBox';
+import useCreateBoard from '@hooks/boards/useCreateBoard';
 
 const NewBoard: NextPage = () => {
   const {
@@ -21,9 +21,7 @@ const NewBoard: NextPage = () => {
   const { session } = useCurrentSession({ required: true });
   const [isBackButtonDisable, setBackButtonState] = useState(false);
 
-  const {
-    createBoard: { status },
-  } = useBoard({ autoFetchBoard: false });
+  const { status } = useCreateBoard();
 
   // Handle back to boards list page
   const handleBack = useCallback(() => {

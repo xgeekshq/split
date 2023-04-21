@@ -9,6 +9,7 @@ import Button from '@/components/Primitives/Inputs/Button/Button';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import LoadingPage from '@/components/Primitives/Loading/Page/Page';
 import Text from '@/components/Primitives/Text/Text';
+import { ROUTES } from '@/constants/routes';
 import useTeams from '@/hooks/teams/useTeams';
 import BoardType from '@/types/board/board';
 import { Team } from '@/types/team/team';
@@ -76,7 +77,7 @@ const ListBoards = React.memo<ListBoardsProps>(
                   !Array.from(dataByTeamAndDate.teams.keys()).includes(teamId)) && (
                   <Link
                     href={{
-                      pathname: teamId === 'personal' ? `/boards/newRegularBoard` : `/boards/new`,
+                      pathname: teamId === 'personal' ? ROUTES.NewRegularBoard : ROUTES.NewBoard,
                       query: { team: teamId },
                     }}
                   >

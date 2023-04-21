@@ -13,7 +13,7 @@ import { createBoardError } from '@/store/createBoard/atoms/create-board.atom';
 import { TeamUser } from '@/types/team/team.user';
 import { User } from '@/types/user/user';
 import { TeamUserRoles } from '@/utils/enums/team.user.roles';
-import useCreateBoard from '@hooks/useCreateBoard';
+import useCreateBoardHelper from '@hooks/useCreateBoardHelper';
 
 type SubTeamsTabProps = {
   previousTeam?: string;
@@ -26,7 +26,7 @@ const SubTeamsTab = React.memo<SubTeamsTabProps>(({ previousTeam }) => {
 
   const {
     createBoardData: { team },
-  } = useCreateBoard();
+  } = useCreateBoardHelper();
   const { data: teams } = useTeams(isSAdmin);
 
   useEffect(() => {

@@ -11,9 +11,9 @@ import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Separator from '@/components/Primitives/Separator/Separator';
 import Text from '@/components/Primitives/Text/Text';
 import Tooltip from '@/components/Primitives/Tooltips/Tooltip/Tooltip';
-import useCreateBoard from '@/hooks/useCreateBoard';
 import { CreateBoardData, createBoardError } from '@/store/createBoard/atoms/create-board.atom';
 import { BoardToAdd } from '@/types/board/board';
+import useCreateBoardHelper from '@hooks/useCreateBoardHelper';
 import { InnerContainer } from '@styles/pages/pages.styles';
 
 interface SubBoardListProp {
@@ -46,7 +46,7 @@ const CreateBoardItem = React.memo(() => {
     setCreateBoardData,
     canAdd,
     canReduce,
-  } = useCreateBoard();
+  } = useCreateBoardHelper();
 
   return (
     team && (

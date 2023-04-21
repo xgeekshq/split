@@ -1,7 +1,6 @@
 import { UseInfiniteQueryResult, UseMutationResult, UseQueryResult } from '@tanstack/react-query';
 
 import BoardType, {
-  CreateBoardDto,
   DuplicateBoardType,
   GetBoardResponse,
   InfiniteBoards,
@@ -12,7 +11,6 @@ import { BoardUser } from '@/types/board/board.user';
 import UpdateBoardPhaseDto from '@/types/board/updateBoardPhase.dto';
 
 export default interface UseBoardType {
-  createBoard: UseMutationResult<BoardType, unknown, CreateBoardDto, unknown>;
   duplicateBoard: UseMutationResult<BoardType, unknown, DuplicateBoardType, unknown>;
   updateBoard: UseMutationResult<
     BoardType,

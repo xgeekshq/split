@@ -13,7 +13,7 @@ import Button from '@/components/Primitives/Inputs/Button/Button';
 import Input from '@/components/Primitives/Inputs/Input/Input';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Text from '@/components/Primitives/Text/Text';
-import useCreateBoard from '@/hooks/useCreateBoard';
+import useCreateBoardHelper from '@hooks/useCreateBoardHelper';
 
 const QuickEditSubTeams = () => {
   const { register, getValues, setValue } = useFormContext();
@@ -24,7 +24,7 @@ const QuickEditSubTeams = () => {
     setCreateBoardData,
     handleSplitBoards,
     teamMembers,
-  } = useCreateBoard();
+  } = useCreateBoardHelper();
 
   const teamLength = teamMembers?.length ?? 0;
   const minUsers = teamLength % 2 === 0 ? 2 : 3;

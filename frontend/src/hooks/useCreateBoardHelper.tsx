@@ -9,7 +9,7 @@ import { TeamUser } from '@/types/team/team.user';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 
-const useCreateBoard = () => {
+const useCreateBoardHelper = () => {
   const MIN_TEAMS = 2;
   const MIN_MEMBERS = 4;
 
@@ -257,4 +257,4 @@ const useCreateBoard = () => {
   };
 };
 
-export default useCreateBoard;
+export default useCreateBoardHelper;

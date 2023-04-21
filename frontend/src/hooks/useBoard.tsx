@@ -3,7 +3,6 @@ import { AxiosError } from 'axios';
 import { useSetRecoilState } from 'recoil';
 
 import {
-  createBoardRequest,
   deleteBoardRequest,
   duplicateBoardRequest,
   getBoardRequest,
@@ -13,7 +12,6 @@ import {
 } from '@/api/boardService';
 import { handleNewBoardUser } from '@/helper/board/transformBoard';
 import useBoardUtils from '@/hooks/useBoardUtils';
-import { newBoardState } from '@/store/board/atoms/board.atom';
 import { operationsQueueAtom } from '@/store/operations/atom/operations-queue.atom';
 import BoardType, { InfiniteBoards, PhaseChangeEventType } from '@/types/board/board';
 import { BoardUser } from '@/types/board/board.user';
@@ -32,7 +30,6 @@ const useBoard = ({
 }: AutoFetchProps = {}): UseBoardType => {
   const { boardId, queryClient, setToastState } = useBoardUtils();
 
-  const setNewBoard = useSetRecoilState(newBoardState);
   const setReady = useSetRecoilState(operationsQueueAtom);
 
   const getBoardQuery = (id: string | undefined) => ['board', { id }];
@@ -92,17 +89,6 @@ const useBoard = ({
       },
     },
   );
-
-  const createBoard = useMutation(createBoardRequest, {
-    onSuccess: (data) => setNewBoard(data._id),
-    onError: () => {
-      setToastState({
-        open: true,
-        content: 'Error creating the board',
-        type: ToastStateEnum.ERROR,
-      });
-    },
-  });
 
   const duplicateBoard = useMutation(duplicateBoardRequest, {
     onSuccess: async () => {
@@ -222,7 +208,6 @@ const useBoard = ({
   };
 
   return {
-    createBoard,
     duplicateBoard,
     deleteBoard,
     updateBoard,

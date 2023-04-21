@@ -23,7 +23,6 @@ import { TEAMS_KEY } from '@/constants/react-query/keys';
 import { DASHBOARD_ROUTE } from '@/constants/routes';
 import REGULAR_BOARD_TIPS from '@/constants/tips/regularBoard';
 import useTeams from '@/hooks/teams/useTeams';
-import useBoard from '@/hooks/useBoard';
 import useCurrentSession from '@/hooks/useCurrentSession';
 import SchemaCreateRegularBoard from '@/schema/schemaCreateRegularBoard';
 import { toastState } from '@/store/toast/atom/toast.atom';
@@ -34,7 +33,8 @@ import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
 import isEmpty from '@/utils/isEmpty';
 import CreateBoardBox from '@components/Primitives/Layout/CreateBoardBox/CreateBoardBox';
-import useCreateBoard from '@hooks/useCreateBoard';
+import useCreateBoard from '@hooks/boards/useCreateBoard';
+import useCreateBoardHelper from '@hooks/useCreateBoardHelper';
 
 const NewRegularBoard: NextPage = () => {
   const router = useRouter();
@@ -74,10 +74,8 @@ const NewRegularBoard: NextPage = () => {
   }, [allUsers, setUsersList, userId]);
 
   // Board Hook
-  const { createBoardData, resetBoardState } = useCreateBoard();
-  const {
-    createBoard: { status, mutate },
-  } = useBoard({ autoFetchBoard: false });
+  const { createBoardData, resetBoardState } = useCreateBoardHelper();
+  const { status, mutate } = useCreateBoard();
 
   const addNewRegularBoard = () => {
     setCreateBoard(true);

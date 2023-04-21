@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect, useMemo } from 'react';
 import { useFormContext } from 'react-hook-form';
-import { useRouter } from 'next/router';
 import { useSetRecoilState } from 'recoil';
 
 import Icon from '@/components/Primitives/Icons/Icon/Icon';
@@ -15,13 +14,13 @@ import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Text from '@/components/Primitives/Text/Text';
 import { MIN_MEMBERS } from '@/constants';
 import useTeams from '@/hooks/teams/useTeams';
-import useCreateBoard from '@/hooks/useCreateBoard';
 import useCurrentSession from '@/hooks/useCurrentSession';
 import { createBoardError } from '@/store/createBoard/atoms/create-board.atom';
 import { Team } from '@/types/team/team';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 import isEmpty from '@/utils/isEmpty';
+import useCreateBoardHelper from '@hooks/useCreateBoardHelper';
 
 type SelectTeamProps = {
   previousTeam?: string;
@@ -29,20 +28,17 @@ type SelectTeamProps = {
 
 const SelectTeam = ({ previousTeam }: SelectTeamProps) => {
   const { userId, isSAdmin } = useCurrentSession({ required: true });
-  const router = useRouter();
-  const routerTeam = router.query.team as string;
 
   const setHaveError = useSetRecoilState(createBoardError);
   const {
     handleSplitBoards,
     createBoardData: { team: createBoardTeam },
     setCreateBoardData,
-  } = useCreateBoard();
+  } = useCreateBoardHelper();
   const teamsQuery = useTeams(isSAdmin);
   const teams = teamsQuery.data ?? [];
 
   const {
-    setValue,
     getValues,
     clearErrors,
     formState: { errors },
