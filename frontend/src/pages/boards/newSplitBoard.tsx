@@ -132,9 +132,14 @@ const NewSplitBoard: NextPage = () => {
       },
     );
 
+    const boardUsersDtos = createBoardData.users.map((boardUser) => ({
+      user: boardUser.user._id,
+      role: boardUser.role,
+    }));
+
     mutate({
       ...createBoardData.board,
-      users: [...createBoardData.users],
+      users: boardUsersDtos,
       title,
       dividedBoards: newDividedBoards,
       maxVotes,
