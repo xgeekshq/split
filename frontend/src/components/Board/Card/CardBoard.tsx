@@ -10,6 +10,7 @@ import Comments from '@/components/Board/Comment/Comments';
 import Icon from '@/components/Primitives/Icons/Icon/Icon';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Text from '@/components/Primitives/Text/Text';
+import { BoardPhases } from '@/enums/boards/phases';
 import { cardBlur } from '@/helper/board/blurFilter';
 import { getCommentsFromCardGroup } from '@/helper/board/comments';
 import useCards from '@/hooks/useCards';
@@ -17,7 +18,6 @@ import { onDragCardStart } from '@/store/card/atoms/card.atom';
 import { styled } from '@/styles/stitches/stitches.config';
 import { BoardUser } from '@/types/board/board.user';
 import CardType from '@/types/card/card';
-import { BoardPhases } from '@/utils/enums/board.phases';
 
 const Container = styled(Flex, {
   borderRadius: '$8',

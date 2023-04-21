@@ -5,6 +5,7 @@ import { fireEvent, waitFor } from '@testing-library/dom';
 import TeamMemberItem, {
   TeamMemberItemProps,
 } from '@/components/Teams/Team/TeamMemberItem/TeamMemberItem';
+import { TeamUserRoles } from '@/enums/teams/userRoles';
 import { createTeamState } from '@/store/team.atom';
 import { TeamUserFactory, UserFactory } from '@/utils/factories/user';
 import { getFormattedUsername } from '@/utils/getFormattedUsername';
@@ -14,7 +15,6 @@ import {
   RenderWithProvidersOptions,
 } from '@/utils/testing/renderWithProviders';
 import useUpdateTeamUser from '@hooks/teams/useUpdateTeamUser';
-import { TeamUserRoles } from '@utils/enums/team.user.roles';
 
 const { mockRouter } = libraryMocks.mockNextRouter({ pathname: '/teams' });
 const mockUser = UserFactory.create();

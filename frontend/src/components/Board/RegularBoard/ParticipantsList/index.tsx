@@ -6,10 +6,10 @@ import { useRecoilValue } from 'recoil';
 import BoardParticipantsSubHeader from '@/components/Board/RegularBoard/ParticipantsList/BoardParticipantsSubHeader/BoardParticipantsSubHeader';
 import ParticipantCard from '@/components/Board/RegularBoard/ParticipantsList/ParticipantCard';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
+import { BoardUserRoles } from '@/enums/boards/userRoles';
 import useParticipants from '@/hooks/useParticipants';
 import { boardParticipantsState } from '@/store/board/atoms/board.atom';
 import { BoardUser, UpdateBoardUser } from '@/types/board/board.user';
-import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import { getGuestUserCookies } from '@/utils/getGuestUserCookies';
 
 type ParticipantsListProps = {

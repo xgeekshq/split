@@ -4,6 +4,7 @@ import { useMutation } from '@tanstack/react-query';
 import { useSetRecoilState } from 'recoil';
 
 import { addCommentRequest, deleteCommentRequest, updateCommentRequest } from '@/api/boardService';
+import { ToastStateEnum } from '@/enums/toasts/toast-types';
 import {
   handleAddComments,
   handleDeleteComments,
@@ -15,7 +16,6 @@ import BoardType from '@/types/board/board';
 import AddCommentDto from '@/types/comment/addComment.dto';
 import DeleteCommentDto from '@/types/comment/deleteComment.dto';
 import UpdateCommentDto from '@/types/comment/updateComment.dto';
-import { ToastStateEnum } from '@/utils/enums/toast-types';
 
 const useComments = () => {
   const { queryClient, setToastState } = useBoardUtils();

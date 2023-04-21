@@ -2,13 +2,13 @@ import React, { Dispatch, SetStateAction } from 'react';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 
 import UserListDialog from '@/components/Primitives/Dialogs/UserListDialog/UserListDialog';
+import { BoardUserRoles } from '@/enums/boards/userRoles';
+import { ToastStateEnum } from '@/enums/toasts/toast-types';
 import useCurrentSession from '@/hooks/useCurrentSession';
 import { createBoardDataState } from '@/store/createBoard/atoms/create-board.atom';
 import { toastState } from '@/store/toast/atom/toast.atom';
 import { usersListState } from '@/store/user.atom';
 import { UserList } from '@/types/team/userList';
-import { BoardUserRoles } from '@/utils/enums/board.user.roles';
-import { ToastStateEnum } from '@/utils/enums/toast-types';
 
 type ListParticipantsProps = {
   setIsOpen: Dispatch<SetStateAction<boolean>>;
