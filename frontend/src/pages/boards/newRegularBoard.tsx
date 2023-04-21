@@ -10,7 +10,6 @@ import { useRecoilState, useSetRecoilState } from 'recoil';
 import { getAllTeams, getUserTeams } from '@/api/teamService';
 import { getAllUsers } from '@/api/userService';
 import BoardName from '@/components/CreateBoard/BoardName/BoardName';
-import CreateBoardBox from '@/components/CreateBoard/CreateBoardBox/CreateBoardBox';
 import SettingsTabs from '@/components/CreateBoard/RegularBoard/SettingsTabs/SettingsTabs';
 import QueryError from '@/components/Errors/QueryError';
 import requireAuthentication from '@/components/HOC/requireAuthentication';
@@ -34,6 +33,7 @@ import { BoardUser, BoardUserDto } from '@/types/board/board.user';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
 import isEmpty from '@/utils/isEmpty';
+import CreateBoardBox from '@components/Primitives/Layout/CreateBoardBox/CreateBoardBox';
 import useCreateBoard from '@hooks/useCreateBoard';
 
 const NewRegularBoard: NextPage = () => {

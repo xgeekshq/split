@@ -2,12 +2,6 @@ import React from 'react';
 import { ComponentStory } from '@storybook/react';
 import dedent from 'ts-dedent';
 
-import {
-  Label,
-  RadioGroup,
-  RadioGroupIndicator,
-  RadioGroupItem,
-} from '@/components/Primitives/Inputs/RadioGroup/RadioGroup';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Text from '@/components/Primitives/Text/Text';
 import {
@@ -15,6 +9,12 @@ import {
   RadioGroupFontWeightType,
   RadioGroupSizeType,
 } from '@/stories/types/PrimitiveTypes';
+import {
+  Label,
+  RadioGroup,
+  RadioGroupIndicator,
+  RadioGroupItem,
+} from '@components/Primitives/Inputs/RadioGroups/RadioGroup/RadioGroup';
 
 const DIRECTION_OPTIONS: RadioGroupDirectionType[] = ['row', 'column'];
 

@@ -19,6 +19,7 @@ const BoardConfigurations = ({ isRegularBoard }: BoardConfigurationsProps) => {
     createBoardData: { board },
     setCreateBoardData,
   } = useCreateBoard();
+
   const { register, unregister, clearErrors, setValue } = useFormContext();
 
   const handleCheckedChange = (checked: boolean, key: BoardConfigurationOptions) => {

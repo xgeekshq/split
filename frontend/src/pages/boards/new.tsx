@@ -3,7 +3,6 @@ import { NextPage } from 'next';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 
-import CreateBoardBox from '@/components/CreateBoard/CreateBoardBox/CreateBoardBox';
 import CreateHeader from '@/components/Primitives/Layout/CreateHeader/CreateHeader';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import LoadingPage from '@/components/Primitives/Loading/Page/Page';
@@ -12,6 +11,7 @@ import { NEXT_PUBLIC_REGULAR_BOARD } from '@/constants';
 import { ROUTES } from '@/constants/routes';
 import useBoard from '@/hooks/useBoard';
 import useCurrentSession from '@/hooks/useCurrentSession';
+import CreateBoardBox from '@components/Primitives/Layout/CreateBoardBox/CreateBoardBox';
 
 const NewBoard: NextPage = () => {
   const {

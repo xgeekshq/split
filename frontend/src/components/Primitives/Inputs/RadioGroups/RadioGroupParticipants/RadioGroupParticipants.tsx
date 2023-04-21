@@ -1,12 +1,12 @@
+import Flex from '@/components/Primitives/Layout/Flex/Flex';
+import Text from '@/components/Primitives/Text/Text';
+import { styled } from '@/styles/stitches/stitches.config';
 import {
   Label,
   RadioGroup,
   RadioGroupIndicator,
   RadioGroupItem,
-} from '@/components/Primitives/Inputs/RadioGroup/RadioGroup';
-import Flex from '@/components/Primitives/Layout/Flex/Flex';
-import Text from '@/components/Primitives/Text/Text';
-import { styled } from '@/styles/stitches/stitches.config';
+} from '@components/Primitives/Inputs/RadioGroups/RadioGroup/RadioGroup';
 
 type RadioGroupParticipantsProps = {
   optionSelected: string;

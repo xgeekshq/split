@@ -1,9 +1,9 @@
 import { Dispatch, SetStateAction } from 'react';
 
 import BoardParticipantsList from '@/components/CreateBoard/RegularBoard/ParticipantsTab/BoardParticipantsList/BoardParticipantsList';
-import RadioGroupParticipants from '@/components/CreateBoard/RegularBoard/ParticipantsTab/RadioGroupParticipants/RadioGroupParticipants';
 import SelectTeam from '@/components/CreateBoard/RegularBoard/ParticipantsTab/SelectTeam/SelectTeam';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
+import RadioGroupParticipants from '@components/Primitives/Inputs/RadioGroupParticipants/RadioGroupParticipants';
 
 type Props = {
   optionSelected: string;
