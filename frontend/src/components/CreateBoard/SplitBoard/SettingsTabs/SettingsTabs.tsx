@@ -7,9 +7,9 @@ import SubTeamsConfigurations from '@/components/CreateBoard/SplitBoard/SubTeams
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Tab, { TabList } from '@/components/Primitives/Tab/Tab';
 import Text from '@/components/Primitives/Text/Text';
+import { createErrorMessage } from '@/constants/toasts';
 import { createBoardError, createBoardTeam } from '@/store/createBoard/atoms/create-board.atom';
 import { toastState } from '@/store/toast/atom/toast.atom';
-import { ToastStateEnum } from '@/utils/enums/toast-types';
 import { usePrevious } from '@/utils/previousState';
 
 const SettingsTabs = () => {
@@ -50,11 +50,9 @@ const SettingsTabs = () => {
 
     if (errors.team && activeTab === 'config') {
       handleTabChange('teams');
-      setToastState({
-        open: true,
-        content: 'Please choose a team in the "Team/-Sub-teams configuration" tab',
-        type: ToastStateEnum.ERROR,
-      });
+      setToastState(
+        createErrorMessage('Please choose a team in the "Team/-Sub-teams configuration" tab'),
+      );
     }
   }, [activeTab, errors.maxVotes, errors.team, setToastState]);
 

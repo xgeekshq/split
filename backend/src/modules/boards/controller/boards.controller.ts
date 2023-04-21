@@ -61,7 +61,19 @@ import GetBoardUseCaseDto from '../dto/useCase/get-board.use-case.dto';
 import GetBoardsUseCaseDto from '../dto/useCase/get-boards.use-case.dto';
 import MergeBoardUseCaseDto from '../dto/useCase/merge-board.use-case.dto';
 import Board from '../entities/board.schema';
-import { TYPES } from '../interfaces/types';
+import {
+	CREATE_BOARD_USE_CASE,
+	DELETE_BOARD_USE_CASE,
+	DUPLICATE_BOARD_USE_CASE,
+	GET_ALL_BOARDS_USE_CASE,
+	GET_BOARD_USE_CASE,
+	GET_DASHBOARD_BOARDS_USE_CASE,
+	GET_PERSONAL_BOARDS_USE_CASE,
+	MERGE_BOARD_USE_CASE,
+	UPDATE_BOARD_PARTICIPANTS_USE_CASE,
+	UPDATE_BOARD_PHASE_USE_CASE,
+	UPDATE_BOARD_USE_CASE
+} from '../constants';
 import BoardUseCasePresenter from '../presenter/board.use-case.presenter';
 import DeleteBoardUseCaseDto from 'src/modules/boards/dto/useCase/delete-board.use-case';
 import BoardsPaginatedPresenter from 'src/modules/boards/presenter/boards-paginated.presenter';
@@ -74,38 +86,38 @@ const BoardUser = (permissions: string[]) => SetMetadata('permissions', permissi
 @Controller('boards')
 export default class BoardsController {
 	constructor(
-		@Inject(TYPES.applications.GetBoardsForDashboardUseCase)
-		private readonly getBoardsForDashboardUseCase: UseCase<
+		@Inject(GET_DASHBOARD_BOARDS_USE_CASE)
+		private readonly getDashboardBoardsUseCase: UseCase<
 			GetBoardsUseCaseDto,
 			BoardsPaginatedPresenter
 		>,
-		@Inject(TYPES.applications.CreateBoardUseCase)
+		@Inject(CREATE_BOARD_USE_CASE)
 		private readonly createBoardUseCase: UseCase<CreateBoardUseCaseDto, Board>,
-		@Inject(TYPES.applications.DuplicateBoardUseCase)
+		@Inject(DUPLICATE_BOARD_USE_CASE)
 		private readonly duplicateBoardUseCase: UseCase<DuplicateBoardDto, Board>,
-		@Inject(TYPES.applications.GetAllBoardsUseCase)
+		@Inject(GET_ALL_BOARDS_USE_CASE)
 		private readonly getAllBoardsUseCase: UseCase<GetAllBoardsUseCaseDto, BoardsPaginatedPresenter>,
-		@Inject(TYPES.applications.GetPersonalBoardsUseCase)
+		@Inject(GET_PERSONAL_BOARDS_USE_CASE)
 		private readonly getPersonalBoardsUseCase: UseCase<
 			GetBoardsUseCaseDto,
 			BoardsPaginatedPresenter
 		>,
-		@Inject(TYPES.applications.GetBoardUseCase)
+		@Inject(GET_BOARD_USE_CASE)
 		private readonly getBoardUseCase: UseCase<GetBoardUseCaseDto, BoardUseCasePresenter>,
-		@Inject(TYPES.applications.UpdateBoardUseCase)
+		@Inject(UPDATE_BOARD_USE_CASE)
 		private readonly updateBoardUseCase: UseCase<UpdateBoardDto, Board>,
-		@Inject(TYPES.applications.UpdateBoardParticipantsUseCase)
+		@Inject(UPDATE_BOARD_PARTICIPANTS_USE_CASE)
 		private readonly updateBoardParticipantsUseCase: UseCase<
 			UpdateBoardUserDto,
 			BoardParticipantsPresenter
 		>,
-		@Inject(TYPES.applications.MergeBoardUseCase)
+		@Inject(MERGE_BOARD_USE_CASE)
 		private readonly mergeBoardUseCase: UseCase<MergeBoardUseCaseDto, Board>,
-		@Inject(TYPES.applications.UpdateBoardPhaseUseCase)
+		@Inject(UPDATE_BOARD_PHASE_USE_CASE)
 		private readonly updateBoardPhaseUseCase: UseCase<BoardPhaseDto, void>,
-		@Inject(TYPES.applications.DeleteBoardUseCase)
-		private deleteBoardUseCase: UseCase<DeleteBoardUseCaseDto, boolean>,
-		private socketService: SocketGateway
+		@Inject(DELETE_BOARD_USE_CASE)
+		private readonly deleteBoardUseCase: UseCase<DeleteBoardUseCaseDto, boolean>,
+		private readonly socketService: SocketGateway
 	) {}
 
 	@ApiOperation({ summary: 'Create a new board' })
@@ -182,7 +194,7 @@ export default class BoardsController {
 	})
 	@Get('/dashboard')
 	getDashboardBoards(@Req() request: RequestWithUser, @Query() { page, size }: PaginationParams) {
-		return this.getBoardsForDashboardUseCase.execute({ userId: request.user._id, page, size });
+		return this.getDashboardBoardsUseCase.execute({ userId: request.user._id, page, size });
 	}
 
 	@ApiOperation({ summary: 'Retrieve all boards from database' })

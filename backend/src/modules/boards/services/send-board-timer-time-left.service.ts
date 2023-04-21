@@ -11,7 +11,7 @@ export default class SendBoardTimerTimeLeftService
 {
 	private logger: Logger = new Logger(SendBoardTimerTimeLeftService.name);
 
-	constructor(private eventEmitter: EventEmitter2) {}
+	constructor(private readonly eventEmitter: EventEmitter2) {}
 
 	sendTimeLeft(boardTimeLeft: BoardTimerTimeLeftDto) {
 		this.logger.log(`Will send time left. Board: "${boardTimeLeft.boardId})"`);

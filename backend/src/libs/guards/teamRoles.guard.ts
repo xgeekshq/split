@@ -14,7 +14,7 @@ export class TeamUserGuard implements CanActivate {
 	constructor(
 		private readonly reflector: Reflector,
 		@Inject(GET_TEAM_USER_SERVICE)
-		private getTeamUserService: GetTeamUserServiceInterface
+		private readonly getTeamUserService: GetTeamUserServiceInterface
 	) {}
 
 	async canActivate(context: ExecutionContext) {

@@ -13,11 +13,11 @@ import Box from '@/components/Primitives/Layout/Box/Box';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Text from '@/components/Primitives/Text/Text';
 import Tooltip from '@/components/Primitives/Tooltips/Tooltip/Tooltip';
+import { BoardUserRoles } from '@/enums/boards/userRoles';
 import { newBoardState } from '@/store/board/atoms/board.atom';
 import { styled } from '@/styles/stitches/stitches.config';
 import BoardType from '@/types/board/board';
 import { Team } from '@/types/team/team';
-import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 
 const InnerContainer = styled(Flex, Box, {
   px: '$18',

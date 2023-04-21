@@ -1,4 +1,4 @@
-import { TeamUserRoles } from '@/utils/enums/team.user.roles';
+import { TeamUserRoles } from '@/enums/teams/userRoles';
 
 export const getFormattedTeamUserRole = (role: string): string => {
   if (role === TeamUserRoles.STAKEHOLDER) {

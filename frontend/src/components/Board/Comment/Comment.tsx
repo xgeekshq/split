@@ -4,10 +4,10 @@ import AddCardOrComment from '@/components/Board/AddCardOrComment';
 import PopoverCommentSettings from '@/components/Board/Comment/PopoverSettings';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Text from '@/components/Primitives/Text/Text';
+import { BoardPhases } from '@/enums/boards/phases';
 import useComments from '@/hooks/useComments';
 import CommentType from '@/types/comment/comment';
 import DeleteCommentDto from '@/types/comment/deleteComment.dto';
-import { BoardPhases } from '@/utils/enums/board.phases';
 
 interface CommentProps {
   comment: CommentType;

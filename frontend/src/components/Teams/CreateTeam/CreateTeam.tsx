@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useRouter } from 'next/router';
 import { joiResolver } from '@hookform/resolvers/joi';
@@ -28,7 +28,7 @@ const CreateTeam = () => {
   const { userId } = useCurrentSession();
   const { back, push } = useRouter();
 
-  const { mutate: createTeam, status } = useCreateTeam();
+  const { mutate: createTeam } = useCreateTeam();
 
   const [disableButtons, setDisableButtons] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
@@ -59,7 +59,17 @@ const CreateTeam = () => {
       user: member.user._id,
     }));
 
-    createTeam({ name: title, users: membersListToSubmit });
+    createTeam(
+      { name: title, users: membersListToSubmit },
+      {
+        onSuccess: () => {
+          push(ROUTES.Teams);
+        },
+        onError: () => {
+          setDisableButtons(false);
+        },
+      },
+    );
     resetListUsersState();
   };
 
@@ -73,16 +83,6 @@ const CreateTeam = () => {
     event.preventDefault();
     setIsOpen(true);
   };
-
-  useEffect(() => {
-    if (status === 'error') {
-      setDisableButtons(false);
-    }
-
-    if (status === 'success') {
-      push(ROUTES.Teams);
-    }
-  }, [status]);
 
   return (
     <Flex

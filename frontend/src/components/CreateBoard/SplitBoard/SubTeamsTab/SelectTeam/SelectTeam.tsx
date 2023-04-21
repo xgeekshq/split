@@ -14,13 +14,13 @@ import {
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Text from '@/components/Primitives/Text/Text';
 import { MIN_MEMBERS } from '@/constants';
+import { BoardUserRoles } from '@/enums/boards/userRoles';
+import { TeamUserRoles } from '@/enums/teams/userRoles';
 import useTeams from '@/hooks/teams/useTeams';
 import useCreateBoard from '@/hooks/useCreateBoard';
 import useCurrentSession from '@/hooks/useCurrentSession';
 import { createBoardError, createBoardTeam } from '@/store/createBoard/atoms/create-board.atom';
 import { Team } from '@/types/team/team';
-import { BoardUserRoles } from '@/utils/enums/board.user.roles';
-import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 import isEmpty from '@/utils/isEmpty';
 
 type SelectTeamProps = {

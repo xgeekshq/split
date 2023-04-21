@@ -3,7 +3,7 @@ import React, { Dispatch, useState } from 'react';
 import RegisterForm from '@/components/auth/SignUp/RegisterForm';
 import SignUpForm from '@/components/auth/SignUp/SignUpForm';
 import SignUpOptionsForm from '@/components/auth/SignUp/SignUpOptionsForm';
-import { SignUpEnum } from '@/utils/signUp.enum';
+import { SignUpEnum } from '@/enums/auth/signUp';
 
 interface SignUpTabContentProps {
   setCurrentTab: Dispatch<React.SetStateAction<string>>;
