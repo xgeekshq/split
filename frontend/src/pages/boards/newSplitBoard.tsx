@@ -63,7 +63,6 @@ const NewSplitBoard: NextPage = () => {
   // React Hook Form
   const methods = useForm<{
     text: string;
-    team: string;
     maxVotes?: number;
     slackEnable: boolean;
     maxTeams: number;
@@ -74,7 +73,6 @@ const NewSplitBoard: NextPage = () => {
     defaultValues: {
       text: '',
       maxVotes: createBoardData.board.maxVotes,
-      team: undefined,
       slackEnable: createBoardData.board.slackEnable,
       maxTeams: undefined,
       maxUsers: undefined,
@@ -105,13 +103,7 @@ const NewSplitBoard: NextPage = () => {
     router.push(DASHBOARD_ROUTE);
   };
 
-  const saveBoard = (
-    title: string,
-    team: string,
-    slackEnable: boolean,
-    maxUsers: number,
-    maxVotes?: number,
-  ) => {
+  const saveBoard = (title: string, slackEnable: boolean, maxUsers: number, maxVotes?: number) => {
     const responsibles: string[] = [];
     const newDividedBoards: CreateBoardDto[] = createBoardData.board.dividedBoards.map(
       (subBoard) => {
@@ -140,19 +132,13 @@ const NewSplitBoard: NextPage = () => {
       },
     );
 
-    const boardUsersDtos = createBoardData.users.map((boardUser) => ({
-      user: boardUser.user._id,
-      role: boardUser.role,
-    }));
-
     mutate({
       ...createBoardData.board,
-      users: boardUsersDtos,
+      users: [...createBoardData.users],
       title,
       dividedBoards: newDividedBoards,
       maxVotes,
       maxUsers,
-      team,
       responsibles,
       slackEnable,
       phase: BoardPhases.ADDCARDS,
@@ -201,11 +187,9 @@ const NewSplitBoard: NextPage = () => {
                 <StyledForm
                   id="hook-form"
                   {...(!haveError && {
-                    onSubmit: methods.handleSubmit(
-                      ({ text, team, maxVotes, slackEnable, maxUsers }) => {
-                        saveBoard(text, team, slackEnable, +maxUsers, maxVotes);
-                      },
-                    ),
+                    onSubmit: methods.handleSubmit(({ text, maxVotes, slackEnable, maxUsers }) => {
+                      saveBoard(text, slackEnable, +maxUsers, maxVotes);
+                    }),
                   })}
                 >
                   <Flex css={{ width: '100%' }} direction="column" gap={24}>

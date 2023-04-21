@@ -12,9 +12,6 @@ const SchemaCreateBoard = Joi.object({
   slackEnable: Joi.boolean().required().messages({
     'boolean.required': 'Please enter the value for slack enable.',
   }),
-  team: Joi.string().required().messages({
-    'any.required': 'Please Select Team',
-  }),
   maxTeams: Joi.any(), // Dynamic validation inside QuickEditSubTeams
   maxUsers: Joi.any(), // Dynamic validation inside QuickEditSubTeams
 });

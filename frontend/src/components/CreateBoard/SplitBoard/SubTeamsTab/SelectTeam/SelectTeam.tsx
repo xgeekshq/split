@@ -92,9 +92,8 @@ const SelectTeam = ({ previousTeam }: SelectTeamProps) => {
 
         return [
           {
-            user: teamUser.user,
+            user: teamUser.user._id,
             role: BoardUserRoles.MEMBER,
-            votesCount: 0,
           },
         ];
       }) ?? [];
@@ -117,7 +116,6 @@ const SelectTeam = ({ previousTeam }: SelectTeamProps) => {
 
     if (!foundTeam) return;
 
-    setValue('team', foundTeam.id);
     setCreateBoardData((prev) => ({
       ...prev,
       team: foundTeam,
@@ -137,10 +135,6 @@ const SelectTeam = ({ previousTeam }: SelectTeamProps) => {
   }, [createBoardTeam]);
 
   useEffect(() => {
-    if (routerTeam) {
-      setValue('team', routerTeam);
-    }
-
     setHaveError(availableTeams.length <= 0);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

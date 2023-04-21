@@ -2,7 +2,7 @@ import { atom } from 'recoil';
 
 import { defaultSplitColumns } from '@/constants/boards/defaultColumns';
 import { BoardToAdd } from '@/types/board/board';
-import { BoardUser } from '@/types/board/board.user';
+import { BoardUserDto } from '@/types/board/board.user';
 import { Team } from '@/types/team/team';
 
 export const createBoardError = atom({
@@ -18,7 +18,7 @@ export interface CreateBoardData {
 
   board: BoardToAdd;
   team: Team | null;
-  users: BoardUser[];
+  users: BoardUserDto[];
 }
 
 export const createBoardDataState = atom<CreateBoardData>({

@@ -65,6 +65,7 @@ export interface CreateBoardDto extends Omit<BoardToAdd, 'dividedBoards' | 'user
   users: BoardUserDto[];
   maxUsers?: number;
 }
+
 export type DuplicateBoardType = {
   boardId: string;
   boardTitle: string;
