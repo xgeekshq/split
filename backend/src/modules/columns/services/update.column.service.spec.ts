@@ -6,7 +6,6 @@ import { BadRequestException, Logger, NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { BoardFactory } from 'src/libs/test-utils/mocks/factories/board-factory.mock';
 import SocketGateway from 'src/modules/socket/gateway/socket.gateway';
-import * as Columns from '../interfaces/types';
 import { ColumnRepository } from '../repositories/column.repository';
 import GetBoardService from 'src/modules/boards/services/get.board.service';
 import UpdateColumnService from './update.column.service';
@@ -14,6 +13,7 @@ import DeleteVoteService from 'src/modules/votes/services/delete.vote.service';
 import { DeleteVoteServiceInterface } from 'src/modules/votes/interfaces/services/delete.vote.service.interface';
 import { GET_BOARD_SERVICE } from 'src/modules/boards/constants';
 import { DELETE_VOTE_SERVICE } from 'src/modules/votes/constants';
+import { COLUMN_REPOSITORY } from 'src/modules/columns/constants';
 
 const fakeBoards = BoardFactory.createMany(2);
 
@@ -30,7 +30,7 @@ describe('UpdateColumnService', () => {
 			providers: [
 				UpdateColumnService,
 				{
-					provide: Columns.TYPES.repositories.ColumnRepository,
+					provide: COLUMN_REPOSITORY,
 					useValue: createMock<ColumnRepository>()
 				},
 				{
@@ -50,7 +50,7 @@ describe('UpdateColumnService', () => {
 
 		columnService = module.get(UpdateColumnService);
 		deleteVoteService = module.get(DELETE_VOTE_SERVICE);
-		repositoryColumn = module.get(Columns.TYPES.repositories.ColumnRepository);
+		repositoryColumn = module.get(COLUMN_REPOSITORY);
 		socketService = module.get(SocketGateway);
 		getBoardServiceImpl = module.get(GET_BOARD_SERVICE);
 
