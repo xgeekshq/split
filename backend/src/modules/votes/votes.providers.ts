@@ -1,31 +1,43 @@
 import { VoteRepository } from './repositories/vote.repository';
-import { TYPES } from './interfaces/types';
+import {
+	CARD_GROUP_VOTE_USE_CASE,
+	CARD_ITEM_VOTE_USE_CASE,
+	CREATE_VOTE_SERVICE,
+	DELETE_VOTE_SERVICE,
+	VOTE_REPOSITORY
+} from './constants';
 import CreateVoteService from './services/create.vote.service';
 import DeleteVoteService from './services/delete.vote.service';
 import { CardItemVoteUseCase } from './applications/card-item-vote.use-case';
 import { CardGroupVoteUseCase } from './applications/card-group-vote.use-case';
 
+/* SERVICES */
+
 export const createVoteService = {
-	provide: TYPES.services.CreateVoteService,
+	provide: CREATE_VOTE_SERVICE,
 	useClass: CreateVoteService
 };
 
 export const deleteVoteService = {
-	provide: TYPES.services.DeleteVoteService,
+	provide: DELETE_VOTE_SERVICE,
 	useClass: DeleteVoteService
 };
 
+/* USE CASES */
+
 export const cardItemVoteUseCase = {
-	provide: TYPES.applications.CardItemVoteUseCase,
+	provide: CARD_ITEM_VOTE_USE_CASE,
 	useClass: CardItemVoteUseCase
 };
 
 export const cardGroupVoteUseCase = {
-	provide: TYPES.applications.CardGroupVoteUseCase,
+	provide: CARD_GROUP_VOTE_USE_CASE,
 	useClass: CardGroupVoteUseCase
 };
 
+/* REPOSITORY */
+
 export const voteRepository = {
-	provide: TYPES.repositories.VoteRepository,
+	provide: VOTE_REPOSITORY,
 	useClass: VoteRepository
 };
