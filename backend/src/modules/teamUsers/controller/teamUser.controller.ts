@@ -33,9 +33,15 @@ import { ForbiddenResponse } from '../../../libs/swagger/errors/forbidden.swagge
 import { NotFoundResponse } from '../../../libs/swagger/errors/not-found.swagger';
 import TeamUserDto from '../dto/team.user.dto';
 import UpdateTeamUserDto from '../dto/update.team.user.dto';
-import * as TeamUsers from 'src/modules/teamUsers/interfaces/types';
 import { SuperAdminGuard } from 'src/libs/guards/superAdmin.guard';
 import TeamUser from 'src/modules/teamUsers/entities/team.user.schema';
+import {
+	ADD_AND_REMOVE_TEAM_USER_USE_CASE,
+	CREATE_TEAM_USERS_USE_CASE,
+	CREATE_TEAM_USER_USE_CASE,
+	DELETE_TEAM_USER_USE_CASE,
+	UPDATE_TEAM_USER_USE_CASE
+} from 'src/modules/teamUsers/constants';
 
 const TeamUserPermission = (permissions: string[]) => SetMetadata('permissions', permissions);
 
@@ -45,15 +51,15 @@ const TeamUserPermission = (permissions: string[]) => SetMetadata('permissions',
 @Controller('teams')
 export default class TeamUsersController {
 	constructor(
-		@Inject(TeamUsers.TYPES.applications.CreateTeamUserUseCase)
+		@Inject(CREATE_TEAM_USER_USE_CASE)
 		private createTeamUserUseCase: UseCase<TeamUserDto, TeamUser>,
-		@Inject(TeamUsers.TYPES.applications.CreateTeamUsersUseCase)
+		@Inject(CREATE_TEAM_USERS_USE_CASE)
 		private createTeamUsersUseCase: UseCase<TeamUserDto[], TeamUser[]>,
-		@Inject(TeamUsers.TYPES.applications.UpdateTeamUserUseCase)
+		@Inject(UPDATE_TEAM_USER_USE_CASE)
 		private updateTeamUserUseCase: UseCase<TeamUserDto, TeamUser>,
-		@Inject(TeamUsers.TYPES.applications.AddAndRemoveTeamUsersUseCase)
+		@Inject(ADD_AND_REMOVE_TEAM_USER_USE_CASE)
 		private addAndRemoveTeamUsersUseCase: UseCase<UpdateTeamUserDto, TeamUser[]>,
-		@Inject(TeamUsers.TYPES.applications.DeleteTeamUserUseCase)
+		@Inject(DELETE_TEAM_USER_USE_CASE)
 		private deleteTeamUserUseCase: UseCase<string, TeamUser>
 	) {}
 

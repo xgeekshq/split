@@ -3,8 +3,8 @@ import { fireEvent, waitFor } from '@testing-library/react';
 import TeamBoards, {
   TeamBoardsProps,
 } from '@/components/Teams/TeamsList/TeamItem/TeamBoards/TeamBoards';
+import { ROUTES } from '@/constants/routes';
 import { TeamFactory } from '@/utils/factories/team';
-import { ROUTES } from '@/utils/routes';
 import { libraryMocks } from '@/utils/testing/mocks';
 import { renderWithProviders } from '@/utils/testing/renderWithProviders';
 

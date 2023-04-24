@@ -13,13 +13,13 @@ import Button from '@/components/Primitives/Inputs/Button/Button';
 import Input from '@/components/Primitives/Inputs/Input/Input';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Text from '@/components/Primitives/Text/Text';
+import { DASHBOARD_ROUTE } from '@/constants/routes';
+import { createErrorMessage } from '@/constants/toasts';
+import { SignUpEnum } from '@/enums/auth/signUp';
 import SchemaRegisterForm from '@/schema/schemaRegisterForm';
 import { toastState } from '@/store/toast/atom/toast.atom';
 import { FlexForm } from '@/styles/pages/pages.styles';
 import { RegisterUser } from '@/types/user/user';
-import { ToastStateEnum } from '@/utils/enums/toast-types';
-import { DASHBOARD_ROUTE } from '@/utils/routes';
-import { SignUpEnum } from '@/utils/signUp.enum';
 
 interface RegisterFormProps {
   emailName: { email: string; goback: boolean };
@@ -71,11 +71,7 @@ const RegisterForm = ({
   const createUser = useMutation((user: RegisterUser) => registerNewUser(user), {
     mutationKey: ['register'],
     onError: () => {
-      setToastState({
-        open: true,
-        type: ToastStateEnum.ERROR,
-        content: 'Something went wrong, please try again',
-      });
+      setToastState(createErrorMessage('Something went wrong, please try again'));
     },
     onSuccess: () => {
       setShowSignUp(SignUpEnum.SIGN_UP);

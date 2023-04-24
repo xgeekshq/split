@@ -1,13 +1,13 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { isEmpty } from 'class-validator';
 import { GetCardServiceInterface } from '../interfaces/services/get.card.service.interface';
-import * as Cards from 'src/modules/cards/interfaces/types';
 import { CardRepositoryInterface } from '../repository/card.repository.interface';
+import { CARD_REPOSITORY } from 'src/modules/cards/constants';
 
 @Injectable()
 export default class GetCardService implements GetCardServiceInterface {
 	constructor(
-		@Inject(Cards.TYPES.repository.CardRepository)
+		@Inject(CARD_REPOSITORY)
 		private readonly cardRepository: CardRepositoryInterface
 	) {}
 

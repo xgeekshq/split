@@ -6,15 +6,15 @@ import { TeamFactory } from 'src/libs/test-utils/mocks/factories/team-factory.mo
 import Team from 'src/modules/teams/entities/team.schema';
 import { Test, TestingModule } from '@nestjs/testing';
 import { DeepMocked, createMock } from '@golevelup/ts-jest';
-import { deleteTeamService } from 'src/modules/teams/providers';
-import * as Boards from 'src/modules/boards/interfaces/types';
-import * as Teams from 'src/modules/teams/interfaces/types';
-import * as TeamUsers from 'src/modules/teamUsers/interfaces/types';
 import { TeamUserFactory } from 'src/libs/test-utils/mocks/factories/teamUser-factory.mock';
 import { DeleteBoardServiceInterface } from 'src/modules/boards/interfaces/services/delete.board.service.interface';
 import { DeleteTeamUserServiceInterface } from 'src/modules/teamUsers/interfaces/services/delete.team.user.service.interface';
 import { BadRequestException } from '@nestjs/common';
 import { TeamRepositoryInterface } from '../interfaces/repositories/team.repository.interface';
+import { TEAM_REPOSITORY } from 'src/modules/teams/constants';
+import DeleteTeamService from 'src/modules/teams/services/delete.team.service';
+import { DELETE_TEAM_USER_SERVICE } from 'src/modules/teamUsers/constants';
+import { DELETE_BOARD_SERVICE } from 'src/modules/boards/constants';
 
 const teams: Team[] = TeamFactory.createMany(4);
 const teamUsers: TeamUser[] = TeamUserFactory.createMany(5);
@@ -41,26 +41,26 @@ describe('DeleteTeamService', () => {
 	beforeAll(async () => {
 		const module: TestingModule = await Test.createTestingModule({
 			providers: [
-				deleteTeamService,
+				DeleteTeamService,
 				{
-					provide: Teams.TYPES.repositories.TeamRepository,
+					provide: TEAM_REPOSITORY,
 					useValue: createMock<TeamRepositoryInterface>()
 				},
 				{
-					provide: Boards.TYPES.services.DeleteBoardService,
+					provide: DELETE_BOARD_SERVICE,
 					useValue: createMock<DeleteBoardServiceInterface>()
 				},
 				{
-					provide: TeamUsers.TYPES.services.DeleteTeamUserService,
+					provide: DELETE_TEAM_USER_SERVICE,
 					useValue: createMock<DeleteTeamUserServiceInterface>()
 				}
 			]
 		}).compile();
 
-		teamService = module.get<DeleteTeamServiceInterface>(deleteTeamService.provide);
-		teamRepositoryMock = module.get(Teams.TYPES.repositories.TeamRepository);
-		deleteTeamUserServiceMock = module.get(TeamUsers.TYPES.services.DeleteTeamUserService);
-		deleteBoardServiceMock = module.get(Boards.TYPES.services.DeleteBoardService);
+		teamService = module.get(DeleteTeamService);
+		teamRepositoryMock = module.get(TEAM_REPOSITORY);
+		deleteTeamUserServiceMock = module.get(DELETE_TEAM_USER_SERVICE);
+		deleteBoardServiceMock = module.get(DELETE_BOARD_SERVICE);
 	});
 
 	beforeEach(() => {

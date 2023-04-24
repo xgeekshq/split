@@ -1,7 +1,6 @@
 import { UseCase } from 'src/libs/interfaces/use-case.interface';
 import { BadRequestException, Inject, Injectable, NotFoundException } from '@nestjs/common';
-import { TYPES } from '../interfaces/types';
-import * as BoardUsers from 'src/modules/boardUsers/interfaces/types';
+import { BOARD_REPOSITORY } from '../constants';
 import * as Auth from 'src/modules/auth/interfaces/types';
 import * as Users from 'src/modules/users/interfaces/types';
 import BoardUseCasePresenter from '../presenter/board.use-case.presenter';
@@ -18,15 +17,19 @@ import { CreateBoardUserServiceInterface } from 'src/modules/boardUsers/interfac
 import { GetTokenAuthServiceInterface } from 'src/modules/auth/interfaces/services/get-token.auth.service.interface';
 import { UpdateUserServiceInterface } from 'src/modules/users/interfaces/services/update.user.service.interface';
 import BoardGuestUserDto from 'src/modules/boardUsers/dto/board.guest.user.dto';
+import {
+	CREATE_BOARD_USER_SERVICE,
+	GET_BOARD_USER_SERVICE
+} from 'src/modules/boardUsers/constants';
 
 @Injectable()
 export class GetBoardUseCase implements UseCase<GetBoardUseCaseDto, BoardUseCasePresenter> {
 	constructor(
-		@Inject(TYPES.repositories.BoardRepository)
+		@Inject(BOARD_REPOSITORY)
 		private readonly boardRepository: BoardRepositoryInterface,
-		@Inject(BoardUsers.TYPES.services.GetBoardUserService)
+		@Inject(GET_BOARD_USER_SERVICE)
 		private readonly getBoardUserService: GetBoardUserServiceInterface,
-		@Inject(BoardUsers.TYPES.services.CreateBoardUserService)
+		@Inject(CREATE_BOARD_USER_SERVICE)
 		private readonly createBoardUserService: CreateBoardUserServiceInterface,
 		@Inject(Auth.TYPES.services.GetTokenAuthService)
 		private readonly getTokenAuthService: GetTokenAuthServiceInterface,

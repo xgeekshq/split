@@ -7,9 +7,9 @@ import UncontrolledInput from '@/components/Primitives/Inputs/UncontrolledInput/
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Separator from '@/components/Primitives/Separator/Separator';
 import Text from '@/components/Primitives/Text/Text';
+import { TeamUserRoles } from '@/enums/teams/userRoles';
 import useUpdateUserTeams from '@/hooks/teams/useUpdateUserTeams';
 import { TeamChecked } from '@/types/team/team';
-import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 import isEmpty from '@/utils/isEmpty';
 import { verifyIfIsNewJoiner } from '@/utils/verifyIfIsNewJoiner';
 

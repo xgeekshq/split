@@ -2,16 +2,16 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { FilterQuery, Model, QueryOptions, UpdateQuery } from 'mongoose';
 import { MongoGenericRepository } from 'src/libs/repositories/mongo/mongo-generic.repository';
-import Board, { BoardDocument } from 'src/modules/boards/entities/board.schema';
+import Board from 'src/modules/boards/entities/board.schema';
 import { VoteRepositoryInterface } from '../interfaces/repositories/vote.repository.interface';
 import { PopulateType } from 'src/libs/repositories/interfaces/base.repository.interface';
 
 @Injectable()
 export class VoteRepository
-	extends MongoGenericRepository<BoardDocument>
+	extends MongoGenericRepository<Board>
 	implements VoteRepositoryInterface
 {
-	constructor(@InjectModel(Board.name) private model: Model<BoardDocument>) {
+	constructor(@InjectModel(Board.name) private model: Model<Board>) {
 		super(model);
 	}
 

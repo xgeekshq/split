@@ -1,21 +1,3 @@
-import { BoardPhaseDto } from 'src/libs/dto/board-phase.dto';
-import { BaseParam } from 'src/libs/dto/param/base.param';
-import { PaginationParams } from 'src/libs/dto/param/pagination.params';
-import { BaseParamWSocket } from 'src/libs/dto/param/socket.param';
-import { BoardPhases } from 'src/libs/enum/board.phases';
-import { TeamRoles } from 'src/libs/enum/team.roles';
-import { BoardUserGuard } from 'src/libs/guards/boardRoles.guard';
-import JwtAuthenticationGuard from 'src/libs/guards/jwtAuth.guard';
-import RequestWithUser from 'src/libs/interfaces/requestWithUser.interface';
-import { UseCase } from 'src/libs/interfaces/use-case.interface';
-import { BadRequestResponse } from 'src/libs/swagger/errors/bad-request.swagger';
-import { ForbiddenResponse } from 'src/libs/swagger/errors/forbidden.swagger';
-import { InternalServerErrorResponse } from 'src/libs/swagger/errors/internal-server-error.swagger';
-import { NotFoundResponse } from 'src/libs/swagger/errors/not-found.swagger';
-import { UnauthorizedResponse } from 'src/libs/swagger/errors/unauthorized.swagger';
-import { BoardResponse } from 'src/modules/boards/swagger/board.swagger';
-import { BoardRoles } from 'src/modules/communication/dto/types';
-import SocketGateway from 'src/modules/socket/gateway/socket.gateway';
 import {
 	Body,
 	Controller,
@@ -46,23 +28,55 @@ import {
 	ApiUnauthorizedResponse,
 	OmitType
 } from '@nestjs/swagger';
-import { TeamParamOptional } from '../../../libs/dto/param/team.param.optional';
-import { GetBoardGuard } from '../../../libs/guards/getBoardPermissions.guard';
-import BoardDto from '../dto/board.dto';
+import { BoardPhaseDto } from 'src/libs/dto/board-phase.dto';
+import { BaseParam } from 'src/libs/dto/param/base.param';
+import { PaginationParams } from 'src/libs/dto/param/pagination.params';
+import { BaseParamWSocket } from 'src/libs/dto/param/socket.param';
+import { BoardPhases } from 'src/libs/enum/board.phases';
+import { TeamRoles } from 'src/libs/enum/team.roles';
+import { BoardUserGuard } from 'src/libs/guards/boardRoles.guard';
+import JwtAuthenticationGuard from 'src/libs/guards/jwtAuth.guard';
+import { UpdateBoardPermissionsGuard } from 'src/libs/guards/updateBoardPermissions.guard';
+import RequestWithUser from 'src/libs/interfaces/requestWithUser.interface';
+import { UseCase } from 'src/libs/interfaces/use-case.interface';
+import { BadRequestResponse } from 'src/libs/swagger/errors/bad-request.swagger';
+import { ForbiddenResponse } from 'src/libs/swagger/errors/forbidden.swagger';
+import { InternalServerErrorResponse } from 'src/libs/swagger/errors/internal-server-error.swagger';
+import { NotFoundResponse } from 'src/libs/swagger/errors/not-found.swagger';
+import { UnauthorizedResponse } from 'src/libs/swagger/errors/unauthorized.swagger';
+import BoardGuestUserDto from 'src/modules/boardUsers/dto/board.guest.user.dto';
 import UpdateBoardUserDto from 'src/modules/boardUsers/dto/update-board-user.dto';
 import { UpdateBoardDto } from 'src/modules/boards/dto/update-board.dto';
-import Board from '../entities/board.schema';
-import { UpdateBoardApplicationInterface } from '../interfaces/applications/update.board.application.interface';
-import { TYPES } from '../interfaces/types';
+import { BoardResponse } from 'src/modules/boards/swagger/board.swagger';
+import { BoardRoles } from 'src/modules/communication/dto/types';
+import SocketGateway from 'src/modules/socket/gateway/socket.gateway';
+import { TeamParamOptional } from '../../../libs/dto/param/team.param.optional';
+import { GetBoardGuard } from '../../../libs/guards/getBoardPermissions.guard';
 import { DuplicateBoardDto } from '../applications/duplicate-board.use-case';
+import { BoardParticipantsPresenter } from '../applications/update-board-participants.use-case';
+import BoardDto from '../dto/board.dto';
 import CreateBoardUseCaseDto from '../dto/useCase/create-board.use-case.dto';
 import GetAllBoardsUseCaseDto from '../dto/useCase/get-all-boards.use-case.dto';
-import BoardsPaginatedPresenter from '../presenter/boards-paginated.presenter';
-import GetBoardsUseCaseDto from '../dto/useCase/get-boards.use-case.dto';
 import GetBoardUseCaseDto from '../dto/useCase/get-board.use-case.dto';
+import GetBoardsUseCaseDto from '../dto/useCase/get-boards.use-case.dto';
+import MergeBoardUseCaseDto from '../dto/useCase/merge-board.use-case.dto';
+import Board from '../entities/board.schema';
+import {
+	CREATE_BOARD_USE_CASE,
+	DELETE_BOARD_USE_CASE,
+	DUPLICATE_BOARD_USE_CASE,
+	GET_ALL_BOARDS_USE_CASE,
+	GET_BOARD_USE_CASE,
+	GET_DASHBOARD_BOARDS_USE_CASE,
+	GET_PERSONAL_BOARDS_USE_CASE,
+	MERGE_BOARD_USE_CASE,
+	UPDATE_BOARD_PARTICIPANTS_USE_CASE,
+	UPDATE_BOARD_PHASE_USE_CASE,
+	UPDATE_BOARD_USE_CASE
+} from '../constants';
 import BoardUseCasePresenter from '../presenter/board.use-case.presenter';
-import BoardGuestUserDto from 'src/modules/boardUsers/dto/board.guest.user.dto';
-import { UpdateBoardPermissionsGuard } from 'src/libs/guards/updateBoardPermissions.guard';
+import DeleteBoardUseCaseDto from 'src/modules/boards/dto/useCase/delete-board.use-case';
+import BoardsPaginatedPresenter from 'src/modules/boards/presenter/boards-paginated.presenter';
 
 const BoardUser = (permissions: string[]) => SetMetadata('permissions', permissions);
 
@@ -72,23 +86,38 @@ const BoardUser = (permissions: string[]) => SetMetadata('permissions', permissi
 @Controller('boards')
 export default class BoardsController {
 	constructor(
-		@Inject(TYPES.applications.GetBoardsForDashboardUseCase)
-		private getBoardsForDashboardUseCase: UseCase<GetBoardsUseCaseDto, BoardsPaginatedPresenter>,
-		@Inject(TYPES.applications.CreateBoardUseCase)
-		private createBoardUseCase: UseCase<CreateBoardUseCaseDto, Board>,
-		@Inject(TYPES.applications.DuplicateBoardUseCase)
-		private duplicateBoardUseCase: UseCase<DuplicateBoardDto, Board>,
-		@Inject(TYPES.applications.GetAllBoardsUseCase)
-		private getAllBoardsUseCase: UseCase<GetAllBoardsUseCaseDto, BoardsPaginatedPresenter>,
-		@Inject(TYPES.applications.GetPersonalBoardsUseCase)
-		private getPersonalBoardsUseCase: UseCase<GetBoardsUseCaseDto, BoardsPaginatedPresenter>,
-		@Inject(TYPES.applications.GetBoardUseCase)
-		private getBoardUseCase: UseCase<GetBoardUseCaseDto, BoardUseCasePresenter>,
-		@Inject(TYPES.applications.UpdateBoardApplication)
-		private updateBoardApp: UpdateBoardApplicationInterface,
-		@Inject(TYPES.applications.DeleteBoardUseCase)
-		private deleteBoardUseCase: UseCase<string, boolean>,
-		private socketService: SocketGateway
+		@Inject(GET_DASHBOARD_BOARDS_USE_CASE)
+		private readonly getDashboardBoardsUseCase: UseCase<
+			GetBoardsUseCaseDto,
+			BoardsPaginatedPresenter
+		>,
+		@Inject(CREATE_BOARD_USE_CASE)
+		private readonly createBoardUseCase: UseCase<CreateBoardUseCaseDto, Board>,
+		@Inject(DUPLICATE_BOARD_USE_CASE)
+		private readonly duplicateBoardUseCase: UseCase<DuplicateBoardDto, Board>,
+		@Inject(GET_ALL_BOARDS_USE_CASE)
+		private readonly getAllBoardsUseCase: UseCase<GetAllBoardsUseCaseDto, BoardsPaginatedPresenter>,
+		@Inject(GET_PERSONAL_BOARDS_USE_CASE)
+		private readonly getPersonalBoardsUseCase: UseCase<
+			GetBoardsUseCaseDto,
+			BoardsPaginatedPresenter
+		>,
+		@Inject(GET_BOARD_USE_CASE)
+		private readonly getBoardUseCase: UseCase<GetBoardUseCaseDto, BoardUseCasePresenter>,
+		@Inject(UPDATE_BOARD_USE_CASE)
+		private readonly updateBoardUseCase: UseCase<UpdateBoardDto, Board>,
+		@Inject(UPDATE_BOARD_PARTICIPANTS_USE_CASE)
+		private readonly updateBoardParticipantsUseCase: UseCase<
+			UpdateBoardUserDto,
+			BoardParticipantsPresenter
+		>,
+		@Inject(MERGE_BOARD_USE_CASE)
+		private readonly mergeBoardUseCase: UseCase<MergeBoardUseCaseDto, Board>,
+		@Inject(UPDATE_BOARD_PHASE_USE_CASE)
+		private readonly updateBoardPhaseUseCase: UseCase<BoardPhaseDto, void>,
+		@Inject(DELETE_BOARD_USE_CASE)
+		private readonly deleteBoardUseCase: UseCase<DeleteBoardUseCaseDto, boolean>,
+		private readonly socketService: SocketGateway
 	) {}
 
 	@ApiOperation({ summary: 'Create a new board' })
@@ -165,7 +194,7 @@ export default class BoardsController {
 	})
 	@Get('/dashboard')
 	getDashboardBoards(@Req() request: RequestWithUser, @Query() { page, size }: PaginationParams) {
-		return this.getBoardsForDashboardUseCase.execute({ userId: request.user._id, page, size });
+		return this.getDashboardBoardsUseCase.execute({ userId: request.user._id, page, size });
 	}
 
 	@ApiOperation({ summary: 'Retrieve all boards from database' })
@@ -271,7 +300,11 @@ export default class BoardsController {
 	@UseGuards(BoardUserGuard)
 	@Put(':boardId')
 	updateBoard(@Param() { boardId }: BaseParam, @Body() boardData: UpdateBoardDto) {
-		return this.updateBoardApp.update(boardId, boardData);
+		const completionHandler = () => {
+			this.socketService.sendUpdatedBoard(boardId, boardData.socketId);
+		};
+
+		return this.updateBoardUseCase.execute({ ...boardData, boardId, completionHandler });
 	}
 
 	@ApiOperation({ summary: 'Update participants of a specific board' })
@@ -305,7 +338,7 @@ export default class BoardsController {
 	@UseGuards(UpdateBoardPermissionsGuard, BoardUserGuard)
 	@Put(':boardId/participants')
 	updateBoardParticipants(@Body() boardData: UpdateBoardUserDto) {
-		return this.updateBoardApp.updateBoardParticipants(boardData);
+		return this.updateBoardParticipantsUseCase.execute(boardData);
 	}
 
 	@ApiOperation({ summary: 'Delete a specific board' })
@@ -331,12 +364,15 @@ export default class BoardsController {
 		@Query() { teamId }: TeamParamOptional,
 		@Query() { socketId }: BaseParamWSocket
 	) {
-		const result = await this.deleteBoardUseCase.execute(boardId);
+		const completionHandler = (deletedBoards: string[]) => {
+			this.socketService.sendDeleteBoard(socketId, deletedBoards);
 
-		if (socketId && teamId) {
-			this.socketService.sendUpdatedBoards(socketId, teamId);
-			this.socketService.sendUpdatedBoard(boardId, socketId);
-		}
+			if (socketId && teamId) {
+				this.socketService.sendUpdatedBoard(boardId, socketId);
+			}
+		};
+
+		const result = await this.deleteBoardUseCase.execute({ boardId, completionHandler });
 
 		return result;
 	}
@@ -364,7 +400,16 @@ export default class BoardsController {
 		@Query() { socketId }: BaseParamWSocket,
 		@Req() request: RequestWithUser
 	) {
-		return this.updateBoardApp.mergeBoards(boardId, request.user._id, socketId);
+		const completionHandler = () => {
+			this.socketService.sendUpdatedAllBoard(boardId, socketId);
+		};
+
+		return this.mergeBoardUseCase.execute({
+			subBoardId: boardId,
+			userId: request.user._id,
+			socketId: socketId,
+			completionHandler
+		});
 	}
 
 	@ApiOperation({ summary: 'Update board phase' })
@@ -393,6 +438,6 @@ export default class BoardsController {
 	})
 	@Put(':boardId/phase')
 	updateBoardPhase(@Body() boardPhaseDto: BoardPhaseDto) {
-		this.updateBoardApp.updatePhase(boardPhaseDto);
+		return this.updateBoardPhaseUseCase.execute(boardPhaseDto);
 	}
 }

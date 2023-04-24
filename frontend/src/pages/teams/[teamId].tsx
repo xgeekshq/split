@@ -13,14 +13,14 @@ import Dots from '@/components/Primitives/Loading/Dots/Dots';
 import LoadingPage from '@/components/Primitives/Loading/Page/Page';
 import TeamHeader from '@/components/Teams/Team/Header/Header';
 import TeamMembersList from '@/components/Teams/Team/TeamMembersList';
+import { TEAMS_KEY, USERS_KEY } from '@/constants/react-query/keys';
+import { ROUTES } from '@/constants/routes';
+import { TeamUserRoles } from '@/enums/teams/userRoles';
 import useTeam from '@/hooks/teams/useTeam';
 import useCurrentSession from '@/hooks/useCurrentSession';
 import useUsers from '@/hooks/users/useUsers';
 import { usersListState } from '@/store/user.atom';
 import { UserList } from '@/types/team/userList';
-import { TEAMS_KEY, USERS_KEY } from '@/utils/constants/reactQueryKeys';
-import { TeamUserRoles } from '@/utils/enums/team.user.roles';
-import { ROUTES } from '@/utils/routes';
 
 const Team = () => {
   // Session Details

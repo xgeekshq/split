@@ -1,6 +1,4 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import * as Boards from 'src/modules/boards/interfaces/types';
-import * as BoardUsers from 'src/modules/boardUsers/interfaces/types';
 import * as Auth from 'src/modules/auth/interfaces/types';
 import * as Users from 'src/modules/users/interfaces/types';
 import { DeepMocked, createMock } from '@golevelup/ts-jest';
@@ -20,6 +18,11 @@ import { BoardUserFactory } from 'src/libs/test-utils/mocks/factories/boardUser-
 import { Tokens } from 'src/libs/interfaces/jwt/tokens.interface';
 import { hideVotesFromColumns } from '../utils/hideVotesFromColumns';
 import { GetBoardUseCase } from './get-board.use-case';
+import { BOARD_REPOSITORY } from 'src/modules/boards/constants';
+import {
+	CREATE_BOARD_USER_SERVICE,
+	GET_BOARD_USER_SERVICE
+} from 'src/modules/boardUsers/constants';
 
 const mainBoard = BoardFactory.create({ isSubBoard: false, isPublic: false });
 const subBoard = BoardFactory.create({ isSubBoard: true, isPublic: false });
@@ -37,15 +40,15 @@ describe('GetBoardUseCase', () => {
 			providers: [
 				GetBoardUseCase,
 				{
-					provide: Boards.TYPES.repositories.BoardRepository,
+					provide: BOARD_REPOSITORY,
 					useValue: createMock<BoardRepositoryInterface>()
 				},
 				{
-					provide: BoardUsers.TYPES.services.GetBoardUserService,
+					provide: GET_BOARD_USER_SERVICE,
 					useValue: createMock<GetBoardUserServiceInterface>()
 				},
 				{
-					provide: BoardUsers.TYPES.services.CreateBoardUserService,
+					provide: CREATE_BOARD_USER_SERVICE,
 					useValue: createMock<CreateBoardUserServiceInterface>()
 				},
 				{
@@ -60,8 +63,8 @@ describe('GetBoardUseCase', () => {
 		}).compile();
 
 		useCase = module.get(GetBoardUseCase);
-		boardRepositoryMock = module.get(Boards.TYPES.repositories.BoardRepository);
-		getBoardUserServiceMock = module.get(BoardUsers.TYPES.services.GetBoardUserService);
+		boardRepositoryMock = module.get(BOARD_REPOSITORY);
+		getBoardUserServiceMock = module.get(GET_BOARD_USER_SERVICE);
 		getTokenAuthServiceMock = module.get(Auth.TYPES.services.GetTokenAuthService);
 	});
 

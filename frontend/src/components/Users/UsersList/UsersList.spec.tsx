@@ -18,7 +18,6 @@ const render = () =>
   });
 
 const mockUseUsersWithTeams = useUsersWithTeams as jest.Mock<Partial<UseInfiniteQueryResult>>;
-
 jest.mock('@/hooks/users/useUsersWithTeams');
 
 describe('Components/Users/User/UsersList/UserList/UserList', () => {
@@ -99,7 +98,7 @@ describe('Components/Users/User/UsersList/UserList/UserList', () => {
     const { getByLabelText } = render();
 
     const searchInput = getByLabelText('Search user');
-    userEvent.type(searchInput, 'Jack');
+    await userEvent.type(searchInput, 'Jack');
 
     // Assert
     await waitFor(() => {

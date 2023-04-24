@@ -1,22 +1,23 @@
 import { UseCase } from 'src/libs/interfaces/use-case.interface';
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
-import { TYPES } from '../interfaces/types';
+import { BOARD_REPOSITORY, DELETE_BOARD_SERVICE } from '../constants';
 import { BoardRepositoryInterface } from '../repositories/board.repository.interface';
 import { BOARD_NOT_FOUND } from 'src/libs/exceptions/messages';
 import { ObjectId } from 'mongoose';
 import isEmpty from 'src/libs/utils/isEmpty';
 import { DeleteBoardServiceInterface } from '../interfaces/services/delete.board.service.interface';
+import DeleteBoardUseCaseDto from 'src/modules/boards/dto/useCase/delete-board.use-case';
 
 @Injectable()
-export class DeleteBoardUseCase implements UseCase<string, boolean> {
+export class DeleteBoardUseCase implements UseCase<DeleteBoardUseCaseDto, boolean> {
 	constructor(
-		@Inject(TYPES.repositories.BoardRepository)
+		@Inject(BOARD_REPOSITORY)
 		private readonly boardRepository: BoardRepositoryInterface,
-		@Inject(TYPES.services.DeleteBoardService)
+		@Inject(DELETE_BOARD_SERVICE)
 		private readonly deleteBoardService: DeleteBoardServiceInterface
 	) {}
 
-	async execute(boardId) {
+	async execute({ boardId, completionHandler }: DeleteBoardUseCaseDto) {
 		const board = await this.boardRepository.getBoard(boardId);
 
 		if (!board) {
@@ -32,6 +33,14 @@ export class DeleteBoardUseCase implements UseCase<string, boolean> {
 			boardIdsToDelete.push(...dividedBoards);
 		}
 
-		return this.deleteBoardService.deleteBoardBoardUsersAndSchedules(boardIdsToDelete);
+		const wasDeleted = await this.deleteBoardService.deleteBoardBoardUsersAndSchedules(
+			boardIdsToDelete
+		);
+
+		if (wasDeleted) {
+			completionHandler(boardIdsToDelete);
+		}
+
+		return wasDeleted;
 	}
 }

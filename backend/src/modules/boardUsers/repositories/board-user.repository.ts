@@ -5,16 +5,16 @@ import { BoardRoles } from 'src/libs/enum/board.roles';
 import { MongoGenericRepository } from 'src/libs/repositories/mongo/mongo-generic.repository';
 import BoardUserDto from 'src/modules/boardUsers/dto/board.user.dto';
 import Board from 'src/modules/boards/entities/board.schema';
-import BoardUser, { BoardUserDocument } from 'src/modules/boardUsers/entities/board.user.schema';
+import BoardUser from 'src/modules/boardUsers/entities/board.user.schema';
 import { BoardUserRepositoryInterface } from '../interfaces/repositories/board-user.repository.interface';
 import { BulkWriteResult } from 'mongodb';
 
 @Injectable()
 export class BoardUserRepository
-	extends MongoGenericRepository<BoardUserDocument>
+	extends MongoGenericRepository<BoardUser>
 	implements BoardUserRepositoryInterface
 {
-	constructor(@InjectModel(BoardUser.name) private model: Model<BoardUserDocument>) {
+	constructor(@InjectModel(BoardUser.name) private model: Model<BoardUser>) {
 		super(model);
 	}
 

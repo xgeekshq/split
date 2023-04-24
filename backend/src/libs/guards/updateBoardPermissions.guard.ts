@@ -7,14 +7,14 @@ import {
 	Injectable,
 	NotFoundException
 } from '@nestjs/common';
-import * as Boards from 'src/modules/boards/interfaces/types';
 import User from 'src/modules/users/entities/user.schema';
 import UpdateBoardUserDto from 'src/modules/boardUsers/dto/update-board-user.dto';
+import { GET_BOARD_SERVICE } from 'src/modules/boards/constants';
 
 @Injectable()
 export class UpdateBoardPermissionsGuard implements CanActivate {
 	constructor(
-		@Inject(Boards.TYPES.services.GetBoardService)
+		@Inject(GET_BOARD_SERVICE)
 		private readonly getBoardService: GetBoardServiceInterface
 	) {}
 
@@ -23,7 +23,10 @@ export class UpdateBoardPermissionsGuard implements CanActivate {
 
 		const boardId: string = request.params.boardId;
 		const userToUpdate: User = (request.body as UpdateBoardUserDto).boardUserToUpdateRole
-			.user as User;
+			?.user as User;
+		const hasMembersToAddOrRemove =
+			(request.body as UpdateBoardUserDto).addBoardUsers.length > 0 ||
+			(request.body as UpdateBoardUserDto).removeBoardUsers.length > 0;
 
 		try {
 			const board = await this.getBoardService.getBoardOwner(boardId);
@@ -32,7 +35,11 @@ export class UpdateBoardPermissionsGuard implements CanActivate {
 				throw new NotFoundException();
 			}
 
-			return userToUpdate && String(board.createdBy) !== userToUpdate._id;
+			const canUserUpdateRole = userToUpdate
+				? String(board.createdBy) !== userToUpdate._id
+				: hasMembersToAddOrRemove;
+
+			return canUserUpdateRole;
 		} catch (error) {
 			throw new ForbiddenException();
 		}

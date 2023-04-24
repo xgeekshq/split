@@ -70,7 +70,7 @@ export class CreateResetPasswordTokenUseCase implements CreateResetPasswordToken
 		const isTokenInvalid = (new Date().getTime() - updatedAt.getTime()) / 60000 < 1;
 
 		if (isTokenInvalid) {
-			throw new Error('EMAIL_SENDED_RECENTLY');
+			throw new Error('EMAIL_SENT_RECENTLY');
 		}
 	}
 }

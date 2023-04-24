@@ -6,13 +6,19 @@ import ListParticipants from '@/components/CreateBoard/RegularBoard/Participants
 import Icon from '@/components/Primitives/Icons/Icon/Icon';
 import Button from '@/components/Primitives/Inputs/Button/Button';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
+import Text from '@/components/Primitives/Text/Text';
+import { BoardUserRoles } from '@/enums/boards/userRoles';
 import useCurrentSession from '@/hooks/useCurrentSession';
 import { createBoardDataState } from '@/store/createBoard/atoms/create-board.atom';
 import { usersListState } from '@/store/user.atom';
 import { BoardUser } from '@/types/board/board.user';
-import { BoardUserRoles } from '@/utils/enums/board.user.roles';
+import isEmpty from '@/utils/isEmpty';
 
-const BoardParticipantsList = () => {
+type BoardParticipantsListProps = {
+  isPageLoading: boolean;
+};
+
+const BoardParticipantsList = ({ isPageLoading }: BoardParticipantsListProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const { userId, isSAdmin } = useCurrentSession();
   const [createBoardData, setCreateBoardData] = useRecoilState(createBoardDataState);
@@ -31,12 +37,19 @@ const BoardParticipantsList = () => {
 
     setUsersList((prev) =>
       prev.map((user) => {
-        if (user._id !== userId) return user;
+        if (user._id === userId && !isSAdmin)
+          return {
+            ...user,
+            isChecked: true,
+          };
 
-        return {
-          ...user,
-          isChecked: false,
-        };
+        if (user._id === participantId)
+          return {
+            ...user,
+            isChecked: false,
+          };
+
+        return user;
       }),
     );
   };
@@ -55,13 +68,27 @@ const BoardParticipantsList = () => {
     }));
   };
 
+  const responsibles = createBoardData.users.filter(
+    (user) => user.role === BoardUserRoles.RESPONSIBLE,
+  );
+
   return (
     <Flex css={{ width: '100%' }} direction="column" gap={16}>
-      <Flex css={{ mt: '$10' }} justify="end">
-        <Button onClick={handleOpen} size="sm" variant="link">
-          <Icon name="plus" />
-          Add/remove participants
-        </Button>
+      <Flex align="center" direction="row" justify="between">
+        {isEmpty(responsibles) && !isPageLoading && (
+          <Flex css={{ mt: '$10' }}>
+            <Icon css={{ color: '$dangerBase' }} name="error" size={20} />
+            <Text color="dangerBase" css={{ marginLeft: '$5' }} fontWeight="medium" size="sm">
+              You must select a responsible
+            </Text>
+          </Flex>
+        )}
+        <Flex css={{ mt: '$10' }} justify="end">
+          <Button onClick={handleOpen} size="sm" variant="link">
+            <Icon name="plus" />
+            Add/remove participants
+          </Button>
+        </Flex>
       </Flex>
       <Flex direction="column" gap="8">
         {createBoardData.users.map((participant) => (

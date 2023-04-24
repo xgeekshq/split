@@ -2,8 +2,8 @@ import React from 'react';
 
 import Tile from '@/components/Dashboard/Tiles/Tile/Tile';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
+import { BOARDS_ROUTE, TEAMS_ROUTE, USERS_ROUTE } from '@/constants/routes';
 import { HeaderInfo } from '@/types/dashboard/header.info';
-import { BOARDS_ROUTE, TEAMS_ROUTE, USERS_ROUTE } from '@/utils/routes';
 
 export type TilesProps = {
   data: HeaderInfo;

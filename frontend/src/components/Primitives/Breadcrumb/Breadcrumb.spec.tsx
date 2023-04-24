@@ -1,7 +1,7 @@
 import { fireEvent, waitFor } from '@testing-library/react';
 
 import Breadcrumb, { BreadcrumbProps } from '@/components/Primitives/Breadcrumb/Breadcrumb';
-import { ROUTES } from '@/utils/routes';
+import { ROUTES } from '@/constants/routes';
 import { libraryMocks } from '@/utils/testing/mocks';
 import { renderWithProviders } from '@/utils/testing/renderWithProviders';
 

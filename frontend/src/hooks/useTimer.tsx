@@ -1,11 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 
-import { TimeDto } from '@/types/timer/time.dto';
-import { TimerProps } from '@/types/timer/timer-props.interface';
-import { TimerStateDto } from '@/types/timer/timer-state.dto';
-import { TimerStatus } from '@/types/timer/timer-status.enum';
-import { TimeWithTotalTime } from '@/types/timer/timer-with-total-time.type';
-import { inSeconds, timeToString } from '@/types/utils';
 import {
   BOARD_TIMER_JUMP_MINUTES,
   BOARD_TIMER_JUMP_SECONDS,
@@ -29,7 +23,13 @@ import {
   BOARD_TIMER_USER_STARTED,
   BOARD_TIMER_USER_STOPPED,
   ONE_SECOND,
-} from '@/utils/constants';
+} from '@/constants';
+import { TimerStatus } from '@/enums/timer/status';
+import { TimeDto } from '@/types/timer/time.dto';
+import { TimerProps } from '@/types/timer/timer-props.interface';
+import { TimerStateDto } from '@/types/timer/timer-state.dto';
+import { TimeWithTotalTime } from '@/types/timer/timer-with-total-time.type';
+import { inSeconds, timeToString } from '@/types/utils';
 
 const useTimer = ({ boardId, isAdmin, listenEvent, emitEvent }: TimerProps) => {
   const [duration, setDuration] = useState<TimeWithTotalTime>(BOARD_TIMER_START_TIME);

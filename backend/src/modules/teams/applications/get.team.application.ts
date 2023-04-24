@@ -2,12 +2,12 @@ import { Inject, Injectable } from '@nestjs/common';
 import { TeamQueryParams } from '../../../libs/dto/param/team.query.params';
 import { GetTeamApplicationInterface } from '../interfaces/applications/get.team.application.interface';
 import { GetTeamServiceInterface } from '../interfaces/services/get.team.service.interface';
-import { TYPES } from '../interfaces/types';
+import { GET_TEAM_SERVICE } from 'src/modules/teams/constants';
 
 @Injectable()
 export class GetTeamApplication implements GetTeamApplicationInterface {
 	constructor(
-		@Inject(TYPES.services.GetTeamService)
+		@Inject(GET_TEAM_SERVICE)
 		private getTeamService: GetTeamServiceInterface
 	) {}
 

@@ -5,8 +5,8 @@ import dedent from 'ts-dedent';
 
 import Button from '@/components/Primitives/Inputs/Button/Button';
 import Toast, { ToastProvider, ToastViewport } from '@/components/Primitives/Toast/Toast';
+import { ToastStateEnum } from '@/enums/toasts/toast-types';
 import { toastState } from '@/store/toast/atom/toast.atom';
-import { ToastStateEnum } from '@/utils/enums/toast-types';
 
 const TOAST_MESSAGES = [
   'Your request was a success!',

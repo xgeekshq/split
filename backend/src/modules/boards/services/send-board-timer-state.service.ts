@@ -4,7 +4,7 @@ import { BOARD_TIMER_SERVER_SENT_TIMER_STATE } from 'src/libs/constants/timer';
 import BoardTimerDto from 'src/libs/dto/board-timer.dto';
 import ServerSentTimerStateEvent from 'src/modules/boards/events/server-sent-timer-state.event';
 import SendBoardTimerStateServiceInterface from 'src/modules/boards/interfaces/services/send-board-timer-state.service.interface';
-import { TYPES } from 'src/modules/boards/interfaces/types';
+import { BOARD_TIMER_REPOSITORY } from 'src/modules/boards/constants';
 import { BoardTimerRepositoryInterface } from 'src/modules/boards/repositories/board-timer.repository.interface';
 
 @Injectable()
@@ -12,10 +12,10 @@ export default class SendBoardTimerStateService implements SendBoardTimerStateSe
 	private logger: Logger = new Logger(SendBoardTimerStateService.name);
 
 	constructor(
-		@Inject(TYPES.repositories.BoardTimerRepository)
-		private boardTimerRepository: BoardTimerRepositoryInterface,
+		@Inject(BOARD_TIMER_REPOSITORY)
+		private readonly boardTimerRepository: BoardTimerRepositoryInterface,
 
-		private eventEmitter: EventEmitter2
+		private readonly eventEmitter: EventEmitter2
 	) {}
 
 	sendBoardTimerState(boardTimerDto: BoardTimerDto) {

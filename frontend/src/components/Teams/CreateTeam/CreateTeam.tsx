@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useRouter } from 'next/router';
 import { joiResolver } from '@hookform/resolvers/joi';
@@ -14,6 +14,8 @@ import TipBar from '@/components/Primitives/Layout/TipBar/TipBar';
 import Text from '@/components/Primitives/Text/Text';
 import ListMembers from '@/components/Teams/Team/ListMembers/ListMembers';
 import TeamMembersList from '@/components/Teams/Team/TeamMembersList';
+import { ROUTES } from '@/constants/routes';
+import CREATE_TEAM_TIPS from '@/constants/tips/createTeam';
 import useCreateTeam from '@/hooks/teams/useCreateTeam';
 import useCurrentSession from '@/hooks/useCurrentSession';
 import SchemaCreateTeam from '@/schema/schemaCreateTeamForm';
@@ -21,14 +23,12 @@ import { createTeamState } from '@/store/team.atom';
 import { usersListState } from '@/store/user.atom';
 import { StyledForm } from '@/styles/pages/pages.styles';
 import { CreateTeamUser } from '@/types/team/team.user';
-import { ROUTES } from '@/utils/routes';
-import { CREATE_TEAM_TIPS } from '@/utils/tips';
 
 const CreateTeam = () => {
   const { userId } = useCurrentSession();
   const { back, push } = useRouter();
 
-  const { mutate: createTeam, status } = useCreateTeam();
+  const { mutate: createTeam } = useCreateTeam();
 
   const [disableButtons, setDisableButtons] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
@@ -59,7 +59,17 @@ const CreateTeam = () => {
       user: member.user._id,
     }));
 
-    createTeam({ name: title, users: membersListToSubmit });
+    createTeam(
+      { name: title, users: membersListToSubmit },
+      {
+        onSuccess: () => {
+          push(ROUTES.Teams);
+        },
+        onError: () => {
+          setDisableButtons(false);
+        },
+      },
+    );
     resetListUsersState();
   };
 
@@ -73,16 +83,6 @@ const CreateTeam = () => {
     event.preventDefault();
     setIsOpen(true);
   };
-
-  useEffect(() => {
-    if (status === 'error') {
-      setDisableButtons(false);
-    }
-
-    if (status === 'success') {
-      push(ROUTES.Teams);
-    }
-  }, [status]);
 
   return (
     <Flex

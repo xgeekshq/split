@@ -15,11 +15,6 @@ import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Dots from '@/components/Primitives/Loading/Dots/Dots';
 import Separator from '@/components/Primitives/Separator/Separator';
 import Text from '@/components/Primitives/Text/Text';
-import loginWithAzure from '@/hooks/auth/loginWithAzure';
-import SchemaLoginForm from '@/schema/schemaLoginForm';
-import { toastState } from '@/store/toast/atom/toast.atom';
-import { FlexForm } from '@/styles/pages/pages.styles';
-import { LoginUser } from '@/types/user/user';
 import {
   AUTH_SSO,
   GUEST_USER_COOKIE,
@@ -27,9 +22,14 @@ import {
   NEXT_PUBLIC_ENABLE_GIT,
   NEXT_PUBLIC_ENABLE_GOOGLE,
   NEXT_PUBLIC_LOGIN_SSO_ONLY,
-} from '@/utils/constants';
-import { ToastStateEnum } from '@/utils/enums/toast-types';
-import { DASHBOARD_ROUTE } from '@/utils/routes';
+} from '@/constants';
+import { DASHBOARD_ROUTE } from '@/constants/routes';
+import { createErrorMessage } from '@/constants/toasts';
+import loginWithAzure from '@/hooks/auth/loginWithAzure';
+import SchemaLoginForm from '@/schema/schemaLoginForm';
+import { toastState } from '@/store/toast/atom/toast.atom';
+import { FlexForm } from '@/styles/pages/pages.styles';
+import { LoginUser } from '@/types/user/user';
 
 interface LoginFormProps {
   setShowTroubleLogin: Dispatch<SetStateAction<boolean>>;
@@ -74,11 +74,7 @@ const LoginForm = ({ setShowTroubleLogin }: LoginFormProps) => {
 
     if (result.error) {
       methods.reset();
-      setToastState({
-        open: true,
-        type: ToastStateEnum.ERROR,
-        content: result.error,
-      });
+      setToastState(createErrorMessage(result.error));
     }
 
     setLoading((prevState) => ({ ...prevState, credentials: false }));

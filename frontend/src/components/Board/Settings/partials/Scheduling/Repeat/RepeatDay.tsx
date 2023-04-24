@@ -188,7 +188,7 @@ const RepeatDay = ({ disableCheckboxes, schedulingData, setSchedulingData }: Rep
               },
               {
                 label: 'Second',
-                value: 'Secodn',
+                value: 'Second',
               },
               {
                 label: 'Third',

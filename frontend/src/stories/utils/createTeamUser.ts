@@ -1,5 +1,5 @@
+import { TeamUserRoles } from '@/enums/teams/userRoles';
 import { Team } from '@/types/team/team';
-import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 import { TeamUserFactory } from '@/utils/factories/user';
 
 export const createTeamUser = (user: any, team: Team) => {

@@ -5,9 +5,9 @@ import { ListBoardMembers } from '@/components/Boards/MyBoards/ListBoardMembers'
 import Avatar, { AvatarButton, AvatarColor } from '@/components/Primitives/Avatars/Avatar/Avatar';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Tooltip from '@/components/Primitives/Tooltips/Tooltip/Tooltip';
+import { BoardUserRoles } from '@/enums/boards/userRoles';
+import { TeamUserRoles } from '@/enums/teams/userRoles';
 import { User } from '@/types/user/user';
-import { BoardUserRoles } from '@/utils/enums/board.user.roles';
-import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 import { getInitials } from '@/utils/getInitials';
 
 export type ListUsersType = {

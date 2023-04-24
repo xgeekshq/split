@@ -1,7 +1,7 @@
 import Link from 'next/link';
 
 import Text from '@/components/Primitives/Text/Text';
-import { ROUTES } from '@/utils/routes';
+import { ROUTES } from '@/constants/routes';
 
 export type MemberTitleProps = {
   name: string;

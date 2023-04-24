@@ -3,15 +3,15 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { MongoGenericRepository } from 'src/libs/repositories/mongo/mongo-generic.repository';
-import Board, { BoardDocument } from 'src/modules/boards/entities/board.schema';
+import Board from 'src/modules/boards/entities/board.schema';
 import { BoardDataPopulate } from 'src/modules/boards/utils/populate-board';
 
 @Injectable()
 export class CommentRepository
-	extends MongoGenericRepository<BoardDocument>
+	extends MongoGenericRepository<Board>
 	implements CommentRepositoryInterface
 {
-	constructor(@InjectModel(Board.name) private model: Model<BoardDocument>) {
+	constructor(@InjectModel(Board.name) private model: Model<Board>) {
 		super(model);
 	}
 
