@@ -6,7 +6,7 @@ import { UserFactory } from 'src/libs/test-utils/mocks/factories/user-factory';
 import TeamUser from 'src/modules/teamUsers/entities/team.user.schema';
 import Team from '../entities/team.schema';
 
-const teams: Team[] = TeamFactory.createMany(4);
+export const teams: Team[] = TeamFactory.createMany(4);
 
 export const teamUsers: TeamUser[] = TeamUserFactory.createMany(5);
 const users: User[] = UserFactory.createMany(5);
@@ -14,14 +14,17 @@ const usersWithId = users.map((user, idx) => ({
 	_id: teamUsers[idx]._id,
 	...user
 }));
-const teamUsersWithUsers = teamUsers.map((teamUser, idx) => ({
+
+export const teamUsersWithUsers = teamUsers.map((teamUser, idx) => ({
 	...teamUser,
 	user: usersWithId[idx]
 }));
-const team1 = {
+
+export const team1 = {
 	...teams[0],
 	users: teamUsersWithUsers
 } as Team;
+
 const team2 = {
 	...teams[1],
 	users: teamUsersWithUsers

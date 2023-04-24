@@ -40,14 +40,17 @@ import { ForbiddenResponse } from '../../../libs/swagger/errors/forbidden.swagge
 import { CreateTeamDto } from '../dto/create-team.dto';
 import TeamDto from '../dto/team.dto';
 import {
-	CREATE_TEAM_APPLICATION,
-	DELETE_TEAM_APPLICATION,
-	GET_TEAM_APPLICATION
+	CREATE_TEAM_USE_CASE,
+	DELETE_TEAM_USE_CASE,
+	GET_ALL_TEAMS_USE_CASE,
+	GET_TEAMS_OF_USER_USE_CASE,
+	GET_TEAMS_USER_IS_NOT_MEMBER_USE_CASE,
+	GET_TEAM_USE_CASE
 } from '../constants';
 import { SuperAdminGuard } from 'src/libs/guards/superAdmin.guard';
-import { CreateTeamApplicationInterface } from '../interfaces/applications/create.team.application.interface';
-import { GetTeamApplicationInterface } from '../interfaces/applications/get.team.application.interface';
-import { DeleteTeamApplicationInterface } from '../interfaces/applications/delete.team.application.interface';
+import { UseCase } from 'src/libs/interfaces/use-case.interface';
+import Team from '../entities/team.schema';
+import { GetTeamUseCaseDto } from '../dto/use-cases/get-team.use-case.dto';
 
 const TeamUserPermission = (permissions: string[]) => SetMetadata('permissions', permissions);
 
@@ -57,12 +60,18 @@ const TeamUserPermission = (permissions: string[]) => SetMetadata('permissions',
 @Controller('teams')
 export default class TeamsController {
 	constructor(
-		@Inject(CREATE_TEAM_APPLICATION)
-		private createTeamApp: CreateTeamApplicationInterface,
-		@Inject(GET_TEAM_APPLICATION)
-		private getTeamApp: GetTeamApplicationInterface,
-		@Inject(DELETE_TEAM_APPLICATION)
-		private deleteTeamApp: DeleteTeamApplicationInterface
+		@Inject(CREATE_TEAM_USE_CASE)
+		private createTeamUseCase: UseCase<CreateTeamDto, Team>,
+		@Inject(GET_ALL_TEAMS_USE_CASE)
+		private getAllTeamsUseCase: UseCase<void, Team[]>,
+		@Inject(GET_TEAMS_OF_USER_USE_CASE)
+		private getTeamsOfUserUseCase: UseCase<string, Team[]>,
+		@Inject(GET_TEAM_USE_CASE)
+		private getTeamUseCase: UseCase<GetTeamUseCaseDto, Team>,
+		@Inject(GET_TEAMS_USER_IS_NOT_MEMBER_USE_CASE)
+		private getTeamsUserIsNotMemberUseCase: UseCase<string, Team[]>,
+		@Inject(DELETE_TEAM_USE_CASE)
+		private deleteTeamUseCase: UseCase<string, boolean>
 	) {}
 
 	@ApiOperation({ summary: 'Create a new team' })
@@ -81,7 +90,7 @@ export default class TeamsController {
 	})
 	@Post()
 	create(@Body() teamData: CreateTeamDto) {
-		return this.createTeamApp.create(teamData);
+		return this.createTeamUseCase.execute(teamData);
 	}
 
 	@ApiOperation({ summary: 'Retrieve a list of existing teams' })
@@ -101,7 +110,7 @@ export default class TeamsController {
 	@UseGuards(SuperAdminGuard)
 	@Get()
 	getAllTeams() {
-		return this.getTeamApp.getAllTeams();
+		return this.getAllTeamsUseCase.execute();
 	}
 
 	@ApiOperation({ summary: 'Retrieve a list of teams that belongs to an user' })
@@ -120,7 +129,7 @@ export default class TeamsController {
 	})
 	@Get('user')
 	async getTeamsOfUser(@Req() request: RequestWithUser, @Query() { userId }: UserTeamsParams) {
-		return this.getTeamApp.getTeamsOfUser(userId ?? request.user._id);
+		return this.getTeamsOfUserUseCase.execute(userId ?? request.user._id);
 	}
 
 	@ApiOperation({ summary: 'Get a specific team' })
@@ -152,7 +161,7 @@ export default class TeamsController {
 	@Get(':teamId')
 	@UsePipes(new ValidationPipe({ transform: true }))
 	getTeam(@Param() { teamId }: TeamParams, @Query() teamQueryParams?: TeamQueryParams) {
-		return this.getTeamApp.getTeam(teamId, teamQueryParams);
+		return this.getTeamUseCase.execute({ teamId, teamQueryParams });
 	}
 
 	@ApiOperation({ summary: 'Retrieve a list of teams that dont belong to an user' })
@@ -172,7 +181,7 @@ export default class TeamsController {
 	@Get('not/:userId')
 	@UseGuards(SuperAdminGuard)
 	getTeamsUserIsNotMember(@Param() { userId }: UserTeamsParams) {
-		return this.getTeamApp.getTeamsUserIsNotMember(userId);
+		return this.getTeamsUserIsNotMemberUseCase.execute(userId);
 	}
 
 	@ApiOperation({ summary: 'Delete a specific team' })
@@ -198,6 +207,6 @@ export default class TeamsController {
 	@UseGuards(TeamUserGuard)
 	@Delete(':teamId')
 	deleteTeam(@Param() { teamId }: TeamParams) {
-		return this.deleteTeamApp.delete(teamId);
+		return this.deleteTeamUseCase.execute(teamId);
 	}
 }
