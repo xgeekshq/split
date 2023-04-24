@@ -38,7 +38,6 @@ const RepeatDay = ({ disableCheckboxes, schedulingData, setSchedulingData }: Rep
 
   //State handlers
   const handleDayCheckbox = (value: boolean) => {
-    console.log(value);
     if (value === true) {
       setDayChecked(true);
       setWeekDayChecked(false);
@@ -120,7 +119,9 @@ const RepeatDay = ({ disableCheckboxes, schedulingData, setSchedulingData }: Rep
           checked={isDayChecked}
           disabled={!disableCheckboxes}
           id="repeatCheckbox"
+          showIcon={false}
           size="md"
+          variant="round"
           handleChange={() => {
             handleDayCheckbox(!isDayChecked);
           }}
@@ -159,7 +160,9 @@ const RepeatDay = ({ disableCheckboxes, schedulingData, setSchedulingData }: Rep
           checked={isWeekDayChecked}
           disabled={!disableCheckboxes}
           id="repeatCheckbox"
+          showIcon={false}
           size="md"
+          variant="round"
           handleChange={() => {
             handleWeekDayCheckbox(!isWeekDayChecked);
           }}

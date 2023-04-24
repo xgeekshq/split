@@ -43,6 +43,20 @@ const StyledCheckbox = styled(CheckboxPrimitive.Root, {
           },
         },
       },
+      round: {
+        borderRadius: '50%',
+        borderColor: '$primaryBase',
+        backgroundColor: 'transparent',
+        '&[data-state="checked"]': {
+          border: '4px solid black',
+        },
+        '&:disabled': {
+          borderColor: '$primary100',
+          '&[data-state="checked"]': {
+            backgroundColor: '$primary100',
+          },
+        },
+      },
     },
     size: {
       sm: {
@@ -82,7 +96,8 @@ const StyledIndicator = styled(CheckboxPrimitive.Indicator, {
 export type CheckboxProps = {
   id: string;
   label?: string;
-  variant?: 'default' | 'error';
+  variant?: 'default' | 'error' | 'round';
+  showIcon?: boolean;
   size: 'sm' | 'md';
   checked?: boolean;
   handleChange?: (value: boolean) => void;
@@ -96,6 +111,7 @@ const Checkbox = ({
   size,
   checked = false,
   disabled = false,
+  showIcon = true,
   handleChange,
 }: CheckboxProps) => (
   <Flex align="center" data-testid="checkBox" gap={8}>
@@ -108,9 +124,11 @@ const Checkbox = ({
       size={size}
       variant={variant}
     >
-      <StyledIndicator>
-        <Icon name="check" />
-      </StyledIndicator>
+      {showIcon && (
+        <StyledIndicator>
+          <Icon name="check" />
+        </StyledIndicator>
+      )}
     </StyledCheckbox>
     {label && (
       <Text
