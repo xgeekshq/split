@@ -1,10 +1,9 @@
 import { DeepMocked, createMock } from '@golevelup/ts-jest';
 import { Test, TestingModule } from '@nestjs/testing';
 import { CardRepositoryInterface } from '../repository/card.repository.interface';
-import { TYPES } from '../interfaces/types';
+import { CARD_REPOSITORY, GET_CARD_SERVICE } from '../constants';
 import { GetCardServiceInterface } from '../interfaces/services/get.card.service.interface';
 import { UpdateBoardUserServiceInterface } from 'src/modules/boardUsers/interfaces/services/update.board.user.service.interface';
-import * as BoardUsers from 'src/modules/boardUsers/interfaces/types';
 import faker from '@faker-js/faker';
 import { BulkWriteResult, UpdateResult } from 'mongodb';
 import { CardFactory } from 'src/libs/test-utils/mocks/factories/card-factory.mock';
@@ -13,6 +12,7 @@ import { DeleteFromCardGroupUseCase } from './delete-from-card-group.use-case';
 import DeleteFromCardGroupUseCaseDto from '../dto/useCase/delete-fom-card-group.use-case.dto';
 import { CardItemFactory } from 'src/libs/test-utils/mocks/factories/cardItem-factory.mock';
 import { UseCase } from 'src/libs/interfaces/use-case.interface';
+import { UPDATE_BOARD_USER_SERVICE } from 'src/modules/boardUsers/constants';
 
 const deleteFromCardGroupMock: DeleteFromCardGroupUseCaseDto = {
 	boardId: faker.datatype.uuid(),
@@ -60,23 +60,23 @@ describe('DeleteFromCardGroupUseCase', () => {
 			providers: [
 				DeleteFromCardGroupUseCase,
 				{
-					provide: TYPES.services.GetCardService,
+					provide: GET_CARD_SERVICE,
 					useValue: createMock<GetCardServiceInterface>()
 				},
 				{
-					provide: BoardUsers.TYPES.services.UpdateBoardUserService,
+					provide: UPDATE_BOARD_USER_SERVICE,
 					useValue: createMock<GetCardServiceInterface>()
 				},
 				{
-					provide: TYPES.repository.CardRepository,
+					provide: CARD_REPOSITORY,
 					useValue: createMock<UpdateBoardUserServiceInterface>()
 				}
 			]
 		}).compile();
-		useCase = module.get<UseCase<DeleteFromCardGroupUseCaseDto, void>>(DeleteFromCardGroupUseCase);
-		cardRepositoryMock = module.get(TYPES.repository.CardRepository);
-		updateBoardUserServiceMock = module.get(BoardUsers.TYPES.services.UpdateBoardUserService);
-		getCardServiceMock = module.get(TYPES.services.GetCardService);
+		useCase = module.get(DeleteFromCardGroupUseCase);
+		cardRepositoryMock = module.get(CARD_REPOSITORY);
+		updateBoardUserServiceMock = module.get(UPDATE_BOARD_USER_SERVICE);
+		getCardServiceMock = module.get(GET_CARD_SERVICE);
 
 		updateBoardUserServiceMock.updateManyUserVotes.mockResolvedValue(
 			bulkWriteResult as unknown as BulkWriteResult

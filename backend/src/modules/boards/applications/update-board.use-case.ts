@@ -7,30 +7,33 @@ import isEmpty from 'src/libs/utils/isEmpty';
 import BoardUserDto from 'src/modules/boardUsers/dto/board.user.dto';
 import { GetBoardUserServiceInterface } from 'src/modules/boardUsers/interfaces/services/get.board.user.service.interface';
 import { UpdateBoardUserServiceInterface } from 'src/modules/boardUsers/interfaces/services/update.board.user.service.interface';
-import * as BoardUsers from 'src/modules/boardUsers/interfaces/types';
 import ColumnDto from 'src/modules/columns/dto/column.dto';
 import Column from 'src/modules/columns/entities/column.schema';
 import { CommunicationServiceInterface } from 'src/modules/communication/interfaces/slack-communication.service.interface';
 import * as CommunicationsType from 'src/modules/communication/interfaces/types';
 import User from 'src/modules/users/entities/user.schema';
 import { DeleteVoteServiceInterface } from 'src/modules/votes/interfaces/services/delete.vote.service.interface';
-import * as Votes from 'src/modules/votes/interfaces/types';
 import { UpdateBoardDto } from '../dto/update-board.dto';
 import Board from '../entities/board.schema';
 import { ResponsibleType } from '../interfaces/responsible.interface';
-import { TYPES } from '../interfaces/types';
+import { BOARD_REPOSITORY } from '../constants';
 import { BoardRepositoryInterface } from '../repositories/board.repository.interface';
+import {
+	GET_BOARD_USER_SERVICE,
+	UPDATE_BOARD_USER_SERVICE
+} from 'src/modules/boardUsers/constants';
+import { DELETE_VOTE_SERVICE } from 'src/modules/votes/constants';
 
 @Injectable()
 export class UpdateBoardUseCase implements UseCase<UpdateBoardDto, Board> {
 	constructor(
-		@Inject(TYPES.repositories.BoardRepository)
+		@Inject(BOARD_REPOSITORY)
 		private readonly boardRepository: BoardRepositoryInterface,
-		@Inject(BoardUsers.TYPES.services.GetBoardUserService)
+		@Inject(GET_BOARD_USER_SERVICE)
 		private readonly getBoardUserService: GetBoardUserServiceInterface,
-		@Inject(BoardUsers.TYPES.services.UpdateBoardUserService)
+		@Inject(UPDATE_BOARD_USER_SERVICE)
 		private readonly updateBoardUserService: UpdateBoardUserServiceInterface,
-		@Inject(Votes.TYPES.services.DeleteVoteService)
+		@Inject(DELETE_VOTE_SERVICE)
 		private readonly deleteVoteService: DeleteVoteServiceInterface,
 		@Inject(CommunicationsType.TYPES.services.SlackCommunicationService)
 		private readonly slackCommunicationService: CommunicationServiceInterface

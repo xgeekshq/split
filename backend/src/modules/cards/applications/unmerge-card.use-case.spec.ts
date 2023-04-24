@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { TYPES } from '../interfaces/types';
+import { CARD_REPOSITORY, GET_CARD_SERVICE } from '../constants';
 import { DeepMocked, createMock } from '@golevelup/ts-jest';
 import { CardRepositoryInterface } from '../repository/card.repository.interface';
 import { GetCardServiceInterface } from '../interfaces/services/get.card.service.interface';
@@ -9,7 +9,7 @@ import { CardFactory } from 'src/libs/test-utils/mocks/factories/card-factory.mo
 import { BoardFactory } from 'src/libs/test-utils/mocks/factories/board-factory.mock';
 import { BadRequestException } from '@nestjs/common';
 import { UseCase } from 'src/libs/interfaces/use-case.interface';
-import { unmergeCardUseCase } from '../cards.providers';
+import { UnmergeCardUseCase } from 'src/modules/cards/applications/unmerge-card.use-case';
 
 const unmergeCardDto: UnmergeCardUseCaseDto = {
 	boardId: faker.datatype.uuid(),
@@ -37,22 +37,20 @@ describe('UnmergeCardUseCase', () => {
 	beforeAll(async () => {
 		const module: TestingModule = await Test.createTestingModule({
 			providers: [
-				unmergeCardUseCase,
+				UnmergeCardUseCase,
 				{
-					provide: TYPES.services.GetCardService,
+					provide: GET_CARD_SERVICE,
 					useValue: createMock<GetCardServiceInterface>()
 				},
 				{
-					provide: TYPES.repository.CardRepository,
+					provide: CARD_REPOSITORY,
 					useValue: createMock<CardRepositoryInterface>()
 				}
 			]
 		}).compile();
-		useCase = module.get<UseCase<UnmergeCardUseCaseDto, string>>(
-			TYPES.applications.UnmergeCardUseCase
-		);
-		cardRepositoryMock = module.get(TYPES.repository.CardRepository);
-		cardServiceMock = module.get(TYPES.services.GetCardService);
+		useCase = module.get(UnmergeCardUseCase);
+		cardRepositoryMock = module.get(CARD_REPOSITORY);
+		cardServiceMock = module.get(GET_CARD_SERVICE);
 		cardServiceMock.getCardItemFromGroup.mockResolvedValue(cardMock);
 		cardServiceMock.getCardFromBoard.mockResolvedValue(cardMock);
 		cardRepositoryMock.pullItem.mockResolvedValue(updateResultMock);

@@ -15,10 +15,40 @@ import { DeleteBoardUseCase } from './applications/delete-board.use-case';
 import { DuplicateBoardUseCase } from './applications/duplicate-board.use-case';
 import { GetAllBoardsUseCase } from './applications/get-all-boards.use-case';
 import { GetBoardUseCase } from './applications/get-board.use-case';
-import { GetBoardsForDashboardUseCase } from './applications/get-boards-for-dashboard.use-case';
+import { GetDashboardBoardsUseCase } from './applications/get-dashboard-boards.use-case';
 import { GetPersonalBoardsUseCase } from './applications/get-personal-boards.use-case';
 import { IsBoardPublicUseCase } from './applications/is-board-public.use-case';
-import { TYPES } from './interfaces/types';
+import {
+	AFTER_USER_PAUSED_TIMER_SUBSCRIBER,
+	AFTER_USER_REQUESTED_TIMER_STATE_SUBSCRIBER,
+	AFTER_USER_STARTED_TIMER_SUBSCRIBER,
+	AFTER_USER_STOPPED_TIMER_SUBSCRIBER,
+	AFTER_USER_UPDATED_DURATION_SUBSCRIBER,
+	BOARD_REPOSITORY,
+	BOARD_TIMER_REPOSITORY,
+	CREATE_BOARD_SERVICE,
+	CREATE_BOARD_USE_CASE,
+	DELETE_BOARD_SERVICE,
+	DELETE_BOARD_USE_CASE,
+	DUPLICATE_BOARD_USE_CASE,
+	GET_ALL_BOARDS_USE_CASE,
+	GET_BOARD_SERVICE,
+	GET_BOARD_USE_CASE,
+	GET_DASHBOARD_BOARDS_USE_CASE,
+	GET_PERSONAL_BOARDS_USE_CASE,
+	IS_BOARD_PUBLIC_USE_CASE,
+	MERGE_BOARD_USE_CASE,
+	PAUSE_BOARD_TIMER_SERVICE,
+	SEND_BOARD_TIMER_STATE_SERVICE,
+	SEND_BOARD_TIMER_TIME_LEFT_SERVICE,
+	START_BOARD_TIMER_SERVICE,
+	STOP_BOARD_TIMER_SERVICE,
+	UPDATE_BOARD_PARTICIPANTS_USE_CASE,
+	UPDATE_BOARD_PHASE_USE_CASE,
+	UPDATE_BOARD_SERVICE,
+	UPDATE_BOARD_TIMER_DURATION_SERVICE,
+	UPDATE_BOARD_USE_CASE
+} from './constants';
 import { BoardRepository } from './repositories/board.repository';
 import CreateBoardService from './services/create.board.service';
 import DeleteBoardService from './services/delete.board.service';
@@ -29,147 +59,155 @@ import { UpdateBoardParticipantsUseCase } from './applications/update-board-part
 import { MergeBoardUseCase } from './applications/merge-board.use-case';
 import { UpdateBoardPhaseUseCase } from './applications/update-board-phase.use-case';
 
+/* SERVICES */
+
 export const createBoardService = {
-	provide: TYPES.services.CreateBoardService,
+	provide: CREATE_BOARD_SERVICE,
 	useClass: CreateBoardService
 };
 
 export const getBoardService = {
-	provide: TYPES.services.GetBoardService,
+	provide: GET_BOARD_SERVICE,
 	useClass: GetBoardService
 };
 
 export const updateBoardService = {
-	provide: TYPES.services.UpdateBoardService,
+	provide: UPDATE_BOARD_SERVICE,
 	useClass: UpdateBoardService
 };
 
 export const deleteBoardService = {
-	provide: TYPES.services.DeleteBoardService,
+	provide: DELETE_BOARD_SERVICE,
 	useClass: DeleteBoardService
 };
 
-export const duplicateBoardUseCase = {
-	provide: TYPES.applications.DuplicateBoardUseCase,
-	useClass: DuplicateBoardUseCase
-};
-
-export const getBoardsForDashboardUseCase = {
-	provide: TYPES.applications.GetBoardsForDashboardUseCase,
-	useClass: GetBoardsForDashboardUseCase
-};
-
-export const getAllBoardsUseCase = {
-	provide: TYPES.applications.GetAllBoardsUseCase,
-	useClass: GetAllBoardsUseCase
-};
-
-export const getPersonalBoardsUseCase = {
-	provide: TYPES.applications.GetPersonalBoardsUseCase,
-	useClass: GetPersonalBoardsUseCase
-};
-
-export const getBoardUseCase = {
-	provide: TYPES.applications.GetBoardUseCase,
-	useClass: GetBoardUseCase
-};
-
-export const isBoardPublicUseCase = {
-	provide: TYPES.applications.IsBoardPublicUseCase,
-	useClass: IsBoardPublicUseCase
-};
-
-export const updateBoardUseCase = {
-	provide: TYPES.applications.UpdateBoardUseCase,
-	useClass: UpdateBoardUseCase
-};
-
-export const updateBoardParticipantsUseCase = {
-	provide: TYPES.applications.UpdateBoardParticipantsUseCase,
-	useClass: UpdateBoardParticipantsUseCase
-};
-
-export const mergeBoardUseCase = {
-	provide: TYPES.applications.MergeBoardUseCase,
-	useClass: MergeBoardUseCase
-};
-
-export const updateBoardPhaseUseCase = {
-	provide: TYPES.applications.UpdateBoardPhaseUseCase,
-	useClass: UpdateBoardPhaseUseCase
-};
-
-export const deleteBoardUseCase = {
-	provide: TYPES.applications.DeleteBoardUseCase,
-	useClass: DeleteBoardUseCase
-};
-
-export const boardTimerRepository = {
-	provide: TYPES.repositories.BoardTimerRepository,
-	useClass: BoardTimerRepository
-};
-
 export const sendBoardTimerStateService = {
-	provide: TYPES.services.SendBoardTimerStateService,
+	provide: SEND_BOARD_TIMER_STATE_SERVICE,
 	useClass: SendBoardTimerStateService
 };
 
 export const startBoardTimerService = {
-	provide: TYPES.services.StartBoardTimerService,
+	provide: START_BOARD_TIMER_SERVICE,
 	useClass: StartBoardTimerService
 };
 
 export const pauseBoardTimerService = {
-	provide: TYPES.services.PauseBoardTimerService,
+	provide: PAUSE_BOARD_TIMER_SERVICE,
 	useClass: PauseBoardTimerService
 };
 
 export const stopBoardTimerService = {
-	provide: TYPES.services.StopBoardTimerService,
+	provide: STOP_BOARD_TIMER_SERVICE,
 	useClass: StopBoardTimerService
 };
 
 export const updateBoardTimerDurationService = {
-	provide: TYPES.services.UpdateBoardTimerDurationService,
+	provide: UPDATE_BOARD_TIMER_DURATION_SERVICE,
 	useClass: UpdateBoardTimerDurationService
 };
 
 export const sendBoardTimerTimeLeftService = {
-	provide: TYPES.services.SendBardTimerTimeLeftService,
+	provide: SEND_BOARD_TIMER_TIME_LEFT_SERVICE,
 	useClass: SendBoardTimerTimeLeftService
 };
 
+/* USE CASES */
+
+export const createBoardUseCase = {
+	provide: CREATE_BOARD_USE_CASE,
+	useClass: CreateBoardUseCase
+};
+
+export const getDashboardBoardsUseCase = {
+	provide: GET_DASHBOARD_BOARDS_USE_CASE,
+	useClass: GetDashboardBoardsUseCase
+};
+
+export const getAllBoardsUseCase = {
+	provide: GET_ALL_BOARDS_USE_CASE,
+	useClass: GetAllBoardsUseCase
+};
+
+export const getPersonalBoardsUseCase = {
+	provide: GET_PERSONAL_BOARDS_USE_CASE,
+	useClass: GetPersonalBoardsUseCase
+};
+
+export const updateBoardUseCase = {
+	provide: UPDATE_BOARD_USE_CASE,
+	useClass: UpdateBoardUseCase
+};
+
+export const deleteBoardUseCase = {
+	provide: DELETE_BOARD_USE_CASE,
+	useClass: DeleteBoardUseCase
+};
+
+export const getBoardUseCase = {
+	provide: GET_BOARD_USE_CASE,
+	useClass: GetBoardUseCase
+};
+
+export const duplicateBoardUseCase = {
+	provide: DUPLICATE_BOARD_USE_CASE,
+	useClass: DuplicateBoardUseCase
+};
+
+export const isBoardPublicUseCase = {
+	provide: IS_BOARD_PUBLIC_USE_CASE,
+	useClass: IsBoardPublicUseCase
+};
+
+export const updateBoardParticipantsUseCase = {
+	provide: UPDATE_BOARD_PARTICIPANTS_USE_CASE,
+	useClass: UpdateBoardParticipantsUseCase
+};
+
+export const mergeBoardUseCase = {
+	provide: MERGE_BOARD_USE_CASE,
+	useClass: MergeBoardUseCase
+};
+
+export const updateBoardPhaseUseCase = {
+	provide: UPDATE_BOARD_PHASE_USE_CASE,
+	useClass: UpdateBoardPhaseUseCase
+};
+
+/* REPOSITORIES */
+
+export const boardTimerRepository = {
+	provide: BOARD_TIMER_REPOSITORY,
+	useClass: BoardTimerRepository
+};
+
+export const boardRepository = {
+	provide: BOARD_REPOSITORY,
+	useClass: BoardRepository
+};
+
+/* SUBSCRIBERS */
+
 export const afterUserUpdatedDurationSubscriber = {
-	provide: TYPES.subscribers.AfterUserUpdatedDurationSubscriber,
+	provide: AFTER_USER_UPDATED_DURATION_SUBSCRIBER,
 	useClass: AfterUserUpdatedDurationSubscriber
 };
 
 export const afterUserPausedTimerSubscriber = {
-	provide: TYPES.subscribers.AfterUserPausedTimerSubscriber,
+	provide: AFTER_USER_PAUSED_TIMER_SUBSCRIBER,
 	useClass: AfterUserPausedTimerSubscriber
 };
 
 export const afterUserStartedTimerSubscriber = {
-	provide: TYPES.subscribers.AfterUserStartedTimerSubscriber,
+	provide: AFTER_USER_STARTED_TIMER_SUBSCRIBER,
 	useClass: AfterUserStartedTimerSubscriber
 };
 
 export const afterUserStoppedTimerSubscriber = {
-	provide: TYPES.subscribers.AfterUserStoppedTimerSubscriber,
+	provide: AFTER_USER_STOPPED_TIMER_SUBSCRIBER,
 	useClass: AfterUserStoppedTimerSubscriber
 };
 
 export const afterUserRequestedTimerStateSubscriber = {
-	provide: TYPES.subscribers.AfterUserRequestedTimerStateSubscriber,
+	provide: AFTER_USER_REQUESTED_TIMER_STATE_SUBSCRIBER,
 	useClass: AfterUserRequestedTimerStateSubscriber
-};
-
-export const boardRepository = {
-	provide: TYPES.repositories.BoardRepository,
-	useClass: BoardRepository
-};
-
-export const createBoardUseCase = {
-	provide: TYPES.applications.CreateBoardUseCase,
-	useClass: CreateBoardUseCase
 };

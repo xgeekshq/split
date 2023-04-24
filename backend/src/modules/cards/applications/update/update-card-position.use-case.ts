@@ -1,5 +1,5 @@
 import { Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
-import { TYPES } from '../../interfaces/types';
+import { CARD_REPOSITORY, GET_CARD_SERVICE } from '../../constants';
 import { CardRepositoryInterface } from '../../repository/card.repository.interface';
 import { GetCardServiceInterface } from '../../interfaces/services/get.card.service.interface';
 import {
@@ -17,9 +17,9 @@ import { DeleteFailedException } from 'src/libs/exceptions/deleteFailedBadReques
 @Injectable()
 export class UpdateCardPositionUseCase implements UseCase<UpdateCardPositionUseCaseDto, void> {
 	constructor(
-		@Inject(TYPES.services.GetCardService)
+		@Inject(GET_CARD_SERVICE)
 		private readonly cardService: GetCardServiceInterface,
-		@Inject(TYPES.repository.CardRepository)
+		@Inject(CARD_REPOSITORY)
 		private readonly cardRepository: CardRepositoryInterface
 	) {}
 	private logger = new Logger(UpdateCardPositionUseCase.name);

@@ -21,30 +21,7 @@ import GetTeamUserService from './services/get.team.user.service';
 import UpdateTeamUserService from './services/update.team.user.service';
 import { DeleteTeamUserUseCase } from './applications/delete-team-user.use-case';
 
-export const teamUserRepository = {
-	provide: TEAM_USER_REPOSITORY,
-	useClass: TeamUserRepository
-};
-
-export const createTeamUserService = {
-	provide: CREATE_TEAM_USER_SERVICE,
-	useClass: CreateTeamUserService
-};
-
-export const getTeamUserService = {
-	provide: GET_TEAM_USER_SERVICE,
-	useClass: GetTeamUserService
-};
-
-export const updateTeamUserService = {
-	provide: UPDATE_TEAM_USER_SERVICE,
-	useClass: UpdateTeamUserService
-};
-
-export const deleteTeamUserService = {
-	provide: DELETE_TEAM_USER_SERVICE,
-	useClass: DeleteTeamUserService
-};
+/* USE CASES */
 
 export const createTeamUserUseCase = {
 	provide: CREATE_TEAM_USER_USE_CASE,
@@ -69,4 +46,33 @@ export const addAndRemoveTeamUsersUseCase = {
 export const deleteTeamUserUseCase = {
 	provide: DELETE_TEAM_USER_USE_CASE,
 	useClass: DeleteTeamUserUseCase
+};
+
+/* SERVICES */
+
+export const createTeamUserService = {
+	provide: CREATE_TEAM_USER_SERVICE,
+	useClass: CreateTeamUserService
+};
+
+export const getTeamUserService = {
+	provide: GET_TEAM_USER_SERVICE,
+	useClass: GetTeamUserService
+};
+
+export const updateTeamUserService = {
+	provide: UPDATE_TEAM_USER_SERVICE,
+	useClass: UpdateTeamUserService
+};
+
+export const deleteTeamUserService = {
+	provide: DELETE_TEAM_USER_SERVICE,
+	useClass: DeleteTeamUserService
+};
+
+/* REPOSITORY */
+
+export const teamUserRepository = {
+	provide: TEAM_USER_REPOSITORY,
+	useClass: TeamUserRepository
 };

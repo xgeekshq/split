@@ -7,11 +7,11 @@ import Icon from '@/components/Primitives/Icons/Icon/Icon';
 import Button from '@/components/Primitives/Inputs/Button/Button';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Text from '@/components/Primitives/Text/Text';
+import { BoardUserRoles } from '@/enums/boards/userRoles';
 import useParticipants from '@/hooks/useParticipants';
 import { usersListState } from '@/store/user.atom';
 import { BoardUser, BoardUserToAdd, UpdateBoardUser } from '@/types/board/board.user';
 import { UserList } from '@/types/team/userList';
-import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 
 type BoardParticipantsSubHeaderProps = {
   hasPermissions: boolean;

@@ -1,5 +1,4 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import * as Boards from 'src/modules/boards/interfaces/types';
 import { DeepMocked, createMock } from '@golevelup/ts-jest';
 import faker from '@faker-js/faker';
 import { BoardFactory } from 'src/libs/test-utils/mocks/factories/board-factory.mock';
@@ -8,13 +7,13 @@ import * as CommunicationsType from 'src/modules/communication/interfaces/types'
 import MergeBoardUseCaseDto from '../dto/useCase/merge-board.use-case.dto';
 import Board from '../entities/board.schema';
 import { CommunicationServiceInterface } from 'src/modules/communication/interfaces/slack-communication.service.interface';
-import { boardRepository } from '../boards.providers';
 import { BoardRepositoryInterface } from '../repositories/board.repository.interface';
 import { NotFoundException } from '@nestjs/common';
 import { UpdateFailedException } from 'src/libs/exceptions/updateFailedBadRequestException';
 import { generateNewSubColumns } from '../utils/generate-subcolumns';
 import { mergeCardsFromSubBoardColumnsIntoMainBoard } from '../utils/merge-cards-from-subboard';
 import { MergeBoardUseCase } from './merge-board.use-case';
+import { BOARD_REPOSITORY } from 'src/modules/boards/constants';
 
 const userId = faker.datatype.uuid();
 const subBoards = BoardFactory.createMany(2, [
@@ -61,7 +60,7 @@ describe('MergeBoardUseCase', () => {
 			providers: [
 				MergeBoardUseCase,
 				{
-					provide: boardRepository.provide,
+					provide: BOARD_REPOSITORY,
 					useValue: createMock<BoardRepositoryInterface>()
 				},
 				{
@@ -72,7 +71,7 @@ describe('MergeBoardUseCase', () => {
 		}).compile();
 
 		useCase = module.get(MergeBoardUseCase);
-		boardRepositoryMock = module.get(Boards.TYPES.repositories.BoardRepository);
+		boardRepositoryMock = module.get(BOARD_REPOSITORY);
 		slackCommunicationServiceMock = module.get(
 			CommunicationsType.TYPES.services.SlackCommunicationService
 		);

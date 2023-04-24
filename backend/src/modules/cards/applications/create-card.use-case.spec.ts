@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { TYPES } from '../interfaces/types';
+import { CARD_REPOSITORY } from '../constants';
 import { DeepMocked, createMock } from '@golevelup/ts-jest';
 import { CardRepositoryInterface } from '../repository/card.repository.interface';
 import faker from '@faker-js/faker';
@@ -14,7 +14,7 @@ import User from 'src/modules/users/entities/user.schema';
 import { BadRequestException, HttpException } from '@nestjs/common';
 import { UseCase } from 'src/libs/interfaces/use-case.interface';
 import CardCreationPresenter from '../dto/useCase/presenters/create-card-res.use-case.dto';
-import { createCardUseCase } from '../cards.providers';
+import { CreateCardUseCase } from 'src/modules/cards/applications/create-card.use-case';
 
 //Create Card Items Mocks
 const cardIdtemDto = CardItemDtoFactory.create({ text: 'New Card', comments: [] });
@@ -54,17 +54,15 @@ describe('CreateCardUseCase', () => {
 	beforeAll(async () => {
 		const module: TestingModule = await Test.createTestingModule({
 			providers: [
-				createCardUseCase,
+				CreateCardUseCase,
 				{
-					provide: TYPES.repository.CardRepository,
+					provide: CARD_REPOSITORY,
 					useValue: createMock<CardRepositoryInterface>()
 				}
 			]
 		}).compile();
-		useCase = module.get<UseCase<CreateCardUseCaseDto, CardCreationPresenter>>(
-			TYPES.applications.CreateCardUseCase
-		);
-		cardRepositoryMock = module.get(TYPES.repository.CardRepository);
+		useCase = module.get(CreateCardUseCase);
+		cardRepositoryMock = module.get(CARD_REPOSITORY);
 	});
 
 	beforeEach(() => {

@@ -13,11 +13,11 @@ import Icon from '@/components/Primitives/Icons/Icon/Icon';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Separator from '@/components/Primitives/Separator/Separator';
 import Text from '@/components/Primitives/Text/Text';
+import { BoardUserRoles } from '@/enums/boards/userRoles';
 import { CreateBoardData } from '@/store/createBoard/atoms/create-board.atom';
 import { highlight2Colors } from '@/styles/stitches/partials/colors/highlight2.colors';
 import { BoardToAdd } from '@/types/board/board';
 import { BoardUserToAdd } from '@/types/board/board.user';
-import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import { getInitials } from '@/utils/getInitials';
 
 interface CreateSubBoardItemProps {

@@ -20,6 +20,7 @@ import ConfigurationSwitch from '@/components/Primitives/Inputs/Switches/Configu
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Separator from '@/components/Primitives/Separator/Separator';
 import Text from '@/components/Primitives/Text/Text';
+import { BoardUserRoles } from '@/enums/boards/userRoles';
 import useBoard from '@/hooks/useBoard';
 import SchemaUpdateBoard from '@/schema/schemaUpdateBoardForm';
 import { boardInfoState, deletedColumnsState } from '@/store/board/atoms/board.atom';
@@ -27,7 +28,6 @@ import { FlexForm } from '@/styles/pages/pages.styles';
 import { UpdateBoardType } from '@/types/board/board';
 import { BoardUserToAdd } from '@/types/board/board.user';
 import ColumnType, { CreateColumn } from '@/types/column';
-import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import { getInitials } from '@/utils/getInitials';
 import isEmpty from '@/utils/isEmpty';
 

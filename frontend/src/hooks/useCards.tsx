@@ -11,6 +11,7 @@ import {
   updateCardPositionRequest,
   updateCardRequest,
 } from '@/api/boardService';
+import { ToastStateEnum } from '@/enums/toasts/toast-types';
 import {
   handleDeleteCard,
   handleMergeCard,
@@ -30,7 +31,6 @@ import DeleteCardDto from '@/types/card/deleteCard.dto';
 import RemoveFromCardGroupDto from '@/types/card/removeFromCardGroup.dto';
 import UpdateCardDto from '@/types/card/updateCard.dto';
 import UpdateCardPositionDto from '@/types/card/updateCardPosition.dto';
-import { ToastStateEnum } from '@/utils/enums/toast-types';
 
 const useCards = () => {
   const { queryClient, setToastState } = useBoardUtils();

@@ -2,13 +2,17 @@ import { Inject, Injectable } from '@nestjs/common';
 import { UpdateFailedException } from 'src/libs/exceptions/updateFailedBadRequestException';
 import { UseCase } from 'src/libs/interfaces/use-case.interface';
 import isEmpty from 'src/libs/utils/isEmpty';
+import {
+	CREATE_BOARD_USER_SERVICE,
+	DELETE_BOARD_USER_SERVICE,
+	UPDATE_BOARD_USER_SERVICE
+} from 'src/modules/boardUsers/constants';
 import BoardUserDto from 'src/modules/boardUsers/dto/board.user.dto';
 import UpdateBoardUserDto from 'src/modules/boardUsers/dto/update-board-user.dto';
 import BoardUser from 'src/modules/boardUsers/entities/board.user.schema';
 import { CreateBoardUserServiceInterface } from 'src/modules/boardUsers/interfaces/services/create.board.user.service.interface';
 import { DeleteBoardUserServiceInterface } from 'src/modules/boardUsers/interfaces/services/delete.board.user.service.interface';
 import { UpdateBoardUserServiceInterface } from 'src/modules/boardUsers/interfaces/services/update.board.user.service.interface';
-import * as BoardUsers from 'src/modules/boardUsers/interfaces/types';
 import User from 'src/modules/users/entities/user.schema';
 
 export type BoardParticipantsPresenter = BoardUser | BoardUser[];
@@ -18,11 +22,11 @@ export class UpdateBoardParticipantsUseCase
 	implements UseCase<UpdateBoardUserDto, BoardParticipantsPresenter>
 {
 	constructor(
-		@Inject(BoardUsers.TYPES.services.CreateBoardUserService)
+		@Inject(CREATE_BOARD_USER_SERVICE)
 		private readonly createBoardUserService: CreateBoardUserServiceInterface,
-		@Inject(BoardUsers.TYPES.services.DeleteBoardUserService)
+		@Inject(DELETE_BOARD_USER_SERVICE)
 		private readonly deleteBoardUserService: DeleteBoardUserServiceInterface,
-		@Inject(BoardUsers.TYPES.services.UpdateBoardUserService)
+		@Inject(UPDATE_BOARD_USER_SERVICE)
 		private readonly updateBoardUserService: UpdateBoardUserServiceInterface
 	) {}
 

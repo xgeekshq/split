@@ -1,6 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { TYPES } from '../interfaces/types';
-import * as BoardUsers from 'src/modules/boardUsers/interfaces/types';
+import { CREATE_VOTE_SERVICE, DELETE_VOTE_SERVICE, VOTE_REPOSITORY } from '../constants';
 import { DeepMocked, createMock } from '@golevelup/ts-jest';
 import { CreateVoteServiceInterface } from '../interfaces/services/create.vote.service.interface';
 import { VoteRepositoryInterface } from '../interfaces/repositories/vote.repository.interface';
@@ -21,6 +20,7 @@ import { DeleteFailedException } from 'src/libs/exceptions/deleteFailedBadReques
 import CardItem from 'src/modules/cards/entities/card.item.schema';
 import { BoardUserFactory } from 'src/libs/test-utils/mocks/factories/boardUser-factory.mock';
 import BoardUser from 'src/modules/boardUsers/entities/board.user.schema';
+import { UPDATE_BOARD_USER_SERVICE } from 'src/modules/boardUsers/constants';
 
 const userId: string = faker.datatype.uuid();
 const board: Board = BoardFactory.create({ maxVotes: 3 });
@@ -43,28 +43,28 @@ describe('CardGroupVoteUseCase', () => {
 			providers: [
 				CardGroupVoteUseCase,
 				{
-					provide: TYPES.repositories.VoteRepository,
+					provide: VOTE_REPOSITORY,
 					useValue: createMock<VoteRepositoryInterface>()
 				},
 				{
-					provide: TYPES.services.DeleteVoteService,
+					provide: DELETE_VOTE_SERVICE,
 					useValue: createMock<DeleteVoteServiceInterface>()
 				},
 				{
-					provide: TYPES.services.CreateVoteService,
+					provide: CREATE_VOTE_SERVICE,
 					useValue: createMock<CreateVoteServiceInterface>()
 				},
 				{
-					provide: BoardUsers.TYPES.services.UpdateBoardUserService,
+					provide: UPDATE_BOARD_USER_SERVICE,
 					useValue: createMock<UpdateBoardServiceInterface>()
 				}
 			]
 		}).compile();
 
 		useCase = module.get(CardGroupVoteUseCase);
-		voteRepositoryMock = module.get(TYPES.repositories.VoteRepository);
-		createVoteServiceMock = module.get(TYPES.services.CreateVoteService);
-		deleteVoteServiceMock = module.get(TYPES.services.DeleteVoteService);
+		voteRepositoryMock = module.get(VOTE_REPOSITORY);
+		createVoteServiceMock = module.get(CREATE_VOTE_SERVICE);
+		deleteVoteServiceMock = module.get(DELETE_VOTE_SERVICE);
 	});
 
 	beforeEach(() => {
