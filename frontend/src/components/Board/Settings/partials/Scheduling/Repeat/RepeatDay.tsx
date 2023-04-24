@@ -34,6 +34,7 @@ const RepeatDay = ({ disableCheckboxes, schedulingData, setSchedulingData }: Rep
         repeatMeetingDay: undefined,
       }));
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [disableCheckboxes]);
 
   //State handlers
