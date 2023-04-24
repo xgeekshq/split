@@ -24,12 +24,12 @@ import {
   NEXT_PUBLIC_LOGIN_SSO_ONLY,
 } from '@/constants';
 import { DASHBOARD_ROUTE } from '@/constants/routes';
+import { createErrorMessage } from '@/constants/toasts';
 import loginWithAzure from '@/hooks/auth/loginWithAzure';
 import SchemaLoginForm from '@/schema/schemaLoginForm';
 import { toastState } from '@/store/toast/atom/toast.atom';
 import { FlexForm } from '@/styles/pages/pages.styles';
 import { LoginUser } from '@/types/user/user';
-import { ToastStateEnum } from '@/utils/enums/toast-types';
 
 interface LoginFormProps {
   setShowTroubleLogin: Dispatch<SetStateAction<boolean>>;
@@ -74,11 +74,7 @@ const LoginForm = ({ setShowTroubleLogin }: LoginFormProps) => {
 
     if (result.error) {
       methods.reset();
-      setToastState({
-        open: true,
-        type: ToastStateEnum.ERROR,
-        content: result.error,
-      });
+      setToastState(createErrorMessage(result.error));
     }
 
     setLoading((prevState) => ({ ...prevState, credentials: false }));

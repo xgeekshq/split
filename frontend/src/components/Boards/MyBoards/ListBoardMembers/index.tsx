@@ -3,9 +3,9 @@ import React, { Dispatch, SetStateAction } from 'react';
 import { FilterBoardMembers } from '@/components/Boards/MyBoards/ListBoardMembers/FilterBoardMembers';
 import { ScrollableContent } from '@/components/Boards/MyBoards/ListBoardMembers/styles';
 import Dialog from '@/components/Primitives/Dialogs/Dialog/Dialog';
+import { BoardUserRoles } from '@/enums/boards/userRoles';
+import { TeamUserRoles } from '@/enums/teams/userRoles';
 import { User } from '@/types/user/user';
-import { BoardUserRoles } from '@/utils/enums/board.user.roles';
-import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 import isEmpty from '@/utils/isEmpty';
 
 type ListUsersType = {

@@ -5,8 +5,8 @@ import { useSetRecoilState } from 'recoil';
 import { getDashboardBoardsRequest } from '@/api/boardService';
 import EmptyBoards from '@/components/Dashboard/RecentRetros/partials/EmptyBoards';
 import ListOfCards from '@/components/Dashboard/RecentRetros/partials/ListOfCards';
+import { createErrorMessage } from '@/constants/toasts';
 import { toastState } from '@/store/toast/atom/toast.atom';
-import { ToastStateEnum } from '@/utils/enums/toast-types';
 import isEmpty from '@/utils/isEmpty';
 
 type RecentRetrosProp = {
@@ -28,11 +28,7 @@ const RecentRetros = React.memo<RecentRetrosProp>(({ userId }) => {
         return undefined;
       },
       onError: () => {
-        setToastState({
-          open: true,
-          content: 'Error getting the boards',
-          type: ToastStateEnum.ERROR,
-        });
+        setToastState(createErrorMessage('Error getting the boards'));
       },
     },
   );

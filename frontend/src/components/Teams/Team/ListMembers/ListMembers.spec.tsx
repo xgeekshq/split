@@ -2,6 +2,7 @@ import { UseMutationResult, UseQueryResult } from '@tanstack/react-query';
 import { fireEvent, waitFor } from '@testing-library/react';
 
 import { ROUTES } from '@/constants/routes';
+import { TeamUserRoles } from '@/enums/teams/userRoles';
 import useTeam from '@/hooks/teams/useTeam';
 import { createTeamState } from '@/store/team.atom';
 import { usersListState } from '@/store/user.atom';
@@ -12,7 +13,6 @@ import {
 import ListMembers, { ListMembersProps } from '@components/Teams/Team/ListMembers/ListMembers';
 import useUpdateTeamUsers from '@hooks/teams/useUpdateTeamUsers';
 import useCurrentSession, { UseCurrentSessionResult } from '@hooks/useCurrentSession';
-import { TeamUserRoles } from '@utils/enums/team.user.roles';
 import { TeamFactory } from '@utils/factories/team';
 import { UserListFactory } from '@utils/factories/user';
 import { libraryMocks } from '@utils/testing/mocks';

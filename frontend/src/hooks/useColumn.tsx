@@ -1,11 +1,11 @@
 import { useMutation } from '@tanstack/react-query';
 
 import { deleteCardsFromColumnRequest, updateColumnRequest } from '@/api/boardService';
+import { ToastStateEnum } from '@/enums/toasts/toast-types';
 import useBoardUtils from '@/hooks/useBoardUtils';
 import BoardType from '@/types/board/board';
 import { BoardUser } from '@/types/board/board.user';
 import ColumnType from '@/types/column';
-import { ToastStateEnum } from '@/utils/enums/toast-types';
 
 const useColumn = () => {
   const { queryClient, setToastState } = useBoardUtils();
