@@ -1,6 +1,6 @@
 import { atom } from 'recoil';
 
-import { ToastStateEnum } from '@/utils/enums/toast-types';
+import { ToastStateEnum } from '@/enums/toasts/toast-types';
 
 export const toastState = atom({
   key: 'toast',

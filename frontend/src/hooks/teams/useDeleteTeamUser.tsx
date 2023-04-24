@@ -2,10 +2,11 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useSetRecoilState } from 'recoil';
 
 import { deleteTeamUser } from '@/api/teamService';
+import { TEAMS_KEY, USERS_KEY } from '@/constants/react-query/keys';
+import { createErrorMessage, createSuccessMessage } from '@/constants/toasts';
+import { ErrorMessages, SuccessMessages } from '@/constants/toasts/teams-messages';
 import { toastState } from '@/store/toast/atom/toast.atom';
 import { Team, TeamChecked } from '@/types/team/team';
-import { TEAMS_KEY, USERS_KEY } from '@/utils/constants/reactQueryKeys';
-import { ToastStateEnum } from '@/utils/enums/toast-types';
 
 const useDeleteTeamUser = (userId: string) => {
   const queryClient = useQueryClient();
@@ -36,21 +37,13 @@ const useDeleteTeamUser = (userId: string) => {
       });
     },
     onSuccess: () => {
-      setToastState({
-        open: true,
-        content: 'The user was successfully removed from the team.',
-        type: ToastStateEnum.SUCCESS,
-      });
+      setToastState(createSuccessMessage(SuccessMessages.DELETE_USER));
     },
     onError: () => {
       queryClient.invalidateQueries([TEAMS_KEY, USERS_KEY, userId]);
       queryClient.invalidateQueries([TEAMS_KEY, 'not', USERS_KEY, userId]);
 
-      setToastState({
-        open: true,
-        content: 'Error removing user from the team.',
-        type: ToastStateEnum.ERROR,
-      });
+      setToastState(createErrorMessage(ErrorMessages.DELETE_USER));
     },
   });
 };

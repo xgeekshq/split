@@ -4,8 +4,8 @@ import { fireEvent, waitFor } from '@testing-library/react';
 import UserTitle, {
   UserTitleProps,
 } from '@/components/Users/UsersList/UserItem/UserTitle/UserTitle';
+import { ROUTES } from '@/constants/routes';
 import { UserFactory } from '@/utils/factories/user';
-import { ROUTES } from '@/utils/routes';
 import { libraryMocks } from '@/utils/testing/mocks';
 import { renderWithProviders } from '@/utils/testing/renderWithProviders';
 

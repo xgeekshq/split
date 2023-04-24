@@ -2,15 +2,15 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { MongoGenericRepository } from 'src/libs/repositories/mongo/mongo-generic.repository';
-import Team, { TeamDocument } from '../entities/team.schema';
+import Team from '../entities/team.schema';
 import { TeamRepositoryInterface } from '../interfaces/repositories/team.repository.interface';
 
 @Injectable()
 export class TeamRepository
-	extends MongoGenericRepository<TeamDocument>
+	extends MongoGenericRepository<Team>
 	implements TeamRepositoryInterface
 {
-	constructor(@InjectModel(Team.name) private model: Model<TeamDocument>) {
+	constructor(@InjectModel(Team.name) private model: Model<Team>) {
 		super(model);
 	}
 

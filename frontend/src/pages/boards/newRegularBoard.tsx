@@ -4,7 +4,7 @@ import { GetServerSideProps, GetServerSidePropsContext, NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { getSession } from 'next-auth/react';
 import { joiResolver } from '@hookform/resolvers/joi';
-import { dehydrate, QueryClient, useQuery } from '@tanstack/react-query';
+import { dehydrate, QueryClient } from '@tanstack/react-query';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 
 import { getAllTeams, getUserTeams } from '@/api/teamService';
@@ -19,7 +19,12 @@ import CreateHeader from '@/components/Primitives/Layout/CreateHeader/CreateHead
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import TipBar from '@/components/Primitives/Layout/TipBar/TipBar';
 import LoadingPage from '@/components/Primitives/Loading/Page/Page';
-import { defaultRegularColumns } from '@/helper/board/defaultColumns';
+import { defaultRegularColumns } from '@/constants/boards/defaultColumns';
+import { TEAMS_KEY, USERS_KEY } from '@/constants/react-query/keys';
+import { DASHBOARD_ROUTE, ROUTES } from '@/constants/routes';
+import REGULAR_BOARD_TIPS from '@/constants/tips/regularBoard';
+import { createSuccessMessage } from '@/constants/toasts';
+import { BoardUserRoles } from '@/enums/boards/userRoles';
 import useTeams from '@/hooks/teams/useTeams';
 import useBoard from '@/hooks/useBoard';
 import useCurrentSession from '@/hooks/useCurrentSession';
@@ -28,12 +33,9 @@ import { createBoardDataState, createBoardTeam } from '@/store/createBoard/atoms
 import { toastState } from '@/store/toast/atom/toast.atom';
 import { usersListState } from '@/store/user.atom';
 import { StyledForm } from '@/styles/pages/pages.styles';
-import { BoardUserDto } from '@/types/board/board.user';
-import { TEAMS_KEY } from '@/utils/constants/reactQueryKeys';
-import { BoardUserRoles } from '@/utils/enums/board.user.roles';
-import { ToastStateEnum } from '@/utils/enums/toast-types';
+import { BoardUser, BoardUserDto } from '@/types/board/board.user';
 import isEmpty from '@/utils/isEmpty';
-import { DASHBOARD_ROUTE } from '@/utils/routes';
+import useUsers from '@hooks/users/useUsers';
 
 const defaultBoard = {
   users: [],
@@ -66,7 +68,7 @@ const NewRegularBoard: NextPage = () => {
   const { session, userId, isSAdmin } = useCurrentSession({ required: true });
 
   const [isBackButtonDisable, setBackButtonState] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isPageLoading, setIsPageLoading] = useState(false);
   const [createBoard, setCreateBoard] = useState(false);
 
   const setToastState = useSetRecoilState(toastState);
@@ -77,34 +79,8 @@ const NewRegularBoard: NextPage = () => {
   // Team  Hook
   const { data: userBasedTeams } = useTeams(isSAdmin);
 
-  const regularBoardTips = [
-    {
-      title: 'Quick create board',
-      description: [
-        'If you want to jump the settings you can just hit the button Create board.',
-        'You can still adjust all the settings later on inside the board itself.',
-      ],
-    },
-    {
-      title: 'Columns',
-      description: [
-        'We will set the columns by default to 3.',
-        'If you want to have more or less you can later, inside the actual board, still adjust the columns.',
-      ],
-    },
-  ];
-
-  const { data: allUsers } = useQuery(['users'], () => getAllUsers(), {
-    enabled: true,
-    refetchOnWindowFocus: false,
-    onError: () => {
-      setToastState({
-        open: true,
-        content: 'Error getting the users',
-        type: ToastStateEnum.ERROR,
-      });
-    },
-  });
+  // User Hook
+  const { data: allUsers } = useUsers();
 
   useEffect(() => {
     if (allUsers) {
@@ -119,7 +95,7 @@ const NewRegularBoard: NextPage = () => {
 
   // Board Hook
   const {
-    createBoard: { status, mutate },
+    createBoard: { mutate },
   } = useBoard({ autoFetchBoard: false });
 
   const addNewRegularBoard = () => {
@@ -147,7 +123,7 @@ const NewRegularBoard: NextPage = () => {
 
   // Handle back to boards list page
   const handleBack = useCallback(() => {
-    setIsLoading(true);
+    setIsPageLoading(true);
     resetListUsersState();
     setBackButtonState(true);
     router.back();
@@ -155,19 +131,37 @@ const NewRegularBoard: NextPage = () => {
 
   const handleCancelBtn = () => {
     resetListUsersState();
-    setIsLoading(true);
+    setIsPageLoading(true);
     router.push(DASHBOARD_ROUTE);
+  };
+
+  const filterResponsibles = (users: BoardUser[]) =>
+    users.flatMap((member) => {
+      if (member.role === BoardUserRoles.RESPONSIBLE) {
+        return [member.user._id];
+      }
+      return [];
+    });
+
+  const onMutateSuccess = () => {
+    setIsPageLoading(true);
+    setToastState(createSuccessMessage('Board created with success!'));
+
+    setBoardState(defaultBoard);
+    setSelectedTeam(undefined);
+    router.push(ROUTES.Boards);
   };
 
   const saveBoard = (title?: string, maxVotes?: number, slackEnable?: boolean) => {
     const users: BoardUserDto[] = [];
-    const responsibles: string[] = [];
-    const responsible = boardState.users.find((user) => user.role === BoardUserRoles.RESPONSIBLE);
 
+    let responsibles: string[] = [];
+
+    const responsiblesFiltered = filterResponsibles(boardState.users);
     if (!session) return;
 
-    if (!isEmpty(responsible)) {
-      responsibles.push(responsible.user._id);
+    if (!isEmpty(responsiblesFiltered)) {
+      responsibles = [...responsiblesFiltered];
     }
 
     if (isEmpty(boardState.users)) {
@@ -178,19 +172,24 @@ const NewRegularBoard: NextPage = () => {
       });
     }
 
-    mutate({
-      ...boardState.board,
-      columns: defaultRegularColumns,
-      users,
-      title: title || defaultBoard.board.title,
-      dividedBoards: [],
-      maxVotes,
-      slackEnable,
-      maxUsers: boardState.count.maxUsersCount,
-      recurrent: false,
-      responsibles,
-      phase: undefined,
-    });
+    mutate(
+      {
+        ...boardState.board,
+        columns: defaultRegularColumns,
+        users,
+        title: title || defaultBoard.board.title,
+        dividedBoards: [],
+        maxVotes,
+        slackEnable,
+        maxUsers: boardState.count.maxUsersCount,
+        recurrent: false,
+        responsibles,
+        phase: undefined,
+      },
+      {
+        onSuccess: onMutateSuccess,
+      },
+    );
   };
 
   const saveEmptyBoard = () => {
@@ -199,36 +198,31 @@ const NewRegularBoard: NextPage = () => {
       users.push({ role: BoardUserRoles.RESPONSIBLE, user: userId });
     }
 
-    mutate({
-      ...boardState.board,
-      columns: defaultRegularColumns,
-      users,
-      title: defaultBoard.board.title,
-      dividedBoards: [],
-      maxUsers: boardState.count.maxUsersCount,
-      recurrent: false,
-    });
+    mutate(
+      {
+        ...boardState.board,
+        columns: defaultRegularColumns,
+        users,
+        title: defaultBoard.board.title,
+        dividedBoards: [],
+        maxUsers: boardState.count.maxUsersCount,
+        recurrent: false,
+        responsibles: [userId],
+      },
+      {
+        onSuccess: onMutateSuccess,
+      },
+    );
   };
 
+  const hasResponsibles = !isEmpty(filterResponsibles(boardState.users));
+
   useEffect(() => {
-    if (status === 'success') {
-      setIsLoading(true);
-      setToastState({
-        open: true,
-        content: 'Board created with success!',
-        type: ToastStateEnum.SUCCESS,
-      });
-
-      setBoardState(defaultBoard);
-      setSelectedTeam(undefined);
-      router.push('/boards');
-    }
-
     return () => {
       setBoardState(defaultBoard);
       setSelectedTeam(undefined);
     };
-  }, [router, setToastState, setSelectedTeam, setBoardState, status]);
+  }, [setSelectedTeam, setBoardState]);
 
   if (!session || !userBasedTeams) return null;
 
@@ -236,7 +230,7 @@ const NewRegularBoard: NextPage = () => {
     <Suspense fallback={<LoadingPage />}>
       <QueryError>
         <Flex
-          css={{ height: '100vh', backgroundColor: '$primary50', opacity: isLoading ? 0.5 : 1 }}
+          css={{ height: '100vh', backgroundColor: '$primary50', opacity: isPageLoading ? 0.5 : 1 }}
           direction="column"
         >
           <CreateHeader
@@ -264,16 +258,16 @@ const NewRegularBoard: NextPage = () => {
                           description="Make it short and descriptive. It well help you to distinguish retrospectives from each other."
                           title="Board Name"
                         />
-                        <SettingsTabs />
+                        <SettingsTabs isPageLoading />
                       </FormProvider>
                     </Flex>
                   </StyledForm>
-                  <TipBar tips={regularBoardTips} />
+                  <TipBar tips={REGULAR_BOARD_TIPS} />
                 </Flex>
               </Flex>
               <CreateFooter
                 confirmationLabel="Create board"
-                disableButton={isBackButtonDisable}
+                disableButton={isBackButtonDisable || !hasResponsibles}
                 formId="hook-form"
                 handleBack={handleCancelBtn}
               />
@@ -324,7 +318,7 @@ export const getServerSideProps: GetServerSideProps = requireAuthentication(
         }
         return getUserTeams(userId, context);
       }),
-      queryClient.prefetchQuery(['users'], () => getAllUsers(context)),
+      queryClient.prefetchQuery([USERS_KEY], () => getAllUsers(context)),
     ]);
 
     return {

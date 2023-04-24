@@ -7,14 +7,14 @@ import {
 	Injectable
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import * as TeamUsers from 'src/modules/teamUsers/interfaces/types';
+import { GET_TEAM_USER_SERVICE } from 'src/modules/teamUsers/constants';
 
 @Injectable()
 export class TeamUserGuard implements CanActivate {
 	constructor(
 		private readonly reflector: Reflector,
-		@Inject(TeamUsers.TYPES.services.GetTeamUserService)
-		private getTeamUserService: GetTeamUserServiceInterface
+		@Inject(GET_TEAM_USER_SERVICE)
+		private readonly getTeamUserService: GetTeamUserServiceInterface
 	) {}
 
 	async canActivate(context: ExecutionContext) {

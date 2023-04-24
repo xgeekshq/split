@@ -20,7 +20,13 @@ import CreateHeader from '@/components/Primitives/Layout/CreateHeader/CreateHead
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import TipBar from '@/components/Primitives/Layout/TipBar/TipBar';
 import LoadingPage from '@/components/Primitives/Loading/Page/Page';
-import { defaultSplitColumns } from '@/helper/board/defaultColumns';
+import { defaultSplitColumns } from '@/constants/boards/defaultColumns';
+import { TEAMS_KEY } from '@/constants/react-query/keys';
+import { DASHBOARD_ROUTE, ROUTES } from '@/constants/routes';
+import SPLIT_BOARD_TIPS from '@/constants/tips/splitBoard';
+import { createSuccessMessage } from '@/constants/toasts';
+import { BoardPhases } from '@/enums/boards/phases';
+import { BoardUserRoles } from '@/enums/boards/userRoles';
 import useTeams from '@/hooks/teams/useTeams';
 import useBoard from '@/hooks/useBoard';
 import useCurrentSession from '@/hooks/useCurrentSession';
@@ -33,12 +39,7 @@ import {
 import { toastState } from '@/store/toast/atom/toast.atom';
 import { StyledForm } from '@/styles/pages/pages.styles';
 import { CreateBoardDto } from '@/types/board/board';
-import { TEAMS_KEY } from '@/utils/constants/reactQueryKeys';
-import { BoardPhases } from '@/utils/enums/board.phases';
-import { BoardUserRoles } from '@/utils/enums/board.user.roles';
-import { ToastStateEnum } from '@/utils/enums/toast-types';
 import isEmpty from '@/utils/isEmpty';
-import { DASHBOARD_ROUTE, ROUTES } from '@/utils/routes';
 
 const defaultBoard = {
   users: [],
@@ -83,34 +84,12 @@ const NewSplitBoard: NextPage = () => {
 
   // User Board Hook
   const {
-    createBoard: { status, mutate },
+    createBoard: { mutate },
   } = useBoard({ autoFetchBoard: false });
 
   // Team  Hook
   const teamsQuery = useTeams(isSAdmin);
   const userBasedTeams = teamsQuery.data ?? [];
-
-  const splitBoardTips = [
-    {
-      title: 'Sub-teams',
-      description: [
-        'The participants of the sub-teams are generated randomly.',
-        'The number of participants is split equally between all sub-teams.',
-        'For each sub-team there is one responsible selected.',
-      ],
-    },
-    {
-      title: 'Responsibles',
-      description: [
-        'Responsibles are normal users with the rights to merge the cards at the end of each sub-teams retro into the main board.',
-        'Responsibles also are in charge of scheduling and conducting the sub-teams retrospective.',
-      ],
-    },
-    {
-      title: 'Stakeholder',
-      description: ['The stakeholder will not be assigned to any sub-team.'],
-    },
-  ];
 
   // React Hook Form
   const methods = useForm<{
@@ -173,8 +152,13 @@ const NewSplitBoard: NextPage = () => {
       const responsible = newSubBoard.users.find(
         (user) => user.role === BoardUserRoles.RESPONSIBLE,
       );
+
       if (!isEmpty(responsible)) {
         responsibles.push(responsible.user);
+      }
+
+      if (responsible) {
+        newSubBoard.responsibles = [responsible.user];
       }
 
       return newSubBoard;
@@ -185,40 +169,39 @@ const NewSplitBoard: NextPage = () => {
       role: boardUser.role,
     }));
 
-    mutate({
-      ...boardState.board,
-      users: boardUsersDtos,
-      title,
-      dividedBoards: newDividedBoards,
-      maxVotes,
-      maxUsers,
-      team,
-      responsibles,
-      slackEnable,
-      phase: BoardPhases.ADDCARDS,
-    });
+    mutate(
+      {
+        ...boardState.board,
+        users: boardUsersDtos,
+        title,
+        dividedBoards: newDividedBoards,
+        maxVotes,
+        maxUsers,
+        team,
+        responsibles,
+        slackEnable,
+        phase: BoardPhases.ADDCARDS,
+      },
+      {
+        onSuccess: () => {
+          setIsLoading(true);
+          setToastState(createSuccessMessage('Board created with success!'));
+
+          setBoardState(defaultBoard);
+          setSelectedTeam(undefined);
+          router.push(ROUTES.Boards);
+        },
+      },
+    );
   };
 
   useEffect(() => {
-    if (status === 'success') {
-      setIsLoading(true);
-      setToastState({
-        open: true,
-        content: 'Board created with success!',
-        type: ToastStateEnum.SUCCESS,
-      });
-
-      setBoardState(defaultBoard);
-      setSelectedTeam(undefined);
-      router.push('/boards');
-    }
-
     return () => {
       setBoardState(defaultBoard);
       setSelectedTeam(undefined);
       setHaveError(false);
     };
-  }, [status, router, setToastState, setSelectedTeam, setBoardState, setHaveError]);
+  }, [setSelectedTeam, setBoardState, setHaveError]);
 
   if (!session || !userBasedTeams) return null;
 
@@ -275,7 +258,7 @@ const NewSplitBoard: NextPage = () => {
                   </Flex>
                 </StyledForm>
               </FormProvider>
-              <TipBar tips={splitBoardTips} />
+              <TipBar tips={SPLIT_BOARD_TIPS} />
             </Flex>
           </Flex>
           <CreateFooter

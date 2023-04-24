@@ -6,8 +6,8 @@ import { VotesModule } from '../votes/votes.module';
 import {
 	cardRepository,
 	createCardUseCase,
+	deleteCardFromGroupUseCase,
 	deleteCardUseCase,
-	deleteFromCardGroupUseCase,
 	getCardService,
 	mergeCardUseCase,
 	unmergeCardUseCase,
@@ -35,7 +35,7 @@ import CardsController from './controller/cards.controller';
 		updateCardTextUseCase,
 		updateCardGroupTextUseCase,
 		deleteCardUseCase,
-		deleteFromCardGroupUseCase
+		deleteCardFromGroupUseCase
 	],
 	exports: [getCardService]
 })

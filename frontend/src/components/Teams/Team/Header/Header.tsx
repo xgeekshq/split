@@ -6,8 +6,8 @@ import Button from '@/components/Primitives/Inputs/Button/Button';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Text from '@/components/Primitives/Text/Text';
 import ListMembers from '@/components/Teams/Team/ListMembers/ListMembers';
+import { ROUTES } from '@/constants/routes';
 import { BreadcrumbType } from '@/types/board/Breadcrumb';
-import { ROUTES } from '@/utils/routes';
 
 export type TeamHeaderProps = {
   title: string;

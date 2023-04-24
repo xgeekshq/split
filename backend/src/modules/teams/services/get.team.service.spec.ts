@@ -5,9 +5,6 @@ import { GetTeamUserServiceInterface } from 'src/modules/teamUsers/interfaces/se
 import { GetTeamServiceInterface } from 'src/modules/teams/interfaces/services/get.team.service.interface';
 import { Test, TestingModule } from '@nestjs/testing';
 import { DeepMocked, createMock } from '@golevelup/ts-jest';
-import { getTeamService } from 'src/modules/teams/providers';
-import * as Boards from 'src/modules/boards/interfaces/types';
-import * as TeamUsers from 'src/modules/teamUsers/interfaces/types';
 import { TeamRepositoryInterface } from '../interfaces/repositories/team.repository.interface';
 import { TEAM_REPOSITORY } from 'src/modules/teams/constants';
 import {
@@ -18,6 +15,9 @@ import {
 	teams,
 	teamsWithUsers
 } from '../applications/get-team-mocked-results';
+import { GET_BOARD_SERVICE } from 'src/modules/boards/constants';
+import { GET_TEAM_USER_SERVICE } from 'src/modules/teamUsers/constants';
+import GetTeamService from './get.team.service';
 
 describe('GetTeamService', () => {
 	let teamService: GetTeamServiceInterface;
@@ -28,26 +28,26 @@ describe('GetTeamService', () => {
 	beforeAll(async () => {
 		const module: TestingModule = await Test.createTestingModule({
 			providers: [
-				getTeamService,
+				GetTeamService,
 				{
 					provide: TEAM_REPOSITORY,
 					useValue: createMock<TeamRepositoryInterface>()
 				},
 				{
-					provide: TeamUsers.TYPES.services.GetTeamUserService,
+					provide: GET_TEAM_USER_SERVICE,
 					useValue: createMock<GetTeamUserServiceInterface>()
 				},
 				{
-					provide: Boards.TYPES.services.GetBoardService,
+					provide: GET_BOARD_SERVICE,
 					useValue: createMock<GetBoardServiceInterface>()
 				}
 			]
 		}).compile();
 
-		teamService = module.get<GetTeamServiceInterface>(getTeamService.provide);
+		teamService = module.get(GetTeamService);
 		teamRepositoryMock = module.get(TEAM_REPOSITORY);
-		getTeamUserServiceMock = module.get(TeamUsers.TYPES.services.GetTeamUserService);
-		getBoardServiceMock = module.get(Boards.TYPES.services.GetBoardService);
+		getTeamUserServiceMock = module.get(GET_TEAM_USER_SERVICE);
+		getBoardServiceMock = module.get(GET_BOARD_SERVICE);
 	});
 
 	beforeEach(() => {

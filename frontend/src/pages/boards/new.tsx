@@ -8,10 +8,10 @@ import CreateHeader from '@/components/Primitives/Layout/CreateHeader/CreateHead
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import LoadingPage from '@/components/Primitives/Loading/Page/Page';
 import Text from '@/components/Primitives/Text/Text';
+import { NEXT_PUBLIC_REGULAR_BOARD } from '@/constants';
+import { ROUTES } from '@/constants/routes';
 import useBoard from '@/hooks/useBoard';
 import useCurrentSession from '@/hooks/useCurrentSession';
-import { NEXT_PUBLIC_REGULAR_BOARD } from '@/utils/constants';
-import { ROUTES } from '@/utils/routes';
 
 const NewBoard: NextPage = () => {
   const {

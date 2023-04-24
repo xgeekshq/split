@@ -2,19 +2,19 @@ import { TeamFactory } from 'src/libs/test-utils/mocks/factories/team-factory.mo
 import Team from 'src/modules/teams/entities/team.schema';
 import { Test, TestingModule } from '@nestjs/testing';
 import { DeepMocked, createMock } from '@golevelup/ts-jest';
-import { deleteTeamUseCase } from 'src/modules/teams/providers';
-import * as TeamUsers from 'src/modules/teamUsers/interfaces/types';
-import * as Boards from 'src/modules/boards/interfaces/types';
+import { TeamUserFactory } from 'src/libs/test-utils/mocks/factories/teamUser-factory.mock';
+import { DeleteBoardServiceInterface } from 'src/modules/boards/interfaces/services/delete.board.service.interface';
+import { DeleteTeamUserServiceInterface } from 'src/modules/teamUsers/interfaces/services/delete.team.user.service.interface';
 import { BadRequestException } from '@nestjs/common';
 import { TeamRepositoryInterface } from '../interfaces/repositories/team.repository.interface';
 import { TEAM_REPOSITORY } from 'src/modules/teams/constants';
-import { UseCase } from 'src/libs/interfaces/use-case.interface';
-import { DeleteTeamUserServiceInterface } from 'src/modules/teamUsers/interfaces/services/delete.team.user.service.interface';
-import { DeleteBoardServiceInterface } from 'src/modules/boards/interfaces/services/delete.board.service.interface';
+import { DELETE_TEAM_USER_SERVICE } from 'src/modules/teamUsers/constants';
+import { DELETE_BOARD_SERVICE } from 'src/modules/boards/constants';
 import { User } from '@slack/web-api/dist/response/AdminAppsRequestsListResponse';
-import { TeamUserFactory } from 'src/libs/test-utils/mocks/factories/teamUser-factory.mock';
+import { UseCase } from 'src/libs/interfaces/use-case.interface';
 import { UserFactory } from 'src/libs/test-utils/mocks/factories/user-factory';
 import TeamUser from 'src/modules/teamUsers/entities/team.user.schema';
+import { DeleteTeamUseCase } from './delete-team.use-case';
 
 const teams: Team[] = TeamFactory.createMany(4);
 const teamUsers: TeamUser[] = TeamUserFactory.createMany(5);
@@ -41,26 +41,30 @@ describe('DeleteTeamUseCase', () => {
 	beforeAll(async () => {
 		const module: TestingModule = await Test.createTestingModule({
 			providers: [
-				deleteTeamUseCase,
+				DeleteTeamUseCase,
 				{
 					provide: TEAM_REPOSITORY,
 					useValue: createMock<TeamRepositoryInterface>()
 				},
 				{
-					provide: TeamUsers.TYPES.services.DeleteTeamUserService,
+					provide: DELETE_BOARD_SERVICE,
+					useValue: createMock<DeleteBoardServiceInterface>()
+				},
+				{
+					provide: DELETE_TEAM_USER_SERVICE,
 					useValue: createMock<DeleteTeamUserServiceInterface>()
 				},
 				{
-					provide: Boards.TYPES.services.DeleteBoardService,
+					provide: DELETE_BOARD_SERVICE,
 					useValue: createMock<DeleteBoardServiceInterface>()
 				}
 			]
 		}).compile();
 
-		deleteTeam = module.get<UseCase<string, boolean>>(deleteTeamUseCase.provide);
+		deleteTeam = module.get(DeleteTeamUseCase);
 		teamRepositoryMock = module.get(TEAM_REPOSITORY);
-		deleteTeamUserServiceMock = module.get(TeamUsers.TYPES.services.DeleteTeamUserService);
-		deleteBoardServiceMock = module.get(Boards.TYPES.services.DeleteBoardService);
+		deleteTeamUserServiceMock = module.get(DELETE_TEAM_USER_SERVICE);
+		deleteBoardServiceMock = module.get(DELETE_BOARD_SERVICE);
 	});
 
 	beforeEach(() => {

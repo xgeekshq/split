@@ -1,5 +1,5 @@
 import { Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
-import { TYPES } from '../interfaces/types';
+import { CARD_REPOSITORY, GET_CARD_SERVICE } from '../constants';
 import { UseCase } from 'src/libs/interfaces/use-case.interface';
 import { CardRepositoryInterface } from '../repository/card.repository.interface';
 import { GetCardServiceInterface } from '../interfaces/services/get.card.service.interface';
@@ -12,7 +12,6 @@ import {
 } from 'src/libs/exceptions/messages';
 import DeleteFromCardGroupUseCaseDto from '../dto/useCase/delete-fom-card-group.use-case.dto';
 import CardItem from '../entities/card.item.schema';
-import * as BoardUsers from 'src/modules/boardUsers/interfaces/types';
 import { UpdateBoardUserServiceInterface } from 'src/modules/boardUsers/interfaces/services/update.board.user.service.interface';
 import { getUserWithVotes } from '../utils/get-user-with-votes';
 import { DeleteFailedException } from 'src/libs/exceptions/deleteFailedBadRequestException';
@@ -20,15 +19,16 @@ import Card from '../entities/card.schema';
 import { CardNotFoundException } from 'src/libs/exceptions/cardNotFoundException';
 import { UpdateFailedException } from 'src/libs/exceptions/updateFailedBadRequestException';
 import { isEmpty } from 'class-validator';
+import { UPDATE_BOARD_USER_SERVICE } from 'src/modules/boardUsers/constants';
 
 @Injectable()
 export class DeleteFromCardGroupUseCase implements UseCase<DeleteFromCardGroupUseCaseDto, void> {
 	constructor(
-		@Inject(TYPES.services.GetCardService)
+		@Inject(GET_CARD_SERVICE)
 		private readonly getCardService: GetCardServiceInterface,
-		@Inject(TYPES.repository.CardRepository)
+		@Inject(CARD_REPOSITORY)
 		private readonly cardRepository: CardRepositoryInterface,
-		@Inject(BoardUsers.TYPES.services.UpdateBoardUserService)
+		@Inject(UPDATE_BOARD_USER_SERVICE)
 		private readonly updateBoardUserService: UpdateBoardUserServiceInterface
 	) {}
 

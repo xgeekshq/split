@@ -2,20 +2,20 @@ import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { DELETE_FAILED } from 'src/libs/exceptions/messages';
 import { UseCase } from 'src/libs/interfaces/use-case.interface';
 import { TeamRepositoryInterface } from '../interfaces/repositories/team.repository.interface';
-import { TEAM_REPOSITORY } from '../constants';
-import * as TeamUsers from 'src/modules/teamUsers/interfaces/types';
-import * as Boards from 'src/modules/boards/interfaces/types';
 import { DeleteBoardServiceInterface } from 'src/modules/boards/interfaces/services/delete.board.service.interface';
 import { DeleteTeamUserServiceInterface } from 'src/modules/teamUsers/interfaces/services/delete.team.user.service.interface';
+import { DELETE_TEAM_USER_SERVICE } from 'src/modules/teamUsers/constants';
+import { DELETE_BOARD_SERVICE } from 'src/modules/boards/constants';
+import { TEAM_REPOSITORY } from '../constants';
 
 @Injectable()
 export class DeleteTeamUseCase implements UseCase<string, boolean> {
 	constructor(
 		@Inject(TEAM_REPOSITORY)
 		private readonly teamRepository: TeamRepositoryInterface,
-		@Inject(Boards.TYPES.services.DeleteBoardService)
+		@Inject(DELETE_BOARD_SERVICE)
 		private readonly deleteBoardService: DeleteBoardServiceInterface,
-		@Inject(TeamUsers.TYPES.services.DeleteTeamUserService)
+		@Inject(DELETE_TEAM_USER_SERVICE)
 		private readonly deleteTeamUserService: DeleteTeamUserServiceInterface
 	) {}
 

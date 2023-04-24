@@ -4,12 +4,12 @@ import { BOARD_USER_EXISTS, INSERT_FAILED } from 'src/libs/exceptions/messages';
 import { CreateBoardUserServiceInterface } from '../interfaces/services/create.board.user.service.interface';
 import BoardUserDto from '../dto/board.user.dto';
 import { BoardUserRepositoryInterface } from '../interfaces/repositories/board-user.repository.interface';
-import { TYPES } from '../interfaces/types';
+import { BOARD_USER_REPOSITORY } from '../constants';
 
 @Injectable()
 export default class CreateBoardUserService implements CreateBoardUserServiceInterface {
 	constructor(
-		@Inject(TYPES.repositories.BoardUserRepository)
+		@Inject(BOARD_USER_REPOSITORY)
 		private readonly boardUserRepository: BoardUserRepositoryInterface
 	) {}
 

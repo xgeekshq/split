@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { TYPES } from '../interfaces/types';
+import { CARD_REPOSITORY } from '../constants';
 import { DeepMocked, createMock } from '@golevelup/ts-jest';
 import { CardRepositoryInterface } from '../repository/card.repository.interface';
 import { GetCardServiceInterface } from '../interfaces/services/get.card.service.interface';
@@ -21,13 +21,13 @@ describe('GetCardService', () => {
 			providers: [
 				GetCardService,
 				{
-					provide: TYPES.repository.CardRepository,
+					provide: CARD_REPOSITORY,
 					useValue: createMock<CardRepositoryInterface>()
 				}
 			]
 		}).compile();
-		service = module.get<GetCardServiceInterface>(GetCardService);
-		cardRepositoryMock = module.get(TYPES.repository.CardRepository);
+		service = module.get(GetCardService);
+		cardRepositoryMock = module.get(CARD_REPOSITORY);
 		cardRepositoryMock.getCardFromBoard.mockResolvedValue(cards);
 		cardRepositoryMock.getCardItemFromGroup.mockResolvedValue(cardItem);
 	});

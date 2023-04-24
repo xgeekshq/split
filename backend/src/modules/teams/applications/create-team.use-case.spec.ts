@@ -4,8 +4,6 @@ import { faker } from '@faker-js/faker';
 import { Test, TestingModule } from '@nestjs/testing';
 import { DeepMocked, createMock } from '@golevelup/ts-jest';
 import { CreateTeamUserServiceInterface } from 'src/modules/teamUsers/interfaces/services/create.team.user.service.interface';
-import { createTeamUseCase } from 'src/modules/teams/providers';
-import * as TeamUsers from 'src/modules/teamUsers/interfaces/types';
 import { CreateTeamDto } from '../dto/create-team.dto';
 import { TeamUserDtoFactory } from 'src/libs/test-utils/mocks/factories/dto/teamUserDto-factory.mock';
 import { BadRequestException, HttpException, HttpStatus } from '@nestjs/common';
@@ -13,6 +11,8 @@ import { TEAM_ALREADY_EXISTS } from 'src/libs/constants/team';
 import { TeamRepositoryInterface } from '../interfaces/repositories/team.repository.interface';
 import { TEAM_REPOSITORY } from 'src/modules/teams/constants';
 import { UseCase } from 'src/libs/interfaces/use-case.interface';
+import { CreateTeamUseCase } from './create-team.use-case';
+import { CREATE_TEAM_USER_SERVICE } from 'src/modules/teamUsers/constants';
 
 const createTeamDto: CreateTeamDto = {
 	name: faker.name.findName(),
@@ -32,21 +32,21 @@ describe('CreateTeamUseCase', () => {
 	beforeAll(async () => {
 		const module: TestingModule = await Test.createTestingModule({
 			providers: [
-				createTeamUseCase,
+				CreateTeamUseCase,
 				{
 					provide: TEAM_REPOSITORY,
 					useValue: createMock<TeamRepositoryInterface>()
 				},
 				{
-					provide: TeamUsers.TYPES.services.CreateTeamUserService,
+					provide: CREATE_TEAM_USER_SERVICE,
 					useValue: createMock<CreateTeamUserServiceInterface>()
 				}
 			]
 		}).compile();
 
-		createTeam = module.get<UseCase<CreateTeamDto, Team>>(createTeamUseCase.provide);
+		createTeam = module.get(CreateTeamUseCase);
 		teamRepositoryMock = module.get(TEAM_REPOSITORY);
-		createTeamUserServiceMock = module.get(TeamUsers.TYPES.services.CreateTeamUserService);
+		createTeamUserServiceMock = module.get(CREATE_TEAM_USER_SERVICE);
 	});
 
 	beforeEach(() => {

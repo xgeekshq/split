@@ -4,6 +4,10 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { io, Socket } from 'socket.io-client';
 
+import { BOARD_PHASE_SERVER_SENT, NEXT_PUBLIC_BACKEND_URL } from '@/constants';
+import { ROUTES } from '@/constants/routes';
+import { createErrorMessage } from '@/constants/toasts';
+import { BoardAction } from '@/enums/boards/actions';
 import useBoard from '@/hooks/useBoard';
 import useCards from '@/hooks/useCards';
 import useComments from '@/hooks/useComments';
@@ -25,25 +29,7 @@ import { EmitEvent } from '@/types/events/emit-event.type';
 import EventCallback from '@/types/events/event-callback.type';
 import { ListenEvent } from '@/types/events/listen-event.type';
 import VoteDto from '@/types/vote/vote.dto';
-import { BOARD_PHASE_SERVER_SENT, NEXT_PUBLIC_BACKEND_URL } from '@/utils/constants';
 import isEmpty from '@/utils/isEmpty';
-import { ToastStateEnum } from '@utils/enums/toast-types';
-import { ROUTES } from '@utils/routes';
-
-enum BoardAction {
-  UPDATECARDPOSITION,
-  VOTE,
-  UNMERGE,
-  MERGE,
-  ADDCARD,
-  UPDATECARD,
-  DELETECARD,
-  ADDCOMMENT,
-  DELETECOMMENT,
-  UPDATECOMMENT,
-  UPDATEBOARDUSERS,
-  UPDATEPHASE,
-}
 
 interface SocketInterface {
   socketId?: string;
@@ -96,11 +82,7 @@ export const useSocketIO = (boardId: string): SocketInterface => {
 
     socket?.on('deleteBoard', () => {
       router.replace(ROUTES.Boards);
-      setToastState({
-        open: true,
-        content: 'The board was deleted by a board admin.',
-        type: ToastStateEnum.ERROR,
-      });
+      setToastState(createErrorMessage('The board was deleted by a board admin.'));
     });
 
     socket?.on('board', (board: BoardType) => {

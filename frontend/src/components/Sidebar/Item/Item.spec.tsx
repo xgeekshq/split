@@ -1,7 +1,7 @@
 import { fireEvent, waitFor } from '@testing-library/react';
 
 import Item, { SidebarItemProps } from '@/components/Sidebar/Item/Item';
-import { BOARDS_ROUTE } from '@/utils/routes';
+import { BOARDS_ROUTE } from '@/constants/routes';
 import { libraryMocks } from '@/utils/testing/mocks';
 import { renderWithProviders } from '@/utils/testing/renderWithProviders';
 

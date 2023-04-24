@@ -3,9 +3,9 @@ import { BadRequestException } from '@nestjs/common';
 import { deleteTeamUserService } from './../teamusers.providers';
 import { Test, TestingModule } from '@nestjs/testing';
 import { DeepMocked, createMock } from '@golevelup/ts-jest';
-import * as TeamUsers from 'src/modules/teamUsers/interfaces/types';
 import { TeamUserRepositoryInterface } from '../interfaces/repositories/team-user.repository.interface';
 import { DeleteTeamUserServiceInterface } from '../interfaces/services/delete.team.user.service.interface';
+import { TEAM_USER_REPOSITORY } from 'src/modules/teamUsers/constants';
 
 const removeTeamUsers: string[] = [
 	faker.datatype.uuid(),
@@ -29,14 +29,14 @@ describe('DeleteTeamUserService', () => {
 			providers: [
 				deleteTeamUserService,
 				{
-					provide: TeamUsers.TYPES.repositories.TeamUserRepository,
+					provide: TEAM_USER_REPOSITORY,
 					useValue: createMock<TeamUserRepositoryInterface>()
 				}
 			]
 		}).compile();
 
-		teamUserService = module.get<DeleteTeamUserServiceInterface>(deleteTeamUserService.provide);
-		teamUserRepositoryMock = module.get(TeamUsers.TYPES.repositories.TeamUserRepository);
+		teamUserService = module.get(deleteTeamUserService.provide);
+		teamUserRepositoryMock = module.get(TEAM_USER_REPOSITORY);
 	});
 
 	beforeEach(() => {

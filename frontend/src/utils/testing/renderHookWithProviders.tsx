@@ -1,12 +1,9 @@
-import { ReactNode, useEffect } from 'react';
+import { ReactNode } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { RenderOptions } from '@testing-library/react';
-import { RecoilRoot, RecoilState, useRecoilValue } from 'recoil';
+import { RecoilRoot, RecoilState } from 'recoil';
 
-type RecoilOptions = {
-  recoilHandler: (value: any) => void;
-  recoilState: RecoilState<any>;
-};
+import RecoilObserver, { RecoilOptions } from '@utils/testing/recoilObserver';
 
 export type RenderHookWithProvidersOptions = Omit<RenderOptions, 'queries'> & {
   queryClient?: QueryClient;
@@ -18,12 +15,6 @@ type WrapperProps = {
   queryClient: QueryClient;
   recoilHandler?: (value: any) => void;
   recoilState?: RecoilState<any>;
-};
-
-const RecoilObserver = ({ recoilState, recoilHandler }: RecoilOptions) => {
-  const value = useRecoilValue(recoilState);
-  useEffect(() => recoilHandler(value), [recoilHandler, value]);
-  return null;
 };
 
 function createWrapper({ children, queryClient, recoilHandler, recoilState }: WrapperProps) {

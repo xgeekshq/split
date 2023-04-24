@@ -1,9 +1,10 @@
 import { renderHook, waitFor } from '@testing-library/react';
 
 import { deleteUserRequest } from '@/api/userService';
+import { createErrorMessage, createSuccessMessage } from '@/constants/toasts';
+import { ErrorMessages, SuccessMessages } from '@/constants/toasts/users-messages';
 import useDeleteUser from '@/hooks/users/useDeleteUser';
 import { toastState } from '@/store/toast/atom/toast.atom';
-import { ToastStateEnum } from '@/utils/enums/toast-types';
 import { UserFactory } from '@/utils/factories/user';
 import {
   renderHookWithProviders,
@@ -38,11 +39,7 @@ describe('hooks/users/useDeleteUser', () => {
     await waitFor(() => expect(result.current.isSuccess).toBeTruthy());
 
     expect(mockDeleteUserRequest).toBeCalledWith({ id: DUMMY_USER._id });
-    expect(recoilHandler).toHaveBeenCalledWith({
-      open: true,
-      content: 'The user was successfully updated.',
-      type: ToastStateEnum.SUCCESS,
-    });
+    expect(recoilHandler).toHaveBeenCalledWith(createSuccessMessage(SuccessMessages.DELETE));
   });
 
   it('should throw an error', async () => {
@@ -61,11 +58,7 @@ describe('hooks/users/useDeleteUser', () => {
     await waitFor(() => {
       expect(result.current.isError).toBeTruthy();
       expect(result.current.data).not.toBeDefined();
-      expect(recoilHandler).toHaveBeenCalledWith({
-        open: true,
-        content: 'Error while deleting the user',
-        type: ToastStateEnum.ERROR,
-      });
+      expect(recoilHandler).toHaveBeenCalledWith(createErrorMessage(ErrorMessages.DELETE));
     });
   });
 });

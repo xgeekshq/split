@@ -9,15 +9,15 @@ import { TEAM_REPOSITORY } from '../constants';
 import { TEAM_ALREADY_EXISTS } from 'src/libs/constants/team';
 import TeamUserDto from 'src/modules/teamUsers/dto/team.user.dto';
 import { CreateTeamUserServiceInterface } from 'src/modules/teamUsers/interfaces/services/create.team.user.service.interface';
-import * as TeamUsers from 'src/modules/teamUsers/interfaces/types';
 import isEmpty from 'src/libs/utils/isEmpty';
+import { CREATE_TEAM_USER_SERVICE } from 'src/modules/teamUsers/constants';
 
 @Injectable()
 export class CreateTeamUseCase implements UseCase<CreateTeamDto, Team> {
 	constructor(
 		@Inject(TEAM_REPOSITORY)
 		private readonly teamRepository: TeamRepositoryInterface,
-		@Inject(TeamUsers.TYPES.services.CreateTeamUserService)
+		@Inject(CREATE_TEAM_USER_SERVICE)
 		private readonly createTeamUserService: CreateTeamUserServiceInterface
 	) {}
 

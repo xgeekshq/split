@@ -1,13 +1,13 @@
 import { TeamUserFactory } from 'src/libs/test-utils/mocks/factories/teamUser-factory.mock';
 import { faker } from '@faker-js/faker';
-import { deleteTeamUserUseCase } from '../teamusers.providers';
 import { Test, TestingModule } from '@nestjs/testing';
 import { DeepMocked, createMock } from '@golevelup/ts-jest';
 import { UseCase } from 'src/libs/interfaces/use-case.interface';
-import * as TeamUsers from 'src/modules/teamUsers/interfaces/types';
 import { TeamUserRepositoryInterface } from 'src/modules/teamUsers/interfaces/repositories/team-user.repository.interface';
 import TeamUser from '../entities/team.user.schema';
 import { BadRequestException } from '@nestjs/common/exceptions/bad-request.exception';
+import { DeleteTeamUserUseCase } from 'src/modules/teamUsers/applications/delete-team-user.use-case';
+import { TEAM_USER_REPOSITORY } from 'src/modules/teamUsers/constants';
 
 const removeTeamUser: string = faker.datatype.uuid();
 const deletedTeamUser: TeamUser = TeamUserFactory.create({ _id: removeTeamUser });
@@ -19,16 +19,16 @@ describe('DeleteTeamUserUseCase', () => {
 	beforeAll(async () => {
 		const module: TestingModule = await Test.createTestingModule({
 			providers: [
-				deleteTeamUserUseCase,
+				DeleteTeamUserUseCase,
 				{
-					provide: TeamUsers.TYPES.repositories.TeamUserRepository,
+					provide: TEAM_USER_REPOSITORY,
 					useValue: createMock<TeamUserRepositoryInterface>()
 				}
 			]
 		}).compile();
 
-		deleteTeamUser = module.get<UseCase<string, TeamUser>>(deleteTeamUserUseCase.provide);
-		teamUserRepositoryMock = module.get(TeamUsers.TYPES.repositories.TeamUserRepository);
+		deleteTeamUser = module.get(DeleteTeamUserUseCase);
+		teamUserRepositoryMock = module.get(TEAM_USER_REPOSITORY);
 	});
 
 	beforeEach(() => {

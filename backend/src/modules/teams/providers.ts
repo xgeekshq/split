@@ -17,14 +17,18 @@ import {
 import { TeamRepository } from './repositories/team.repository';
 import GetTeamService from './services/get.team.service';
 
-export const createTeamUseCase = {
-	provide: CREATE_TEAM_USE_CASE,
-	useClass: CreateTeamUseCase
-};
+/* SERVICE */
 
 export const getTeamService = {
 	provide: GET_TEAM_SERVICE,
 	useClass: GetTeamService
+};
+
+/* USE CASE */
+
+export const createTeamUseCase = {
+	provide: CREATE_TEAM_USE_CASE,
+	useClass: CreateTeamUseCase
 };
 
 export const getTeamsUserIsNotMemberUseCase = {
@@ -51,6 +55,8 @@ export const deleteTeamUseCase = {
 	provide: DELETE_TEAM_USE_CASE,
 	useClass: DeleteTeamUseCase
 };
+
+/* REPOSITORY */
 
 export const teamRepository = {
 	provide: TEAM_REPOSITORY,

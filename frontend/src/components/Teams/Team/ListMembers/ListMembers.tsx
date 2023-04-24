@@ -3,6 +3,8 @@ import { useRouter } from 'next/router';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 
 import UserListDialog from '@/components/Primitives/Dialogs/UserListDialog/UserListDialog';
+import { createSuccessMessage } from '@/constants/toasts';
+import { TeamUserRoles } from '@/enums/teams/userRoles';
 import useTeam from '@/hooks/teams/useTeam';
 import useUpdateTeamUsers from '@/hooks/teams/useUpdateTeamUsers';
 import useCurrentSession from '@/hooks/useCurrentSession';
@@ -11,17 +13,15 @@ import { toastState } from '@/store/toast/atom/toast.atom';
 import { usersListState } from '@/store/user.atom';
 import { CreateTeamUser, TeamUserAddAndRemove } from '@/types/team/team.user';
 import { UserList } from '@/types/team/userList';
-import { TeamUserRoles } from '@/utils/enums/team.user.roles';
-import { ToastStateEnum } from '@/utils/enums/toast-types';
 import { verifyIfIsNewJoiner } from '@/utils/verifyIfIsNewJoiner';
 
-type Props = {
+export type ListMembersProps = {
   setIsOpen: Dispatch<SetStateAction<boolean>>;
   isOpen: boolean;
   isTeamPage?: boolean;
 };
 
-const ListMembers = ({ isOpen, setIsOpen, isTeamPage }: Props) => {
+const ListMembers = ({ isOpen, setIsOpen, isTeamPage }: ListMembersProps) => {
   const {
     query: { teamId },
   } = useRouter();
@@ -107,11 +107,7 @@ const ListMembers = ({ isOpen, setIsOpen, isTeamPage }: Props) => {
 
     updatedListWithAdded.unshift(updatedListWithAdded.splice(userAdminIndex, 1)[0]);
 
-    setToastState({
-      open: true,
-      content: 'Team member/s successfully updated',
-      type: ToastStateEnum.SUCCESS,
-    });
+    setToastState(createSuccessMessage('Team member/s successfully updated'));
 
     setCreateTeamMembers(updatedListWithAdded);
     setUsersList(checkedUserList);
