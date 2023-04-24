@@ -1,8 +1,7 @@
 import { BadRequestException, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { COLUMN_NOT_FOUND, UPDATE_FAILED } from 'src/libs/exceptions/messages';
 import { UpdateColumnServiceInterface } from '../interfaces/services/update.column.service.interface';
-import { UpdateColumnDto } from '../dto/update-column.dto';
-import { ColumnDeleteCardsDto } from 'src/modules/columns/dto/colum.deleteCards.dto';
+import { DeleteCardsFromColumnDto } from 'src/modules/columns/dto/delete-cards-from-column.dto';
 import SocketGateway from 'src/modules/socket/gateway/socket.gateway';
 import { ColumnRepositoryInterface } from '../repositories/column.repository.interface';
 import { GetBoardServiceInterface } from 'src/modules/boards/interfaces/services/get.board.service.interface';
@@ -23,19 +22,7 @@ export default class UpdateColumnService implements UpdateColumnServiceInterface
 		private readonly deleteVoteService: DeleteVoteServiceInterface
 	) {}
 
-	async updateColumn(boardId: string, column: UpdateColumnDto) {
-		const board = await this.columnRepository.updateColumn(boardId, column);
-
-		if (!board) {
-			throw new BadRequestException(UPDATE_FAILED);
-		}
-
-		if (column.socketId) this.socketService.sendUpdatedBoard(boardId, column.socketId);
-
-		return board;
-	}
-
-	async deleteCardsFromColumn(boardId: string, column: ColumnDeleteCardsDto) {
+	async deleteCardsFromColumn(boardId: string, column: DeleteCardsFromColumnDto) {
 		const board = await this.getBoardService.getBoardById(boardId);
 
 		if (!board) {

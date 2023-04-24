@@ -65,64 +65,6 @@ describe('UpdateColumnService', () => {
 		expect(columnService).toBeDefined();
 	});
 
-	describe('update column', () => {
-		it('should update a column and return an updated board', async () => {
-			const fakeBoards = BoardFactory.createMany(2);
-			const boardId = fakeBoards[1]._id;
-
-			const column = {
-				title: 'ola',
-				_id: fakeBoards[1].columns[0]._id,
-				cardText: fakeBoards[1].columns[0].cardText,
-				color: fakeBoards[1].columns[0].color,
-				isDefaultText: fakeBoards[1].columns[0].isDefaultText
-			};
-
-			const fakeResult = {
-				...fakeBoards[1],
-				columns: [
-					{ ...fakeBoards[1].columns[0], title: column.title },
-					{ ...fakeBoards[1].columns[1] }
-				]
-			};
-
-			const spyColumnRepository = jest
-				.spyOn(repositoryColumn, 'updateColumn')
-				.mockResolvedValue(
-					fakeResult as unknown as ReturnType<typeof repositoryColumn.updateColumn>
-				);
-
-			const result = await columnService.updateColumn(boardId, column);
-
-			expect(spyColumnRepository).toHaveBeenCalledWith(boardId, column);
-
-			expect(result).toEqual(fakeResult);
-		});
-
-		it('when not existing board, throw Bad Request Exception', async () => {
-			const boardId = '-1';
-
-			const column = {
-				title: faker.lorem.words(2),
-				_id: fakeBoards[1].columns[0]._id,
-				cardText: fakeBoards[1].columns[0].cardText,
-				color: fakeBoards[1].columns[0].color,
-				isDefaultText: fakeBoards[1].columns[0].isDefaultText
-			};
-
-			const spyColumnRepository = jest
-				.spyOn(repositoryColumn, 'updateColumn')
-				.mockResolvedValue(null);
-
-			expect(async () => {
-				return await columnService.updateColumn(boardId, column);
-			}).rejects.toThrow(BadRequestException);
-
-			expect(spyColumnRepository).toHaveBeenCalledWith(boardId, column);
-			expect(spyColumnRepository).toHaveBeenCalledTimes(1);
-		});
-	});
-
 	describe('delete cards from column', () => {
 		it('should return a updated board without cards on the column', async () => {
 			const fakeBoards = BoardFactory.createMany(2);
