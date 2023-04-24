@@ -2,6 +2,7 @@ import { useState } from 'react';
 
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Text from '@/components/Primitives/Text/Text';
+import { TIME_RANGE } from '@/constants/options/hours';
 import { TimeSlot } from '@/types/board/board';
 import DatePicker from '@components/Primitives/DatePicker/DatePicker';
 import Icon from '@components/Primitives/Icons/Icon/Icon';
@@ -13,7 +14,6 @@ import {
   SelectValue,
 } from '@components/Primitives/Inputs/Select/Select';
 import isEmpty from '@utils/isEmpty';
-import { TIME_RANGE } from '@utils/options/hours';
 
 export type SchedulingProps = {
   currentDate?: Date;
