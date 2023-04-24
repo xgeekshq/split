@@ -2,7 +2,6 @@ import { Inject, Injectable, Logger } from '@nestjs/common';
 import { DELETE_VOTE_FAILED, UPDATE_FAILED } from 'src/libs/exceptions/messages';
 import isEmpty from 'src/libs/utils/isEmpty';
 import { GetCardServiceInterface } from 'src/modules/cards/interfaces/services/get.card.service.interface';
-import * as Cards from 'src/modules/cards/interfaces/types';
 import { DeleteVoteServiceInterface } from '../interfaces/services/delete.vote.service.interface';
 import { TYPES } from '../interfaces/types';
 import { VoteRepositoryInterface } from '../interfaces/repositories/vote.repository.interface';
@@ -22,6 +21,7 @@ import {
 	GET_BOARD_USER_SERVICE,
 	UPDATE_BOARD_USER_SERVICE
 } from 'src/modules/boardUsers/constants';
+import { GET_CARD_SERVICE } from 'src/modules/cards/constants';
 
 @Injectable()
 export default class DeleteVoteService implements DeleteVoteServiceInterface {
@@ -32,7 +32,7 @@ export default class DeleteVoteService implements DeleteVoteServiceInterface {
 		private readonly getBoardUserService: GetBoardUserServiceInterface,
 		@Inject(UPDATE_BOARD_USER_SERVICE)
 		private readonly updateBoardUserService: UpdateBoardUserServiceInterface,
-		@Inject(Cards.TYPES.services.GetCardService)
+		@Inject(GET_CARD_SERVICE)
 		private readonly getCardService: GetCardServiceInterface,
 		@Inject(GET_BOARD_SERVICE)
 		private readonly getBoardService: GetBoardServiceInterface
