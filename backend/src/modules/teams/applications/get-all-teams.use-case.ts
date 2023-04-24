@@ -3,15 +3,15 @@ import { UseCase } from 'src/libs/interfaces/use-case.interface';
 import Team from '../entities/team.schema';
 import { TeamRepositoryInterface } from '../interfaces/repositories/team.repository.interface';
 import { TEAM_REPOSITORY } from '../constants';
-import * as Boards from 'src/modules/boards/interfaces/types';
 import GetBoardService from 'src/modules/boards/services/get.board.service';
+import { GET_BOARD_SERVICE } from 'src/modules/boards/constants';
 
 @Injectable()
 export class GetAllTeamsUseCase implements UseCase<void, Team[]> {
 	constructor(
 		@Inject(TEAM_REPOSITORY)
 		private readonly teamRepository: TeamRepositoryInterface,
-		@Inject(Boards.TYPES.services.GetBoardService)
+		@Inject(GET_BOARD_SERVICE)
 		private getBoardService: GetBoardService
 	) {}
 

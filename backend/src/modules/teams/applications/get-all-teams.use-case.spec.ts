@@ -6,8 +6,8 @@ import { TeamRepositoryInterface } from '../interfaces/repositories/team.reposit
 import { TEAM_REPOSITORY } from 'src/modules/teams/constants';
 import { UseCase } from 'src/libs/interfaces/use-case.interface';
 import { boards, teamsWithUsers } from './get-team-mocked-results';
-import * as Boards from 'src/modules/boards/interfaces/types';
 import { GetBoardServiceInterface } from 'src/modules/boards/interfaces/services/get.board.service.interface';
+import { GET_BOARD_SERVICE } from 'src/modules/boards/constants';
 
 describe('GetAllTeamsUseCase', () => {
 	let getAllTeams: UseCase<void, Team[]>;
@@ -23,7 +23,7 @@ describe('GetAllTeamsUseCase', () => {
 					useValue: createMock<TeamRepositoryInterface>()
 				},
 				{
-					provide: Boards.TYPES.services.GetBoardService,
+					provide: GET_BOARD_SERVICE,
 					useValue: createMock<GetBoardServiceInterface>()
 				}
 			]
@@ -31,7 +31,7 @@ describe('GetAllTeamsUseCase', () => {
 
 		getAllTeams = module.get<UseCase<void, Team[]>>(getAllTeamsUseCase.provide);
 		teamRepositoryMock = module.get(TEAM_REPOSITORY);
-		getBoardServiceMock = module.get(Boards.TYPES.services.GetBoardService);
+		getBoardServiceMock = module.get(GET_BOARD_SERVICE);
 	});
 
 	beforeEach(() => {

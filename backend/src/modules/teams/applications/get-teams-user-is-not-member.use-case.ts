@@ -3,15 +3,15 @@ import { UseCase } from 'src/libs/interfaces/use-case.interface';
 import Team from '../entities/team.schema';
 import { TeamRepositoryInterface } from '../interfaces/repositories/team.repository.interface';
 import { TEAM_REPOSITORY } from '../constants';
-import * as TeamUsers from 'src/modules/teamUsers/interfaces/types';
 import { GetTeamUserServiceInterface } from 'src/modules/teamUsers/interfaces/services/get.team.user.service.interface';
+import { GET_TEAM_USER_SERVICE } from 'src/modules/teamUsers/constants';
 
 @Injectable()
 export class GetTeamsUserIsNotMemberUseCase implements UseCase<string, Team[]> {
 	constructor(
 		@Inject(TEAM_REPOSITORY)
 		private readonly teamRepository: TeamRepositoryInterface,
-		@Inject(TeamUsers.TYPES.services.GetTeamUserService)
+		@Inject(GET_TEAM_USER_SERVICE)
 		private readonly getTeamUserService: GetTeamUserServiceInterface
 	) {}
 
