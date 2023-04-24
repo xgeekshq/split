@@ -11,10 +11,21 @@ export type SchedulingProps = {
 const BoardCreation = ({ schedulingData, setSchedulingData }: SchedulingProps) => {
   const [isBoardCreationActive, setBoardCreation] = useState(false);
 
+  const handleCreationActiveChange = (isActive: boolean) => {
+    setBoardCreation(isActive);
+    if (!isActive) {
+      setSchedulingData((prev: UpdateScheduleType) => ({
+        ...prev,
+        timeBeforeMeeting: undefined,
+        creationTimeUnit: undefined,
+      }));
+    }
+  };
+
   const handleTimeBeforeReunionChange = (timeBefore: string) => {
     setSchedulingData((prev: UpdateScheduleType) => ({
       ...prev,
-      timeBeforeReunion: timeBefore,
+      timeBeforeMeeting: timeBefore,
     }));
   };
   const handleCreationTimeUnitChange = (timeUnit: string) => {
@@ -27,10 +38,10 @@ const BoardCreation = ({ schedulingData, setSchedulingData }: SchedulingProps) =
     <SelectDateUnit
       description="Create board days/weeks before retro"
       isChecked={isBoardCreationActive}
-      setCheckboxState={setBoardCreation}
+      setCheckboxState={handleCreationActiveChange}
       setTimeRange={handleTimeBeforeReunionChange}
       setUnitTime={handleCreationTimeUnitChange}
-      timeRange={schedulingData.timeBeforeReunion}
+      timeRange={schedulingData.timeBeforeMeeting}
       timeUnit={schedulingData.creationTimeUnit}
       title="Board creation"
     />

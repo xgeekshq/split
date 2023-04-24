@@ -13,6 +13,20 @@ export type SchedulingProps = {
 const ReminderSchedule = ({ schedulingData, setSchedulingData }: SchedulingProps) => {
   const [isReminderActive, setReminderState] = useState<boolean>(false);
 
+  const handleReminderActiveChange = (isActive: boolean) => {
+    setReminderState(isActive);
+    if (!isActive) {
+      setSchedulingData((prev: UpdateScheduleType) => ({
+        ...prev,
+        reminderTimeRange: undefined,
+        reminderTimeUnit: undefined,
+        reminderViaEmail: undefined,
+        reminderPrefillingCards: undefined,
+        reminderViaSlack: undefined,
+      }));
+    }
+  };
+
   const handleReminderTimeRangeChange = (timeRange: string) => {
     setSchedulingData((prev: UpdateScheduleType) => ({
       ...prev,
@@ -30,20 +44,20 @@ const ReminderSchedule = ({ schedulingData, setSchedulingData }: SchedulingProps
   const handleSlackChange = (viaSlackActive: boolean) => {
     setSchedulingData((prev: UpdateScheduleType) => ({
       ...prev,
-      viaSlack: viaSlackActive,
+      reminderViaSlack: viaSlackActive,
     }));
   };
   const handleEmailChange = (viaEmailActive: boolean) => {
     setSchedulingData((prev: UpdateScheduleType) => ({
       ...prev,
-      viaEmail: viaEmailActive,
+      reminderViaEmail: viaEmailActive,
     }));
   };
 
   const handlePrefillingCardChange = (prefillingCards: boolean) => {
     setSchedulingData((prev: UpdateScheduleType) => ({
       ...prev,
-      prefillingCards: prefillingCards,
+      reminderPrefillingCards: prefillingCards,
     }));
   };
   return (
@@ -51,7 +65,7 @@ const ReminderSchedule = ({ schedulingData, setSchedulingData }: SchedulingProps
       <SelectDateUnit
         description="Send reminder minutes/days/weeks before"
         isChecked={isReminderActive}
-        setCheckboxState={setReminderState}
+        setCheckboxState={handleReminderActiveChange}
         setTimeRange={handleReminderTimeRangeChange}
         setUnitTime={handleReminderTimeUnitChange}
         timeRange={schedulingData.reminderTimeRange}
@@ -60,7 +74,7 @@ const ReminderSchedule = ({ schedulingData, setSchedulingData }: SchedulingProps
       />
       <Flex direction="column" style={{ marginLeft: '35px' }}>
         <Checkbox
-          checked={schedulingData.viaSlack}
+          checked={schedulingData.reminderViaSlack}
           disabled={!isReminderActive}
           handleChange={handleSlackChange}
           id="repeatCheckbox"
@@ -68,7 +82,7 @@ const ReminderSchedule = ({ schedulingData, setSchedulingData }: SchedulingProps
           size="md"
         />
         <Checkbox
-          checked={schedulingData.viaEmail}
+          checked={schedulingData.reminderViaEmail}
           disabled={!isReminderActive}
           handleChange={handleEmailChange}
           id="repeatCheckbox"
@@ -76,7 +90,7 @@ const ReminderSchedule = ({ schedulingData, setSchedulingData }: SchedulingProps
           size="md"
         />
         <Checkbox
-          checked={schedulingData.prefillingCards}
+          checked={schedulingData.reminderPrefillingCards}
           disabled={!isReminderActive}
           handleChange={handlePrefillingCardChange}
           id="repeatCheckbox"

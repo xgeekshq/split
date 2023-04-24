@@ -119,17 +119,26 @@ const BoardSettings = ({
 
   // State used to change values
   const initialSchedulingData: UpdateScheduleType = {
-    scheduleDate: undefined,
-    startTime: undefined,
-    endTime: undefined,
-    repeatUntil: undefined,
-    repeatTimeRange: undefined,
-    repeatTimeUnit: undefined,
+    firstMeetingDay: undefined,
+    startMeetingTime: undefined,
+    endMeetingTime: undefined,
+    //Repeat
+    repeatMeetingDay: undefined,
+    repeatMeetingTimeRange: undefined,
+    repeatMeetingTimeUnit: undefined,
+
+    repeatMeetingUntil: undefined,
+    repeatMeetingNWeek: undefined,
+    repeatMeetingWeekDay: undefined,
+    //Reminder
     reminderTimeRange: undefined,
     reminderTimeUnit: undefined,
-    viaSlack: undefined,
-    viaEmail: undefined,
-    prefillingCards: undefined,
+    reminderViaSlack: undefined,
+    reminderViaEmail: undefined,
+    reminderPrefillingCards: undefined,
+    //Creation
+    timeBeforeMeeting: undefined,
+    creationTimeUnit: undefined,
   };
 
   //state used for scheduling

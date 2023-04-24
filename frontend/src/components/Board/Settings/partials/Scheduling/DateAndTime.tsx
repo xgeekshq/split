@@ -13,7 +13,7 @@ import {
   SelectValue,
 } from '@components/Primitives/Inputs/Select/Select';
 import isEmpty from '@utils/isEmpty';
-import { TimeRange } from '@utils/options/time';
+import { TIME_RANGE } from '@utils/options/hours';
 
 export type SchedulingProps = {
   currentDate?: Date;
@@ -37,7 +37,7 @@ const DateAndTimePicker = ({ currentDate, setDate }: SchedulingProps) => {
   }
 
   function handleCustomRange(startTime: string) {
-    TimeRange.map((time) => {
+    TIME_RANGE.map((time) => {
       if (Number(time.value) > Number(startTime)) customRange.push(time);
     });
   }
@@ -62,7 +62,7 @@ const DateAndTimePicker = ({ currentDate, setDate }: SchedulingProps) => {
               <Icon name="arrow-down" />
             </SelectIcon>
           </SelectTrigger>
-          <SelectContent options={TimeRange} />
+          <SelectContent options={TIME_RANGE} />
         </Select>
         <Select
           css={{ width: '50%', height: '$60' }}
@@ -79,7 +79,7 @@ const DateAndTimePicker = ({ currentDate, setDate }: SchedulingProps) => {
               <Icon name="arrow-down" />
             </SelectIcon>
           </SelectTrigger>
-          <SelectContent options={isEmpty(customRange) ? TimeRange : customRange} />
+          <SelectContent options={isEmpty(customRange) ? TIME_RANGE : customRange} />
         </Select>
       </Flex>
     </>

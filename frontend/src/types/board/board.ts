@@ -89,19 +89,27 @@ export type UpdateBoardType = {
 };
 
 export type UpdateScheduleType = {
-  scheduleDate?: Date;
-  startTime?: string;
-  endTime?: string;
-  repeatUntil?: Date;
-  repeatTimeRange?: string;
-  repeatTimeUnit?: string;
+  firstMeetingDay?: Date;
+  startMeetingTime?: string;
+  endMeetingTime?: string;
+  //Repeat
+  repeatMeetingDay?: string;
+  repeatMeetingTimeRange?: string;
+  repeatMeetingTimeUnit?: string;
+
+  repeatMeetingUntil?: Date;
+  repeatMeetingNWeek?: string;
+  repeatMeetingWeekDay?: string;
+  //Reminder
   reminderTimeRange?: string;
   reminderTimeUnit?: string;
-  viaSlack?: boolean;
-  viaEmail?: boolean;
-  prefillingCards?: boolean;
+  reminderViaSlack?: boolean;
+  reminderViaEmail?: boolean;
+  reminderPrefillingCards?: boolean;
+
+  //Creation
+  timeBeforeMeeting?: string;
   creationTimeUnit?: string;
-  timeBeforeReunion?: string;
 };
 
 export type TimeSlot = {

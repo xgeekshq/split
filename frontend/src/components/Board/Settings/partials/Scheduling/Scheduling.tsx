@@ -10,10 +10,10 @@ import {
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Text from '@/components/Primitives/Text/Text';
 import { UpdateScheduleType } from '@/types/board/board';
-import { BoardCreation } from '@components/Board/Settings/partials/Scheduling/BoardCreation';
+import { BoardCreation } from '@components/Board/Settings/partials/Scheduling/Creation/BoardCreation';
 import { DateAndTimePicker } from '@components/Board/Settings/partials/Scheduling/DateAndTime';
-import { ReminderSchedule } from '@components/Board/Settings/partials/Scheduling/Reminder';
-import { RepeatSchedule } from '@components/Board/Settings/partials/Scheduling/Repeat';
+import { ReminderSchedule } from '@components/Board/Settings/partials/Scheduling/Reminder/Reminder';
+import { RepeatSchedule } from '@components/Board/Settings/partials/Scheduling/Repeat/Repeat';
 import Separator from '@components/Primitives/Separator/Separator';
 
 export type SchedulingProps = {
@@ -25,7 +25,7 @@ const SchedulingSettings = ({ schedulingData, setSchedulingData }: SchedulingPro
   const handleScheduleDateChange = (scheduleDate: Date) => {
     setSchedulingData((prev: UpdateScheduleType) => ({
       ...prev,
-      scheduleDate: scheduleDate,
+      firstMeetingDay: scheduleDate,
     }));
   };
 
@@ -40,7 +40,7 @@ const SchedulingSettings = ({ schedulingData, setSchedulingData }: SchedulingPro
       <StyledAccordionContent>
         <Flex direction="column" gap={16}>
           <DateAndTimePicker
-            currentDate={schedulingData.scheduleDate}
+            currentDate={schedulingData.firstMeetingDay}
             setDate={handleScheduleDateChange}
           ></DateAndTimePicker>
           <Separator />

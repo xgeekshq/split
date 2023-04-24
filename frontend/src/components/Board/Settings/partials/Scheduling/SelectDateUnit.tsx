@@ -43,15 +43,7 @@ const SelectDateUnit = ({
 
   return (
     <>
-      <Text fontWeight="medium">{title}</Text>
-      <Text>{description}</Text>
-      <Flex
-        direction="row"
-        gap={16}
-        style={{
-          maxHeight: '100%',
-        }}
-      >
+      <Flex direction="row" gap={16}>
         <Checkbox
           checked={isChecked}
           id="repeatCheckbox"
@@ -60,9 +52,17 @@ const SelectDateUnit = ({
             setCheckboxState(!isChecked);
           }}
         />
+        <Text fontWeight="medium">{title}</Text>
+      </Flex>
 
-        {/* <DatePicker currentDate={currentDate} disabled={!isChecked} setDate={setDate} /> */}
-
+      <Text>{description}</Text>
+      <Flex
+        direction="row"
+        gap={16}
+        style={{
+          maxHeight: '100%',
+        }}
+      >
         <Select
           css={{ width: '50%', height: '$60' }}
           disabled={!isChecked}

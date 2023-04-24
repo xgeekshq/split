@@ -5,15 +5,11 @@ import { styled } from '@stitches/react';
 import Icon from '@/components/Primitives/Icons/Icon/Icon';
 import Text from '@/components/Primitives/Text/Text';
 import { UpdateScheduleType } from '@/types/board/board';
+import { RepeatDay } from '@components/Board/Settings/partials/Scheduling/Repeat/RepeatDay';
 import { SelectDateUnit } from '@components/Board/Settings/partials/Scheduling/SelectDateUnit';
 import Calendar from '@components/Primitives/Calendar/Calendar';
-import {
-  Label,
-  RadioGroup,
-  RadioGroupIndicator,
-  RadioGroupItem,
-} from '@components/Primitives/Inputs/RadioGroup/RadioGroup';
 import Flex from '@components/Primitives/Layout/Flex/Flex';
+import { MONTHS } from '@utils/options/months';
 
 export type SchedulingProps = {
   schedulingData: UpdateScheduleType;
@@ -29,86 +25,88 @@ const StyledDropDownTrigger = styled(DropdownMenu.Trigger, {
 const RepeatSchedule = ({ schedulingData, setSchedulingData }: SchedulingProps) => {
   const [isRepeatActive, setRepeatState] = useState<boolean>(false);
 
-  const showRadioGroup = schedulingData.scheduleDate && schedulingData.repeatTimeUnit === 'Month';
+  const showRadioGroup =
+    schedulingData.firstMeetingDay && schedulingData.repeatMeetingTimeUnit === 'Month';
 
-  //State handlers
+  const handleRepeatActiveChange = (isActive: boolean) => {
+    setRepeatState(isActive);
+    if (!isActive) {
+      setSchedulingData((prev: UpdateScheduleType) => ({
+        ...prev,
+        repeatMeetingTimeRange: undefined,
+        repeatMeetingTimeUnit: undefined,
+        repeatMeetingUntil: undefined,
+      }));
+    }
+  };
+
   const handleRepeatTimeUnitChange = (timeUnit: string) => {
     setSchedulingData((prev: UpdateScheduleType) => ({
       ...prev,
-      repeatTimeUnit: timeUnit,
+      repeatMeetingTimeUnit: timeUnit,
     }));
   };
 
   const handleRepeatUnitChange = (date: Date) => {
     setSchedulingData((prev: UpdateScheduleType) => ({
       ...prev,
-      repeatUntil: date,
+      repeatMeetingUntil: date,
     }));
   };
   const handleRemoveRepeatUntil = () => {
     setSchedulingData((prev: UpdateScheduleType) => ({
       ...prev,
-      repeatUntil: undefined,
+      repeatMeetingUntil: undefined,
     }));
   };
 
   const handleRepeatTimeRangeChange = (timeRange: string) => {
     setSchedulingData((prev: UpdateScheduleType) => ({
       ...prev,
-      repeatTimeRange: timeRange,
+      repeatMeetingTimeRange: timeRange,
     }));
   };
+
+  const repeatText =
+    'Occurs every ' +
+    schedulingData.repeatMeetingTimeRange +
+    ' ' +
+    (schedulingData.repeatMeetingTimeUnit === 'Day'
+      ? ' days'
+      : schedulingData.repeatMeetingTimeUnit === 'Week'
+      ? ' weeks'
+      : ' months') +
+    (schedulingData.repeatMeetingDay ? ' on day ' + schedulingData.repeatMeetingDay : '') +
+    (schedulingData.repeatMeetingWeekDay && schedulingData.repeatMeetingNWeek
+      ? ' on the ' + schedulingData.repeatMeetingNWeek + ' ' + schedulingData.repeatMeetingWeekDay
+      : '') +
+    ' until:';
 
   return (
     <>
       <SelectDateUnit
         isChecked={isRepeatActive}
-        setCheckboxState={setRepeatState}
+        setCheckboxState={handleRepeatActiveChange}
         setTimeRange={handleRepeatTimeRangeChange}
         setUnitTime={handleRepeatTimeUnitChange}
-        timeRange={schedulingData.repeatTimeRange}
-        timeUnit={schedulingData.repeatTimeUnit}
+        timeRange={schedulingData.repeatMeetingTimeRange}
+        timeUnit={schedulingData.repeatMeetingTimeUnit}
         title="Repeat"
         description="Repeat minutes/days/weeks 
 "
       />
 
-      {schedulingData.repeatTimeRange && (
+      <RepeatDay
+        disableCheckboxes={isRepeatActive}
+        schedulingData={schedulingData}
+        setSchedulingData={setSchedulingData}
+      ></RepeatDay>
+
+      {schedulingData.repeatMeetingTimeRange && schedulingData.repeatMeetingTimeUnit && (
         <Flex align="start" direction="column">
-          {showRadioGroup && schedulingData?.scheduleDate && (
-            <RadioGroup
-              defaultValue="default"
-              direction="column"
-              style={{ paddingLeft: '23px', paddingBottom: '15px' }}
-            >
-              <Flex align="center">
-                <RadioGroupItem id="r1" value="default">
-                  <RadioGroupIndicator />
-                </RadioGroupItem>
-                <Label color="primary500" fontWeight="regular" htmlFor="r1" size="sm">
-                  WIP
-                </Label>
-              </Flex>
-              <Flex align="center">
-                <RadioGroupItem id="r3" value="compact">
-                  <RadioGroupIndicator />
-                </RadioGroupItem>
-                <Label color="primary500" fontWeight="regular" htmlFor="r3" size="sm">
-                  WIP
-                </Label>
-              </Flex>
-            </RadioGroup>
-          )}
-          <Text color="primary500">
-            Occurs every {schedulingData.repeatTimeRange}{' '}
-            {schedulingData.repeatTimeUnit === 'Day'
-              ? 'days'
-              : schedulingData.repeatTimeUnit === 'Week'
-              ? 'weeks'
-              : 'months'}{' '}
-            until:
-          </Text>
-          {!schedulingData.repeatUntil && (
+          {showRadioGroup && schedulingData?.firstMeetingDay && <></>}
+          <Text color="primary500">{repeatText}</Text>
+          {!schedulingData.repeatMeetingUntil && (
             <DropdownMenu.Root>
               <StyledDropDownTrigger disabled={false}>
                 <Text link color="infoBase" style={{ width: 'fit-content' }}>
@@ -118,36 +116,21 @@ const RepeatSchedule = ({ schedulingData, setSchedulingData }: SchedulingProps) 
               <DropdownMenu.Portal>
                 <DropdownMenu.Content align="start" style={{ zIndex: '9999' }}>
                   <Calendar
-                    currentDate={schedulingData.repeatUntil}
+                    currentDate={schedulingData.repeatMeetingUntil}
                     setDate={handleRepeatUnitChange}
                   />
                 </DropdownMenu.Content>
               </DropdownMenu.Portal>
             </DropdownMenu.Root>
           )}
-          {schedulingData.repeatUntil && (
+          {schedulingData.repeatMeetingUntil && (
             <Flex direction="row" gap={20} justify="between">
               <DropdownMenu.Root>
                 <StyledDropDownTrigger disabled={false}>
                   <Text link color="primary500" style={{ width: 'fit-content' }}>
-                    {
-                      [
-                        'Jan',
-                        'Feb',
-                        'Mar',
-                        'Apr',
-                        'May',
-                        'June',
-                        'July',
-                        'Aug',
-                        'Sep',
-                        'Oct',
-                        'Nov',
-                        'Dec',
-                      ][schedulingData.repeatUntil.getMonth()]
-                    }{' '}
-                    {schedulingData.repeatUntil.getDate()},{' '}
-                    {schedulingData.repeatUntil.getFullYear()}
+                    {MONTHS[schedulingData.repeatMeetingUntil.getMonth()]}{' '}
+                    {schedulingData.repeatMeetingUntil.getDate()},{' '}
+                    {schedulingData.repeatMeetingUntil.getFullYear()}
                     <Icon
                       css={{ color: '$primary400', paddingBottom: '$2', paddingLeft: '$2' }}
                       name="arrow-down"
@@ -158,7 +141,7 @@ const RepeatSchedule = ({ schedulingData, setSchedulingData }: SchedulingProps) 
                 <DropdownMenu.Portal>
                   <DropdownMenu.Content align="start" style={{ zIndex: '9999' }}>
                     <Calendar
-                      currentDate={schedulingData.repeatUntil}
+                      currentDate={schedulingData.repeatMeetingUntil}
                       setDate={handleRepeatUnitChange}
                     />
                   </DropdownMenu.Content>

@@ -1,4 +1,4 @@
-export const TimeRange = [
+export const TIME_RANGE = [
   {
     label: '00:00',
     value: '0000',
