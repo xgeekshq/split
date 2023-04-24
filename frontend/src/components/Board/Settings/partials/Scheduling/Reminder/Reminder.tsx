@@ -61,7 +61,7 @@ const ReminderSchedule = ({ schedulingData, setSchedulingData }: SchedulingProps
     }));
   };
   return (
-    <>
+    <Flex direction="column" gap={16}>
       <SelectDateUnit
         description="Send reminder minutes/days/weeks before"
         isChecked={isReminderActive}
@@ -98,7 +98,7 @@ const ReminderSchedule = ({ schedulingData, setSchedulingData }: SchedulingProps
           size="md"
         />
       </Flex>
-    </>
+    </Flex>
   );
 };
 

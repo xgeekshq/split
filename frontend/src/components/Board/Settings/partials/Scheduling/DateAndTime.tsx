@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Text from '@/components/Primitives/Text/Text';
-import { TIME_RANGE } from '@/constants/options/hours';
+import { TIME_RANGE } from '@/constants/schedulingOptions/hours';
 import { TimeSlot } from '@/types/board/board';
 import DatePicker from '@components/Primitives/DatePicker/DatePicker';
 import Icon from '@components/Primitives/Icons/Icon/Icon';
