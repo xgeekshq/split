@@ -1,6 +1,7 @@
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 
 import Text from '@/components/Primitives/Text/Text';
+import { WEEK_DAYS_FULL_NAME } from '@/constants/schedulingOptions/weeks';
 import { UpdateScheduleType } from '@/types/board/board';
 import Icon from '@components/Primitives/Icons/Icon/Icon';
 import Checkbox from '@components/Primitives/Inputs/Checkboxes/Checkbox/Checkbox';
@@ -225,38 +226,7 @@ const RepeatDay = ({ disableCheckboxes, schedulingData, setSchedulingData }: Rep
               <Icon name="arrow-down" />
             </SelectIcon>
           </SelectTrigger>
-          <SelectContent
-            options={[
-              {
-                label: 'Monday',
-                value: 'Monday',
-              },
-              {
-                label: 'Tuesday',
-                value: 'Tuesday',
-              },
-              {
-                label: 'Wednesday',
-                value: 'Wednesday',
-              },
-              {
-                label: 'Thursday',
-                value: 'Thursday',
-              },
-              {
-                label: 'Friday',
-                value: 'Friday',
-              },
-              {
-                label: 'Saturday',
-                value: 'Saturday',
-              },
-              {
-                label: 'Sunday',
-                value: 'Sunday',
-              },
-            ]}
-          />
+          <SelectContent options={WEEK_DAYS_FULL_NAME} />
         </Select>
       </Flex>
     </>
