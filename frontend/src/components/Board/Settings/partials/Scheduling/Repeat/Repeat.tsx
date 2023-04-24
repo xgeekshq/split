@@ -4,7 +4,7 @@ import { styled } from '@stitches/react';
 
 import Icon from '@/components/Primitives/Icons/Icon/Icon';
 import Text from '@/components/Primitives/Text/Text';
-import { MONTHS } from '@/constants/options/months';
+import { MONTHS } from '@/constants/schedulingOptions/months';
 import { UpdateScheduleType } from '@/types/board/board';
 import { RepeatDay } from '@components/Board/Settings/partials/Scheduling/Repeat/RepeatDay';
 import { SelectDateUnit } from '@components/Board/Settings/partials/Scheduling/SelectDateUnit';

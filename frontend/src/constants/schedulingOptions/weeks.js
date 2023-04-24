@@ -1,4 +1,4 @@
-export const WEEKS = [
+export const WEEK_DAYS_FULL_NAME = [
   {
     label: 'Monday',
     value: 'Monday',
@@ -28,3 +28,5 @@ export const WEEKS = [
     value: 'Sunday',
   },
 ];
+
+export const WEEK_DAYS_ABREVIATED = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
