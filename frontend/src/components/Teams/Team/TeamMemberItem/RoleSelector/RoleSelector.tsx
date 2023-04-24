@@ -4,7 +4,7 @@ import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import TeamRolePopover from '@/components/Primitives/Popovers/TeamRolePopover/TeamRolePopover';
 import Separator from '@/components/Primitives/Separator/Separator';
 import Text from '@/components/Primitives/Text/Text';
-import { TeamUserRoles } from '@/utils/enums/team.user.roles';
+import { TeamUserRoles } from '@/enums/teams/userRoles';
 import { getFormattedTeamUserRole } from '@/utils/getFormattedTeamUserRole';
 
 export type RoleSelectorProps = {

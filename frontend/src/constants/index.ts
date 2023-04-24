@@ -4,7 +4,7 @@ import { inSeconds } from '@/types/utils';
 
 const { publicRuntimeConfig, serverRuntimeConfig } = getConfig();
 
-export const UNDEFINED = 'UNDEFINED';
+export const UNDEFINED = ' UNDEFINED';
 export const ERROR_LOADING_DATA = 'Error loading data';
 
 export const JWT_EXPIRATION_TIME = Number(publicRuntimeConfig.NEXT_PUBLIC_EXPIRATION_TIME);

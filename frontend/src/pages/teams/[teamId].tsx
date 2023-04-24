@@ -15,12 +15,12 @@ import TeamHeader from '@/components/Teams/Team/Header/Header';
 import TeamMembersList from '@/components/Teams/Team/TeamMembersList';
 import { TEAMS_KEY, USERS_KEY } from '@/constants/react-query/keys';
 import { ROUTES } from '@/constants/routes';
+import { TeamUserRoles } from '@/enums/teams/userRoles';
 import useTeam from '@/hooks/teams/useTeam';
 import useCurrentSession from '@/hooks/useCurrentSession';
 import useUsers from '@/hooks/users/useUsers';
 import { usersListState } from '@/store/user.atom';
 import { UserList } from '@/types/team/userList';
-import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 
 const Team = () => {
   // Session Details

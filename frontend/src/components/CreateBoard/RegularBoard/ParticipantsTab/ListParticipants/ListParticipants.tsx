@@ -2,13 +2,13 @@ import React, { Dispatch, SetStateAction } from 'react';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 
 import UserListDialog from '@/components/Primitives/Dialogs/UserListDialog/UserListDialog';
+import { createSuccessMessage } from '@/constants/toasts';
+import { BoardUserRoles } from '@/enums/boards/userRoles';
 import useCurrentSession from '@/hooks/useCurrentSession';
 import { createBoardDataState } from '@/store/createBoard/atoms/create-board.atom';
 import { toastState } from '@/store/toast/atom/toast.atom';
 import { usersListState } from '@/store/user.atom';
 import { UserList } from '@/types/team/userList';
-import { BoardUserRoles } from '@/utils/enums/board.user.roles';
-import { ToastStateEnum } from '@/utils/enums/toast-types';
 
 type ListParticipantsProps = {
   setIsOpen: Dispatch<SetStateAction<boolean>>;
@@ -65,11 +65,7 @@ const ListParticipants = ({ isOpen, setIsOpen }: ListParticipantsProps) => {
       board: { ...prev.board, team: null },
     }));
 
-    setToastState({
-      open: true,
-      content: 'Board participant/s successfully updated',
-      type: ToastStateEnum.SUCCESS,
-    });
+    setToastState(createSuccessMessage('Board participant/s successfully updated'));
 
     setIsOpen(false);
   };

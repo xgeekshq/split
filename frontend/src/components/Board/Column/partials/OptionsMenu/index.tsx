@@ -14,12 +14,12 @@ import {
 } from '@/components/Primitives/Popovers/Popover/Popover';
 import Separator from '@/components/Primitives/Separator/Separator';
 import Text from '@/components/Primitives/Text/Text';
+import { BoardUserRoles } from '@/enums/boards/userRoles';
 import useBoard from '@/hooks/useBoard';
 import useColumn from '@/hooks/useColumn';
 import { boardInfoState } from '@/store/board/atoms/board.atom';
 import { UpdateBoardType } from '@/types/board/board';
 import CardType from '@/types/card/card';
-import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 
 type OptionsMenuProps = {
   disabled?: boolean;

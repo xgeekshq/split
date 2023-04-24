@@ -8,9 +8,9 @@ import Icon from '@/components/Primitives/Icons/Icon/Icon';
 import Button from '@/components/Primitives/Inputs/Button/Button';
 import Text from '@/components/Primitives/Text/Text';
 import { ROUTES } from '@/constants/routes';
+import { ToastStateEnum } from '@/enums/toasts/toast-types';
 import { toastState } from '@/store/toast/atom/toast.atom';
 import { keyframes, styled } from '@/styles/stitches/stitches.config';
-import { ToastStateEnum } from '@/utils/enums/toast-types';
 
 const hide = keyframes({
   '0%': { opacity: 1 },

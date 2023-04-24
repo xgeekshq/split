@@ -6,9 +6,9 @@ import Icon from '@/components/Primitives/Icons/Icon/Icon';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Separator from '@/components/Primitives/Separator/Separator';
 import Text from '@/components/Primitives/Text/Text';
+import { BoardPhases } from '@/enums/boards/phases';
 import { CardItemType } from '@/types/card/cardItem';
 import CommentType from '@/types/comment/comment';
-import { BoardPhases } from '@/utils/enums/board.phases';
 
 interface CommentsListProps {
   comments: CommentType[];

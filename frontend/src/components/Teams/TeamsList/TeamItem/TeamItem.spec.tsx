@@ -4,7 +4,7 @@ import { UseMutationResult } from '@tanstack/react-query';
 import { fireEvent, waitFor } from '@testing-library/dom';
 
 import TeamItem, { TeamItemProps } from '@/components/Teams/TeamsList/TeamItem/TeamItem';
-import { TeamUserRoles } from '@/utils/enums/team.user.roles';
+import { TeamUserRoles } from '@/enums/teams/userRoles';
 import { TeamFactory } from '@/utils/factories/team';
 import { TeamUserFactory } from '@/utils/factories/user';
 import { libraryMocks } from '@/utils/testing/mocks';

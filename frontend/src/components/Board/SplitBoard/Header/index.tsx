@@ -26,14 +26,14 @@ import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Separator from '@/components/Primitives/Separator/Separator';
 import Text from '@/components/Primitives/Text/Text';
 import Tooltip from '@/components/Primitives/Tooltips/Tooltip/Tooltip';
+import { BoardPhases } from '@/enums/boards/phases';
+import { TeamUserRoles } from '@/enums/teams/userRoles';
 import { boardInfoState } from '@/store/board/atoms/board.atom';
 import BoardType from '@/types/board/board';
 import { BoardUserNoPopulated } from '@/types/board/board.user';
 import { BreadcrumbType } from '@/types/board/Breadcrumb';
 import { TeamUser } from '@/types/team/team.user';
 import { User } from '@/types/user/user';
-import { BoardPhases } from '@/utils/enums/board.phases';
-import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 import isEmpty from '@/utils/isEmpty';
 
 const BoardHeader = () => {

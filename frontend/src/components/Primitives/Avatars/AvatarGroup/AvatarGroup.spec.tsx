@@ -1,9 +1,9 @@
 import AvatarGroup, {
   AvatarGroupProps,
 } from '@/components/Primitives/Avatars/AvatarGroup/AvatarGroup';
+import { BoardUserRoles } from '@/enums/boards/userRoles';
+import { TeamUserRoles } from '@/enums/teams/userRoles';
 import { User } from '@/types/user/user';
-import { BoardUserRoles } from '@/utils/enums/board.user.roles';
-import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 import { AvatarGroupUsersFactory } from '@/utils/factories/user';
 import { getInitials } from '@/utils/getInitials';
 import { createMockRouter } from '@/utils/testing/mocks';
