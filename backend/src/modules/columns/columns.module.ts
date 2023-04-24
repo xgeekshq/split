@@ -10,7 +10,6 @@ import TeamsModule from '../teams/teams.module';
 import {
 	columnRepository,
 	deleteCardsFromColumnUseCase,
-	updateColumnService,
 	updateColumnUseCase
 } from './columns.providers';
 import ColumnsController from './controller/columns.controller';
@@ -31,11 +30,6 @@ import { VotesModule } from '../votes/votes.module';
 		forwardRef(() => VotesModule)
 	],
 	controllers: [ColumnsController],
-	providers: [
-		updateColumnService,
-		columnRepository,
-		updateColumnUseCase,
-		deleteCardsFromColumnUseCase
-	]
+	providers: [columnRepository, updateColumnUseCase, deleteCardsFromColumnUseCase]
 })
 export class ColumnsModule {}

@@ -8,16 +8,19 @@ import { UpdateColumnUseCaseDto } from 'src/modules/columns/dto/useCase/update-c
 import Board from 'src/modules/boards/entities/board.schema';
 import { UpdateColumnUseCase } from 'src/modules/columns/applications/update-column.use-case';
 import { ColumnRepositoryInterface } from 'src/modules/columns/repositories/column.repository.interface';
+import { UpdateColumnDto } from 'src/modules/columns/dto/update-column.dto';
+import faker from '@faker-js/faker';
 
 const board = BoardFactory.create();
 const boardId = board._id;
 
-const column = {
+const column: UpdateColumnDto = {
 	title: 'ola',
 	_id: board.columns[0]._id,
 	cardText: board.columns[0].cardText,
 	color: board.columns[0].color,
-	isDefaultText: board.columns[0].isDefaultText
+	isDefaultText: board.columns[0].isDefaultText,
+	socketId: faker.datatype.uuid()
 };
 
 const updateResult = {

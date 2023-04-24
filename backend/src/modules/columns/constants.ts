@@ -1,6 +1,3 @@
-/* SERVICE */
-export const UPDATE_COLUMN_SERVICE = 'UpdateColumnService';
-
 /* USE CASES */
 
 export const UPDATE_COLUMN_USE_CASE = 'UpdateColumnUseCase';
