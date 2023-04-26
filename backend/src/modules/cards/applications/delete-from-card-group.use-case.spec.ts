@@ -1,7 +1,7 @@
 import { DeepMocked, createMock } from '@golevelup/ts-jest';
 import { Test, TestingModule } from '@nestjs/testing';
 import { CardRepositoryInterface } from '../repository/card.repository.interface';
-import { TYPES } from '../interfaces/types';
+import { CARD_REPOSITORY, GET_CARD_SERVICE } from '../constants';
 import { GetCardServiceInterface } from '../interfaces/services/get.card.service.interface';
 import { UpdateBoardUserServiceInterface } from 'src/modules/boardUsers/interfaces/services/update.board.user.service.interface';
 import faker from '@faker-js/faker';
@@ -60,7 +60,7 @@ describe('DeleteFromCardGroupUseCase', () => {
 			providers: [
 				DeleteFromCardGroupUseCase,
 				{
-					provide: TYPES.services.GetCardService,
+					provide: GET_CARD_SERVICE,
 					useValue: createMock<GetCardServiceInterface>()
 				},
 				{
@@ -68,15 +68,15 @@ describe('DeleteFromCardGroupUseCase', () => {
 					useValue: createMock<GetCardServiceInterface>()
 				},
 				{
-					provide: TYPES.repository.CardRepository,
+					provide: CARD_REPOSITORY,
 					useValue: createMock<UpdateBoardUserServiceInterface>()
 				}
 			]
 		}).compile();
-		useCase = module.get<UseCase<DeleteFromCardGroupUseCaseDto, void>>(DeleteFromCardGroupUseCase);
-		cardRepositoryMock = module.get(TYPES.repository.CardRepository);
+		useCase = module.get(DeleteFromCardGroupUseCase);
+		cardRepositoryMock = module.get(CARD_REPOSITORY);
 		updateBoardUserServiceMock = module.get(UPDATE_BOARD_USER_SERVICE);
-		getCardServiceMock = module.get(TYPES.services.GetCardService);
+		getCardServiceMock = module.get(GET_CARD_SERVICE);
 
 		updateBoardUserServiceMock.updateManyUserVotes.mockResolvedValue(
 			bulkWriteResult as unknown as BulkWriteResult
