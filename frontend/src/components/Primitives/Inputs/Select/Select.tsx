@@ -135,7 +135,7 @@ export const Select = ({ children, disabled, hasError = false, css, ...props }: 
       css={{
         ...css,
         borderRadius: '$4',
-        backgroundColor: disabled ? 'transparent' : 'white',
+        backgroundColor: disabled ? '$primary50' : 'white',
         border: hasError ? '1px solid $dangerBase' : '1px solid $primary200',
       }}
     >

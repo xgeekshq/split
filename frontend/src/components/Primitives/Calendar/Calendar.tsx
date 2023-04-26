@@ -1,6 +1,7 @@
 import StyledCalendar from '@/components/Primitives/Calendar/styles';
 import Icon from '@/components/Primitives/Icons/Icon/Icon';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
+import { WEEK_DAYS_ABREVIATED } from '@/constants/schedulingOptions/weeks';
 
 export type CalendarProps = {
   minDate?: Date;
@@ -22,7 +23,7 @@ const Calendar = ({ minDate, maxDate, tileContent, currentDate, setDate }: Calen
       tileContent={tileContent}
       value={currentDate}
       formatShortWeekday={(locale: string | undefined, date: Date) =>
-        ['Su', 'Mo', 'Th', 'We', 'Th', 'Fr', 'Sa'][date.getDay()]
+        WEEK_DAYS_ABREVIATED[date.getDay()]
       }
     />
   </Flex>
