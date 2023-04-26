@@ -48,4 +48,4 @@ const BoardCreation = ({ schedulingData, setSchedulingData }: SchedulingProps) =
   );
 };
 
-export { BoardCreation };
+export default BoardCreation;

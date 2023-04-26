@@ -10,7 +10,7 @@ import {
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Text from '@/components/Primitives/Text/Text';
 import { UpdateScheduleType } from '@/types/board/board';
-import { BoardCreation } from '@components/Board/Settings/partials/Scheduling/Creation/BoardCreation';
+import BoardCreation from '@components/Board/Settings/partials/Scheduling/Creation/BoardCreation';
 import DateAndTimePicker from '@components/Board/Settings/partials/Scheduling/DateAndTime';
 import ReminderSchedule from '@components/Board/Settings/partials/Scheduling/Reminder/Reminder';
 import RepeatSchedule from '@components/Board/Settings/partials/Scheduling/Repeat/Repeat';
