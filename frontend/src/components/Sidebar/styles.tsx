@@ -13,7 +13,7 @@ const StyledSidebar = styled('aside', {
 
   variants: {
     collapsed: {
-      true: { width: '100%', height: '$82' },
+      true: { width: '100%', height: 'auto' },
       false: { '@md': { width: '$256', height: '100vh' } },
     },
   },
