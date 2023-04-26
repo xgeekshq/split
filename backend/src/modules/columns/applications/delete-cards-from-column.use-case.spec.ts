@@ -2,18 +2,19 @@ import { GetBoardServiceInterface } from 'src/modules/boards/interfaces/services
 import { DeepMocked, createMock } from '@golevelup/ts-jest';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import faker from '@faker-js/faker';
-import { BadRequestException, NotFoundException } from '@nestjs/common';
+import { NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { BoardFactory } from 'src/libs/test-utils/mocks/factories/board-factory.mock';
 import { DeleteVoteServiceInterface } from 'src/modules/votes/interfaces/services/delete.vote.service.interface';
 import { GET_BOARD_SERVICE } from 'src/modules/boards/constants';
 import { DELETE_VOTE_SERVICE } from 'src/modules/votes/constants';
 import { COLUMN_REPOSITORY } from 'src/modules/columns/constants';
-import { DeleteCardsFromColumnUseCase } from 'src/modules/columns/applications/delete-cards-from-column.use-case';
 import { UseCase } from 'src/libs/interfaces/use-case.interface';
 import { DeleteCardsFromColumnUseCaseDto } from 'src/modules/columns/dto/useCase/delete-cards-from-column.use-case.dto';
 import Board from 'src/modules/boards/entities/board.schema';
 import { ColumnRepositoryInterface } from 'src/modules/columns/repositories/column.repository.interface';
+import { UpdateFailedException } from 'src/libs/exceptions/updateFailedBadRequestException';
+import { DeleteCardsFromColumnUseCase } from 'src/modules/columns/applications/delete-cards-from-column.use-case';
 
 const board = BoardFactory.create();
 const columnToDeleteCards = {
@@ -71,7 +72,7 @@ describe('DeleteCardsFromColumnUseCase', () => {
 	});
 
 	describe('delete cards from column', () => {
-		it('should return a updated board without cards on the column', async () => {
+		it('should return an updated board without cards on the column', async () => {
 			const columnsResult = board.columns.map((col) => {
 				if (col._id === board.columns[0]._id) {
 					return { ...col, cards: [] };
@@ -97,7 +98,7 @@ describe('DeleteCardsFromColumnUseCase', () => {
 			expect(updateBoard).toEqual(boardUpdateResult);
 		});
 
-		it('when not existing board, throw Bad Request Exception', async () => {
+		it('throw an error when board does not exists', async () => {
 			getBoardServiceMock.getBoardById.mockResolvedValue(null);
 
 			expect(async () => {
@@ -106,10 +107,10 @@ describe('DeleteCardsFromColumnUseCase', () => {
 					columnToDelete: columnToDeleteCards,
 					completionHandler
 				});
-			}).rejects.toThrow(BadRequestException);
+			}).rejects.toThrow(NotFoundException);
 		});
 
-		it("when given column_id doesn't exist, throw Bad Request Exception", async () => {
+		it("throw an error, when given column_id doesn't exist, ", async () => {
 			const columnToDeleteCardsWithFakeId = {
 				id: faker.datatype.uuid(),
 				socketId: faker.datatype.uuid()
@@ -127,15 +128,13 @@ describe('DeleteCardsFromColumnUseCase', () => {
 		it("when board returned after deleting column cards doesn't exist, throw Bad Request Exception", async () => {
 			columnRepositoryMock.deleteCards.mockResolvedValue(null);
 
-			try {
-				await useCase.execute({
+			expect(async () => {
+				return await useCase.execute({
 					boardId,
 					columnToDelete: columnToDeleteCards,
 					completionHandler
 				});
-			} catch (ex) {
-				expect(ex).toBeInstanceOf(BadRequestException);
-			}
+			}).rejects.toThrow(UpdateFailedException);
 		});
 	});
 });

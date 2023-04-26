@@ -1,18 +1,19 @@
-import TeamUserDto from 'src/modules/teamUsers/dto/team.user.dto';
-import { INSERT_FAILED } from 'src/libs/exceptions/messages';
-import { CreateTeamUserServiceInterface } from 'src/modules/teamUsers/interfaces/services/create.team.user.service.interface';
 import { BadRequestException, HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
-import isEmpty from 'src/libs/utils/isEmpty';
+import { INSERT_FAILED } from 'src/libs/exceptions/messages';
+import TeamUser from 'src/modules/teamUsers/entities/team.user.schema';
+import { UseCase } from 'src/libs/interfaces/use-case.interface';
+import Team from '../entities/team.schema';
 import { CreateTeamDto } from '../dto/create-team.dto';
-import { CreateTeamServiceInterface } from '../interfaces/services/create.team.service.interface';
 import { TeamRepositoryInterface } from '../interfaces/repositories/team.repository.interface';
 import { TEAM_REPOSITORY } from '../constants';
 import { TEAM_ALREADY_EXISTS } from 'src/libs/constants/team';
-import TeamUser from 'src/modules/teamUsers/entities/team.user.schema';
+import TeamUserDto from 'src/modules/teamUsers/dto/team.user.dto';
+import { CreateTeamUserServiceInterface } from 'src/modules/teamUsers/interfaces/services/create.team.user.service.interface';
+import isEmpty from 'src/libs/utils/isEmpty';
 import { CREATE_TEAM_USER_SERVICE } from 'src/modules/teamUsers/constants';
 
 @Injectable()
-export default class CreateTeamService implements CreateTeamServiceInterface {
+export class CreateTeamUseCase implements UseCase<CreateTeamDto, Team> {
 	constructor(
 		@Inject(TEAM_REPOSITORY)
 		private readonly teamRepository: TeamRepositoryInterface,
@@ -20,9 +21,7 @@ export default class CreateTeamService implements CreateTeamServiceInterface {
 		private readonly createTeamUserService: CreateTeamUserServiceInterface
 	) {}
 
-	async create(teamData: CreateTeamDto) {
-		const { users, name } = teamData;
-
+	async execute({ users, name }: CreateTeamDto) {
 		const isTeamAlreadyCreated = await this.teamRepository.findOneByField({ name });
 
 		if (isTeamAlreadyCreated) {
@@ -46,6 +45,8 @@ export default class CreateTeamService implements CreateTeamServiceInterface {
 			await this.createTeamUserService.endSession();
 		}
 	}
+
+	/* --------------- HELPERS --------------- */
 
 	private async createTeamAndTeamUsers(teamName: string, users: TeamUserDto[]) {
 		try {

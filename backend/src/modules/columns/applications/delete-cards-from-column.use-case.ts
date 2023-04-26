@@ -1,5 +1,6 @@
-import { BadRequestException, Inject, Injectable, NotFoundException } from '@nestjs/common';
-import { COLUMN_NOT_FOUND, UPDATE_FAILED } from 'src/libs/exceptions/messages';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { BOARD_NOT_FOUND, COLUMN_NOT_FOUND } from 'src/libs/exceptions/messages';
+import { UpdateFailedException } from 'src/libs/exceptions/updateFailedBadRequestException';
 import { UseCase } from 'src/libs/interfaces/use-case.interface';
 import { GET_BOARD_SERVICE } from 'src/modules/boards/constants';
 import Board from 'src/modules/boards/entities/board.schema';
@@ -45,7 +46,7 @@ export class DeleteCardsFromColumnUseCase
 		const board = await this.getBoardService.getBoardById(boardId);
 
 		if (!board) {
-			throw new BadRequestException(UPDATE_FAILED);
+			throw new NotFoundException(BOARD_NOT_FOUND);
 		}
 
 		return board;
@@ -55,7 +56,7 @@ export class DeleteCardsFromColumnUseCase
 		const updateBoard = await this.columnRepository.deleteCards(boardId, columnId);
 
 		if (!updateBoard) {
-			throw new BadRequestException(UPDATE_FAILED);
+			throw new UpdateFailedException();
 		}
 
 		return updateBoard;
