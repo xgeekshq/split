@@ -11,7 +11,7 @@ import { UserRepositoryInterface } from './../repository/user.repository.interfa
 import { updateUserService } from './../users.providers';
 import { Test, TestingModule } from '@nestjs/testing';
 import { DeepMocked, createMock } from '@golevelup/ts-jest';
-import * as Users from 'src/modules/users/interfaces/types';
+import * as Users from 'src/modules/users/constants';
 import User from '../entities/user.schema';
 import * as ResetPasswords from '../../auth/interfaces/types';
 import { ResetPasswordRepositoryInterface } from 'src/modules/auth/repository/reset-password.repository.interface';

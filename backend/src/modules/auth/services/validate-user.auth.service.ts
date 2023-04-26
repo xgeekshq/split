@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { compare } from 'src/libs/utils/bcrypt';
-import { TYPES } from 'src/modules/users/interfaces/types';
+import { TYPES } from 'src/modules/users/constants';
 import { ValidateUserAuthServiceInterface } from '../interfaces/services/validate-user.auth.service.interface';
 import { GetUserServiceInterface } from 'src/modules/users/interfaces/services/get.user.service.interface';
 

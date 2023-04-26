@@ -30,7 +30,7 @@ import { InternalServerErrorResponse } from 'src/libs/swagger/errors/internal-se
 import { UnauthorizedResponse } from 'src/libs/swagger/errors/unauthorized.swagger';
 import UpdateUserDto from '../dto/update.user.dto';
 import UserDto from '../dto/user.dto';
-import { TYPES } from '../interfaces/types';
+import { TYPES } from '../constants';
 import { UsersWithTeamsResponse } from '../swagger/users-with-teams.swagger';
 import { SuperAdminGuard } from 'src/libs/guards/superAdmin.guard';
 import { ForbiddenResponse } from '../../../libs/swagger/errors/forbidden.swagger';

@@ -1,6 +1,6 @@
 import { UpdateUserServiceInterface } from 'src/modules/users/interfaces/services/update.user.service.interface';
 import { Inject, Injectable } from '@nestjs/common';
-import { TYPES } from 'src/modules/users/interfaces/types';
+import { TYPES } from 'src/modules/users/constants';
 import { ResetPasswordUseCaseInterface } from '../interfaces/applications/reset-password.use-case.interface';
 import { UPDATE_FAILED } from 'src/libs/exceptions/messages';
 import { InvalidTokenException } from '../exceptions/invalidTokenException';

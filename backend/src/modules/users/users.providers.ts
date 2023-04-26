@@ -1,5 +1,5 @@
 import { DeleteUserUseCase } from './applications/delete-user.use-case';
-import { TYPES } from './interfaces/types';
+import { TYPES } from './constants';
 import { UserRepository } from './repository/user.repository';
 import CreateUserService from './services/create.user.service';
 import GetUserService from './services/get.user.service';

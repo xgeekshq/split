@@ -8,7 +8,7 @@ import {
 	JWT_REFRESH_TOKEN_SECRET
 } from 'src/libs/constants/jwt';
 import { UpdateUserServiceInterface } from 'src/modules/users/interfaces/services/update.user.service.interface';
-import { TYPES } from 'src/modules/users/interfaces/types';
+import { TYPES } from 'src/modules/users/constants';
 import { GetTokenAuthServiceInterface } from '../interfaces/services/get-token.auth.service.interface';
 
 @Injectable()

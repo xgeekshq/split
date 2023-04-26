@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { TYPES } from '../interfaces/types';
+import { TYPES } from '../constants';
 import { UserRepositoryInterface } from '../repository/user.repository.interface';
 import { UseCase } from 'src/libs/interfaces/use-case.interface';
 import User from '../entities/user.schema';

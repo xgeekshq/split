@@ -2,7 +2,7 @@ import { GetAllUsersWithTeamsPresenter } from '../presenter/get-all-users-with-t
 import { GetTeamUserServiceInterface } from 'src/modules/teamUsers/interfaces/services/get.team.user.service.interface';
 import { Inject, Injectable } from '@nestjs/common';
 import { UserWithTeams } from '../interfaces/type-user-with-teams';
-import { TYPES } from '../interfaces/types';
+import { TYPES } from '../constants';
 import { UserRepositoryInterface } from '../repository/user.repository.interface';
 import { sortTeamUserListAlphabetically } from '../utils/sortings';
 import { GetUserServiceInterface } from '../interfaces/services/get.user.service.interface';

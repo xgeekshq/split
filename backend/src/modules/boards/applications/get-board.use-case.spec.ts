@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import * as Auth from 'src/modules/auth/interfaces/types';
-import * as Users from 'src/modules/users/interfaces/types';
+import * as Users from 'src/modules/users/constants';
 import { DeepMocked, createMock } from '@golevelup/ts-jest';
 import faker from '@faker-js/faker';
 import { UseCase } from 'src/libs/interfaces/use-case.interface';

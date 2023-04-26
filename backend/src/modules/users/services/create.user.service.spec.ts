@@ -7,7 +7,7 @@ import { UserRepositoryInterface } from './../repository/user.repository.interfa
 import { createUserService } from './../users.providers';
 import { Test, TestingModule } from '@nestjs/testing';
 import { DeepMocked, createMock } from '@golevelup/ts-jest';
-import * as Users from 'src/modules/users/interfaces/types';
+import * as Users from 'src/modules/users/constants';
 import CreateUserDto from '../dto/create.user.dto';
 import User from '../entities/user.schema';
 

@@ -1,6 +1,6 @@
 import { UseCase } from 'src/libs/interfaces/use-case.interface';
 import { Inject, Injectable } from '@nestjs/common';
-import { TYPES } from '../interfaces/types';
+import { TYPES } from '../constants';
 import { DeleteTeamUserServiceInterface } from 'src/modules/teamUsers/interfaces/services/delete.team.user.service.interface';
 import { GetTeamUserServiceInterface } from '../../teamUsers/interfaces/services/get.team.user.service.interface';
 import { UserRepositoryInterface } from '../repository/user.repository.interface';

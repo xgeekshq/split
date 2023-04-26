@@ -1,7 +1,7 @@
 import { createMock } from '@golevelup/ts-jest';
 import { UseCase } from 'src/libs/interfaces/use-case.interface';
 import { getUserUseCase } from '../users.providers';
-import * as Users from 'src/modules/users/interfaces/types';
+import * as Users from 'src/modules/users/constants';
 import { Test, TestingModule } from '@nestjs/testing';
 import { GetUserServiceInterface } from '../interfaces/services/get.user.service.interface';
 import User from '../entities/user.schema';

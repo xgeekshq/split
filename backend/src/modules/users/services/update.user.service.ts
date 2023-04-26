@@ -3,7 +3,7 @@ import { BadRequestException, HttpException, HttpStatus, Inject, Injectable } fr
 import { encrypt } from 'src/libs/utils/bcrypt';
 import * as ResetPassword from '../../auth/interfaces/types';
 import { UpdateUserServiceInterface } from '../interfaces/services/update.user.service.interface';
-import { TYPES } from '../interfaces/types';
+import { TYPES } from '../constants';
 import { UserRepositoryInterface } from '../repository/user.repository.interface';
 import { ResetPasswordRepositoryInterface } from 'src/modules/auth/repository/reset-password.repository.interface';
 import { PasswordsDontMatchException } from '../exceptions/passwordsDontMatchException';

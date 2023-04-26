@@ -2,7 +2,7 @@ import { UseCase } from 'src/libs/interfaces/use-case.interface';
 import { BadRequestException, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { BOARD_REPOSITORY } from '../constants';
 import * as Auth from 'src/modules/auth/interfaces/types';
-import * as Users from 'src/modules/users/interfaces/types';
+import * as Users from 'src/modules/users/constants';
 import BoardUseCasePresenter from '../presenter/board.use-case.presenter';
 import GetBoardUseCaseDto from '../dto/useCase/get-board.use-case.dto';
 import Board from '../entities/board.schema';

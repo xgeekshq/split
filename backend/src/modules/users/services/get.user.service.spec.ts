@@ -6,7 +6,7 @@ import { UserRepositoryInterface } from './../repository/user.repository.interfa
 import { getUserService } from './../users.providers';
 import { Test, TestingModule } from '@nestjs/testing';
 import { DeepMocked, createMock } from '@golevelup/ts-jest';
-import * as Users from 'src/modules/users/interfaces/types';
+import * as Users from 'src/modules/users/constants';
 import User from '../entities/user.schema';
 
 const user: User = UserFactory.create();

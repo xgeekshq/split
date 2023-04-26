@@ -17,7 +17,7 @@ import {
 } from 'src/modules/boardUsers/boardusers.providers';
 import SocketGateway from 'src/modules/socket/gateway/socket.gateway';
 import { getTeamService, teamRepository } from 'src/modules/teams/providers';
-import { TYPES } from 'src/modules/users/interfaces/types';
+import { TYPES } from 'src/modules/users/constants';
 import GetUserService from 'src/modules/users/services/get.user.service';
 import {
 	getUserService,

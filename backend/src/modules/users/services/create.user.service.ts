@@ -2,7 +2,7 @@ import { CREATE_FAILED } from 'src/libs/exceptions/messages';
 import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import CreateUserDto from '../dto/create.user.dto';
 import User from '../entities/user.schema';
-import { TYPES } from '../interfaces/types';
+import { TYPES } from '../constants';
 import { UserRepositoryInterface } from '../repository/user.repository.interface';
 import CreateGuestUserDto from '../dto/create.guest.user.dto';
 import faker from '@faker-js/faker';

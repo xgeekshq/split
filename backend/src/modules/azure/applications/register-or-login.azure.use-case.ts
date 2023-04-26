@@ -4,7 +4,7 @@ import { AuthAzureServiceInterface } from '../interfaces/services/auth.azure.ser
 import { TYPES } from '../interfaces/types';
 import { AzureDecodedUser } from '../services/auth.azure.service';
 import jwt_decode from 'jwt-decode';
-import * as UserType from 'src/modules/users/interfaces/types';
+import * as UserType from 'src/modules/users/constants';
 import { GetUserServiceInterface } from 'src/modules/users/interfaces/services/get.user.service.interface';
 import { CreateUserServiceInterface } from 'src/modules/users/interfaces/services/create.user.service.interface';
 import User from 'src/modules/users/entities/user.schema';

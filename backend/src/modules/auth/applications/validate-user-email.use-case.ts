@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { TYPES } from 'src/modules/users/interfaces/types';
+import { TYPES } from 'src/modules/users/constants';
 import { ValidateUserEmailUseCaseInterface } from '../interfaces/applications/validate-email.use-case.interface';
 import { GetUserServiceInterface } from 'src/modules/users/interfaces/services/get.user.service.interface';
 

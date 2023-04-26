@@ -11,7 +11,7 @@ import Column from 'src/modules/columns/entities/column.schema';
 import Team from 'src/modules/teams/entities/team.schema';
 import User from 'src/modules/users/entities/user.schema';
 import { GetUserServiceInterface } from 'src/modules/users/interfaces/services/get.user.service.interface';
-import * as Users from 'src/modules/users/interfaces/types';
+import * as Users from 'src/modules/users/constants';
 import Board from '../entities/board.schema';
 import { GetBoardServiceInterface } from '../interfaces/services/get.board.service.interface';
 import { BOARD_REPOSITORY, GET_BOARD_SERVICE } from '../constants';

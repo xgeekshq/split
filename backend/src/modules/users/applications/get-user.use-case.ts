@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import User from '../entities/user.schema';
 import { GetUserServiceInterface } from '../interfaces/services/get.user.service.interface';
-import { TYPES } from '../interfaces/types';
+import { TYPES } from '../constants';
 import { UseCase } from 'src/libs/interfaces/use-case.interface';
 
 @Injectable()

@@ -1,5 +1,5 @@
 import * as Azure from 'src/modules/azure/interfaces/types';
-import * as User from 'src/modules/users/interfaces/types';
+import * as User from 'src/modules/users/constants';
 import { Test } from '@nestjs/testing';
 import { createMock } from '@golevelup/ts-jest';
 import AzureController from './azure.controller';

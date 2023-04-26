@@ -1,7 +1,7 @@
 import { updateSAdminUseCase } from './../users.providers';
 import { DeepMocked, createMock } from '@golevelup/ts-jest';
 import { UserRepositoryInterface } from '../repository/user.repository.interface';
-import * as Users from 'src/modules/users/interfaces/types';
+import * as Users from 'src/modules/users/constants';
 import { Test, TestingModule } from '@nestjs/testing';
 import { UserFactory } from 'src/libs/test-utils/mocks/factories/user-factory';
 import faker from '@faker-js/faker';
