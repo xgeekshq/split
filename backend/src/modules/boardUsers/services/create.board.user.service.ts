@@ -1,10 +1,11 @@
 import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { BoardRoles } from 'src/libs/enum/board.roles';
-import { BOARD_USER_EXISTS, INSERT_FAILED } from 'src/libs/exceptions/messages';
+import { BOARD_USER_EXISTS, CREATE_FAILED, INSERT_FAILED } from 'src/libs/exceptions/messages';
 import { CreateBoardUserServiceInterface } from '../interfaces/services/create.board.user.service.interface';
 import BoardUserDto from '../dto/board.user.dto';
 import { BoardUserRepositoryInterface } from '../interfaces/repositories/board-user.repository.interface';
 import { BOARD_USER_REPOSITORY } from '../constants';
+import BoardUser from '../entities/board.user.schema';
 
 @Injectable()
 export default class CreateBoardUserService implements CreateBoardUserServiceInterface {
@@ -13,7 +14,7 @@ export default class CreateBoardUserService implements CreateBoardUserServiceInt
 		private readonly boardUserRepository: BoardUserRepositoryInterface
 	) {}
 
-	saveBoardUsers(newUsers: BoardUserDto[], newBoardId?: string, withSession?: boolean) {
+	async saveBoardUsers(newUsers: BoardUserDto[], newBoardId?: string, withSession?: boolean) {
 		let boardUsersToInsert: BoardUserDto[] = newUsers;
 
 		if (newBoardId) {
@@ -22,8 +23,15 @@ export default class CreateBoardUserService implements CreateBoardUserServiceInt
 				board: newBoardId
 			}));
 		}
+		const createdBoardUsers: BoardUser[] = await this.boardUserRepository.createBoardUsers(
+			boardUsersToInsert,
+			withSession
+		);
 
-		return this.boardUserRepository.createBoardUsers(boardUsersToInsert, withSession);
+		if (createdBoardUsers.length < boardUsersToInsert.length)
+			throw new BadRequestException(CREATE_FAILED);
+
+		return createdBoardUsers;
 	}
 
 	async createBoardUser(board: string, user: string) {
