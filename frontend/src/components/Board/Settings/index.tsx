@@ -9,7 +9,7 @@ import { colors } from '@/components/Board/Column/partials/OptionsMenu';
 import { ColumnSettings } from '@/components/Board/Settings/partials/Columns';
 import { ColumnBoxAndDelete } from '@/components/Board/Settings/partials/Columns/ColumnBoxAndDelete';
 import { ConfigurationSettings } from '@/components/Board/Settings/partials/ConfigurationSettings';
-import { SchedulingSettings } from '@/components/Board/Settings/partials/Scheduling/Scheduling';
+import SchedulingSettings from '@/components/Board/Settings/partials/Scheduling/Scheduling';
 import { TeamResponsibleSettings } from '@/components/Board/Settings/partials/TeamResponsible';
 import { ScrollableContent } from '@/components/Boards/MyBoards/ListBoardMembers/styles';
 import Avatar from '@/components/Primitives/Avatars/Avatar/Avatar';

@@ -55,4 +55,4 @@ const SchedulingSettings = ({ schedulingData, setSchedulingData }: SchedulingPro
   );
 };
 
-export { SchedulingSettings };
+export default SchedulingSettings;
