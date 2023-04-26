@@ -3,7 +3,7 @@ import { DELETE_VOTE_FAILED, UPDATE_FAILED } from 'src/libs/exceptions/messages'
 import isEmpty from 'src/libs/utils/isEmpty';
 import { GetCardServiceInterface } from 'src/modules/cards/interfaces/services/get.card.service.interface';
 import { DeleteVoteServiceInterface } from '../interfaces/services/delete.vote.service.interface';
-import { TYPES } from '../interfaces/types';
+import { VOTE_REPOSITORY } from '../constants';
 import { VoteRepositoryInterface } from '../interfaces/repositories/vote.repository.interface';
 import { UpdateBoardUserServiceInterface } from 'src/modules/boardUsers/interfaces/services/update.board.user.service.interface';
 import { GetBoardUserServiceInterface } from 'src/modules/boardUsers/interfaces/services/get.board.user.service.interface';
@@ -26,7 +26,7 @@ import { GET_CARD_SERVICE } from 'src/modules/cards/constants';
 @Injectable()
 export default class DeleteVoteService implements DeleteVoteServiceInterface {
 	constructor(
-		@Inject(TYPES.repositories.VoteRepository)
+		@Inject(VOTE_REPOSITORY)
 		private readonly voteRepository: VoteRepositoryInterface,
 		@Inject(GET_BOARD_USER_SERVICE)
 		private readonly getBoardUserService: GetBoardUserServiceInterface,
