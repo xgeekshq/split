@@ -3,12 +3,12 @@ import React, { Dispatch, SetStateAction, useEffect, useMemo, useState } from 'r
 import Dialog from '@/components/Primitives/Dialogs/Dialog/Dialog';
 import Checkbox from '@/components/Primitives/Inputs/Checkboxes/Checkbox/Checkbox';
 import CheckboxUserItem from '@/components/Primitives/Inputs/Checkboxes/UserCheckbox/UserCheckbox';
+import UncontrolledInput from '@/components/Primitives/Inputs/UncontrolledInput/UncontrolledInput';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Separator from '@/components/Primitives/Separator/Separator';
 import Text from '@/components/Primitives/Text/Text';
 import useCurrentSession from '@/hooks/useCurrentSession';
 import { UserList } from '@/types/team/userList';
-import UncontrolledInput from '../../Inputs/UncontrolledInput/UncontrolledInput';
 
 export type UserListDialogProps = {
   usersList: UserList[];
