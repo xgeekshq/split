@@ -234,4 +234,4 @@ const RepeatDay = ({ disableCheckboxes, schedulingData, setSchedulingData }: Rep
   );
 };
 
-export { RepeatDay };
+export default RepeatDay;
