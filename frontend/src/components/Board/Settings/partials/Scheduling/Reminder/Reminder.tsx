@@ -20,9 +20,9 @@ const ReminderSchedule = ({ schedulingData, setSchedulingData }: SchedulingProps
         ...prev,
         reminderTimeRange: undefined,
         reminderTimeUnit: undefined,
-        reminderViaEmail: undefined,
-        reminderPrefillingCards: undefined,
-        reminderViaSlack: undefined,
+        reminderViaEmail: false,
+        reminderPrefillingCards: false,
+        reminderViaSlack: false,
       }));
     }
   };
