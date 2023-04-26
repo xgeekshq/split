@@ -103,9 +103,9 @@ export type UpdateScheduleType = {
   //Reminder
   reminderTimeRange?: string;
   reminderTimeUnit?: string;
-  reminderViaSlack?: boolean;
-  reminderViaEmail?: boolean;
-  reminderPrefillingCards?: boolean;
+  reminderViaSlack: boolean;
+  reminderViaEmail: boolean;
+  reminderPrefillingCards: boolean;
 
   //Creation
   timeBeforeMeeting?: string;
