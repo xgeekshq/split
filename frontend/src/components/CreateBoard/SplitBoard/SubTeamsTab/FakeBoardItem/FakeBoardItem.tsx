@@ -70,7 +70,7 @@ const FakeBoardItem = () => (
     </StyledMainBoardItem>
     <Flex css={{ mb: '$50' }} direction="column" gap={8}>
       <Flex>
-        <LeftArrow index={0} isDashboard={false} />
+        <LeftArrow index={0} isDashboard={false} isLast={false} />
         <StyledSubBoardItem align="center" css={{ opacity: '0.5' }} elevation="1" justify="between">
           <Flex css={{ flex: 2 }}>
             <Text heading="5">Sub-team board 1</Text>
@@ -112,7 +112,7 @@ const FakeBoardItem = () => (
         </StyledSubBoardItem>
       </Flex>
       <Flex>
-        <LeftArrow index={1} isDashboard={false} />
+        <LeftArrow isLast index={1} isDashboard={false} />
         <StyledSubBoardItem align="center" css={{ opacity: '0.5' }} elevation="1" justify="between">
           <Flex css={{ flex: 2 }}>
             <Text heading="5">Sub-team board 2</Text>

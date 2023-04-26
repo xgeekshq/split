@@ -87,11 +87,12 @@ const CardEnd: React.FC<CardEndProps> = React.memo(
 
     if (isDashboard) {
       return (
-        <Flex align="center" css={{ justifySelf: 'end' }}>
+        <Flex align="center" css={{ flex: 1 }} gap="8" justify="end" wrap="wrap">
           <Text color="primary300" size="sm">
-            {boardTypeCaption} |
+            {boardTypeCaption}
           </Text>
-          <Text color="primary800" css={{ mx: '$8' }} fontWeight="medium" size="sm">
+          <Separator orientation="vertical" size="lg" />
+          <Text color="primary800" fontWeight="medium" size="sm">
             {boardOwnerName}
           </Text>
           <AvatarGroup listUsers={!team || isSubBoard ? users : team.users} userId={userId} />
@@ -101,7 +102,7 @@ const CardEnd: React.FC<CardEndProps> = React.memo(
 
     if (!isDashboard) {
       return (
-        <Flex css={{ alignItems: 'center' }}>
+        <Flex align="center" css={{ flex: 1, gap: '$12 $24' }} justify="end" wrap="wrap">
           {isSubBoard && (
             <Flex align="center" gap="8">
               <Text color="primary300" size="sm">
@@ -110,35 +111,33 @@ const CardEnd: React.FC<CardEndProps> = React.memo(
               <AvatarGroup responsible listUsers={users} userId={userId} />
             </Flex>
           )}
-          <CountCards columns={columns} />
-          {(havePermissions || userSAdmin) && !isSubBoard && (
-            <Flex align="center" css={{ ml: '$24' }} gap="24">
-              <Separator css={{ ml: '$8' }} orientation="vertical" size="lg" />
-              {isEmpty(board.dividedBoards) && (
-                <DuplicateBoardNameDialog
-                  boardTitle={title}
-                  handleDuplicateBoard={handleDuplicateBoard}
-                />
-              )}
-              <ConfirmationDialog
-                confirmationHandler={handleDelete}
-                confirmationLabel="Delete"
-                description={deleteBoardDescription}
-                title="Delete board"
-                tooltip="Delete board"
-                variant="danger"
-              >
-                <Button isIcon size="sm">
-                  <Icon
-                    name="trash-alt"
-                    css={{
-                      color: '$primary400',
-                    }}
+
+          <Flex align="center" gap="24">
+            <CountCards columns={columns} />
+            {(havePermissions || userSAdmin) && !isSubBoard && (
+              <>
+                <Separator orientation="vertical" size="lg" />
+                {isEmpty(board.dividedBoards) && (
+                  <DuplicateBoardNameDialog
+                    boardTitle={title}
+                    handleDuplicateBoard={handleDuplicateBoard}
                   />
-                </Button>
-              </ConfirmationDialog>
-            </Flex>
-          )}
+                )}
+                <ConfirmationDialog
+                  confirmationHandler={handleDelete}
+                  confirmationLabel="Delete"
+                  description={deleteBoardDescription}
+                  title="Delete board"
+                  tooltip="Delete board"
+                  variant="danger"
+                >
+                  <Button isIcon size="sm">
+                    <Icon css={{ color: '$primary400' }} name="trash-alt" />
+                  </Button>
+                </ConfirmationDialog>
+              </>
+            )}
+          </Flex>
         </Flex>
       );
     }
