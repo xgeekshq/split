@@ -1,15 +1,15 @@
 import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { DELETE_FAILED } from 'src/libs/exceptions/messages';
-import { DeleteTeamServiceInterface } from '../interfaces/services/delete.team.service.interface';
-import { TEAM_REPOSITORY } from '../constants';
+import { UseCase } from 'src/libs/interfaces/use-case.interface';
 import { TeamRepositoryInterface } from '../interfaces/repositories/team.repository.interface';
 import { DeleteBoardServiceInterface } from 'src/modules/boards/interfaces/services/delete.board.service.interface';
 import { DeleteTeamUserServiceInterface } from 'src/modules/teamUsers/interfaces/services/delete.team.user.service.interface';
 import { DELETE_TEAM_USER_SERVICE } from 'src/modules/teamUsers/constants';
 import { DELETE_BOARD_SERVICE } from 'src/modules/boards/constants';
+import { TEAM_REPOSITORY } from '../constants';
 
 @Injectable()
-export default class DeleteTeamService implements DeleteTeamServiceInterface {
+export class DeleteTeamUseCase implements UseCase<string, boolean> {
 	constructor(
 		@Inject(TEAM_REPOSITORY)
 		private readonly teamRepository: TeamRepositoryInterface,
@@ -19,7 +19,7 @@ export default class DeleteTeamService implements DeleteTeamServiceInterface {
 		private readonly deleteTeamUserService: DeleteTeamUserServiceInterface
 	) {}
 
-	async delete(teamId: string): Promise<boolean> {
+	async execute(teamId: string): Promise<boolean> {
 		await this.teamRepository.startTransaction();
 		await this.deleteTeamUserService.startTransaction();
 
@@ -37,6 +37,8 @@ export default class DeleteTeamService implements DeleteTeamServiceInterface {
 			await this.deleteTeamUserService.endSession();
 		}
 	}
+
+	/* --------------- HELPERS --------------- */
 
 	private async deleteTeamAndTeamUsersAndBoards(teamId: string) {
 		try {

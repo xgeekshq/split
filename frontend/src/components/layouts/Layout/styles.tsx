@@ -11,9 +11,10 @@ const Container = styled('main', {
 const ContentSection = styled('section', Flex, {
   flexGrow: 1,
   mt: '$82',
-  padding: '$64 $48 $24 $48',
+  padding: '$64 $24 $24',
 
   '@md': {
+    px: '$48',
     ml: '$256',
     mt: 0,
   },

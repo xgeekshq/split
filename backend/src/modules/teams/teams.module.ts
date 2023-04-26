@@ -3,12 +3,13 @@ import { Module, forwardRef } from '@nestjs/common';
 import { mongooseTeamModule } from 'src/infrastructure/database/mongoose.module';
 import TeamsController from './controller/team.controller';
 import {
-	createTeamApplication,
-	createTeamService,
-	deleteTeamApplication,
-	deleteTeamService,
-	getTeamApplication,
+	createTeamUseCase,
+	deleteTeamUseCase,
+	getAllTeamsUseCase,
 	getTeamService,
+	getTeamUseCase,
+	getTeamsOfUserUseCase,
+	getTeamsUserIsNotMemberUseCase,
 	teamRepository
 } from './providers';
 import TeamUsersModule from 'src/modules/teamUsers/teamusers.module';
@@ -16,15 +17,16 @@ import TeamUsersModule from 'src/modules/teamUsers/teamusers.module';
 @Module({
 	imports: [mongooseTeamModule, forwardRef(() => BoardsModule), TeamUsersModule],
 	providers: [
-		createTeamService,
-		createTeamApplication,
+		createTeamUseCase,
+		getTeamsUserIsNotMemberUseCase,
+		getAllTeamsUseCase,
+		getTeamUseCase,
+		getTeamsOfUserUseCase,
+		deleteTeamUseCase,
 		getTeamService,
-		getTeamApplication,
-		deleteTeamApplication,
-		deleteTeamService,
 		teamRepository
 	],
 	controllers: [TeamsController],
-	exports: [getTeamApplication, getTeamService, createTeamService]
+	exports: [getTeamService]
 })
 export default class TeamsModule {}

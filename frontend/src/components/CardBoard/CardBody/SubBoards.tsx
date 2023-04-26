@@ -1,5 +1,6 @@
 import React from 'react';
 
+import LeftArrow from '@/components/CardBoard/CardBody/LeftArrow';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import BoardType from '@/types/board/board';
 
@@ -14,20 +15,24 @@ type SubBoardsProps = {
 const SubBoards = React.memo(
   ({ isSubBoard, isDashboard, dividedBoards, renderCardBody, userId }: SubBoardsProps) => {
     if (isSubBoard || dividedBoards.length <= 0) return null;
-    if (isDashboard) {
-      return (
-        <Flex direction="column" gap="8">
-          {dividedBoards.map((subBoard, idx) =>
-            subBoard.users.find((boardUser) => boardUser.user?._id === userId)
-              ? renderCardBody(subBoard, idx)
-              : null,
-          )}
-        </Flex>
-      );
-    }
+
+    const dashboardSubBoards = dividedBoards.filter((subBoard) =>
+      subBoard.users.find((boardUser) => boardUser.user?._id === userId),
+    );
+    const subBoards = isDashboard ? dashboardSubBoards : dividedBoards;
+
     return (
       <Flex direction="column" gap="8">
-        {dividedBoards.map((subBoard, idx) => renderCardBody(subBoard, idx))}
+        {subBoards.map((subBoard, idx) => (
+          <Flex key={subBoard._id} gap="40">
+            <LeftArrow
+              index={idx}
+              isDashboard={isDashboard}
+              isLast={isDashboard || idx === subBoards.length - 1}
+            />
+            {renderCardBody(subBoard, idx)}
+          </Flex>
+        ))}
       </Flex>
     );
   },
