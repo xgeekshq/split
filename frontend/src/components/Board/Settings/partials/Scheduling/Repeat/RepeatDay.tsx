@@ -1,6 +1,7 @@
 import { Dispatch, SetStateAction, useEffect, useMemo, useState } from 'react';
 
 import Text from '@/components/Primitives/Text/Text';
+import { WEEK_NUMBER } from '@/constants/schedulingOptions/weekNumber';
 import { WEEK_DAYS_FULL_NAME } from '@/constants/schedulingOptions/weeks';
 import { UpdateScheduleType } from '@/types/board/board';
 import Icon from '@components/Primitives/Icons/Icon/Icon';
@@ -129,25 +130,30 @@ const RepeatDay = ({ disableCheckboxes, schedulingData, setSchedulingData }: Rep
             handleDayCheckbox(!isDayChecked);
           }}
         />
-        {/* TODO: CHANGE */}
-        <Select
-          css={{ width: '41.598%', height: '$60' }}
-          disabled={!isDayChecked}
-          onValueChange={handleDayChange}
-          value={schedulingData.repeatMeetingDay}
-        >
-          <SelectTrigger css={{ padding: '$24' }}>
-            <Flex direction="column">
-              <Text color="primary300">Select a day</Text>
-              <SelectValue />
-            </Flex>
-            <SelectIcon className="SelectIcon">
-              <Icon name="arrow-down" />
-            </SelectIcon>
-          </SelectTrigger>
-          <SelectContent options={days} />
-        </Select>
-        <Text> day</Text>
+        <Flex align="center" gap={16} style={{ width: '100%' }}>
+          <Flex style={{ width: '100%' }}>
+            <Select
+              css={{ height: '$60', width: '100%' }}
+              disabled={!isDayChecked}
+              onValueChange={handleDayChange}
+              value={schedulingData.repeatMeetingDay}
+            >
+              <SelectTrigger css={{ padding: '$24' }}>
+                <Flex direction="column">
+                  <Text color="primary300">Select a day</Text>
+                  <SelectValue />
+                </Flex>
+                <SelectIcon className="SelectIcon">
+                  <Icon name="arrow-down" />
+                </SelectIcon>
+              </SelectTrigger>
+              <SelectContent options={days} />
+            </Select>
+          </Flex>
+          <Flex justify="start" style={{ width: '100%' }}>
+            <Text> day</Text>
+          </Flex>
+        </Flex>
       </Flex>
       {/* Repeat on weekDay */}
       <Flex
@@ -186,30 +192,7 @@ const RepeatDay = ({ disableCheckboxes, schedulingData, setSchedulingData }: Rep
               <Icon name="arrow-down" />
             </SelectIcon>
           </SelectTrigger>
-          <SelectContent
-            options={[
-              {
-                label: 'First',
-                value: 'First',
-              },
-              {
-                label: 'Second',
-                value: 'Second',
-              },
-              {
-                label: 'Third',
-                value: 'Third',
-              },
-              {
-                label: 'Fourth',
-                value: 'Fourth',
-              },
-              {
-                label: 'Last',
-                value: 'Last',
-              },
-            ]}
-          />
+          <SelectContent options={WEEK_NUMBER} />
         </Select>
         {/* Select weekDay ex:monday,... */}
         <Select

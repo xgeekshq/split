@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Text from '@/components/Primitives/Text/Text';
+import { TIME_UNIT } from '@/constants/schedulingOptions/timeUnit';
 import Icon from '@components/Primitives/Icons/Icon/Icon';
 import Checkbox from '@components/Primitives/Inputs/Checkboxes/Checkbox/Checkbox';
 import {
@@ -97,22 +98,7 @@ const SelectDateUnit = ({
               <Icon name="arrow-down" />
             </SelectIcon>
           </SelectTrigger>
-          <SelectContent
-            options={[
-              {
-                label: 'Day',
-                value: 'Day',
-              },
-              {
-                label: 'Week',
-                value: 'Week',
-              },
-              {
-                label: 'Month',
-                value: 'Month',
-              },
-            ]}
-          />
+          <SelectContent options={TIME_UNIT} />
         </Select>
       </Flex>
     </>
