@@ -46,7 +46,7 @@ const DateAndTimePicker = ({ currentDate, setDate }: SchedulingProps) => {
     <>
       <Text fontWeight="medium">Date and time</Text>
       <DatePicker currentDate={currentDate} setDate={setDate} />
-      <Flex css={{ flex: 1, paddingBottom: '24px' }} direction="row">
+      <Flex css={{ flex: 1, pb: '$24' }} direction="row">
         <Select
           css={{ width: '50%', height: '$60', marginRight: '$16' }}
           disabled={false}
@@ -86,4 +86,4 @@ const DateAndTimePicker = ({ currentDate, setDate }: SchedulingProps) => {
   );
 };
 
-export { DateAndTimePicker };
+export default DateAndTimePicker;

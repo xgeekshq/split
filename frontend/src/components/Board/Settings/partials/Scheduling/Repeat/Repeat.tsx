@@ -124,7 +124,7 @@ const RepeatSchedule = ({ schedulingData, setSchedulingData }: SchedulingProps) 
             </DropdownMenu.Root>
           )}
           {schedulingData.repeatMeetingUntil && (
-            <Flex direction="row" gap={20} justify="between">
+            <Flex gap={20} justify="between">
               <DropdownMenu.Root>
                 <StyledDropDownTrigger disabled={false}>
                   <Text link color="primary500" style={{ width: 'fit-content' }}>

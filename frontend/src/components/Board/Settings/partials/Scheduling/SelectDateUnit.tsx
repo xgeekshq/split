@@ -1,3 +1,5 @@
+import { useMemo } from 'react';
+
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Text from '@/components/Primitives/Text/Text';
 import Icon from '@components/Primitives/Icons/Icon/Icon';
@@ -31,15 +33,15 @@ const SelectDateUnit = ({
   setCheckboxState,
   setTimeRange,
 }: RepeatProps) => {
-  const options = [];
-
-  for (let i = 1; i <= 99; i++) {
-    const obj = {
-      label: i.toString(),
-      value: i.toString(),
-    };
-    options.push(obj);
-  }
+  const options = useMemo(() => {
+    return Array.from({ length: 99 }, (_, i) => {
+      const option = i + 1;
+      return {
+        label: option.toString(),
+        value: option.toString(),
+      };
+    });
+  }, []);
 
   return (
     <>

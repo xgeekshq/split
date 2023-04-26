@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useMemo, useState } from 'react';
 
 import Text from '@/components/Primitives/Text/Text';
 import { WEEK_DAYS_FULL_NAME } from '@/constants/schedulingOptions/weeks';
@@ -95,15 +95,16 @@ const RepeatDay = ({ disableCheckboxes, schedulingData, setSchedulingData }: Rep
       repeatMeetingWeekDay: repeatMeetingWeekDay,
     }));
   };
-  const days = [];
 
-  for (let i = 1; i <= 31; i++) {
-    const obj = {
-      label: i.toString(),
-      value: i.toString(),
-    };
-    days.push(obj);
-  }
+  const days = useMemo(() => {
+    return Array.from({ length: 31 }, (_, i) => {
+      const day = i + 1;
+      return {
+        label: day.toString(),
+        value: day.toString(),
+      };
+    });
+  }, []);
 
   return (
     <>
@@ -128,7 +129,7 @@ const RepeatDay = ({ disableCheckboxes, schedulingData, setSchedulingData }: Rep
             handleDayCheckbox(!isDayChecked);
           }}
         />
-
+        {/* TODO: CHANGE */}
         <Select
           css={{ width: '41.598%', height: '$60' }}
           disabled={!isDayChecked}
