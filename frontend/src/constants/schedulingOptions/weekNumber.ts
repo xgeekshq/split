@@ -1,22 +1,22 @@
 export const WEEK_NUMBER = [
   {
     label: 'First',
-    value: 'First',
+    value: 'first',
   },
   {
     label: 'Second',
-    value: 'Second',
+    value: 'second',
   },
   {
     label: 'Third',
-    value: 'Third',
+    value: 'third',
   },
   {
     label: 'Fourth',
-    value: 'Fourth',
+    value: 'fourth',
   },
   {
     label: 'Last',
-    value: 'Last',
+    value: 'last',
   },
 ];

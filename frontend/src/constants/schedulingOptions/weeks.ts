@@ -1,31 +1,31 @@
 export const WEEK_DAYS_FULL_NAME = [
   {
     label: 'Monday',
-    value: 'Monday',
+    value: 'monday',
   },
   {
     label: 'Tuesday',
-    value: 'Tuesday',
+    value: 'tuesday',
   },
   {
     label: 'Wednesday',
-    value: 'Wednesday',
+    value: 'wednesday',
   },
   {
     label: 'Thursday',
-    value: 'Thursday',
+    value: 'thursday',
   },
   {
     label: 'Friday',
-    value: 'Friday',
+    value: 'friday',
   },
   {
     label: 'Saturday',
-    value: 'Saturday',
+    value: 'saturday',
   },
   {
     label: 'Sunday',
-    value: 'Sunday',
+    value: 'sunday',
   },
 ];
 

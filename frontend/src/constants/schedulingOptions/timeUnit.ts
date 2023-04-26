@@ -1,14 +1,14 @@
 export const TIME_UNIT = [
   {
     label: 'Day',
-    value: 'Day',
+    value: 'day',
   },
   {
     label: 'Week',
-    value: 'Week',
+    value: 'week',
   },
   {
     label: 'Month',
-    value: 'Month',
+    value: 'month',
   },
 ];
