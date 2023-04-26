@@ -2,13 +2,13 @@ import { Inject, Logger } from '@nestjs/common';
 import { SchedulerRegistry } from '@nestjs/schedule';
 import { DeleteSchedulesServiceInterface } from '../interfaces/services/delete.schedules.service.interface';
 import Schedules from '../entities/schedules.schema';
-import { TYPES } from '../interfaces/types';
+import { SCHEDULE_REPOSITORY } from '../constants';
 import { ScheduleRepositoryInterface } from '../repository/schedule.repository.interface';
 
 export class DeleteSchedulesService implements DeleteSchedulesServiceInterface {
 	constructor(
-		private schedulerRegistry: SchedulerRegistry,
-		@Inject(TYPES.repository.ScheduleRepository)
+		private readonly schedulerRegistry: SchedulerRegistry,
+		@Inject(SCHEDULE_REPOSITORY)
 		private readonly scheduleRepository: ScheduleRepositoryInterface
 	) {}
 
