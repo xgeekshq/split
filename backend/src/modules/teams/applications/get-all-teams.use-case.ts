@@ -12,7 +12,7 @@ export class GetAllTeamsUseCase implements UseCase<void, Team[]> {
 		@Inject(TEAM_REPOSITORY)
 		private readonly teamRepository: TeamRepositoryInterface,
 		@Inject(GET_BOARD_SERVICE)
-		private getBoardService: GetBoardService
+		private readonly getBoardService: GetBoardService
 	) {}
 
 	async execute() {

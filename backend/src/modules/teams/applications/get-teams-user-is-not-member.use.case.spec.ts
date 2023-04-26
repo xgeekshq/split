@@ -1,7 +1,6 @@
 import Team from 'src/modules/teams/entities/team.schema';
 import { Test, TestingModule } from '@nestjs/testing';
 import { DeepMocked, createMock } from '@golevelup/ts-jest';
-import { getTeamsUserIsNotMemberUseCase } from 'src/modules/teams/providers';
 import { TeamRepositoryInterface } from '../interfaces/repositories/team.repository.interface';
 import { TEAM_REPOSITORY } from 'src/modules/teams/constants';
 import { UseCase } from 'src/libs/interfaces/use-case.interface';
@@ -9,6 +8,7 @@ import { GetTeamUserServiceInterface } from 'src/modules/teamUsers/interfaces/se
 import faker from '@faker-js/faker';
 import { teamUsers, teamsWithUsers } from './get-team-mocked-results';
 import { GET_TEAM_USER_SERVICE } from 'src/modules/teamUsers/constants';
+import { GetTeamsUserIsNotMemberUseCase } from './get-teams-user-is-not-member.use-case';
 
 describe('GetTeamsUserIsNotMemberUseCase', () => {
 	let getTeamsUserIsNotMember: UseCase<string, Team[]>;
@@ -18,7 +18,7 @@ describe('GetTeamsUserIsNotMemberUseCase', () => {
 	beforeAll(async () => {
 		const module: TestingModule = await Test.createTestingModule({
 			providers: [
-				getTeamsUserIsNotMemberUseCase,
+				GetTeamsUserIsNotMemberUseCase,
 				{
 					provide: TEAM_REPOSITORY,
 					useValue: createMock<TeamRepositoryInterface>()
@@ -30,9 +30,7 @@ describe('GetTeamsUserIsNotMemberUseCase', () => {
 			]
 		}).compile();
 
-		getTeamsUserIsNotMember = module.get<UseCase<string, Team[]>>(
-			getTeamsUserIsNotMemberUseCase.provide
-		);
+		getTeamsUserIsNotMember = module.get(GetTeamsUserIsNotMemberUseCase);
 		teamRepositoryMock = module.get(TEAM_REPOSITORY);
 		getTeamUserServiceMock = module.get(GET_TEAM_USER_SERVICE);
 	});

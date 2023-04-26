@@ -61,17 +61,17 @@ const TeamUserPermission = (permissions: string[]) => SetMetadata('permissions',
 export default class TeamsController {
 	constructor(
 		@Inject(CREATE_TEAM_USE_CASE)
-		private createTeamUseCase: UseCase<CreateTeamDto, Team>,
+		private readonly createTeamUseCase: UseCase<CreateTeamDto, Team>,
 		@Inject(GET_ALL_TEAMS_USE_CASE)
-		private getAllTeamsUseCase: UseCase<void, Team[]>,
+		private readonly getAllTeamsUseCase: UseCase<void, Team[]>,
 		@Inject(GET_TEAMS_OF_USER_USE_CASE)
-		private getTeamsOfUserUseCase: UseCase<string, Team[]>,
+		private readonly getTeamsOfUserUseCase: UseCase<string, Team[]>,
 		@Inject(GET_TEAM_USE_CASE)
-		private getTeamUseCase: UseCase<GetTeamUseCaseDto, Team>,
+		private readonly getTeamUseCase: UseCase<GetTeamUseCaseDto, Team>,
 		@Inject(GET_TEAMS_USER_IS_NOT_MEMBER_USE_CASE)
-		private getTeamsUserIsNotMemberUseCase: UseCase<string, Team[]>,
+		private readonly getTeamsUserIsNotMemberUseCase: UseCase<string, Team[]>,
 		@Inject(DELETE_TEAM_USE_CASE)
-		private deleteTeamUseCase: UseCase<string, boolean>
+		private readonly deleteTeamUseCase: UseCase<string, boolean>
 	) {}
 
 	@ApiOperation({ summary: 'Create a new team' })
