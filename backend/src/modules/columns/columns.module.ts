@@ -9,8 +9,8 @@ import SocketModule from '../socket/socket.module';
 import TeamsModule from '../teams/teams.module';
 import {
 	columnRepository,
-	updateColumnApplication,
-	updateColumnService
+	deleteCardsFromColumnUseCase,
+	updateColumnUseCase
 } from './columns.providers';
 import ColumnsController from './controller/columns.controller';
 import BoardUsersModule from '../boardUsers/boardusers.module';
@@ -30,6 +30,6 @@ import { VotesModule } from '../votes/votes.module';
 		forwardRef(() => VotesModule)
 	],
 	controllers: [ColumnsController],
-	providers: [updateColumnService, updateColumnApplication, columnRepository]
+	providers: [columnRepository, updateColumnUseCase, deleteCardsFromColumnUseCase]
 })
 export class ColumnsModule {}
