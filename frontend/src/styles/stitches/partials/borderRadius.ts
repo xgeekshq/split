@@ -3,6 +3,7 @@ const borderRadius = {
   2: '0.125rem',
   3: '0.1875rem',
   4: '0.25rem',
+  5: '0.313rem',
   6: '0.375rem',
   8: '0.5rem',
   12: '0.75rem',
