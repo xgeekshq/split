@@ -1,7 +1,7 @@
 import { Dispatch, SetStateAction, useState } from 'react';
 
 import { UpdateScheduleType } from '@/types/board/board';
-import { SelectDateUnit } from '@components/Board/Settings/partials/Scheduling/SelectDateUnit';
+import SelectDateUnit from '@components/Board/Settings/partials/Scheduling/SelectDateUnit';
 import Checkbox from '@components/Primitives/Inputs/Checkboxes/Checkbox/Checkbox';
 import Flex from '@components/Primitives/Layout/Flex/Flex';
 

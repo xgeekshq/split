@@ -119,4 +119,4 @@ const SelectDateUnit = ({
   );
 };
 
-export { SelectDateUnit };
+export default SelectDateUnit;
