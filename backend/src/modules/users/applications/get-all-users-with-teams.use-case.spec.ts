@@ -1,8 +1,6 @@
 import { DeepMocked, createMock } from '@golevelup/ts-jest';
 import { UseCase } from 'src/libs/interfaces/use-case.interface';
 import { UserRepositoryInterface } from '../repository/user.repository.interface';
-import { getAllUsersWithTeamsUseCase } from '../users.providers';
-import * as Users from 'src/modules/users/constants';
 import { Test, TestingModule } from '@nestjs/testing';
 import { GetUserServiceInterface } from '../interfaces/services/get.user.service.interface';
 import { GetTeamUserServiceInterface } from 'src/modules/teamUsers/interfaces/services/get.team.user.service.interface';
@@ -13,6 +11,8 @@ import GetAllUsersWithTeamsUseCaseDto from '../dto/useCase/get-all-users-with-te
 import { GetAllUsersWithTeamsPresenter } from 'src/modules/users/presenter/get-all-users-with-teams.presenter';
 import { sortTeamUserListAlphabetically } from '../utils/sortings';
 import { GET_TEAM_USER_SERVICE } from 'src/modules/teamUsers/constants';
+import { GET_USER_SERVICE, USER_REPOSITORY } from 'src/modules/users/constants';
+import GetAllUsersWithTeamsUseCase from 'src/modules/users/applications/get-all-users-with-teams.use-case';
 
 const users = UserFactory.createMany(10);
 const teams = TeamFactory.createMany(5);
@@ -39,13 +39,13 @@ describe('GetAllUsersWithTeamsUseCase', () => {
 	beforeAll(async () => {
 		const module: TestingModule = await Test.createTestingModule({
 			providers: [
-				getAllUsersWithTeamsUseCase,
+				GetAllUsersWithTeamsUseCase,
 				{
-					provide: Users.TYPES.repository,
+					provide: USER_REPOSITORY,
 					useValue: createMock<UserRepositoryInterface>()
 				},
 				{
-					provide: Users.TYPES.services.GetUserService,
+					provide: GET_USER_SERVICE,
 					useValue: createMock<GetUserServiceInterface>()
 				},
 				{
@@ -55,12 +55,10 @@ describe('GetAllUsersWithTeamsUseCase', () => {
 			]
 		}).compile();
 
-		getAllUsersWithTeams = module.get<
-			UseCase<GetAllUsersWithTeamsUseCaseDto, GetAllUsersWithTeamsPresenter>
-		>(getAllUsersWithTeamsUseCase.provide);
+		getAllUsersWithTeams = module.get(GetAllUsersWithTeamsUseCase);
 
-		userRepositoryMock = module.get(Users.TYPES.repository);
-		getUserServiceMock = module.get(Users.TYPES.services.GetUserService);
+		userRepositoryMock = module.get(USER_REPOSITORY);
+		getUserServiceMock = module.get(GET_USER_SERVICE);
 		getTeamUserServiceMock = module.get(GET_TEAM_USER_SERVICE);
 	});
 

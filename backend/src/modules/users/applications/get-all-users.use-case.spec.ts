@@ -1,10 +1,10 @@
 import { createMock } from '@golevelup/ts-jest';
 import { UseCase } from 'src/libs/interfaces/use-case.interface';
 import { UserRepositoryInterface } from '../repository/user.repository.interface';
-import { getAllUsersUseCase } from '../users.providers';
-import * as Users from 'src/modules/users/constants';
 import { Test, TestingModule } from '@nestjs/testing';
 import User from '../entities/user.schema';
+import { USER_REPOSITORY } from 'src/modules/users/constants';
+import GetAllUsersUseCase from 'src/modules/users/applications/get-all-users.use-case';
 
 describe('GetAllUsersUseCase', () => {
 	let getAllUsers: UseCase<void, User[]>;
@@ -12,15 +12,15 @@ describe('GetAllUsersUseCase', () => {
 	beforeAll(async () => {
 		const module: TestingModule = await Test.createTestingModule({
 			providers: [
-				getAllUsersUseCase,
+				GetAllUsersUseCase,
 				{
-					provide: Users.TYPES.repository,
+					provide: USER_REPOSITORY,
 					useValue: createMock<UserRepositoryInterface>()
 				}
 			]
 		}).compile();
 
-		getAllUsers = module.get<UseCase<void, User[]>>(getAllUsersUseCase.provide);
+		getAllUsers = module.get(GetAllUsersUseCase);
 	});
 
 	beforeEach(() => {

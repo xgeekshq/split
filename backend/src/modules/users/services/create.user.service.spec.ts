@@ -4,12 +4,12 @@ import { UserDtoFactory } from 'src/libs/test-utils/mocks/factories/dto/userDto-
 import { UserFactory } from 'src/libs/test-utils/mocks/factories/user-factory';
 import { CreateUserServiceInterface } from 'src/modules/users/interfaces/services/create.user.service.interface';
 import { UserRepositoryInterface } from './../repository/user.repository.interface';
-import { createUserService } from './../users.providers';
 import { Test, TestingModule } from '@nestjs/testing';
 import { DeepMocked, createMock } from '@golevelup/ts-jest';
-import * as Users from 'src/modules/users/constants';
 import CreateUserDto from '../dto/create.user.dto';
 import User from '../entities/user.schema';
+import { USER_REPOSITORY } from 'src/modules/users/constants';
+import CreateUserService from 'src/modules/users/services/create.user.service';
 
 const createUserDto: CreateUserDto = UserDtoFactory.create() as unknown as CreateUserDto;
 
@@ -27,16 +27,16 @@ describe('CreateUserService', () => {
 	beforeAll(async () => {
 		const module: TestingModule = await Test.createTestingModule({
 			providers: [
-				createUserService,
+				CreateUserService,
 				{
-					provide: Users.TYPES.repository,
+					provide: USER_REPOSITORY,
 					useValue: createMock<UserRepositoryInterface>()
 				}
 			]
 		}).compile();
 
-		userService = module.get<CreateUserServiceInterface>(createUserService.provide);
-		userRepositoryMock = module.get(Users.TYPES.repository);
+		userService = module.get(CreateUserService);
+		userRepositoryMock = module.get(USER_REPOSITORY);
 	});
 
 	beforeEach(() => {

@@ -1,8 +1,6 @@
 import { DeepMocked, createMock } from '@golevelup/ts-jest';
 import { UseCase } from 'src/libs/interfaces/use-case.interface';
 import { UserRepositoryInterface } from '../repository/user.repository.interface';
-import { deleteUserUseCase } from '../users.providers';
-import * as Users from 'src/modules/users/constants';
 import { Test, TestingModule } from '@nestjs/testing';
 import { DeleteTeamUserServiceInterface } from 'src/modules/teamUsers/interfaces/services/delete.team.user.service.interface';
 import { GetTeamUserServiceInterface } from 'src/modules/teamUsers/interfaces/services/get.team.user.service.interface';
@@ -10,6 +8,8 @@ import { UserFactory } from 'src/libs/test-utils/mocks/factories/user-factory';
 import faker from '@faker-js/faker';
 import { DeleteFailedException } from 'src/libs/exceptions/deleteFailedBadRequestException';
 import { DELETE_TEAM_USER_SERVICE, GET_TEAM_USER_SERVICE } from 'src/modules/teamUsers/constants';
+import { USER_REPOSITORY } from 'src/modules/users/constants';
+import { DeleteUserUseCase } from 'src/modules/users/applications/delete-user.use-case';
 
 const userId = faker.datatype.uuid();
 const userDeleted = UserFactory.create({ _id: userId });
@@ -24,9 +24,9 @@ describe('DeleteUserUseCase', () => {
 	beforeAll(async () => {
 		const module: TestingModule = await Test.createTestingModule({
 			providers: [
-				deleteUserUseCase,
+				DeleteUserUseCase,
 				{
-					provide: Users.TYPES.repository,
+					provide: USER_REPOSITORY,
 					useValue: createMock<UserRepositoryInterface>()
 				},
 				{
@@ -40,9 +40,9 @@ describe('DeleteUserUseCase', () => {
 			]
 		}).compile();
 
-		deleteUser = module.get<UseCase<string, boolean>>(deleteUserUseCase.provide);
+		deleteUser = module.get(DeleteUserUseCase);
 
-		userRepositoryMock = module.get(Users.TYPES.repository);
+		userRepositoryMock = module.get(USER_REPOSITORY);
 		deleteTeamUserServiceMock = module.get(DELETE_TEAM_USER_SERVICE);
 		getTeamUserServiceMock = module.get(GET_TEAM_USER_SERVICE);
 	});

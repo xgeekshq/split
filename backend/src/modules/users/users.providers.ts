@@ -1,5 +1,15 @@
 import { DeleteUserUseCase } from './applications/delete-user.use-case';
-import { TYPES } from './constants';
+import {
+	CREATE_USER_SERVICE,
+	DELETE_USER_USE_CASE,
+	GET_ALL_USERS_USE_CASE,
+	GET_ALL_USERS_WITH_TEAM_USE_CASE,
+	GET_USER_SERVICE,
+	GET_USER_USE_CASE,
+	UPDATE_SADMIN_USE_CASE,
+	UPDATE_USER_SERVICE,
+	USER_REPOSITORY
+} from './constants';
 import { UserRepository } from './repository/user.repository';
 import CreateUserService from './services/create.user.service';
 import GetUserService from './services/get.user.service';
@@ -9,47 +19,52 @@ import GetAllUsersUseCase from './applications/get-all-users.use-case';
 import UpdateSAdminUseCase from './applications/update-sadmin.use-case';
 import UpdateUserService from './services/update.user.service';
 
+/* SERVICES */
 export const createUserService = {
-	provide: TYPES.services.CreateUserService,
+	provide: CREATE_USER_SERVICE,
 	useClass: CreateUserService
 };
 
-export const getUserService = {
-	provide: TYPES.services.GetUserService,
-	useClass: GetUserService
-};
-
-export const getAllUsersUseCase = {
-	provide: TYPES.applications.GetAllUsersUseCase,
-	useClass: GetAllUsersUseCase
-};
-
-export const getUserUseCase = {
-	provide: TYPES.applications.GetUserUseCase,
-	useClass: GetUserUseCase
-};
-
 export const updateUserService = {
-	provide: TYPES.services.UpdateUserService,
+	provide: UPDATE_USER_SERVICE,
 	useClass: UpdateUserService
 };
 
+export const getUserService = {
+	provide: GET_USER_SERVICE,
+	useClass: GetUserService
+};
+
+/* USE CASES */
+
 export const getAllUsersWithTeamsUseCase = {
-	provide: TYPES.applications.GetAllUsersWithTeamsUseCase,
+	provide: GET_ALL_USERS_WITH_TEAM_USE_CASE,
 	useClass: GetAllUsersWithTeamsUseCase
 };
 
 export const updateSAdminUseCase = {
-	provide: TYPES.applications.UpdateSAdminUseCase,
+	provide: UPDATE_SADMIN_USE_CASE,
 	useClass: UpdateSAdminUseCase
 };
 
-export const userRepository = {
-	provide: TYPES.repository,
-	useClass: UserRepository
+export const deleteUserUseCase = {
+	provide: DELETE_USER_USE_CASE,
+	useClass: DeleteUserUseCase
 };
 
-export const deleteUserUseCase = {
-	provide: TYPES.applications.DeleteUserUseCase,
-	useClass: DeleteUserUseCase
+export const getAllUsersUseCase = {
+	provide: GET_ALL_USERS_USE_CASE,
+	useClass: GetAllUsersUseCase
+};
+
+export const getUserUseCase = {
+	provide: GET_USER_USE_CASE,
+	useClass: GetUserUseCase
+};
+
+/* REPOSITORY */
+
+export const userRepository = {
+	provide: USER_REPOSITORY,
+	useClass: UserRepository
 };

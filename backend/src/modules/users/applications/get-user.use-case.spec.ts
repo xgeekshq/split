@@ -1,10 +1,10 @@
 import { createMock } from '@golevelup/ts-jest';
 import { UseCase } from 'src/libs/interfaces/use-case.interface';
 import { getUserUseCase } from '../users.providers';
-import * as Users from 'src/modules/users/constants';
 import { Test, TestingModule } from '@nestjs/testing';
 import { GetUserServiceInterface } from '../interfaces/services/get.user.service.interface';
 import User from '../entities/user.schema';
+import { GET_USER_USE_CASE } from 'src/modules/users/constants';
 
 describe('GetUserUseCase', () => {
 	let getUser: UseCase<string, User>;
@@ -14,13 +14,13 @@ describe('GetUserUseCase', () => {
 			providers: [
 				getUserUseCase,
 				{
-					provide: Users.TYPES.services.GetUserService,
+					provide: GET_USER_USE_CASE,
 					useValue: createMock<GetUserServiceInterface>()
 				}
 			]
 		}).compile();
 
-		getUser = module.get<UseCase<string, User>>(getUserUseCase.provide);
+		getUser = module.get(getUserUseCase.provide);
 	});
 
 	beforeEach(() => {

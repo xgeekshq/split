@@ -20,10 +20,10 @@ import { StorageServiceInterface } from 'src/modules/storage/interfaces/services
 export class RegisterOrLoginAzureUseCase implements RegisterOrLoginAzureUseCaseInterface {
 	constructor(
 		@Inject(TYPES.services.AuthAzureService)
-		private authAzureService: AuthAzureServiceInterface,
-		@Inject(UserType.TYPES.services.GetUserService)
+		private readonly authAzureService: AuthAzureServiceInterface,
+		@Inject(UserType.GET_USER_SERVICE)
 		private readonly getUserService: GetUserServiceInterface,
-		@Inject(UserType.TYPES.services.CreateUserService)
+		@Inject(UserType.CREATE_USER_SERVICE)
 		private readonly createUserService: CreateUserServiceInterface,
 		@Inject(AuthType.TYPES.services.UpdateUserService)
 		private readonly updateUserService: UpdateUserServiceInterface,

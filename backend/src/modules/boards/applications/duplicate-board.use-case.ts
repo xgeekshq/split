@@ -11,12 +11,12 @@ import Column from 'src/modules/columns/entities/column.schema';
 import Team from 'src/modules/teams/entities/team.schema';
 import User from 'src/modules/users/entities/user.schema';
 import { GetUserServiceInterface } from 'src/modules/users/interfaces/services/get.user.service.interface';
-import * as Users from 'src/modules/users/constants';
 import Board from '../entities/board.schema';
 import { GetBoardServiceInterface } from '../interfaces/services/get.board.service.interface';
 import { BOARD_REPOSITORY, GET_BOARD_SERVICE } from '../constants';
 import { BoardRepositoryInterface } from '../repositories/board.repository.interface';
 import { CREATE_BOARD_USER_SERVICE } from 'src/modules/boardUsers/constants';
+import { GET_USER_SERVICE } from 'src/modules/users/constants';
 
 export type DuplicateBoardDto = { boardId: string; userId: string; boardTitle: string };
 
@@ -25,7 +25,7 @@ export class DuplicateBoardUseCase implements UseCase<DuplicateBoardDto, Board> 
 	constructor(
 		@Inject(GET_BOARD_SERVICE)
 		private readonly getBoardService: GetBoardServiceInterface,
-		@Inject(Users.TYPES.services.GetUserService)
+		@Inject(GET_USER_SERVICE)
 		private readonly getUserService: GetUserServiceInterface,
 		@Inject(BOARD_REPOSITORY)
 		private readonly boardRepository: BoardRepositoryInterface,
