@@ -130,8 +130,8 @@ const RepeatDay = ({ disableCheckboxes, schedulingData, setSchedulingData }: Rep
             handleDayCheckbox(!isDayChecked);
           }}
         />
-        <Flex align="center" gap={16} style={{ width: '100%' }}>
-          <Flex style={{ width: '100%' }}>
+        <Flex align="center" css={{ width: '100%' }} gap={16}>
+          <Flex css={{ width: '50%' }}>
             <Select
               css={{ height: '$60', width: '100%' }}
               disabled={!isDayChecked}
@@ -150,7 +150,7 @@ const RepeatDay = ({ disableCheckboxes, schedulingData, setSchedulingData }: Rep
               <SelectContent options={days} />
             </Select>
           </Flex>
-          <Flex justify="start" style={{ width: '100%' }}>
+          <Flex css={{ width: '50%' }} justify="start">
             <Text> day</Text>
           </Flex>
         </Flex>
@@ -160,7 +160,7 @@ const RepeatDay = ({ disableCheckboxes, schedulingData, setSchedulingData }: Rep
         align="center"
         direction="row"
         gap={16}
-        style={{
+        css={{
           maxHeight: '100%',
         }}
       >

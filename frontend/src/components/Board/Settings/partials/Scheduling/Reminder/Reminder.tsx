@@ -72,7 +72,7 @@ const ReminderSchedule = ({ schedulingData, setSchedulingData }: SchedulingProps
         timeUnit={schedulingData.reminderTimeUnit}
         title="Reminder"
       />
-      <Flex direction="column" style={{ marginLeft: '35px' }}>
+      <Flex css={{ ml: '$35' }} direction="column">
         <Checkbox
           checked={schedulingData.reminderViaSlack}
           disabled={!isReminderActive}

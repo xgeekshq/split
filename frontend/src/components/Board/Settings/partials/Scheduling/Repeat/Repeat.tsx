@@ -109,7 +109,7 @@ const RepeatSchedule = ({ schedulingData, setSchedulingData }: SchedulingProps) 
           {!schedulingData.repeatMeetingUntil && (
             <DropdownMenu.Root>
               <StyledDropDownTrigger disabled={false}>
-                <Text link color="infoBase" style={{ width: 'fit-content' }}>
+                <Text link color="infoBase" css={{ width: 'fit-content' }}>
                   Choose an end date
                 </Text>
               </StyledDropDownTrigger>
