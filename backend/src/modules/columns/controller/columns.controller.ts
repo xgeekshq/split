@@ -18,7 +18,6 @@ import { BadRequestResponse } from 'src/libs/swagger/errors/bad-request.swagger'
 import { InternalServerErrorResponse } from 'src/libs/swagger/errors/internal-server-error.swagger';
 import { UnauthorizedResponse } from 'src/libs/swagger/errors/unauthorized.swagger';
 import BoardDto from 'src/modules/boards/dto/board.dto';
-import { TYPES } from '../interfaces/types';
 import { BoardRoles } from 'src/libs/enum/board.roles';
 import { TeamRoles } from 'src/libs/enum/team.roles';
 import { BoardUserGuard } from 'src/libs/guards/boardRoles.guard';
@@ -28,6 +27,7 @@ import ColumnDto from '../dto/column.dto';
 import { UpdateColumnDto } from '../dto/update-column.dto';
 import { ColumnDeleteCardsDto } from '../dto/colum.deleteCards.dto';
 import { UpdateColumnApplicationInterface } from '../interfaces/applications/update.comment.application.interface';
+import { UPDATE_COLUMN_APPLICATION } from 'src/modules/columns/constants';
 
 const BoardUser = (permissions: string[]) => SetMetadata('permissions', permissions);
 
@@ -37,7 +37,7 @@ const BoardUser = (permissions: string[]) => SetMetadata('permissions', permissi
 @Controller('columns')
 export default class ColumnsController {
 	constructor(
-		@Inject(TYPES.applications.UpdateColumnApplication)
+		@Inject(UPDATE_COLUMN_APPLICATION)
 		private updateColumnApp: UpdateColumnApplicationInterface
 	) {}
 

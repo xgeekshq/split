@@ -1,6 +1,5 @@
 import { BadRequestException, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { COLUMN_NOT_FOUND, UPDATE_FAILED } from 'src/libs/exceptions/messages';
-import * as Columns from '../interfaces/types';
 import { UpdateColumnServiceInterface } from '../interfaces/services/update.column.service.interface';
 import { UpdateColumnDto } from '../dto/update-column.dto';
 import { ColumnDeleteCardsDto } from 'src/modules/columns/dto/colum.deleteCards.dto';
@@ -10,11 +9,12 @@ import { GetBoardServiceInterface } from 'src/modules/boards/interfaces/services
 import { DeleteVoteServiceInterface } from 'src/modules/votes/interfaces/services/delete.vote.service.interface';
 import { GET_BOARD_SERVICE } from 'src/modules/boards/constants';
 import { DELETE_VOTE_SERVICE } from 'src/modules/votes/constants';
+import { COLUMN_REPOSITORY } from 'src/modules/columns/constants';
 
 @Injectable()
 export default class UpdateColumnService implements UpdateColumnServiceInterface {
 	constructor(
-		@Inject(Columns.TYPES.repositories.ColumnRepository)
+		@Inject(COLUMN_REPOSITORY)
 		private readonly columnRepository: ColumnRepositoryInterface,
 		private readonly socketService: SocketGateway,
 		@Inject(GET_BOARD_SERVICE)
