@@ -102,4 +102,4 @@ const ReminderSchedule = ({ schedulingData, setSchedulingData }: SchedulingProps
   );
 };
 
-export { ReminderSchedule };
+export default ReminderSchedule;
