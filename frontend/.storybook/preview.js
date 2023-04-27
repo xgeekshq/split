@@ -1,8 +1,6 @@
 import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
-import _ from '@/mocks/server';
-
 import Sprite from '@/components/icons/Sprite';
 import { RecoilRoot } from 'recoil';
 
