@@ -14,7 +14,7 @@ import {
 	CreateSchedulesServiceInterface
 } from '../interfaces/services/create.schedules.service.interface';
 import { DeleteSchedulesServiceInterface } from '../interfaces/services/delete.schedules.service.interface';
-import { TYPES } from '../interfaces/types';
+import { DELETE_SCHEDULES_SERVICE, SCHEDULE_REPOSITORY } from '../constants';
 import Schedules from '../entities/schedules.schema';
 import { Configs } from 'src/modules/boards/dto/configs.dto';
 import { ScheduleRepositoryInterface } from '../repository/schedule.repository.interface';
@@ -26,7 +26,7 @@ export class CreateSchedulesService implements CreateSchedulesServiceInterface {
 	private logger = new Logger(CreateSchedulesService.name);
 
 	constructor(
-		@Inject(forwardRef(() => TYPES.services.DeleteSchedulesService))
+		@Inject(forwardRef(() => DELETE_SCHEDULES_SERVICE))
 		private readonly deleteSchedulesService: DeleteSchedulesServiceInterface,
 		@Inject(forwardRef(() => CREATE_BOARD_SERVICE))
 		private readonly createBoardService: CreateBoardServiceInterface,
@@ -35,7 +35,7 @@ export class CreateSchedulesService implements CreateSchedulesServiceInterface {
 		private readonly schedulerRegistry: SchedulerRegistry,
 		@Inject(CommunicationTypes.TYPES.services.SlackArchiveChannelService)
 		private readonly archiveChannelService: ArchiveChannelServiceInterface,
-		@Inject(TYPES.repository.ScheduleRepository)
+		@Inject(SCHEDULE_REPOSITORY)
 		private readonly scheduleRepository: ScheduleRepositoryInterface
 	) {
 		this.createInitialJobs();
