@@ -46,7 +46,7 @@ const ListBoards = React.memo<ListBoardsProps>(
 
     return (
       <ScrollableContent
-        css={{ height: 'calc(100vh - 225px)', paddingBottom: '$8' }}
+        css={{ height: 'calc(100vh - 225px)', pb: '$8' }}
         direction="column"
         justify="start"
         onScroll={onScroll}
@@ -62,15 +62,14 @@ const ListBoards = React.memo<ListBoardsProps>(
                 direction="column"
                 css={{
                   position: 'sticky',
-                  zIndex: '5',
-                  top: '-0.4px',
+                  zIndex: 1,
+                  top: 0,
                   backgroundColor: '$background',
-                  marginBottom: '-5px',
                 }}
               >
                 <TeamHeader team={teamFound} userId={userId} users={users} />
               </Flex>
-              <Flex css={{ width: '100%', minHeight: '15px' }} justify="end">
+              <Flex justify="end">
                 {(isSuperAdmin ||
                   isTeamAdmin(boardsOfTeam) ||
                   !Array.from(dataByTeamAndDate.teams.keys()).includes(teamId)) && (
@@ -80,7 +79,7 @@ const ListBoards = React.memo<ListBoardsProps>(
                       query: { team: teamId },
                     }}
                   >
-                    <Button css={{ zIndex: '9' }} size="sm" variant="link">
+                    <Button size="sm" variant="link">
                       <Icon name="plus" />
                       {!Array.from(dataByTeamAndDate.teams.keys()).includes(teamId)
                         ? 'Add new personal board'
@@ -89,7 +88,7 @@ const ListBoards = React.memo<ListBoardsProps>(
                   </Link>
                 )}
               </Flex>
-              <Flex css={{ zIndex: '1', marginTop: '-10px' }} direction="column" gap="32">
+              <Flex direction="column" gap="32">
                 {Array.from(boardsOfTeam).map(([date, boardsOfDay]) => {
                   const formatedDate = new Date(date).toLocaleDateString('en-US', {
                     weekday: 'long',
@@ -98,18 +97,8 @@ const ListBoards = React.memo<ListBoardsProps>(
                     day: 'numeric',
                   });
                   return (
-                    <Flex key={date} direction="column">
-                      <Text
-                        color="primary300"
-                        size="xs"
-                        css={{
-                          position: 'sticky',
-                          zIndex: '5',
-                          top: '-0.2px',
-                          height: '$24',
-                          backgroundColor: '$background',
-                        }}
-                      >
+                    <Flex key={date} direction="column" gap="8">
+                      <Text color="primary300" size="xs">
                         Last updated -{' '}
                         {date === currentDate ? `Today, ${formatedDate}` : formatedDate}
                       </Text>
