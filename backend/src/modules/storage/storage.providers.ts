@@ -1,7 +1,7 @@
-import { TYPES } from './interfaces/types';
+import { STORAGE_SERVICE } from './constants';
 import { StorageService } from './services/storage.service';
 
 export const storageService = {
-	provide: TYPES.services.StorageService,
+	provide: STORAGE_SERVICE,
 	useClass: StorageService
 };
