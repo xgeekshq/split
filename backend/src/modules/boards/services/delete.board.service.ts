@@ -4,13 +4,13 @@ import { DELETE_FAILED } from 'src/libs/exceptions/messages';
 import { DeleteSchedulesServiceInterface } from 'src/modules/schedules/interfaces/services/delete.schedules.service.interface';
 import { DeleteBoardServiceInterface } from '../interfaces/services/delete.board.service.interface';
 import Board from '../entities/board.schema';
-import * as CommunicationTypes from 'src/modules/communication/interfaces/types';
 import { ArchiveChannelServiceInterface } from 'src/modules/communication/interfaces/archive-channel.service.interface';
 import { ArchiveChannelDataOptions } from 'src/modules/communication/dto/types';
 import { BoardRepositoryInterface } from '../repositories/board.repository.interface';
 import { BOARD_REPOSITORY } from 'src/modules/boards/constants';
 import { DELETE_BOARD_USER_SERVICE } from 'src/modules/boardUsers/constants';
 import { DELETE_SCHEDULES_SERVICE } from 'src/modules/schedules/constants';
+import { SLACK_ARCHIVE_CHANNEL_SERVICE } from 'src/modules/communication/constants';
 
 @Injectable()
 export default class DeleteBoardService implements DeleteBoardServiceInterface {
@@ -21,7 +21,7 @@ export default class DeleteBoardService implements DeleteBoardServiceInterface {
 		private readonly deleteBoardUserService: DeleteBoardUserServiceInterface,
 		@Inject(DELETE_SCHEDULES_SERVICE)
 		private readonly deleteScheduleService: DeleteSchedulesServiceInterface,
-		@Inject(CommunicationTypes.TYPES.services.SlackArchiveChannelService)
+		@Inject(SLACK_ARCHIVE_CHANNEL_SERVICE)
 		private readonly archiveChannelService: ArchiveChannelServiceInterface
 	) {}
 

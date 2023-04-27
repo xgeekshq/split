@@ -1,7 +1,7 @@
 import { Process, Processor } from '@nestjs/bull';
 import { SlackSendMessageProducer } from '../producers/slack-send-message-channel.producer';
 import { SlackMessageType } from 'src/modules/communication/dto/types';
-import { TYPES } from 'src/modules/communication/interfaces/types';
+import { SLACK_SEND_MESSAGE_APPLICATION } from 'src/modules/communication/constants';
 import { Job } from 'bull';
 import { Inject, Logger } from '@nestjs/common';
 import { SlackCommunicationEventListeners } from './slack-communication-event-listeners';
@@ -13,7 +13,7 @@ export class SlackSendMessageConsumer extends SlackCommunicationEventListeners<
 	SlackMessageType
 > {
 	constructor(
-		@Inject(TYPES.application.SlackSendMessageApplication)
+		@Inject(SLACK_SEND_MESSAGE_APPLICATION)
 		private readonly application: SendMessageApplicationInterface
 	) {
 		const logger = new Logger(SlackSendMessageProducer.name);

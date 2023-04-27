@@ -8,7 +8,7 @@ import {
 	BoardType
 } from 'src/modules/communication/dto/types';
 import { ArchiveChannelApplicationInterface } from 'src/modules/communication/interfaces/archive-channel.application.interface';
-import { TYPES } from 'src/modules/communication/interfaces/types';
+import { SLACK_ARCHIVE_CHANNEL_APPLICATION } from 'src/modules/communication/constants';
 import { SlackArchiveChannelProducer } from 'src/modules/communication/producers/slack-archive-channel.producer';
 import { SlackCommunicationEventListeners } from './slack-communication-event-listeners';
 
@@ -18,7 +18,7 @@ export class SlackArchiveChannelConsumer extends SlackCommunicationEventListener
 	ArchiveChannelResult[]
 > {
 	constructor(
-		@Inject(TYPES.application.SlackArchiveChannelApplication)
+		@Inject(SLACK_ARCHIVE_CHANNEL_APPLICATION)
 		private readonly application: ArchiveChannelApplicationInterface
 	) {
 		const logger = new Logger(SlackArchiveChannelConsumer.name);
