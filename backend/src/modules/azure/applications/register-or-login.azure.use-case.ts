@@ -9,12 +9,12 @@ import { GetUserServiceInterface } from 'src/modules/users/interfaces/services/g
 import { CreateUserServiceInterface } from 'src/modules/users/interfaces/services/create.user.service.interface';
 import User from 'src/modules/users/entities/user.schema';
 import * as AuthType from 'src/modules/auth/interfaces/types';
-import * as StorageType from 'src/modules/storage/interfaces/types';
 import { UpdateUserServiceInterface } from 'src/modules/users/interfaces/services/update.user.service.interface';
 import { GetTokenAuthServiceInterface } from 'src/modules/auth/interfaces/services/get-token.auth.service.interface';
 import { signIn } from 'src/modules/auth/shared/login.auth';
 import { createHash } from 'node:crypto';
 import { StorageServiceInterface } from 'src/modules/storage/interfaces/services/storage.service';
+import { STORAGE_SERVICE } from 'src/modules/storage/constants';
 
 @Injectable()
 export class RegisterOrLoginAzureUseCase implements RegisterOrLoginAzureUseCaseInterface {
@@ -29,7 +29,7 @@ export class RegisterOrLoginAzureUseCase implements RegisterOrLoginAzureUseCaseI
 		private readonly updateUserService: UpdateUserServiceInterface,
 		@Inject(AuthType.TYPES.services.GetTokenAuthService)
 		private readonly getTokenService: GetTokenAuthServiceInterface,
-		@Inject(StorageType.TYPES.services.StorageService)
+		@Inject(STORAGE_SERVICE)
 		private readonly storageService: StorageServiceInterface
 	) {}
 
