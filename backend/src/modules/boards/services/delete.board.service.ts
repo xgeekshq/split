@@ -2,7 +2,6 @@ import { DeleteBoardUserServiceInterface } from '../../boardUsers/interfaces/ser
 import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { DELETE_FAILED } from 'src/libs/exceptions/messages';
 import { DeleteSchedulesServiceInterface } from 'src/modules/schedules/interfaces/services/delete.schedules.service.interface';
-import * as Schedules from 'src/modules/schedules/interfaces/types';
 import { DeleteBoardServiceInterface } from '../interfaces/services/delete.board.service.interface';
 import Board from '../entities/board.schema';
 import * as CommunicationTypes from 'src/modules/communication/interfaces/types';
@@ -11,6 +10,7 @@ import { ArchiveChannelDataOptions } from 'src/modules/communication/dto/types';
 import { BoardRepositoryInterface } from '../repositories/board.repository.interface';
 import { BOARD_REPOSITORY } from 'src/modules/boards/constants';
 import { DELETE_BOARD_USER_SERVICE } from 'src/modules/boardUsers/constants';
+import { DELETE_SCHEDULES_SERVICE } from 'src/modules/schedules/constants';
 
 @Injectable()
 export default class DeleteBoardService implements DeleteBoardServiceInterface {
@@ -19,7 +19,7 @@ export default class DeleteBoardService implements DeleteBoardServiceInterface {
 		private readonly boardRepository: BoardRepositoryInterface,
 		@Inject(DELETE_BOARD_USER_SERVICE)
 		private readonly deleteBoardUserService: DeleteBoardUserServiceInterface,
-		@Inject(Schedules.TYPES.services.DeleteSchedulesService)
+		@Inject(DELETE_SCHEDULES_SERVICE)
 		private readonly deleteScheduleService: DeleteSchedulesServiceInterface,
 		@Inject(CommunicationTypes.TYPES.services.SlackArchiveChannelService)
 		private readonly archiveChannelService: ArchiveChannelServiceInterface

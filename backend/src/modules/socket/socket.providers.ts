@@ -4,40 +4,48 @@ import AfterServerStaredTimerSubscriber from 'src/modules/socket/subscribers/aft
 import AfterServerStoppedTimerSubscriber from 'src/modules/socket/subscribers/after-server-stopped-timer.subscriber';
 import AfterServerUpdatedTimeLeftSubscriber from 'src/modules/socket/subscribers/after-server-updated-time-left.subscriber';
 import AfterServerUpdatedTimerDurationSubscriber from 'src/modules/socket/subscribers/after-server-updated-timer-duration.subscriber';
-import { TYPES } from './interfaces/types';
+import {
+	AFTER_SERVER_PAUSED_TIMER_SUBSCRIBER,
+	AFTER_SERVER_SENT_TIMER_STATE_SUBSCRIBER,
+	AFTER_SERVER_STARTED_TIMER_SUBSCRIBER,
+	AFTER_SERVER_STOPPED_TIMER_SUBSCRIBER,
+	AFTER_SERVER_UPDATED_PHASE_SUBSCRIBER,
+	AFTER_SERVER_UPDATED_TIME_DURATION_SUBSCRIBER,
+	AFTER_SERVER_UPDATED_TIME_LEFT_SUBSCRIBER
+} from './constants';
 import AfterServerUpdatedPhaseSubscriber from './subscribers/after-server-updated-phase.subscriber';
 
 export const afterServerUpdatedTimerDurationSubscriber = {
-	provide: TYPES.subscribers.AfterServerUpdatedTimerDurationSubscriber,
+	provide: AFTER_SERVER_UPDATED_TIME_DURATION_SUBSCRIBER,
 	useClass: AfterServerUpdatedTimerDurationSubscriber
 };
 
 export const afterServerPausedTimerSubscriber = {
-	provide: TYPES.subscribers.AfterServerPausedTimerSubscriber,
+	provide: AFTER_SERVER_PAUSED_TIMER_SUBSCRIBER,
 	useClass: AfterServerPausedTimerSubscriber
 };
 
-export const afterServerStaredTimerSubscriber = {
-	provide: TYPES.subscribers.AfterServerStaredTimerSubscriber,
+export const afterServerStartedTimerSubscriber = {
+	provide: AFTER_SERVER_STARTED_TIMER_SUBSCRIBER,
 	useClass: AfterServerStaredTimerSubscriber
 };
 
 export const afterServerStoppedTimerSubscriber = {
-	provide: TYPES.subscribers.AfterServerStoppedTimerSubscriber,
+	provide: AFTER_SERVER_STOPPED_TIMER_SUBSCRIBER,
 	useClass: AfterServerStoppedTimerSubscriber
 };
 
 export const afterServerUpdatedTimeLeftSubscriber = {
-	provide: TYPES.subscribers.AfterServerUpdatedTimeLeftSubscriber,
+	provide: AFTER_SERVER_UPDATED_TIME_LEFT_SUBSCRIBER,
 	useClass: AfterServerUpdatedTimeLeftSubscriber
 };
 
 export const afterServerSentTimerStateSubscriber = {
-	provide: TYPES.subscribers.AfterServerSentTimerStateSubscriber,
+	provide: AFTER_SERVER_SENT_TIMER_STATE_SUBSCRIBER,
 	useClass: AfterServerSentTimerStateSubscriber
 };
 
 export const afterServerUpdatedPhaseSubscriber = {
-	provide: TYPES.subscribers.AfterServerUpdatedPhaseSubscriber,
+	provide: AFTER_SERVER_UPDATED_PHASE_SUBSCRIBER,
 	useClass: AfterServerUpdatedPhaseSubscriber
 };
