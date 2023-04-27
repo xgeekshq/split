@@ -62,7 +62,7 @@ const ListBoards = React.memo<ListBoardsProps>(
                 direction="column"
                 css={{
                   position: 'sticky',
-                  zIndex: 1,
+                  zIndex: 5,
                   top: 0,
                   backgroundColor: '$background',
                 }}
