@@ -1,14 +1,14 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { TeamQueryParams } from 'src/libs/dto/param/team.query.params';
 
-export class ColumnDeleteCardsDto {
+export class GetTeamUseCaseDto {
 	@ApiProperty()
+	@IsString()
 	@IsNotEmpty()
-	@IsString()
-	id!: string;
+	teamId: string;
 
 	@ApiProperty()
-	@IsString()
 	@IsOptional()
-	socketId?: string;
+	teamQueryParams?: TeamQueryParams;
 }

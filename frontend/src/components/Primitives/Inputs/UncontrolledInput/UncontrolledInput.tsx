@@ -59,7 +59,7 @@ const UncontrolledInput = ({
           style={{ cursor: cursorType || '' }}
           value={currentValue}
         />
-        <PlaceholderText as="label" htmlFor="uncontrolledInput">
+        <PlaceholderText as="label" color="primary300" htmlFor="uncontrolledInput">
           {placeholder}
         </PlaceholderText>
       </Flex>
