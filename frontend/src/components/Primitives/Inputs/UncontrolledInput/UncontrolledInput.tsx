@@ -16,6 +16,7 @@ export type UncontrolledInputProps = {
   IconPositionRight?: boolean;
   disabled?: boolean;
   currentValue?: string;
+  width?: string;
   handleChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
   handleClear?: () => void;
 };
@@ -27,11 +28,12 @@ const UncontrolledInput = ({
   iconName,
   disabled = false,
   currentValue,
+  width = '100%',
   handleChange,
   handleClear,
 }: UncontrolledInputProps) => (
   <Flex
-    css={{ position: 'relative', width: '100%', mb: '$16', height: 'auto' }}
+    css={{ position: 'relative', width: width, height: 'auto' }}
     data-testid="uncontrolledInput"
     direction="column"
   >
