@@ -1,6 +1,5 @@
 import { DeepMocked, createMock } from '@golevelup/ts-jest';
 import { Test, TestingModule } from '@nestjs/testing';
-import { TYPES } from 'src/modules/communication/interfaces/types';
 import { BoardType } from '../dto/types';
 import { Job } from 'bull';
 import { SlackCommunicationConsumer } from './slack-communication.consumer';
@@ -10,6 +9,7 @@ import { Logger } from '@nestjs/common';
 import { UserFactory } from 'src/libs/test-utils/mocks/factories/user-factory';
 import { TeamDto } from 'src/modules/communication/dto/team.dto';
 import { UPDATE_BOARD_SERVICE } from 'src/modules/boards/constants';
+import { SLACK_COMMUNICATION_APPLICATION } from 'src/modules/communication/constants';
 
 const BoardTypeMock = {
 	id: 1,
@@ -48,7 +48,7 @@ describe('SlackCommunicationConsumer', () => {
 			providers: [
 				SlackCommunicationConsumer,
 				{
-					provide: TYPES.application.SlackCommunicationApplication,
+					provide: SLACK_COMMUNICATION_APPLICATION,
 					useValue: createMock<CommunicationApplicationInterface>()
 				},
 				{
@@ -58,7 +58,7 @@ describe('SlackCommunicationConsumer', () => {
 			]
 		}).compile();
 		consumer = module.get(SlackCommunicationConsumer);
-		communicationAppMock = module.get(TYPES.application.SlackCommunicationApplication);
+		communicationAppMock = module.get(SLACK_COMMUNICATION_APPLICATION);
 		updateBoardServiceMock = module.get(UPDATE_BOARD_SERVICE);
 	});
 

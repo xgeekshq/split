@@ -1,11 +1,11 @@
 import { DeepMocked, createMock } from '@golevelup/ts-jest';
 import { Test, TestingModule } from '@nestjs/testing';
-import { TYPES } from 'src/modules/communication/interfaces/types';
 import { AddUserMainChannelType } from '../dto/types';
 import { Job } from 'bull';
 import { SlackAddUserToChannelConsumer } from './slack-add-user-channel.consumer';
 import { AddUserIntoChannelApplicationInterface } from '../interfaces/communication.application.interface copy';
 import { Logger } from '@nestjs/common';
+import { SLACK_ADD_USER_INTO_CHANNEL_APPLICATION } from 'src/modules/communication/constants';
 
 const newUserMock = {
 	id: 1,
@@ -23,13 +23,13 @@ describe('SlackAddUserToChannelConsumer', () => {
 			providers: [
 				SlackAddUserToChannelConsumer,
 				{
-					provide: TYPES.application.SlackAddUserIntoChannelApplication,
+					provide: SLACK_ADD_USER_INTO_CHANNEL_APPLICATION,
 					useValue: createMock<AddUserIntoChannelApplicationInterface>()
 				}
 			]
 		}).compile();
-		consumer = module.get<SlackAddUserToChannelConsumer>(SlackAddUserToChannelConsumer);
-		addUserIntoChannelAppMock = module.get(TYPES.application.SlackAddUserIntoChannelApplication);
+		consumer = module.get(SlackAddUserToChannelConsumer);
+		addUserIntoChannelAppMock = module.get(SLACK_ADD_USER_INTO_CHANNEL_APPLICATION);
 	});
 
 	beforeEach(() => {

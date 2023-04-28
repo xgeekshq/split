@@ -3,7 +3,7 @@ import { Inject, Logger } from '@nestjs/common';
 import { Job } from 'bull';
 import { MergeBoardType } from 'src/modules/communication/dto/types';
 import { MergeBoardApplicationInterface } from 'src/modules/communication/interfaces/merge-board.application.interface';
-import { TYPES } from 'src/modules/communication/interfaces/types';
+import { SLACK_MERGE_BOARD_APPLICATION } from 'src/modules/communication/constants';
 import { SlackMergeBoardProducer } from '../producers/slack-merge-board.producer';
 import { SlackCommunicationEventListeners } from './slack-communication-event-listeners';
 
@@ -13,7 +13,7 @@ export class SlackMergeBoardConsumer extends SlackCommunicationEventListeners<
 	MergeBoardType
 > {
 	constructor(
-		@Inject(TYPES.application.SlackMergeBoardApplication)
+		@Inject(SLACK_MERGE_BOARD_APPLICATION)
 		private readonly application: MergeBoardApplicationInterface
 	) {
 		const logger = new Logger(SlackMergeBoardConsumer.name);

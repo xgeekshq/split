@@ -11,17 +11,17 @@ import { UpdateFailedException } from 'src/libs/exceptions/updateFailedBadReques
 import { UseCase } from 'src/libs/interfaces/use-case.interface';
 import { SlackMessageDto } from 'src/modules/communication/dto/slack.message.dto';
 import { SendMessageServiceInterface } from 'src/modules/communication/interfaces/send-message.service.interface';
-import * as CommunicationsType from 'src/modules/communication/interfaces/types';
 import PhaseChangeEvent from 'src/modules/socket/events/user-updated-phase.event';
 import { BOARD_REPOSITORY } from '../constants';
 import { BoardRepositoryInterface } from '../repositories/board.repository.interface';
+import { SLACK_SEND_MESSAGE_SERVICE } from 'src/modules/communication/constants';
 
 @Injectable()
 export class UpdateBoardPhaseUseCase implements UseCase<BoardPhaseDto, void> {
 	constructor(
 		@Inject(BOARD_REPOSITORY)
 		private readonly boardRepository: BoardRepositoryInterface,
-		@Inject(CommunicationsType.TYPES.services.SlackSendMessageService)
+		@Inject(SLACK_SEND_MESSAGE_SERVICE)
 		private readonly slackSendMessageService: SendMessageServiceInterface,
 		private readonly eventEmitter: EventEmitter2,
 		private readonly configService: ConfigService
