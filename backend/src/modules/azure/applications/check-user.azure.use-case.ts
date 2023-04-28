@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { AuthAzureServiceInterface } from '../interfaces/services/auth.azure.service.interface';
-import { TYPES } from '../interfaces/types';
+import { AUTH_AZURE_SERVICE } from '../constants';
 import { GetUserServiceInterface } from 'src/modules/users/interfaces/services/get.user.service.interface';
 import { CheckUserAzureUseCaseInterface } from '../interfaces/applications/check-user.azure.use-case.interface';
 import { UserNotFoundException } from 'src/libs/exceptions/userNotFoundException';
@@ -9,7 +9,7 @@ import { GET_USER_SERVICE } from 'src/modules/users/constants';
 @Injectable()
 export class CheckUserAzureUseCase implements CheckUserAzureUseCaseInterface {
 	constructor(
-		@Inject(TYPES.services.AuthAzureService)
+		@Inject(AUTH_AZURE_SERVICE)
 		private readonly authAzureService: AuthAzureServiceInterface,
 		@Inject(GET_USER_SERVICE)
 		private readonly getUserService: GetUserServiceInterface

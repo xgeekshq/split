@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { RegisterOrLoginAzureUseCaseInterface } from '../interfaces/applications/register-or-login.azure.use-case.interface';
 import { AuthAzureServiceInterface } from '../interfaces/services/auth.azure.service.interface';
-import { TYPES } from '../interfaces/types';
+import { AUTH_AZURE_SERVICE } from '../constants';
 import { AzureDecodedUser } from '../services/auth.azure.service';
 import jwt_decode from 'jwt-decode';
 import { GetUserServiceInterface } from 'src/modules/users/interfaces/services/get.user.service.interface';
@@ -19,7 +19,7 @@ import { STORAGE_SERVICE } from 'src/modules/storage/constants';
 @Injectable()
 export class RegisterOrLoginAzureUseCase implements RegisterOrLoginAzureUseCaseInterface {
 	constructor(
-		@Inject(TYPES.services.AuthAzureService)
+		@Inject(AUTH_AZURE_SERVICE)
 		private readonly authAzureService: AuthAzureServiceInterface,
 		@Inject(GET_USER_SERVICE)
 		private readonly getUserService: GetUserServiceInterface,
