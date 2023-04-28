@@ -11,9 +11,9 @@ import { InsertFailedException } from 'src/libs/exceptions/insertFailedBadReques
 export default class RegisterGuestUserUseCase implements RegisterGuestUserUseCaseInterface {
 	constructor(
 		@Inject(CREATE_USER_SERVICE)
-		private createUserService: CreateUserServiceInterface,
+		private readonly createUserService: CreateUserServiceInterface,
 		@Inject(AUTH_TYPES.TYPES.services.GetTokenAuthService)
-		private getTokenAuthService: GetTokenAuthServiceInterface
+		private readonly getTokenAuthService: GetTokenAuthServiceInterface
 	) {}
 
 	public async execute(guestUserData: CreateGuestUserDto) {
