@@ -16,7 +16,6 @@ import { StorageServiceInterface } from 'src/modules/storage/interfaces/services
 import { CREATE_USER_SERVICE, GET_USER_SERVICE } from 'src/modules/users/constants';
 import { STORAGE_SERVICE } from 'src/modules/storage/constants';
 
-
 @Injectable()
 export class RegisterOrLoginAzureUseCase implements RegisterOrLoginAzureUseCaseInterface {
 	constructor(
