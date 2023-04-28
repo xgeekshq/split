@@ -11,7 +11,7 @@ export type MainPagerHeaderProps = {
 };
 
 const MainPageHeader = ({ title, button }: MainPagerHeaderProps) => (
-  <Flex data-testid="MainPageHeader" justify="between">
+  <Flex data-testid="MainPageHeader" gap="8" justify="between">
     <Text heading="1">{title}</Text>
     {button && (
       <Link href={button.link ?? '#'} style={{ height: 'fit-content' }}>
