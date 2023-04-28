@@ -1,10 +1,10 @@
 import { DeepMocked, createMock } from '@golevelup/ts-jest';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ResponsibleApplicationInterface } from '../interfaces/responsible.application.interface';
-import { TYPES } from 'src/modules/communication/interfaces/types';
 import { SlackResponsibleConsumer } from './slack-responsible.consumer';
 import { ChangeResponsibleType } from '../dto/types';
 import { Job } from 'bull';
+import { SLACK_RESPONSIBLE_APPLICATION } from 'src/modules/communication/constants';
 
 const changeResponsibleMock = {
 	id: 1,
@@ -28,13 +28,13 @@ describe('SlackResponsibleConsumer', () => {
 			providers: [
 				SlackResponsibleConsumer,
 				{
-					provide: TYPES.application.SlackResponsibleApplication,
+					provide: SLACK_RESPONSIBLE_APPLICATION,
 					useValue: createMock<ResponsibleApplicationInterface>()
 				}
 			]
 		}).compile();
-		consumer = module.get<SlackResponsibleConsumer>(SlackResponsibleConsumer);
-		responsibleApplicationMock = module.get(TYPES.application.SlackResponsibleApplication);
+		consumer = module.get(SlackResponsibleConsumer);
+		responsibleApplicationMock = module.get(SLACK_RESPONSIBLE_APPLICATION);
 	});
 
 	beforeEach(() => {

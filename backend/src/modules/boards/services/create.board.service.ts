@@ -10,7 +10,6 @@ import {
 import { getDay, getNextMonth } from 'src/libs/utils/dates';
 import { generateBoardDtoData, generateSubBoardDtoData } from 'src/libs/utils/generateBoardData';
 import { CommunicationServiceInterface } from 'src/modules/communication/interfaces/slack-communication.service.interface';
-import * as CommunicationsType from 'src/modules/communication/interfaces/types';
 import { AddCronJobDto } from 'src/modules/schedules/dto/add.cronjob.dto';
 import { CreateSchedulesServiceInterface } from 'src/modules/schedules/interfaces/services/create.schedules.service.interface';
 import { GetTeamServiceInterface } from 'src/modules/teams/interfaces/services/get.team.service.interface';
@@ -38,6 +37,7 @@ import { GET_TEAM_USER_SERVICE, UPDATE_TEAM_USER_SERVICE } from 'src/modules/tea
 import { BOARD_REPOSITORY } from 'src/modules/boards/constants';
 import { CREATE_BOARD_USER_SERVICE } from 'src/modules/boardUsers/constants';
 import { CREATE_SCHEDULES_SERVICE } from 'src/modules/schedules/constants';
+import { SLACK_COMMUNICATION_SERVICE } from 'src/modules/communication/constants';
 
 type CreateBoardAndUsers = {
 	boardData: BoardDto;
@@ -57,7 +57,7 @@ export default class CreateBoardService implements CreateBoardServiceInterface {
 		private readonly updateTeamUserService: UpdateTeamUserServiceInterface,
 		@Inject(CREATE_SCHEDULES_SERVICE)
 		private readonly createSchedulesService: CreateSchedulesServiceInterface,
-		@Inject(CommunicationsType.TYPES.services.SlackCommunicationService)
+		@Inject(SLACK_COMMUNICATION_SERVICE)
 		private readonly slackCommunicationService: CommunicationServiceInterface,
 		@Inject(BOARD_REPOSITORY)
 		private readonly boardRepository: BoardRepositoryInterface,

@@ -9,12 +9,12 @@ import { DeleteVoteServiceInterface } from 'src/modules/votes/interfaces/service
 import { GET_BOARD_SERVICE } from 'src/modules/boards/constants';
 import { DELETE_VOTE_SERVICE } from 'src/modules/votes/constants';
 import { COLUMN_REPOSITORY } from 'src/modules/columns/constants';
-import { DeleteCardsFromColumnUseCase } from 'src/modules/columns/applications/delete-cards-from-column.use-case';
 import { UseCase } from 'src/libs/interfaces/use-case.interface';
 import { DeleteCardsFromColumnUseCaseDto } from 'src/modules/columns/dto/useCase/delete-cards-from-column.use-case.dto';
 import Board from 'src/modules/boards/entities/board.schema';
 import { ColumnRepositoryInterface } from 'src/modules/columns/repositories/column.repository.interface';
 import { UpdateFailedException } from 'src/libs/exceptions/updateFailedBadRequestException';
+import { DeleteCardsFromColumnUseCase } from 'src/modules/columns/applications/delete-cards-from-column.use-case';
 
 const board = BoardFactory.create();
 const columnToDeleteCards = {

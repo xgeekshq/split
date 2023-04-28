@@ -30,7 +30,13 @@ import { InternalServerErrorResponse } from 'src/libs/swagger/errors/internal-se
 import { UnauthorizedResponse } from 'src/libs/swagger/errors/unauthorized.swagger';
 import UpdateUserDto from '../dto/update.user.dto';
 import UserDto from '../dto/user.dto';
-import { TYPES } from '../interfaces/types';
+import {
+	DELETE_USER_USE_CASE,
+	GET_ALL_USERS_USE_CASE,
+	GET_ALL_USERS_WITH_TEAM_USE_CASE,
+	GET_USER_USE_CASE,
+	UPDATE_SADMIN_USE_CASE
+} from '../constants';
 import { UsersWithTeamsResponse } from '../swagger/users-with-teams.swagger';
 import { SuperAdminGuard } from 'src/libs/guards/superAdmin.guard';
 import { ForbiddenResponse } from '../../../libs/swagger/errors/forbidden.swagger';
@@ -51,19 +57,19 @@ import GetAllUsersWithTeamsUseCaseDto from '../dto/useCase/get-all-users-with-te
 @Controller('users')
 export default class UsersController {
 	constructor(
-		@Inject(TYPES.applications.GetUserUseCase)
-		private getUserUseCase: UseCase<string, User>,
-		@Inject(TYPES.applications.GetAllUsersUseCase)
-		private getAllUsersUseCase: UseCase<void, User[]>,
-		@Inject(TYPES.applications.GetAllUsersWithTeamsUseCase)
-		private getAllUsersWithTeamsUseCase: UseCase<
+		@Inject(GET_USER_USE_CASE)
+		private readonly getUserUseCase: UseCase<string, User>,
+		@Inject(GET_ALL_USERS_USE_CASE)
+		private readonly getAllUsersUseCase: UseCase<void, User[]>,
+		@Inject(GET_ALL_USERS_WITH_TEAM_USE_CASE)
+		private readonly getAllUsersWithTeamsUseCase: UseCase<
 			GetAllUsersWithTeamsUseCaseDto,
 			GetAllUsersWithTeamsPresenter
 		>,
-		@Inject(TYPES.applications.UpdateSAdminUseCase)
-		private updateSAdminUseCase: UseCase<UpdateSAdminUseCaseDto, User>,
-		@Inject(TYPES.applications.DeleteUserUseCase)
-		private deleteUserApp: UseCase<string, boolean>
+		@Inject(UPDATE_SADMIN_USE_CASE)
+		private readonly updateSAdminUseCase: UseCase<UpdateSAdminUseCaseDto, User>,
+		@Inject(DELETE_USER_USE_CASE)
+		private readonly deleteUserUseCase: UseCase<string, boolean>
 	) {}
 
 	@ApiOperation({ summary: 'Retrieve a list of existing users' })
@@ -199,7 +205,7 @@ export default class UsersController {
 	})
 	@UseGuards(SuperAdminGuard, DeleteUserGuard)
 	@Delete(':userId')
-	deleteUser(@Req() request: RequestWithUser, @Param() { userId }: UserParams) {
-		return this.deleteUserApp.execute(userId);
+	deleteUser(@Param() { userId }: UserParams) {
+		return this.deleteUserUseCase.execute(userId);
 	}
 }

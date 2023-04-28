@@ -4,7 +4,7 @@ import { SlackSendMessageService } from './slack-send-messages.service';
 import { SlackSendMessageProducer } from '../producers/slack-send-message-channel.producer';
 import { SlackMessageType } from '../dto/types';
 import { SendMessageServiceInterface } from '../interfaces/send-message.service.interface';
-import * as CommunicationsType from 'src/modules/communication/interfaces/types';
+import { SLACK_SEND_MESSAGE_SERVICE } from 'src/modules/communication/constants';
 
 describe('SlackSendMessageService', () => {
 	let service: SendMessageServiceInterface;
@@ -18,7 +18,7 @@ describe('SlackSendMessageService', () => {
 		const module: TestingModule = await Test.createTestingModule({
 			providers: [
 				{
-					provide: CommunicationsType.TYPES.services.SlackSendMessageService,
+					provide: SLACK_SEND_MESSAGE_SERVICE,
 					useClass: SlackSendMessageService
 				},
 				{
@@ -28,9 +28,7 @@ describe('SlackSendMessageService', () => {
 			]
 		}).compile();
 
-		service = module.get<SendMessageServiceInterface>(
-			CommunicationsType.TYPES.services.SlackSendMessageService
-		);
+		service = module.get(SLACK_SEND_MESSAGE_SERVICE);
 		slackSendMessageProducerMock = module.get(SlackSendMessageProducer);
 	});
 

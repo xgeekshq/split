@@ -2,7 +2,6 @@ import { UseCase } from 'src/libs/interfaces/use-case.interface';
 import { BadRequestException, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { BOARD_REPOSITORY } from '../constants';
 import * as Auth from 'src/modules/auth/interfaces/types';
-import * as Users from 'src/modules/users/interfaces/types';
 import BoardUseCasePresenter from '../presenter/board.use-case.presenter';
 import GetBoardUseCaseDto from '../dto/useCase/get-board.use-case.dto';
 import Board from '../entities/board.schema';
@@ -21,6 +20,7 @@ import {
 	CREATE_BOARD_USER_SERVICE,
 	GET_BOARD_USER_SERVICE
 } from 'src/modules/boardUsers/constants';
+import { UPDATE_USER_SERVICE } from 'src/modules/users/constants';
 
 @Injectable()
 export class GetBoardUseCase implements UseCase<GetBoardUseCaseDto, BoardUseCasePresenter> {
@@ -33,7 +33,7 @@ export class GetBoardUseCase implements UseCase<GetBoardUseCaseDto, BoardUseCase
 		private readonly createBoardUserService: CreateBoardUserServiceInterface,
 		@Inject(Auth.TYPES.services.GetTokenAuthService)
 		private readonly getTokenAuthService: GetTokenAuthServiceInterface,
-		@Inject(Users.TYPES.services.UpdateUserService)
+		@Inject(UPDATE_USER_SERVICE)
 		private readonly updateUserService: UpdateUserServiceInterface
 	) {}
 

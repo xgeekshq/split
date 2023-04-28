@@ -3,11 +3,11 @@ import { faker } from '@faker-js/faker';
 import { UserFactory } from 'src/libs/test-utils/mocks/factories/user-factory';
 import { GetUserServiceInterface } from 'src/modules/users/interfaces/services/get.user.service.interface';
 import { UserRepositoryInterface } from './../repository/user.repository.interface';
-import { getUserService } from './../users.providers';
 import { Test, TestingModule } from '@nestjs/testing';
 import { DeepMocked, createMock } from '@golevelup/ts-jest';
-import * as Users from 'src/modules/users/interfaces/types';
 import User from '../entities/user.schema';
+import { USER_REPOSITORY } from 'src/modules/users/constants';
+import GetUserService from 'src/modules/users/services/get.user.service';
 
 const user: User = UserFactory.create();
 const refreshToken = faker.datatype.string();
@@ -19,16 +19,16 @@ describe('GetUserService', () => {
 	beforeAll(async () => {
 		const module: TestingModule = await Test.createTestingModule({
 			providers: [
-				getUserService,
+				GetUserService,
 				{
-					provide: Users.TYPES.repository,
+					provide: USER_REPOSITORY,
 					useValue: createMock<UserRepositoryInterface>()
 				}
 			]
 		}).compile();
 
-		userService = module.get<GetUserServiceInterface>(getUserService.provide);
-		userRepositoryMock = module.get(Users.TYPES.repository);
+		userService = module.get(GetUserService);
+		userRepositoryMock = module.get(USER_REPOSITORY);
 	});
 
 	beforeEach(() => {

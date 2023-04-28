@@ -11,10 +11,10 @@ import { UseCase } from 'src/libs/interfaces/use-case.interface';
 import { BoardFactory } from 'src/libs/test-utils/mocks/factories/board-factory.mock';
 import { TeamFactory } from 'src/libs/test-utils/mocks/factories/team-factory.mock';
 import { SendMessageServiceInterface } from 'src/modules/communication/interfaces/send-message.service.interface';
-import * as CommunicationsType from 'src/modules/communication/interfaces/types';
 import { BoardRepositoryInterface } from '../repositories/board.repository.interface';
 import { UpdateBoardPhaseUseCase } from './update-board-phase.use-case';
 import { BOARD_REPOSITORY } from 'src/modules/boards/constants';
+import { SLACK_SEND_MESSAGE_SERVICE } from 'src/modules/communication/constants';
 
 describe('UpdateBoardPhaseUseCase', () => {
 	let useCase: UseCase<BoardPhaseDto, void>;
@@ -28,7 +28,7 @@ describe('UpdateBoardPhaseUseCase', () => {
 			providers: [
 				UpdateBoardPhaseUseCase,
 				{
-					provide: CommunicationsType.TYPES.services.SlackSendMessageService,
+					provide: SLACK_SEND_MESSAGE_SERVICE,
 					useValue: createMock<SendMessageServiceInterface>()
 				},
 				{
@@ -50,9 +50,7 @@ describe('UpdateBoardPhaseUseCase', () => {
 		boardRepositoryMock = module.get(BOARD_REPOSITORY);
 		eventEmitterMock = module.get(EventEmitter2);
 		configServiceMock = module.get(ConfigService);
-		slackSendMessageServiceMock = module.get(
-			CommunicationsType.TYPES.services.SlackSendMessageService
-		);
+		slackSendMessageServiceMock = module.get(SLACK_SEND_MESSAGE_SERVICE);
 	});
 
 	beforeEach(() => {

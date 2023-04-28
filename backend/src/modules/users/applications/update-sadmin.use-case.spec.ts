@@ -1,7 +1,5 @@
-import { updateSAdminUseCase } from './../users.providers';
 import { DeepMocked, createMock } from '@golevelup/ts-jest';
 import { UserRepositoryInterface } from '../repository/user.repository.interface';
-import * as Users from 'src/modules/users/interfaces/types';
 import { Test, TestingModule } from '@nestjs/testing';
 import { UserFactory } from 'src/libs/test-utils/mocks/factories/user-factory';
 import faker from '@faker-js/faker';
@@ -11,6 +9,8 @@ import { UpdateFailedException } from 'src/libs/exceptions/updateFailedBadReques
 import UpdateSAdminUseCaseDto from '../dto/useCase/update-sadmin.use-case.dto';
 import User from '../entities/user.schema';
 import { UseCase } from 'src/libs/interfaces/use-case.interface';
+import { USER_REPOSITORY } from 'src/modules/users/constants';
+import UpdateSAdminUseCase from 'src/modules/users/applications/update-sadmin.use-case';
 
 const user = UserFactory.create({ isSAdmin: true });
 const userDto = UserDtoFactory.create();
@@ -38,17 +38,17 @@ describe('UpdateSAdminUseCase', () => {
 	beforeAll(async () => {
 		const module: TestingModule = await Test.createTestingModule({
 			providers: [
-				updateSAdminUseCase,
+				UpdateSAdminUseCase,
 				{
-					provide: Users.TYPES.repository,
+					provide: USER_REPOSITORY,
 					useValue: createMock<UserRepositoryInterface>()
 				}
 			]
 		}).compile();
 
-		updateSAdmin = module.get<UseCase<UpdateSAdminUseCaseDto, User>>(updateSAdminUseCase.provide);
+		updateSAdmin = module.get(UpdateSAdminUseCase);
 
-		userRepositoryMock = module.get(Users.TYPES.repository);
+		userRepositoryMock = module.get(USER_REPOSITORY);
 	});
 
 	beforeEach(() => {
