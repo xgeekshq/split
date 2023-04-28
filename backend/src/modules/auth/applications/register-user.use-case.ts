@@ -11,7 +11,7 @@ import { EmailExistsException } from '../exceptions/emailExistsException';
 export default class RegisterUserUseCase implements RegisterUserUseCaseInterface {
 	constructor(
 		@Inject(TYPES.services.CreateUserService)
-		private createUserService: CreateUserServiceInterface
+		private readonly createUserService: CreateUserServiceInterface
 	) {}
 
 	public async execute(registrationData: CreateUserDto) {

@@ -1,12 +1,12 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { RefreshTokenUseCaseInterface } from '../interfaces/applications/refresh-token.use-case.interface';
-import { TYPES } from '../interfaces/types';
+import { GET_TOKEN_AUTH_SERVICE } from '../constants';
 import { GetTokenAuthServiceInterface } from '../interfaces/services/get-token.auth.service.interface';
 
 @Injectable()
 export default class RefreshTokenUseCase implements RefreshTokenUseCaseInterface {
 	constructor(
-		@Inject(TYPES.services.GetTokenAuthService)
+		@Inject(GET_TOKEN_AUTH_SERVICE)
 		private readonly getTokenService: GetTokenAuthServiceInterface
 	) {}
 

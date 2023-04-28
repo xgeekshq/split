@@ -9,4 +9,6 @@ export interface ResetPasswordRepositoryInterface extends BaseInterfaceRepositor
 	): Promise<ResetPassword>;
 
 	findPassword(emailAddress: string): Promise<ResetPassword>;
+
+	getUserByToken(token: string): Promise<ResetPassword>;
 }

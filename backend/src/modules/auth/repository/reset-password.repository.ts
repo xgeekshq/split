@@ -34,4 +34,8 @@ export class ResetPasswordRepository
 	findPassword(emailAddress: string): Promise<ResetPassword> {
 		return this.findOneByField({ emailAddress });
 	}
+
+	getUserByToken(token: string) {
+		return this.findOneByField({ token });
+	}
 }

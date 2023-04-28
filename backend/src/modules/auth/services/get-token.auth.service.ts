@@ -15,7 +15,7 @@ import { GetTokenAuthServiceInterface } from '../interfaces/services/get-token.a
 export default class GetTokenAuthService implements GetTokenAuthServiceInterface {
 	constructor(
 		@Inject(TYPES.services.UpdateUserService)
-		private updateUserService: UpdateUserServiceInterface,
+		private readonly updateUserService: UpdateUserServiceInterface,
 		private readonly jwtService: JwtService,
 		private readonly configService: ConfigService
 	) {}

@@ -62,6 +62,6 @@ import TeamUsersModule from 'src/modules/teamUsers/teamusers.module';
 		resetPasswordRepository
 	],
 	controllers: [AuthController],
-	exports: [getTokenAuthService, resetPasswordRepository]
+	exports: [getTokenAuthService, resetPasswordRepository, validateUserAuthService]
 })
 export default class AuthModule {}

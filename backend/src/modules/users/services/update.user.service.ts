@@ -1,22 +1,22 @@
 import { UPDATE_FAILED } from 'src/libs/exceptions/messages';
 import { BadRequestException, HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { encrypt } from 'src/libs/utils/bcrypt';
-import * as ResetPassword from '../../auth/interfaces/types';
 import { UpdateUserServiceInterface } from '../interfaces/services/update.user.service.interface';
 import { TYPES } from '../interfaces/types';
 import { UserRepositoryInterface } from '../repository/user.repository.interface';
-import { ResetPasswordRepositoryInterface } from 'src/modules/auth/repository/reset-password.repository.interface';
 import { PasswordsDontMatchException } from '../exceptions/passwordsDontMatchException';
 import { UserNotFoundException } from '../../../libs/exceptions/userNotFoundException';
 import { UpdateFailedException } from 'src/libs/exceptions/updateFailedBadRequestException';
+import { VALIDATE_AUTH_SERVICE } from 'src/modules/auth/constants';
+import { ValidateUserAuthServiceInterface } from 'src/modules/auth/interfaces/services/validate-user.auth.service.interface';
 
 @Injectable()
 export default class UpdateUserService implements UpdateUserServiceInterface {
 	constructor(
 		@Inject(TYPES.repository)
 		private readonly userRepository: UserRepositoryInterface,
-		@Inject(ResetPassword.TYPES.repository.ResetPasswordRepository)
-		private readonly resetPasswordRepository: ResetPasswordRepositoryInterface
+		@Inject(VALIDATE_AUTH_SERVICE)
+		private readonly validateAuthService: ValidateUserAuthServiceInterface
 	) {}
 
 	async setPassword(userEmail: string, newPassword: string, newPasswordConf: string) {
@@ -33,7 +33,7 @@ export default class UpdateUserService implements UpdateUserServiceInterface {
 	}
 
 	async checkEmailOfToken(token: string) {
-		const userFromDb = await this.resetPasswordRepository.findOneByField({ token });
+		const userFromDb = await this.validateAuthService.getUserByToken(token);
 
 		if (!userFromDb) throw new UserNotFoundException();
 
