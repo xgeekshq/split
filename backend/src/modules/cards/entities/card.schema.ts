@@ -3,7 +3,7 @@ import { Document, ObjectId, SchemaTypes } from 'mongoose';
 import * as leanVirtualsPlugin from 'mongoose-lean-virtuals';
 import BaseModel from 'src/libs/models/base.model';
 import User from 'src/modules/users/entities/user.schema';
-import Comment, { CommentSchema } from '../../comments/schemas/comment.schema';
+import Comment, { CommentSchema } from '../../comments/entities/comment.schema';
 import CardItem, { CardItemSchema } from './card.item.schema';
 
 export type CardDocument = Card & Document;
