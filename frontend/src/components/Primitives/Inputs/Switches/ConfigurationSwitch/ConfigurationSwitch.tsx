@@ -34,7 +34,7 @@ const ConfigurationSwitch = ({
             checked={isChecked}
             disabled={disabled}
             onCheckedChange={handleCheckedChange}
-            size="sm"
+            size={size}
           />
         </Flex>
       </Tooltip>
