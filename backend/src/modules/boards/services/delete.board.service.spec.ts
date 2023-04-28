@@ -2,7 +2,6 @@ import { faker } from '@faker-js/faker';
 import { Test, TestingModule } from '@nestjs/testing';
 import { DeleteBoardServiceInterface } from '../interfaces/services/delete.board.service.interface';
 import * as CommunicationTypes from 'src/modules/communication/interfaces/types';
-import * as Schedules from 'src/modules/schedules/interfaces/types';
 import { DeepMocked, createMock } from '@golevelup/ts-jest';
 import { BoardRepositoryInterface } from '../repositories/board.repository.interface';
 import { BadRequestException } from '@nestjs/common';
@@ -13,6 +12,7 @@ import { DeleteSchedulesServiceInterface } from 'src/modules/schedules/interface
 import { ArchiveChannelServiceInterface } from 'src/modules/communication/interfaces/archive-channel.service.interface';
 import { BOARD_REPOSITORY } from 'src/modules/boards/constants';
 import { DELETE_BOARD_USER_SERVICE } from 'src/modules/boardUsers/constants';
+import { DELETE_SCHEDULES_SERVICE } from 'src/modules/schedules/constants';
 
 const boards = BoardFactory.createMany(2, [{ slackEnable: true }, { slackEnable: true }]);
 const board = BoardFactory.create({
@@ -49,7 +49,7 @@ describe('DeleteBoardService', () => {
 					useValue: createMock<DeleteBoardUserServiceInterface>()
 				},
 				{
-					provide: Schedules.TYPES.services.DeleteSchedulesService,
+					provide: DELETE_SCHEDULES_SERVICE,
 					useValue: createMock<DeleteSchedulesServiceInterface>()
 				},
 				{
@@ -61,7 +61,7 @@ describe('DeleteBoardService', () => {
 		service = module.get(deleteBoardService.provide);
 		boardRepositoryMock = module.get(BOARD_REPOSITORY);
 		deleteBoardUserServiceMock = module.get(DELETE_BOARD_USER_SERVICE);
-		deleteSchedulesServiceMock = module.get(Schedules.TYPES.services.DeleteSchedulesService);
+		deleteSchedulesServiceMock = module.get(DELETE_SCHEDULES_SERVICE);
 		archiveChannelServiceMock = module.get(
 			CommunicationTypes.TYPES.services.SlackArchiveChannelService
 		);

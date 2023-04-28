@@ -13,7 +13,6 @@ import { CommunicationServiceInterface } from 'src/modules/communication/interfa
 import * as CommunicationsType from 'src/modules/communication/interfaces/types';
 import { AddCronJobDto } from 'src/modules/schedules/dto/add.cronjob.dto';
 import { CreateSchedulesServiceInterface } from 'src/modules/schedules/interfaces/services/create.schedules.service.interface';
-import * as SchedulesType from 'src/modules/schedules/interfaces/types';
 import { GetTeamServiceInterface } from 'src/modules/teams/interfaces/services/get.team.service.interface';
 import TeamUser from 'src/modules/teamUsers/entities/team.user.schema';
 import User from 'src/modules/users/entities/user.schema';
@@ -38,6 +37,7 @@ import { GET_TEAM_SERVICE } from 'src/modules/teams/constants';
 import { GET_TEAM_USER_SERVICE, UPDATE_TEAM_USER_SERVICE } from 'src/modules/teamUsers/constants';
 import { BOARD_REPOSITORY } from 'src/modules/boards/constants';
 import { CREATE_BOARD_USER_SERVICE } from 'src/modules/boardUsers/constants';
+import { CREATE_SCHEDULES_SERVICE } from 'src/modules/schedules/constants';
 
 type CreateBoardAndUsers = {
 	boardData: BoardDto;
@@ -55,7 +55,7 @@ export default class CreateBoardService implements CreateBoardServiceInterface {
 		private readonly getTeamUserService: GetTeamUserServiceInterface,
 		@Inject(UPDATE_TEAM_USER_SERVICE)
 		private readonly updateTeamUserService: UpdateTeamUserServiceInterface,
-		@Inject(SchedulesType.TYPES.services.CreateSchedulesService)
+		@Inject(CREATE_SCHEDULES_SERVICE)
 		private readonly createSchedulesService: CreateSchedulesServiceInterface,
 		@Inject(CommunicationsType.TYPES.services.SlackCommunicationService)
 		private readonly slackCommunicationService: CommunicationServiceInterface,
