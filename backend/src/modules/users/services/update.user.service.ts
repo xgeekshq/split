@@ -3,17 +3,17 @@ import { BadRequestException, HttpException, HttpStatus, Inject, Injectable } fr
 import { encrypt } from 'src/libs/utils/bcrypt';
 import * as ResetPassword from '../../auth/interfaces/types';
 import { UpdateUserServiceInterface } from '../interfaces/services/update.user.service.interface';
-import { TYPES } from '../interfaces/types';
 import { UserRepositoryInterface } from '../repository/user.repository.interface';
 import { ResetPasswordRepositoryInterface } from 'src/modules/auth/repository/reset-password.repository.interface';
 import { PasswordsDontMatchException } from '../exceptions/passwordsDontMatchException';
 import { UserNotFoundException } from '../../../libs/exceptions/userNotFoundException';
 import { UpdateFailedException } from 'src/libs/exceptions/updateFailedBadRequestException';
+import { USER_REPOSITORY } from 'src/modules/users/constants';
 
 @Injectable()
 export default class UpdateUserService implements UpdateUserServiceInterface {
 	constructor(
-		@Inject(TYPES.repository)
+		@Inject(USER_REPOSITORY)
 		private readonly userRepository: UserRepositoryInterface,
 		@Inject(ResetPassword.TYPES.repository.ResetPasswordRepository)
 		private readonly resetPasswordRepository: ResetPasswordRepositoryInterface

@@ -2,7 +2,7 @@ import { GetAllUsersWithTeamsPresenter } from '../presenter/get-all-users-with-t
 import { GetTeamUserServiceInterface } from 'src/modules/teamUsers/interfaces/services/get.team.user.service.interface';
 import { Inject, Injectable } from '@nestjs/common';
 import { UserWithTeams } from '../interfaces/type-user-with-teams';
-import { TYPES } from '../interfaces/types';
+import { GET_USER_SERVICE, USER_REPOSITORY } from '../constants';
 import { UserRepositoryInterface } from '../repository/user.repository.interface';
 import { sortTeamUserListAlphabetically } from '../utils/sortings';
 import { GetUserServiceInterface } from '../interfaces/services/get.user.service.interface';
@@ -15,9 +15,9 @@ export default class GetAllUsersWithTeamsUseCase
 	implements UseCase<GetAllUsersWithTeamsUseCaseDto, GetAllUsersWithTeamsPresenter>
 {
 	constructor(
-		@Inject(TYPES.repository)
+		@Inject(USER_REPOSITORY)
 		private readonly userRepository: UserRepositoryInterface,
-		@Inject(TYPES.services.GetUserService)
+		@Inject(GET_USER_SERVICE)
 		private readonly getUserService: GetUserServiceInterface,
 		@Inject(GET_TEAM_USER_SERVICE)
 		private readonly getTeamUserService: GetTeamUserServiceInterface

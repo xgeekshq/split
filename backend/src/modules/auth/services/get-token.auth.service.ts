@@ -8,14 +8,14 @@ import {
 	JWT_REFRESH_TOKEN_SECRET
 } from 'src/libs/constants/jwt';
 import { UpdateUserServiceInterface } from 'src/modules/users/interfaces/services/update.user.service.interface';
-import { TYPES } from 'src/modules/users/interfaces/types';
+import { UPDATE_USER_SERVICE } from 'src/modules/users/constants';
 import { GetTokenAuthServiceInterface } from '../interfaces/services/get-token.auth.service.interface';
 
 @Injectable()
 export default class GetTokenAuthService implements GetTokenAuthServiceInterface {
 	constructor(
-		@Inject(TYPES.services.UpdateUserService)
-		private updateUserService: UpdateUserServiceInterface,
+		@Inject(UPDATE_USER_SERVICE)
+		private readonly updateUserService: UpdateUserServiceInterface,
 		private readonly jwtService: JwtService,
 		private readonly configService: ConfigService
 	) {}

@@ -4,7 +4,6 @@ import { AuthAzureServiceInterface } from '../interfaces/services/auth.azure.ser
 import { TYPES } from '../interfaces/types';
 import { AzureDecodedUser } from '../services/auth.azure.service';
 import jwt_decode from 'jwt-decode';
-import * as UserType from 'src/modules/users/interfaces/types';
 import { GetUserServiceInterface } from 'src/modules/users/interfaces/services/get.user.service.interface';
 import { CreateUserServiceInterface } from 'src/modules/users/interfaces/services/create.user.service.interface';
 import User from 'src/modules/users/entities/user.schema';
@@ -14,16 +13,17 @@ import { GetTokenAuthServiceInterface } from 'src/modules/auth/interfaces/servic
 import { signIn } from 'src/modules/auth/shared/login.auth';
 import { createHash } from 'node:crypto';
 import { StorageServiceInterface } from 'src/modules/storage/interfaces/services/storage.service';
+import { CREATE_USER_SERVICE, GET_USER_SERVICE } from 'src/modules/users/constants';
 import { STORAGE_SERVICE } from 'src/modules/storage/constants';
 
 @Injectable()
 export class RegisterOrLoginAzureUseCase implements RegisterOrLoginAzureUseCaseInterface {
 	constructor(
 		@Inject(TYPES.services.AuthAzureService)
-		private authAzureService: AuthAzureServiceInterface,
-		@Inject(UserType.TYPES.services.GetUserService)
+		private readonly authAzureService: AuthAzureServiceInterface,
+		@Inject(GET_USER_SERVICE)
 		private readonly getUserService: GetUserServiceInterface,
-		@Inject(UserType.TYPES.services.CreateUserService)
+		@Inject(CREATE_USER_SERVICE)
 		private readonly createUserService: CreateUserServiceInterface,
 		@Inject(AuthType.TYPES.services.UpdateUserService)
 		private readonly updateUserService: UpdateUserServiceInterface,

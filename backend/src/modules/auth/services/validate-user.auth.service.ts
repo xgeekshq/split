@@ -1,13 +1,13 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { compare } from 'src/libs/utils/bcrypt';
-import { TYPES } from 'src/modules/users/interfaces/types';
+import { GET_USER_SERVICE } from 'src/modules/users/constants';
 import { ValidateUserAuthServiceInterface } from '../interfaces/services/validate-user.auth.service.interface';
 import { GetUserServiceInterface } from 'src/modules/users/interfaces/services/get.user.service.interface';
 
 @Injectable()
 export default class ValidateUserAuthService implements ValidateUserAuthServiceInterface {
 	constructor(
-		@Inject(TYPES.services.GetUserService)
+		@Inject(GET_USER_SERVICE)
 		private getUserService: GetUserServiceInterface
 	) {}
 

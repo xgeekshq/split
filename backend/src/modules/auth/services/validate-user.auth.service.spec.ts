@@ -17,7 +17,6 @@ import {
 } from 'src/modules/boardUsers/boardusers.providers';
 import SocketGateway from 'src/modules/socket/gateway/socket.gateway';
 import { getTeamService, teamRepository } from 'src/modules/teams/providers';
-import { TYPES } from 'src/modules/users/interfaces/types';
 import GetUserService from 'src/modules/users/services/get.user.service';
 import {
 	getUserService,
@@ -25,6 +24,7 @@ import {
 	userRepository
 } from 'src/modules/users/users.providers';
 import { getTokenAuthService, resetPasswordRepository } from '../auth.providers';
+import { GET_USER_SERVICE } from 'src/modules/users/constants';
 
 jest.mock('bcrypt');
 jest.mock('src/modules/schedules/services/create.schedules.service.ts');
@@ -100,7 +100,7 @@ describe('The AuthenticationService', () => {
 			]
 		}).compile();
 		authenticationService = await module.get(ValidateUserAuthService);
-		gUserService = await module.get(TYPES.services.GetUserService);
+		gUserService = await module.get(GET_USER_SERVICE);
 	});
 	describe('when accessing the data of authenticating user', () => {
 		it('should attempt to get a user by email', async () => {
