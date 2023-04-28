@@ -1,10 +1,10 @@
 import { DeepMocked, createMock } from '@golevelup/ts-jest';
 import { Test, TestingModule } from '@nestjs/testing';
-import { TYPES } from 'src/modules/communication/interfaces/types';
 import { MergeBoardType } from '../dto/types';
 import { Job } from 'bull';
 import { SlackMergeBoardConsumer } from './slack-merge-board.consumer';
 import { MergeBoardApplicationInterface } from '../interfaces/merge-board.application.interface';
+import { SLACK_MERGE_BOARD_APPLICATION } from 'src/modules/communication/constants';
 
 const mergeBoardTypeMock = {
 	id: 1,
@@ -26,13 +26,13 @@ describe('SlackMergeBoardConsumer', () => {
 			providers: [
 				SlackMergeBoardConsumer,
 				{
-					provide: TYPES.application.SlackMergeBoardApplication,
+					provide: SLACK_MERGE_BOARD_APPLICATION,
 					useValue: createMock<MergeBoardApplicationInterface>()
 				}
 			]
 		}).compile();
-		consumer = module.get<SlackMergeBoardConsumer>(SlackMergeBoardConsumer);
-		applicationMock = module.get(TYPES.application.SlackMergeBoardApplication);
+		consumer = module.get(SlackMergeBoardConsumer);
+		applicationMock = module.get(SLACK_MERGE_BOARD_APPLICATION);
 	});
 
 	beforeEach(() => {

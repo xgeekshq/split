@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { TYPES } from '../interfaces/types';
+import { USER_REPOSITORY } from '../constants';
 import { UserRepositoryInterface } from '../repository/user.repository.interface';
 import { UseCase } from 'src/libs/interfaces/use-case.interface';
 import User from '../entities/user.schema';
@@ -7,7 +7,7 @@ import User from '../entities/user.schema';
 @Injectable()
 export default class GetAllUsersUseCase implements UseCase<void, User[]> {
 	constructor(
-		@Inject(TYPES.repository)
+		@Inject(USER_REPOSITORY)
 		private readonly userRepository: UserRepositoryInterface
 	) {}
 

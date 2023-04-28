@@ -1,11 +1,11 @@
 import { DeepMocked, createMock } from '@golevelup/ts-jest';
 import { Test, TestingModule } from '@nestjs/testing';
-import { TYPES } from 'src/modules/communication/interfaces/types';
 import { ArchiveChannelData } from '../dto/types';
 import { Job } from 'bull';
 import { SlackArchiveChannelConsumer } from './slack-archive-channel.consumer';
 import { ArchiveChannelApplicationInterface } from '../interfaces/archive-channel.application.interface';
 import { Logger } from '@nestjs/common';
+import { SLACK_ARCHIVE_CHANNEL_APPLICATION } from 'src/modules/communication/constants';
 
 const archiveChannelDataMock = {
 	id: 1,
@@ -25,13 +25,13 @@ describe('SlackArchiveChannelConsumer', () => {
 			providers: [
 				SlackArchiveChannelConsumer,
 				{
-					provide: TYPES.application.SlackArchiveChannelApplication,
+					provide: SLACK_ARCHIVE_CHANNEL_APPLICATION,
 					useValue: createMock<ArchiveChannelApplicationInterface>()
 				}
 			]
 		}).compile();
-		consumer = module.get<SlackArchiveChannelConsumer>(SlackArchiveChannelConsumer);
-		archiveChannelAppMock = module.get(TYPES.application.SlackArchiveChannelApplication);
+		consumer = module.get(SlackArchiveChannelConsumer);
+		archiveChannelAppMock = module.get(SLACK_ARCHIVE_CHANNEL_APPLICATION);
 	});
 
 	beforeEach(() => {

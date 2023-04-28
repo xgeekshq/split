@@ -5,9 +5,9 @@ import ValidateUserAuthService from 'src/modules/auth/services/validate-user.aut
 import { RESET_PASSWORD_REPOSITORY } from 'src/modules/auth/constants';
 import { DeepMocked, createMock } from '@golevelup/ts-jest';
 import { ResetPasswordRepositoryInterface } from 'src/modules/auth/repository/reset-password.repository.interface';
-import { TYPES } from 'src/modules/users/interfaces/types';
 import { GetUserServiceInterface } from 'src/modules/users/interfaces/services/get.user.service.interface';
 import { UserFactory } from 'src/libs/test-utils/mocks/factories/user-factory';
+import { GET_USER_SERVICE } from 'src/modules/users/constants';
 
 jest.mock('bcrypt');
 jest.mock('src/modules/schedules/services/create.schedules.service.ts');
@@ -30,13 +30,13 @@ describe('The AuthenticationService', () => {
 					useValue: createMock<ResetPasswordRepositoryInterface>()
 				},
 				{
-					provide: TYPES.services.GetUserService,
+					provide: GET_USER_SERVICE,
 					useValue: createMock<GetUserServiceInterface>()
 				}
 			]
 		}).compile();
 		authenticationService = await module.get(ValidateUserAuthService);
-		getUserServiceMock = await module.get(TYPES.services.GetUserService);
+		getUserServiceMock = await module.get(GET_USER_SERVICE);
 	});
 
 	beforeEach(() => {

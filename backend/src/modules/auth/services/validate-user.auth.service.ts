@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { compare } from 'src/libs/utils/bcrypt';
-import { TYPES } from 'src/modules/users/interfaces/types';
+import { GET_USER_SERVICE } from 'src/modules/users/constants';
 import { ValidateUserAuthServiceInterface } from '../interfaces/services/validate-user.auth.service.interface';
 import { GetUserServiceInterface } from 'src/modules/users/interfaces/services/get.user.service.interface';
 import { ResetPasswordRepositoryInterface } from 'src/modules/auth/repository/reset-password.repository.interface';
@@ -9,7 +9,7 @@ import { RESET_PASSWORD_REPOSITORY } from 'src/modules/auth/constants';
 @Injectable()
 export default class ValidateUserAuthService implements ValidateUserAuthServiceInterface {
 	constructor(
-		@Inject(TYPES.services.GetUserService)
+		@Inject(GET_USER_SERVICE)
 		private readonly getUserService: GetUserServiceInterface,
 		@Inject(RESET_PASSWORD_REPOSITORY)
 		private readonly resetPasswordRepository: ResetPasswordRepositoryInterface

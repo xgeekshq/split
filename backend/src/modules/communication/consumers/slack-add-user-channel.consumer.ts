@@ -2,7 +2,7 @@ import { OnQueueCompleted, Process, Processor } from '@nestjs/bull';
 import { Inject, Logger } from '@nestjs/common';
 import { Job } from 'bull';
 import { AddUserMainChannelType } from 'src/modules/communication/dto/types';
-import { TYPES } from 'src/modules/communication/interfaces/types';
+import { SLACK_ADD_USER_INTO_CHANNEL_APPLICATION } from 'src/modules/communication/constants';
 import { AddUserIntoChannelApplicationInterface } from '../interfaces/communication.application.interface copy';
 import { SlackAddUserToChannelProducer } from '../producers/slack-add-user-channel.producer';
 import { SlackCommunicationEventListeners } from './slack-communication-event-listeners';
@@ -13,7 +13,7 @@ export class SlackAddUserToChannelConsumer extends SlackCommunicationEventListen
 	boolean
 > {
 	constructor(
-		@Inject(TYPES.application.SlackAddUserIntoChannelApplication)
+		@Inject(SLACK_ADD_USER_INTO_CHANNEL_APPLICATION)
 		private readonly application: AddUserIntoChannelApplicationInterface
 	) {
 		const logger = new Logger(SlackAddUserToChannelConsumer.name);

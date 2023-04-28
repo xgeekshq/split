@@ -2,18 +2,18 @@ import { UPDATE_FAILED } from 'src/libs/exceptions/messages';
 import { BadRequestException, HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { encrypt } from 'src/libs/utils/bcrypt';
 import { UpdateUserServiceInterface } from '../interfaces/services/update.user.service.interface';
-import { TYPES } from '../interfaces/types';
 import { UserRepositoryInterface } from '../repository/user.repository.interface';
 import { PasswordsDontMatchException } from '../exceptions/passwordsDontMatchException';
 import { UserNotFoundException } from '../../../libs/exceptions/userNotFoundException';
 import { UpdateFailedException } from 'src/libs/exceptions/updateFailedBadRequestException';
 import { VALIDATE_AUTH_SERVICE } from 'src/modules/auth/constants';
 import { ValidateUserAuthServiceInterface } from 'src/modules/auth/interfaces/services/validate-user.auth.service.interface';
+import { USER_REPOSITORY } from 'src/modules/users/constants';
 
 @Injectable()
 export default class UpdateUserService implements UpdateUserServiceInterface {
 	constructor(
-		@Inject(TYPES.repository)
+		@Inject(USER_REPOSITORY)
 		private readonly userRepository: UserRepositoryInterface,
 		@Inject(VALIDATE_AUTH_SERVICE)
 		private readonly validateAuthService: ValidateUserAuthServiceInterface

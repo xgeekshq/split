@@ -8,13 +8,13 @@ import { PasswordsDontMatchException } from './../exceptions/passwordsDontMatchE
 import { UserFactory } from 'src/libs/test-utils/mocks/factories/user-factory';
 import { UpdateUserServiceInterface } from 'src/modules/users/interfaces/services/update.user.service.interface';
 import { UserRepositoryInterface } from './../repository/user.repository.interface';
-import { updateUserService } from './../users.providers';
 import { Test, TestingModule } from '@nestjs/testing';
 import { DeepMocked, createMock } from '@golevelup/ts-jest';
-import * as Users from 'src/modules/users/interfaces/types';
 import User from '../entities/user.schema';
 import { VALIDATE_AUTH_SERVICE } from 'src/modules/auth/constants';
 import { ValidateUserAuthServiceInterface } from 'src/modules/auth/interfaces/services/validate-user.auth.service.interface';
+import { USER_REPOSITORY } from 'src/modules/users/constants';
+import UpdateUserService from 'src/modules/users/services/update.user.service';
 
 const user: User = UserFactory.create();
 
@@ -35,9 +35,9 @@ describe('UpdateUserService', () => {
 	beforeAll(async () => {
 		const module: TestingModule = await Test.createTestingModule({
 			providers: [
-				updateUserService,
+				UpdateUserService,
 				{
-					provide: Users.TYPES.repository,
+					provide: USER_REPOSITORY,
 					useValue: createMock<UserRepositoryInterface>()
 				},
 				{
@@ -47,8 +47,8 @@ describe('UpdateUserService', () => {
 			]
 		}).compile();
 
-		userService = module.get<UpdateUserServiceInterface>(updateUserService.provide);
-		userRepositoryMock = module.get(Users.TYPES.repository);
+		userService = module.get(UpdateUserService);
+		userRepositoryMock = module.get(USER_REPOSITORY);
 		validateAuthServiceMock = module.get(VALIDATE_AUTH_SERVICE);
 	});
 
