@@ -49,7 +49,7 @@ const UserItemActions = React.memo(({ user }: UserItemActionsProps) => {
   };
 
   return (
-    <Flex align="center" data-testid="userItemActions" gap={24} justify="end">
+    <Flex align="center" css={{ flex: 1 }} data-testid="userItemActions" gap={24} justify="end">
       <ConfigurationSwitch
         disabled={userId === user._id}
         disabledInfo={userId !== user._id ? undefined : "Can't change your own role"}
