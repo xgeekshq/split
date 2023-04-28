@@ -37,7 +37,16 @@ import CreateUserDto from 'src/modules/users/dto/create.user.dto';
 import { ResetPasswordDto } from 'src/modules/users/dto/reset-password.dto';
 import UserDto from 'src/modules/users/dto/user.dto';
 import { LoginDto } from '../dto/login.dto';
-import { TYPES } from '../interfaces/types';
+import {
+	CREATE_RESET_PASSWORD_TOKEN_USE_CASE,
+	REFRESH_TOKEN_USE_CASE,
+	REGISTER_GUEST_USER_USE_CASE,
+	REGISTER_USER_USE_CASE,
+	RESET_PASSWORD_USE_CASE,
+	SIGN_IN_USE_CASE,
+	STATISTICS_AUTH_USER_USE_CASE,
+	VALIDATE_USER_EMAIL_USE_CASE
+} from '../constants';
 import { LoginResponse } from '../swagger/login.swagger';
 import CreateGuestUserDto from 'src/modules/users/dto/create.guest.user.dto';
 import { RegisterUserUseCaseInterface } from '../interfaces/applications/register-user.use-case.interface';
@@ -53,22 +62,22 @@ import { CreateResetPasswordTokenUseCaseInterface } from '../interfaces/applicat
 @Controller('auth')
 export default class AuthController {
 	constructor(
-		@Inject(TYPES.applications.RegisterUserUseCase)
-		private registerUserUseCase: RegisterUserUseCaseInterface,
-		@Inject(TYPES.applications.RegisterGuestUserUseCase)
-		private registerGuestUserUseCase: RegisterGuestUserUseCaseInterface,
-		@Inject(TYPES.applications.ValidateUserEmailUseCase)
-		private validateUserEmailUseCase: ValidateUserEmailUseCaseInterface,
-		@Inject(TYPES.applications.RefreshTokenUseCase)
-		private refreshTokenUseCase: RefreshTokenUseCaseInterface,
-		@Inject(TYPES.applications.StatisticsAuthUserUseCase)
-		private statisticsUseCase: StatisticsAuthUserUseCaseInterface,
-		@Inject(TYPES.applications.ResetPasswordUseCase)
-		private resetPasswordUseCase: ResetPasswordUseCaseInterface,
-		@Inject(TYPES.applications.CreateResetPasswordTokenUseCase)
-		private createResetTokenUseCase: CreateResetPasswordTokenUseCaseInterface,
-		@Inject(TYPES.applications.SignInUseCase)
-		private signInUseCase: SignInUseCaseInterface
+		@Inject(REGISTER_USER_USE_CASE)
+		private readonly registerUserUseCase: RegisterUserUseCaseInterface,
+		@Inject(REGISTER_GUEST_USER_USE_CASE)
+		private readonly registerGuestUserUseCase: RegisterGuestUserUseCaseInterface,
+		@Inject(VALIDATE_USER_EMAIL_USE_CASE)
+		private readonly validateUserEmailUseCase: ValidateUserEmailUseCaseInterface,
+		@Inject(REFRESH_TOKEN_USE_CASE)
+		private readonly refreshTokenUseCase: RefreshTokenUseCaseInterface,
+		@Inject(STATISTICS_AUTH_USER_USE_CASE)
+		private readonly statisticsUseCase: StatisticsAuthUserUseCaseInterface,
+		@Inject(RESET_PASSWORD_USE_CASE)
+		private readonly resetPasswordUseCase: ResetPasswordUseCaseInterface,
+		@Inject(CREATE_RESET_PASSWORD_TOKEN_USE_CASE)
+		private readonly createResetTokenUseCase: CreateResetPasswordTokenUseCaseInterface,
+		@Inject(SIGN_IN_USE_CASE)
+		private readonly signInUseCase: SignInUseCaseInterface
 	) {}
 
 	@ApiOperation({ summary: 'Create new user' })

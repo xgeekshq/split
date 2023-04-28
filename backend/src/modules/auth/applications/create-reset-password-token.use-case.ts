@@ -3,15 +3,15 @@ import { Inject, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { InsertFailedException } from 'src/libs/exceptions/insertFailedBadRequestException';
 import { CreateResetPasswordTokenUseCaseInterface } from '../interfaces/applications/create-reset-token.use-case.interface';
-import { TYPES } from '../interfaces/types';
+import { RESET_PASSWORD_REPOSITORY } from '../constants';
 import { ResetPasswordRepositoryInterface } from '../repository/reset-password.repository.interface';
 
 @Injectable()
 export class CreateResetPasswordTokenUseCase implements CreateResetPasswordTokenUseCaseInterface {
 	constructor(
-		private mailerService: MailerService,
-		private configService: ConfigService,
-		@Inject(TYPES.repository.ResetPasswordRepository)
+		private readonly mailerService: MailerService,
+		private readonly configService: ConfigService,
+		@Inject(RESET_PASSWORD_REPOSITORY)
 		private readonly resetPasswordRepository: ResetPasswordRepositoryInterface
 	) {}
 

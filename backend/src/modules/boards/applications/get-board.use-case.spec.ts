@@ -1,5 +1,4 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import * as Auth from 'src/modules/auth/interfaces/types';
 import { DeepMocked, createMock } from '@golevelup/ts-jest';
 import faker from '@faker-js/faker';
 import { UseCase } from 'src/libs/interfaces/use-case.interface';
@@ -22,6 +21,7 @@ import {
 	CREATE_BOARD_USER_SERVICE,
 	GET_BOARD_USER_SERVICE
 } from 'src/modules/boardUsers/constants';
+import { GET_TOKEN_AUTH_SERVICE } from 'src/modules/auth/constants';
 import { UPDATE_USER_SERVICE } from 'src/modules/users/constants';
 
 const mainBoard = BoardFactory.create({ isSubBoard: false, isPublic: false });
@@ -52,7 +52,7 @@ describe('GetBoardUseCase', () => {
 					useValue: createMock<CreateBoardUserServiceInterface>()
 				},
 				{
-					provide: Auth.TYPES.services.GetTokenAuthService,
+					provide: GET_TOKEN_AUTH_SERVICE,
 					useValue: createMock<GetTokenAuthServiceInterface>()
 				},
 				{
@@ -65,7 +65,7 @@ describe('GetBoardUseCase', () => {
 		useCase = module.get(GetBoardUseCase);
 		boardRepositoryMock = module.get(BOARD_REPOSITORY);
 		getBoardUserServiceMock = module.get(GET_BOARD_USER_SERVICE);
-		getTokenAuthServiceMock = module.get(Auth.TYPES.services.GetTokenAuthService);
+		getTokenAuthServiceMock = module.get(GET_TOKEN_AUTH_SERVICE);
 	});
 
 	beforeEach(() => {

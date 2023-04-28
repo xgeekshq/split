@@ -1,13 +1,13 @@
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
-import { getModelToken } from '@nestjs/mongoose';
 import { Test, TestingModule } from '@nestjs/testing';
 import configService from 'src/libs/test-utils/mocks/configService.mock';
 import jwtService from 'src/libs/test-utils/mocks/jwtService.mock';
-import { updateUserService, userRepository } from 'src/modules/users/users.providers';
-import { getTokenAuthService, resetPasswordRepository } from '../auth.providers';
 import { GetTokenAuthServiceInterface } from '../interfaces/services/get-token.auth.service.interface';
-import { TYPES } from '../interfaces/types';
+import { UPDATE_USER_SERVICE } from 'src/modules/auth/constants';
+import GetTokenAuthService from 'src/modules/auth/services/get-token.auth.service';
+import { createMock } from '@golevelup/ts-jest';
+import { UpdateUserServiceInterface } from 'src/modules/users/interfaces/services/update.user.service.interface';
 
 describe('AuthService', () => {
 	let service: GetTokenAuthServiceInterface;
@@ -15,10 +15,7 @@ describe('AuthService', () => {
 	beforeEach(async () => {
 		const module: TestingModule = await Test.createTestingModule({
 			providers: [
-				getTokenAuthService,
-				updateUserService,
-				userRepository,
-				resetPasswordRepository,
+				GetTokenAuthService,
 				{
 					provide: ConfigService,
 					useValue: configService
@@ -28,17 +25,13 @@ describe('AuthService', () => {
 					useValue: jwtService
 				},
 				{
-					provide: getModelToken('User'),
-					useValue: {}
-				},
-				{
-					provide: getModelToken('ResetPassword'),
-					useValue: {}
+					provide: UPDATE_USER_SERVICE,
+					useValue: createMock<UpdateUserServiceInterface>
 				}
 			]
 		}).compile();
 
-		service = module.get<GetTokenAuthServiceInterface>(TYPES.services.GetTokenAuthService);
+		service = module.get<GetTokenAuthServiceInterface>(GetTokenAuthService);
 	});
 
 	describe('when creating a jwt', () => {

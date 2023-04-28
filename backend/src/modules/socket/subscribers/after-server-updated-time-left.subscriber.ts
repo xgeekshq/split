@@ -8,7 +8,7 @@ import SocketGateway from 'src/modules/socket/gateway/socket.gateway';
 export default class AfterServerUpdatedTimeLeftSubscriber {
 	private logger = new Logger(AfterServerUpdatedTimeLeftSubscriber.name);
 
-	constructor(private socketService: SocketGateway) {}
+	constructor(private readonly socketService: SocketGateway) {}
 
 	@OnEvent(BOARD_TIMER_SERVER_TIME_LEFT_UPDATED)
 	handleServerUpdatedTimeLeftEvent(payload: BoardTimerTimeLeftDto) {
