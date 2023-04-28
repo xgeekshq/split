@@ -1,5 +1,4 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import * as CommunicationsType from 'src/modules/communication/interfaces/types';
 import { BoardRepositoryInterface } from '../repositories/board.repository.interface';
 import { CommunicationServiceInterface } from 'src/modules/communication/interfaces/slack-communication.service.interface';
 import { DeepMocked, createMock } from '@golevelup/ts-jest';
@@ -33,6 +32,7 @@ import { GET_TEAM_USER_SERVICE, UPDATE_TEAM_USER_SERVICE } from 'src/modules/tea
 import { BOARD_REPOSITORY } from 'src/modules/boards/constants';
 import { CREATE_BOARD_USER_SERVICE } from 'src/modules/boardUsers/constants';
 import { CREATE_SCHEDULES_SERVICE } from 'src/modules/schedules/constants';
+import { SLACK_COMMUNICATION_SERVICE } from 'src/modules/communication/constants';
 
 const userId: string = faker.datatype.uuid();
 
@@ -220,7 +220,7 @@ describe('CreateBoardService', () => {
 					useValue: createMock<CreateSchedulesServiceInterface>()
 				},
 				{
-					provide: CommunicationsType.TYPES.services.SlackCommunicationService,
+					provide: SLACK_COMMUNICATION_SERVICE,
 					useValue: createMock<CommunicationServiceInterface>()
 				},
 				{
@@ -241,9 +241,7 @@ describe('CreateBoardService', () => {
 		getTeamUserServiceMock = module.get(GET_TEAM_USER_SERVICE);
 		updateTeamUserServiceMock = module.get(UPDATE_TEAM_USER_SERVICE);
 		createSchedulesServiceMock = module.get(CREATE_SCHEDULES_SERVICE);
-		slackCommunicationServiceMock = module.get(
-			CommunicationsType.TYPES.services.SlackCommunicationService
-		);
+		slackCommunicationServiceMock = module.get(SLACK_COMMUNICATION_SERVICE);
 	});
 
 	beforeEach(() => {

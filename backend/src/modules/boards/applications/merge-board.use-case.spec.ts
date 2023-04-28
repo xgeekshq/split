@@ -3,7 +3,6 @@ import { DeepMocked, createMock } from '@golevelup/ts-jest';
 import faker from '@faker-js/faker';
 import { BoardFactory } from 'src/libs/test-utils/mocks/factories/board-factory.mock';
 import { UseCase } from 'src/libs/interfaces/use-case.interface';
-import * as CommunicationsType from 'src/modules/communication/interfaces/types';
 import MergeBoardUseCaseDto from '../dto/useCase/merge-board.use-case.dto';
 import Board from '../entities/board.schema';
 import { CommunicationServiceInterface } from 'src/modules/communication/interfaces/slack-communication.service.interface';
@@ -14,6 +13,7 @@ import { generateNewSubColumns } from '../utils/generate-subcolumns';
 import { mergeCardsFromSubBoardColumnsIntoMainBoard } from '../utils/merge-cards-from-subboard';
 import { MergeBoardUseCase } from './merge-board.use-case';
 import { BOARD_REPOSITORY } from 'src/modules/boards/constants';
+import { SLACK_COMMUNICATION_SERVICE } from 'src/modules/communication/constants';
 
 const userId = faker.datatype.uuid();
 const subBoards = BoardFactory.createMany(2, [
@@ -64,7 +64,7 @@ describe('MergeBoardUseCase', () => {
 					useValue: createMock<BoardRepositoryInterface>()
 				},
 				{
-					provide: CommunicationsType.TYPES.services.SlackCommunicationService,
+					provide: SLACK_COMMUNICATION_SERVICE,
 					useValue: createMock<CommunicationServiceInterface>()
 				}
 			]
@@ -72,9 +72,7 @@ describe('MergeBoardUseCase', () => {
 
 		useCase = module.get(MergeBoardUseCase);
 		boardRepositoryMock = module.get(BOARD_REPOSITORY);
-		slackCommunicationServiceMock = module.get(
-			CommunicationsType.TYPES.services.SlackCommunicationService
-		);
+		slackCommunicationServiceMock = module.get(SLACK_COMMUNICATION_SERVICE);
 	});
 
 	beforeEach(() => {
