@@ -26,7 +26,7 @@ const ConfigurationSwitch = ({
   disabled = false,
   disabledInfo,
 }: ConfigurationSwitchProps) => (
-  <Flex data-testid="configurationSwitch" gap={20}>
+  <Flex align="center" data-testid="configurationSwitch" gap={20}>
     {disabledInfo && disabled ? (
       <Tooltip content={disabledInfo}>
         <Flex>
@@ -34,7 +34,7 @@ const ConfigurationSwitch = ({
             checked={isChecked}
             disabled={disabled}
             onCheckedChange={handleCheckedChange}
-            size="sm"
+            size={size}
           />
         </Flex>
       </Tooltip>
