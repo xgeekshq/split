@@ -218,7 +218,7 @@ const OptionsMenu = ({
                 Cards color
               </Text>
             </Flex>
-            <Flex align="center" css={{ pb: '$10', pl: '$3' }} direction="row">
+            <Flex align="center" css={{ pb: '$10', px: '$16' }} direction="row" justify="between">
               {colors.map((square) => (
                 <ColorSquare key={square} color={square} handleColorChange={handleColorChange} />
               ))}
