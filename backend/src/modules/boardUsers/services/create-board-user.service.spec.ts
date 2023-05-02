@@ -1,7 +1,5 @@
 import { faker } from '@faker-js/faker';
 import { BadRequestException } from '@nestjs/common';
-import TeamUserDto from 'src/modules/teamUsers/dto/team.user.dto';
-import TeamUser from 'src/modules/teamUsers/entities/team.user.schema';
 import { Test, TestingModule } from '@nestjs/testing';
 import { DeepMocked, createMock } from '@golevelup/ts-jest';
 import { CreateBoardUserServiceInterface } from '../interfaces/services/create.board.user.service.interface';
@@ -11,17 +9,17 @@ import { BoardUserRepositoryInterface } from '../interfaces/repositories/board-u
 import { BoardUserDtoFactory } from 'src/libs/test-utils/mocks/factories/dto/boardUserDto-factory.mock';
 import BoardUserDto from '../dto/board.user.dto';
 import { BoardUserFactory } from 'src/libs/test-utils/mocks/factories/boardUser-factory.mock';
+import BoardUser from '../entities/board.user.schema';
+import { BoardRoles } from 'src/libs/enum/board.roles';
 
 const createBoardUserDtos: BoardUserDto[] = BoardUserDtoFactory.createMany(4);
 
-const createdBoardUsers: TeamUser[] = BoardUserFactory.createMany(4, [
+const createdBoardUsers: BoardUser[] = BoardUserFactory.createMany(4, [
 	{ ...createBoardUserDtos[0] },
 	{ ...createBoardUserDtos[1] },
 	{ ...createBoardUserDtos[2] },
 	{ ...createBoardUserDtos[3] }
 ]);
-
-const teamId = faker.datatype.uuid();
 
 describe('CreateBoardUserService', () => {
 	let boardUserService: CreateBoardUserServiceInterface;
@@ -45,6 +43,10 @@ describe('CreateBoardUserService', () => {
 	beforeEach(() => {
 		jest.restoreAllMocks();
 		jest.clearAllMocks();
+
+		boardUserRepositoryMock.findOneByField.mockResolvedValue(null);
+		boardUserRepositoryMock.create.mockResolvedValue(null);
+		boardUserRepositoryMock.findOneByField.mockResolvedValue(null);
 	});
 
 	it('should be defined', () => {
@@ -68,18 +70,35 @@ describe('CreateBoardUserService', () => {
 	});
 
 	describe('createBoardUser', () => {
-		it('should create board users', async () => {
-			boardUserRepositoryMock.create.mockResolvedValue(createdBoardUsers[0]);
+		it('should create board user', async () => {
+			const user = faker.datatype.uuid();
+			const boardUser: BoardUser = BoardUserFactory.create({ user });
+			boardUser.role = BoardRoles.MEMBER;
+
+			boardUserRepositoryMock.findOneByField.mockResolvedValue(null);
+			boardUserRepositoryMock.create.mockResolvedValue(boardUser);
+
 			await expect(
-				boardUserService.createBoardUser(createBoardUserDtos[0], faker.datatype.uuid())
-			).resolves.toStrictEqual(createdBoardUsers);
+				boardUserService.createBoardUser(boardUser.board as string, user)
+			).resolves.toStrictEqual(boardUser);
 		});
 
-		it('should throw Bad Request when team users are not created', async () => {
+		it('should throw Bad Request when board user already exists', async () => {
+			boardUserRepositoryMock.findOneByField.mockResolvedValue(createdBoardUsers[0]);
+			await expect(
+				boardUserService.createBoardUser(
+					createdBoardUsers[0].board as string,
+					faker.datatype.uuid()
+				)
+			).rejects.toThrowError(BadRequestException);
+		});
+
+		it('should throw Bad Request when board user is not created', async () => {
+			boardUserRepositoryMock.findOneByField.mockResolvedValue(null);
 			boardUserRepositoryMock.create.mockResolvedValue(null);
-			await expect(boardUserService.createBoardUser(createBoardUserDtos)).rejects.toThrow(
-				BadRequestException
-			);
+			await expect(
+				boardUserService.createBoardUser(createBoardUserDtos[0].board, faker.datatype.uuid())
+			).rejects.toThrowError(BadRequestException);
 		});
 	});
 });
