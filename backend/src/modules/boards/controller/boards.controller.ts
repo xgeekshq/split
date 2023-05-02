@@ -53,7 +53,7 @@ import SocketGateway from 'src/modules/socket/gateway/socket.gateway';
 import { TeamParamOptional } from '../../../libs/dto/param/team.param.optional';
 import { GetBoardGuard } from '../../../libs/guards/getBoardPermissions.guard';
 import { DuplicateBoardDto } from '../applications/duplicate-board.use-case';
-import { BoardParticipantsPresenter } from '../applications/update-board-participants.use-case';
+import { BoardParticipantsPresenter } from '../../boardUsers/applications/update-board-users.use-case';
 import BoardDto from '../dto/board.dto';
 import CreateBoardUseCaseDto from '../dto/useCase/create-board.use-case.dto';
 import GetAllBoardsUseCaseDto from '../dto/useCase/get-all-boards.use-case.dto';

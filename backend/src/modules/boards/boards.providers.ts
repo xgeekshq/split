@@ -55,7 +55,7 @@ import DeleteBoardService from './services/delete.board.service';
 import GetBoardService from './services/get.board.service';
 import UpdateBoardService from './services/update.board.service';
 import { UpdateBoardUseCase } from './applications/update-board.use-case';
-import { UpdateBoardParticipantsUseCase } from './applications/update-board-participants.use-case';
+import { UpdateBoardUsersUseCase } from '../boardUsers/applications/update-board-users.use-case';
 import { MergeBoardUseCase } from './applications/merge-board.use-case';
 import { UpdateBoardPhaseUseCase } from './applications/update-board-phase.use-case';
 
@@ -160,7 +160,7 @@ export const isBoardPublicUseCase = {
 
 export const updateBoardParticipantsUseCase = {
 	provide: UPDATE_BOARD_PARTICIPANTS_USE_CASE,
-	useClass: UpdateBoardParticipantsUseCase
+	useClass: UpdateBoardUsersUseCase
 };
 
 export const mergeBoardUseCase = {

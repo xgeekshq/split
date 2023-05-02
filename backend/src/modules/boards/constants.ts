@@ -40,7 +40,7 @@ export const IS_BOARD_PUBLIC_USE_CASE = 'IsBoardPublicUseCase';
 
 export const DUPLICATE_BOARD_USE_CASE = 'DuplicateBoardUseCase';
 
-export const UPDATE_BOARD_PARTICIPANTS_USE_CASE = 'UpdateBoardParticipantsUseCase';
+export const UPDATE_BOARD_PARTICIPANTS_USE_CASE = 'UpdateBoardUsersUseCase';
 
 export const MERGE_BOARD_USE_CASE = 'MergeBoardUseCase';
 
