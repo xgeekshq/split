@@ -1,11 +1,11 @@
-import * as Azure from 'src/modules/azure/interfaces/types';
-import * as User from 'src/modules/users/interfaces/types';
 import { Test } from '@nestjs/testing';
 import { createMock } from '@golevelup/ts-jest';
 import AzureController from './azure.controller';
 import { GetUserServiceInterface } from 'src/modules/users/interfaces/services/get.user.service.interface';
 import { RegisterAuthServiceInterface } from 'src/modules/auth/interfaces/services/register.auth.service.interface';
 import { CheckUserAzureUseCaseInterface } from '../interfaces/applications/check-user.azure.use-case.interface';
+import { GET_USER_SERVICE } from 'src/modules/users/constants';
+import { CHECK_USER_USE_CASE, REGISTER_OR_LOGIN_USE_CASE } from 'src/modules/azure/constants';
 
 describe('AzureController', () => {
 	let controller: AzureController;
@@ -15,15 +15,15 @@ describe('AzureController', () => {
 			controllers: [AzureController],
 			providers: [
 				{
-					provide: Azure.TYPES.applications.RegisterOrLoginUseCase,
+					provide: REGISTER_OR_LOGIN_USE_CASE,
 					useValue: createMock<RegisterAuthServiceInterface>()
 				},
 				{
-					provide: Azure.TYPES.applications.CheckUserUseCase,
+					provide: CHECK_USER_USE_CASE,
 					useValue: createMock<CheckUserAzureUseCaseInterface>()
 				},
 				{
-					provide: User.TYPES.services.GetUserService,
+					provide: GET_USER_SERVICE,
 					useValue: createMock<GetUserServiceInterface>()
 				}
 			]

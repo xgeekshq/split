@@ -10,10 +10,8 @@ import { UpdateBoardUserServiceInterface } from 'src/modules/boardUsers/interfac
 import ColumnDto from 'src/modules/columns/dto/column.dto';
 import Column from 'src/modules/columns/entities/column.schema';
 import { CommunicationServiceInterface } from 'src/modules/communication/interfaces/slack-communication.service.interface';
-import * as CommunicationsType from 'src/modules/communication/interfaces/types';
 import User from 'src/modules/users/entities/user.schema';
 import { DeleteVoteServiceInterface } from 'src/modules/votes/interfaces/services/delete.vote.service.interface';
-import * as Votes from 'src/modules/votes/interfaces/types';
 import { UpdateBoardDto } from '../dto/update-board.dto';
 import Board from '../entities/board.schema';
 import { ResponsibleType } from '../interfaces/responsible.interface';
@@ -23,6 +21,8 @@ import {
 	GET_BOARD_USER_SERVICE,
 	UPDATE_BOARD_USER_SERVICE
 } from 'src/modules/boardUsers/constants';
+import { DELETE_VOTE_SERVICE } from 'src/modules/votes/constants';
+import { SLACK_COMMUNICATION_SERVICE } from 'src/modules/communication/constants';
 
 @Injectable()
 export class UpdateBoardUseCase implements UseCase<UpdateBoardDto, Board> {
@@ -33,9 +33,9 @@ export class UpdateBoardUseCase implements UseCase<UpdateBoardDto, Board> {
 		private readonly getBoardUserService: GetBoardUserServiceInterface,
 		@Inject(UPDATE_BOARD_USER_SERVICE)
 		private readonly updateBoardUserService: UpdateBoardUserServiceInterface,
-		@Inject(Votes.TYPES.services.DeleteVoteService)
+		@Inject(DELETE_VOTE_SERVICE)
 		private readonly deleteVoteService: DeleteVoteServiceInterface,
-		@Inject(CommunicationsType.TYPES.services.SlackCommunicationService)
+		@Inject(SLACK_COMMUNICATION_SERVICE)
 		private readonly slackCommunicationService: CommunicationServiceInterface
 	) {}
 

@@ -29,7 +29,13 @@ interface CreateBoardItemInterface {
 const SubBoardList = React.memo(({ dividedBoards, setBoard }: SubBoardListProp) => (
   <Flex css={{ mb: '$50' }} direction="column" gap={8}>
     {dividedBoards.map((subBoard, index) => (
-      <CreateSubBoardItem key={subBoard.title} board={subBoard} index={index} setBoard={setBoard} />
+      <CreateSubBoardItem
+        key={subBoard.title}
+        board={subBoard}
+        index={index}
+        isLast={index === dividedBoards.length - 1}
+        setBoard={setBoard}
+      />
     ))}
   </Flex>
 ));

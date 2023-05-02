@@ -7,7 +7,7 @@ import { UserFactory } from 'src/libs/test-utils/mocks/factories/user-factory';
 import { hideText } from 'src/libs/utils/hideText';
 import Card from 'src/modules/cards/entities/card.schema';
 import Column from 'src/modules/columns/entities/column.schema';
-import Comment from 'src/modules/comments/schemas/comment.schema';
+import Comment from 'src/modules/comments/entities/comment.schema';
 import User from 'src/modules/users/entities/user.schema';
 import { cleanBoard, replaceUser } from './clean-board';
 

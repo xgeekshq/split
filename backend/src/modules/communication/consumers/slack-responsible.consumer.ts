@@ -3,7 +3,7 @@ import { Inject, Logger } from '@nestjs/common';
 import { Job } from 'bull';
 import { ChangeResponsibleType } from 'src/modules/communication/dto/types';
 import { ResponsibleApplicationInterface } from 'src/modules/communication/interfaces/responsible.application.interface';
-import { TYPES } from 'src/modules/communication/interfaces/types';
+import { SLACK_RESPONSIBLE_APPLICATION } from 'src/modules/communication/constants';
 import { SlackResponsibleProducer } from '../producers/slack-responsible.producer';
 import { SlackCommunicationEventListeners } from './slack-communication-event-listeners';
 
@@ -13,7 +13,7 @@ export class SlackResponsibleConsumer extends SlackCommunicationEventListeners<
 	ChangeResponsibleType
 > {
 	constructor(
-		@Inject(TYPES.application.SlackResponsibleApplication)
+		@Inject(SLACK_RESPONSIBLE_APPLICATION)
 		private readonly application: ResponsibleApplicationInterface
 	) {
 		const logger = new Logger(SlackResponsibleProducer.name);

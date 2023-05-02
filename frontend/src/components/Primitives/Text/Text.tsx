@@ -165,27 +165,39 @@ const Text = styled('span', {
     color: {
       white: {
         color: '$white',
+        textDecorationColor: '$white',
       },
       dangerBase: {
         color: '$dangerBase',
+        textDecorationColor: '$dangerBase',
       },
       primary100: {
         color: '$primary100',
+        textDecorationColor: '$primary100',
       },
       primary200: {
         color: '$primary200',
+        textDecorationColor: '$primary200',
       },
       primary300: {
         color: '$primary300',
+        textDecorationColor: '$primary300',
       },
       primary400: {
         color: '$primary400',
+        textDecorationColor: '$primary400',
       },
       primary500: {
         color: '$primary500',
+        textDecorationColor: '$primary500',
       },
       primary800: {
         color: '$primary800',
+        textDecorationColor: '$primary800',
+      },
+      infoBase: {
+        color: '$infoBase',
+        textDecorationColor: '$infoBase',
       },
     },
     link: {

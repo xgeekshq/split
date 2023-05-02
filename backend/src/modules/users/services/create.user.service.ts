@@ -2,7 +2,7 @@ import { CREATE_FAILED } from 'src/libs/exceptions/messages';
 import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import CreateUserDto from '../dto/create.user.dto';
 import User from '../entities/user.schema';
-import { TYPES } from '../interfaces/types';
+import { USER_REPOSITORY } from '../constants';
 import { UserRepositoryInterface } from '../repository/user.repository.interface';
 import CreateGuestUserDto from '../dto/create.guest.user.dto';
 import faker from '@faker-js/faker';
@@ -11,7 +11,7 @@ import { CreateUserServiceInterface } from '../interfaces/services/create.user.s
 @Injectable()
 export default class CreateUserService implements CreateUserServiceInterface {
 	constructor(
-		@Inject(TYPES.repository)
+		@Inject(USER_REPOSITORY)
 		private readonly userRepository: UserRepositoryInterface
 	) {}
 

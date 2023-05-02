@@ -1,5 +1,5 @@
 import faker from '@faker-js/faker';
-import Comment from 'src/modules/comments/schemas/comment.schema';
+import Comment from 'src/modules/comments/entities/comment.schema';
 import { buildTestFactory } from './generic-factory.mock';
 import { UserFactory } from './user-factory';
 

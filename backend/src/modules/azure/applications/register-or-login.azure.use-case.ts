@@ -1,35 +1,35 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { RegisterOrLoginAzureUseCaseInterface } from '../interfaces/applications/register-or-login.azure.use-case.interface';
 import { AuthAzureServiceInterface } from '../interfaces/services/auth.azure.service.interface';
-import { TYPES } from '../interfaces/types';
+import { AUTH_AZURE_SERVICE } from '../constants';
 import { AzureDecodedUser } from '../services/auth.azure.service';
 import jwt_decode from 'jwt-decode';
-import * as UserType from 'src/modules/users/interfaces/types';
 import { GetUserServiceInterface } from 'src/modules/users/interfaces/services/get.user.service.interface';
 import { CreateUserServiceInterface } from 'src/modules/users/interfaces/services/create.user.service.interface';
 import User from 'src/modules/users/entities/user.schema';
-import * as AuthType from 'src/modules/auth/interfaces/types';
-import * as StorageType from 'src/modules/storage/interfaces/types';
 import { UpdateUserServiceInterface } from 'src/modules/users/interfaces/services/update.user.service.interface';
 import { GetTokenAuthServiceInterface } from 'src/modules/auth/interfaces/services/get-token.auth.service.interface';
 import { signIn } from 'src/modules/auth/shared/login.auth';
 import { createHash } from 'node:crypto';
 import { StorageServiceInterface } from 'src/modules/storage/interfaces/services/storage.service';
+import { CREATE_USER_SERVICE, GET_USER_SERVICE } from 'src/modules/users/constants';
+import { STORAGE_SERVICE } from 'src/modules/storage/constants';
+import { GET_TOKEN_AUTH_SERVICE, UPDATE_USER_SERVICE } from 'src/modules/auth/constants';
 
 @Injectable()
 export class RegisterOrLoginAzureUseCase implements RegisterOrLoginAzureUseCaseInterface {
 	constructor(
-		@Inject(TYPES.services.AuthAzureService)
-		private authAzureService: AuthAzureServiceInterface,
-		@Inject(UserType.TYPES.services.GetUserService)
+		@Inject(AUTH_AZURE_SERVICE)
+		private readonly authAzureService: AuthAzureServiceInterface,
+		@Inject(GET_USER_SERVICE)
 		private readonly getUserService: GetUserServiceInterface,
-		@Inject(UserType.TYPES.services.CreateUserService)
+		@Inject(CREATE_USER_SERVICE)
 		private readonly createUserService: CreateUserServiceInterface,
-		@Inject(AuthType.TYPES.services.UpdateUserService)
+		@Inject(UPDATE_USER_SERVICE)
 		private readonly updateUserService: UpdateUserServiceInterface,
-		@Inject(AuthType.TYPES.services.GetTokenAuthService)
+		@Inject(GET_TOKEN_AUTH_SERVICE)
 		private readonly getTokenService: GetTokenAuthServiceInterface,
-		@Inject(StorageType.TYPES.services.StorageService)
+		@Inject(STORAGE_SERVICE)
 		private readonly storageService: StorageServiceInterface
 	) {}
 

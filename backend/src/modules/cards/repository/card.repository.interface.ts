@@ -2,7 +2,7 @@ import { UpdateResult } from 'mongodb';
 import { ObjectId } from 'mongoose';
 import { BaseInterfaceRepository } from 'src/libs/repositories/interfaces/base.repository.interface';
 import Board from 'src/modules/boards/entities/board.schema';
-import Comment from 'src/modules/comments/schemas/comment.schema';
+import Comment from 'src/modules/comments/entities/comment.schema';
 import User from 'src/modules/users/entities/user.schema';
 import CardDto from '../dto/card.dto';
 import CardItem from '../entities/card.item.schema';

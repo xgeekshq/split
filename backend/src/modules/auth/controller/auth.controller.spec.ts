@@ -13,10 +13,19 @@ import { StatisticsAuthUserUseCaseInterface } from '../interfaces/applications/s
 import { ResetPasswordUseCaseInterface } from '../interfaces/applications/reset-password.use-case.interface';
 import { CreateResetPasswordTokenUseCaseInterface } from '../interfaces/applications/create-reset-token.use-case.interface';
 import { SignInUseCaseInterface } from '../interfaces/applications/signIn.use-case.interface';
-import { TYPES } from '../interfaces/types';
 import { createMock } from '@golevelup/ts-jest';
 import { ResetPasswordRepositoryInterface } from '../repository/reset-password.repository.interface';
-import { getModelToken } from '@nestjs/mongoose';
+import {
+	CREATE_RESET_PASSWORD_TOKEN_USE_CASE,
+	REFRESH_TOKEN_USE_CASE,
+	REGISTER_GUEST_USER_USE_CASE,
+	REGISTER_USER_USE_CASE,
+	RESET_PASSWORD_REPOSITORY,
+	RESET_PASSWORD_USE_CASE,
+	SIGN_IN_USE_CASE,
+	STATISTICS_AUTH_USER_USE_CASE,
+	VALIDATE_USER_EMAIL_USE_CASE
+} from 'src/modules/auth/constants';
 
 describe('AuthController', () => {
 	let app: INestApplication;
@@ -27,43 +36,43 @@ describe('AuthController', () => {
 			controllers: [AuthController],
 			providers: [
 				{
-					provide: TYPES.applications.RegisterUserUseCase,
+					provide: REGISTER_USER_USE_CASE,
 					useValue: createMock<RegisterUserUseCaseInterface>()
 				},
 				{
-					provide: TYPES.applications.RegisterGuestUserUseCase,
+					provide: REGISTER_GUEST_USER_USE_CASE,
 					useValue: createMock<RegisterGuestUserUseCaseInterface>()
 				},
 				{
-					provide: TYPES.applications.ValidateUserEmailUseCase,
+					provide: VALIDATE_USER_EMAIL_USE_CASE,
 					useValue: createMock<ValidateUserEmailUseCaseInterface>()
 				},
 				{
-					provide: TYPES.applications.RefreshTokenUseCase,
+					provide: REFRESH_TOKEN_USE_CASE,
 					useValue: createMock<RefreshTokenUseCaseInterface>()
 				},
 				{
-					provide: TYPES.applications.StatisticsAuthUserUseCase,
+					provide: STATISTICS_AUTH_USER_USE_CASE,
 					useValue: createMock<StatisticsAuthUserUseCaseInterface>()
 				},
 				{
-					provide: TYPES.applications.ResetPasswordUseCase,
+					provide: RESET_PASSWORD_USE_CASE,
 					useValue: createMock<ResetPasswordUseCaseInterface>()
 				},
 				{
-					provide: TYPES.applications.CreateResetPasswordTokenUseCase,
+					provide: CREATE_RESET_PASSWORD_TOKEN_USE_CASE,
 					useValue: createMock<CreateResetPasswordTokenUseCaseInterface>()
 				},
 				{
-					provide: TYPES.applications.SignInUseCase,
+					provide: SIGN_IN_USE_CASE,
 					useValue: createMock<SignInUseCaseInterface>()
 				},
+				// {
+				// 	provide: getModelToken('ResetPassword'),
+				// 	useValue: {}
+				// },
 				{
-					provide: getModelToken('ResetPassword'),
-					useValue: {}
-				},
-				{
-					provide: TYPES.repository.ResetPasswordRepository,
+					provide: RESET_PASSWORD_REPOSITORY,
 					useValue: createMock<ResetPasswordRepositoryInterface>()
 				}
 			]

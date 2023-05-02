@@ -8,13 +8,13 @@ import { PasswordsDontMatchException } from './../exceptions/passwordsDontMatchE
 import { UserFactory } from 'src/libs/test-utils/mocks/factories/user-factory';
 import { UpdateUserServiceInterface } from 'src/modules/users/interfaces/services/update.user.service.interface';
 import { UserRepositoryInterface } from './../repository/user.repository.interface';
-import { updateUserService } from './../users.providers';
 import { Test, TestingModule } from '@nestjs/testing';
 import { DeepMocked, createMock } from '@golevelup/ts-jest';
-import * as Users from 'src/modules/users/interfaces/types';
 import User from '../entities/user.schema';
-import * as ResetPasswords from '../../auth/interfaces/types';
-import { ResetPasswordRepositoryInterface } from 'src/modules/auth/repository/reset-password.repository.interface';
+import { VALIDATE_AUTH_SERVICE } from 'src/modules/auth/constants';
+import { ValidateUserAuthServiceInterface } from 'src/modules/auth/interfaces/services/validate-user.auth.service.interface';
+import { USER_REPOSITORY } from 'src/modules/users/constants';
+import UpdateUserService from 'src/modules/users/services/update.user.service';
 
 const user: User = UserFactory.create();
 
@@ -30,28 +30,26 @@ const url = faker.internet.url();
 describe('UpdateUserService', () => {
 	let userService: UpdateUserServiceInterface;
 	let userRepositoryMock: DeepMocked<UserRepositoryInterface>;
-	let resetPasswordRepositoryMock: DeepMocked<ResetPasswordRepositoryInterface>;
+	let validateAuthServiceMock: DeepMocked<ValidateUserAuthServiceInterface>;
 
 	beforeAll(async () => {
 		const module: TestingModule = await Test.createTestingModule({
 			providers: [
-				updateUserService,
+				UpdateUserService,
 				{
-					provide: Users.TYPES.repository,
+					provide: USER_REPOSITORY,
 					useValue: createMock<UserRepositoryInterface>()
 				},
 				{
-					provide: ResetPasswords.TYPES.repository.ResetPasswordRepository,
-					useValue: createMock<ResetPasswordRepositoryInterface>()
+					provide: VALIDATE_AUTH_SERVICE,
+					useValue: createMock<ValidateUserAuthServiceInterface>()
 				}
 			]
 		}).compile();
 
-		userService = module.get<UpdateUserServiceInterface>(updateUserService.provide);
-		userRepositoryMock = module.get(Users.TYPES.repository);
-		resetPasswordRepositoryMock = module.get(
-			ResetPasswords.TYPES.repository.ResetPasswordRepository
-		);
+		userService = module.get(UpdateUserService);
+		userRepositoryMock = module.get(USER_REPOSITORY);
+		validateAuthServiceMock = module.get(VALIDATE_AUTH_SERVICE);
 	});
 
 	beforeEach(() => {
@@ -87,20 +85,20 @@ describe('UpdateUserService', () => {
 
 	describe('checkEmailOfToken', () => {
 		it('should return email of token', async () => {
-			resetPasswordRepositoryMock.findOneByField.mockResolvedValue(resetPassword);
+			validateAuthServiceMock.getUserByToken.mockResolvedValue(resetPassword);
 			userRepositoryMock.findOneByField.mockResolvedValue(user);
 			await expect(userService.checkEmailOfToken(resetPassword.token)).resolves.toEqual(user.email);
 		});
 
 		it('should throw error when no user with given token', async () => {
-			resetPasswordRepositoryMock.findOneByField.mockResolvedValue(null);
+			validateAuthServiceMock.getUserByToken.mockResolvedValue(null);
 			await expect(userService.checkEmailOfToken(resetPassword.token)).rejects.toThrowError(
 				UserNotFoundException
 			);
 		});
 
 		it('should throw error when user is not found', async () => {
-			resetPasswordRepositoryMock.findOneByField.mockResolvedValue(resetPassword);
+			validateAuthServiceMock.getUserByToken.mockResolvedValue(resetPassword);
 			userRepositoryMock.findOneByField.mockResolvedValue(null);
 			await expect(userService.checkEmailOfToken(resetPassword.token)).rejects.toThrowError(
 				UserNotFoundException
@@ -109,7 +107,7 @@ describe('UpdateUserService', () => {
 
 		it('should throw error when token is not valid', async () => {
 			resetPassword.updatedAt = faker.date.past(2);
-			resetPasswordRepositoryMock.findOneByField.mockResolvedValue(resetPassword);
+			validateAuthServiceMock.getUserByToken.mockResolvedValue(resetPassword);
 			await expect(userService.checkEmailOfToken(resetPassword.token)).rejects.toThrowError(
 				HttpException
 			);

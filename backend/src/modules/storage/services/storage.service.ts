@@ -3,7 +3,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { CONNECTION_STRING } from 'src/libs/constants/storage';
 import { StorageServiceInterface } from '../interfaces/services/storage.service';
-import { ContainerNameEnum } from '../interfaces/types';
+import { ContainerNameEnum } from 'src/modules/storage/enum';
 
 @Injectable()
 export class StorageService implements StorageServiceInterface {

@@ -12,7 +12,7 @@ import Card from '../entities/card.schema';
 import { CardRepositoryInterface } from './card.repository.interface';
 import { UpdateResult } from 'mongodb';
 import CardDto from '../dto/card.dto';
-import Comment from 'src/modules/comments/schemas/comment.schema';
+import Comment from 'src/modules/comments/entities/comment.schema';
 import User from 'src/modules/users/entities/user.schema';
 
 @Injectable()

@@ -1,6 +1,6 @@
 import { UpdateUserServiceInterface } from 'src/modules/users/interfaces/services/update.user.service.interface';
 import { Inject, Injectable } from '@nestjs/common';
-import { TYPES } from 'src/modules/users/interfaces/types';
+import { UPDATE_USER_SERVICE } from 'src/modules/users/constants';
 import { ResetPasswordUseCaseInterface } from '../interfaces/applications/reset-password.use-case.interface';
 import { UPDATE_FAILED } from 'src/libs/exceptions/messages';
 import { InvalidTokenException } from '../exceptions/invalidTokenException';
@@ -9,7 +9,7 @@ import { UpdateFailedException } from 'src/libs/exceptions/updateFailedBadReques
 @Injectable()
 export default class ResetPasswordUseCase implements ResetPasswordUseCaseInterface {
 	constructor(
-		@Inject(TYPES.services.UpdateUserService)
+		@Inject(UPDATE_USER_SERVICE)
 		private readonly updateUserService: UpdateUserServiceInterface
 	) {}
 

@@ -8,7 +8,7 @@ import PhaseChangeEvent from '../events/user-updated-phase.event';
 export default class AfterServerUpdatedPhaseSubscriber {
 	private logger = new Logger(AfterServerUpdatedPhaseSubscriber.name);
 
-	constructor(private socketService: SocketGateway) {}
+	constructor(private readonly socketService: SocketGateway) {}
 
 	@OnEvent(BOARD_PHASE_SERVER_UPDATED)
 	handleServerUpdatedPhaseEvent(phaseChangeEvent: PhaseChangeEvent) {

@@ -9,11 +9,11 @@ import { keyframes, styled } from '@/styles/stitches/stitches.config';
 
 const slideDown = keyframes({
   from: { height: 0 },
-  to: { height: 'var(--radix-accordion-content-height)' },
+  to: { height: '100%' },
 });
 
 const slideUp = keyframes({
-  from: { height: 'var(--radix-accordion-content-height)' },
+  from: { height: '100%' },
   to: { height: 0 },
 });
 

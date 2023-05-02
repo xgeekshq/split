@@ -15,40 +15,40 @@ interface TeamHeaderProps {
 const TeamHeader: React.FC<TeamHeaderProps> = ({ team, userId, users }) => {
   const hasTeam = !!team;
   return (
-    <Flex align="center" css={{ mb: '$16' }} justify="start">
-      <Flex align="center">
-        <Text
-          heading="5"
-          css={{
-            textOverflow: 'ellipsis',
-            whiteSpace: 'nowrap',
-            overflow: 'hidden',
-            maxWidth: '$260',
-          }}
-        >
-          {hasTeam ? team.name : 'My boards'}
-        </Text>
-        {hasTeam && (
-          <Flex align="center" css={{ ml: '$24' }} gap="12">
-            <Flex align="center" gap="8">
-              <Text color="primary300" size="sm">
-                Members
-              </Text>
-              <AvatarGroup listUsers={team.users} userId={userId} />
-            </Flex>
-            <Separator css={{ backgroundColor: '$primary300' }} orientation="vertical" size="md" />
+    <Flex align="center" css={{ mb: '$16' }} gap="24" wrap="wrap">
+      <Text
+        heading="5"
+        css={{
+          textOverflow: 'ellipsis',
+          whiteSpace: 'nowrap',
+          overflow: 'hidden',
+          maxWidth: '$260',
+        }}
+      >
+        {hasTeam ? team.name : 'My boards'}
+      </Text>
+      {hasTeam && (
+        <Flex align="center" gap="12" wrap="wrap">
+          <Flex align="center" gap="8">
+            <Text color="primary300" size="sm">
+              Members
+            </Text>
+            <AvatarGroup listUsers={team.users} userId={userId} />
+          </Flex>
+          <Separator orientation="vertical" size="md" />
+          <Flex align="center" gap="8">
             <Text color="primary300" size="sm">
               Team admin
             </Text>
             <AvatarGroup stakeholders teamAdmins listUsers={team.users} userId={userId} />
           </Flex>
-        )}
-        {!hasTeam && users && (
-          <Flex css={{ ml: '$12' }}>
-            <AvatarGroup myBoards listUsers={users} userId={userId} />
-          </Flex>
-        )}
-      </Flex>
+        </Flex>
+      )}
+      {!hasTeam && users && (
+        <Flex>
+          <AvatarGroup myBoards listUsers={users} userId={userId} />
+        </Flex>
+      )}
     </Flex>
   );
 };

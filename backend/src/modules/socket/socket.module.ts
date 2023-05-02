@@ -4,7 +4,7 @@ import SocketGateway from './gateway/socket.gateway';
 import {
 	afterServerPausedTimerSubscriber,
 	afterServerSentTimerStateSubscriber,
-	afterServerStaredTimerSubscriber,
+	afterServerStartedTimerSubscriber,
 	afterServerStoppedTimerSubscriber,
 	afterServerUpdatedPhaseSubscriber,
 	afterServerUpdatedTimeLeftSubscriber,
@@ -18,7 +18,7 @@ import {
 		SocketGateway,
 		afterServerUpdatedTimerDurationSubscriber,
 		afterServerPausedTimerSubscriber,
-		afterServerStaredTimerSubscriber,
+		afterServerStartedTimerSubscriber,
 		afterServerStoppedTimerSubscriber,
 		afterServerUpdatedTimeLeftSubscriber,
 		afterServerSentTimerStateSubscriber,

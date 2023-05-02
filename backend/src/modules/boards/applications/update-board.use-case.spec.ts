@@ -1,6 +1,4 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import * as CommunicationsType from 'src/modules/communication/interfaces/types';
-import * as Votes from 'src/modules/votes/interfaces/types';
 import { BoardRepositoryInterface } from '../repositories/board.repository.interface';
 import { CommunicationServiceInterface } from 'src/modules/communication/interfaces/slack-communication.service.interface';
 import { BoardFactory } from 'src/libs/test-utils/mocks/factories/board-factory.mock';
@@ -30,6 +28,8 @@ import {
 	GET_BOARD_USER_SERVICE,
 	UPDATE_BOARD_USER_SERVICE
 } from 'src/modules/boardUsers/constants';
+import { DELETE_VOTE_SERVICE } from 'src/modules/votes/constants';
+import { SLACK_COMMUNICATION_SERVICE } from 'src/modules/communication/constants';
 
 const regularBoard = BoardFactory.create({ isSubBoard: false, dividedBoards: [] });
 const userId = faker.datatype.uuid();
@@ -106,11 +106,11 @@ describe('UpdateBoardUseCase', () => {
 			providers: [
 				UpdateBoardUseCase,
 				{
-					provide: CommunicationsType.TYPES.services.SlackCommunicationService,
+					provide: SLACK_COMMUNICATION_SERVICE,
 					useValue: createMock<CommunicationServiceInterface>()
 				},
 				{
-					provide: Votes.TYPES.services.DeleteVoteService,
+					provide: DELETE_VOTE_SERVICE,
 					useValue: createMock<DeleteVoteServiceInterface>()
 				},
 				{
@@ -132,10 +132,8 @@ describe('UpdateBoardUseCase', () => {
 		boardRepositoryMock = module.get(BOARD_REPOSITORY);
 		updateBoardUserServiceMock = module.get(UPDATE_BOARD_USER_SERVICE);
 		getBoardUserServiceMock = module.get(GET_BOARD_USER_SERVICE);
-		deleteVoteServiceMock = module.get(Votes.TYPES.services.DeleteVoteService);
-		slackCommunicationServiceMock = module.get(
-			CommunicationsType.TYPES.services.SlackCommunicationService
-		);
+		deleteVoteServiceMock = module.get(DELETE_VOTE_SERVICE);
+		slackCommunicationServiceMock = module.get(SLACK_COMMUNICATION_SERVICE);
 	});
 
 	beforeEach(() => {

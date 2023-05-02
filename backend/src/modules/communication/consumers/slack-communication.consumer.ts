@@ -5,7 +5,7 @@ import { UpdateBoardServiceInterface } from 'src/modules/boards/interfaces/servi
 import { TeamDto } from 'src/modules/communication/dto/team.dto';
 import { BoardType } from 'src/modules/communication/dto/types';
 import { CommunicationApplicationInterface } from 'src/modules/communication/interfaces/communication.application.interface';
-import { TYPES } from 'src/modules/communication/interfaces/types';
+import { SLACK_COMMUNICATION_APPLICATION } from 'src/modules/communication/constants';
 import { SlackCommunicationProducer } from 'src/modules/communication/producers/slack-communication.producer';
 import { SlackCommunicationEventListeners } from './slack-communication-event-listeners';
 import { UPDATE_BOARD_SERVICE } from 'src/modules/boards/constants';
@@ -16,10 +16,10 @@ export class SlackCommunicationConsumer extends SlackCommunicationEventListeners
 	TeamDto
 > {
 	constructor(
-		@Inject(TYPES.application.SlackCommunicationApplication)
+		@Inject(SLACK_COMMUNICATION_APPLICATION)
 		private readonly application: CommunicationApplicationInterface,
 		@Inject(UPDATE_BOARD_SERVICE)
-		private updateBoardService: UpdateBoardServiceInterface
+		private readonly updateBoardService: UpdateBoardServiceInterface
 	) {
 		const logger = new Logger(SlackCommunicationConsumer.name);
 		super(logger);

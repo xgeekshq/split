@@ -279,7 +279,7 @@ const Button = styled('button', {
         },
         '&:disabled': {
           backgroundColor: '$transparent',
-          border: 'none',
+          border: '2px solid transparent',
           '& svg': {
             color: '$primary200',
           },

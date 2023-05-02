@@ -6,62 +6,80 @@ import ResetPasswordUseCase from './applications/reset-password.use-case';
 import SignInUseCase from './applications/signIn.use-case';
 import StatisticsAuthUserUseCase from './applications/statistics.auth.use-case';
 import ValidateUserEmailUseCase from './applications/validate-user-email.use-case';
-import { TYPES } from './interfaces/types';
+import {
+	CREATE_RESET_PASSWORD_TOKEN_USE_CASE,
+	GET_TOKEN_AUTH_SERVICE,
+	REFRESH_TOKEN_USE_CASE,
+	REGISTER_GUEST_USER_USE_CASE,
+	REGISTER_USER_USE_CASE,
+	RESET_PASSWORD_REPOSITORY,
+	RESET_PASSWORD_USE_CASE,
+	SIGN_IN_USE_CASE,
+	STATISTICS_AUTH_USER_USE_CASE,
+	VALIDATE_AUTH_SERVICE,
+	VALIDATE_USER_EMAIL_USE_CASE
+} from './constants';
 import { ResetPasswordRepository } from './repository/reset-password.repository';
 import GetTokenAuthService from './services/get-token.auth.service';
 import ValidateUserAuthService from './services/validate-user.auth.service';
 
+/* SERVICES */
+
 export const getTokenAuthService = {
-	provide: TYPES.services.GetTokenAuthService,
+	provide: GET_TOKEN_AUTH_SERVICE,
 	useClass: GetTokenAuthService
 };
 
 export const validateUserAuthService = {
-	provide: TYPES.services.ValidateAuthService,
+	provide: VALIDATE_AUTH_SERVICE,
 	useClass: ValidateUserAuthService
 };
 
+/* USE CASES */
+
 export const registerUserUseCase = {
-	provide: TYPES.applications.RegisterUserUseCase,
+	provide: REGISTER_USER_USE_CASE,
 	useClass: RegisterUserUseCase
 };
 
 export const signInUseCase = {
-	provide: TYPES.applications.SignInUseCase,
+	provide: SIGN_IN_USE_CASE,
 	useClass: SignInUseCase
 };
 
 export const refreshTokenUseCase = {
-	provide: TYPES.applications.RefreshTokenUseCase,
+	provide: REFRESH_TOKEN_USE_CASE,
 	useClass: RefreshTokenUseCase
 };
 
 export const registerGuestUserUseCase = {
-	provide: TYPES.applications.RegisterGuestUserUseCase,
+	provide: REGISTER_GUEST_USER_USE_CASE,
 	useClass: RegisterGuestUserUseCase
 };
 
 export const statisticsAuthUserUseCase = {
-	provide: TYPES.applications.StatisticsAuthUserUseCase,
+	provide: STATISTICS_AUTH_USER_USE_CASE,
 	useClass: StatisticsAuthUserUseCase
 };
 
 export const resetPasswordUseCase = {
-	provide: TYPES.applications.ResetPasswordUseCase,
+	provide: RESET_PASSWORD_USE_CASE,
 	useClass: ResetPasswordUseCase
 };
 
 export const validateUserEmailUseCase = {
-	provide: TYPES.applications.ValidateUserEmailUseCase,
+	provide: VALIDATE_USER_EMAIL_USE_CASE,
 	useClass: ValidateUserEmailUseCase
 };
 
 export const createResetPasswordTokenUseCase = {
-	provide: TYPES.applications.CreateResetPasswordTokenUseCase,
+	provide: CREATE_RESET_PASSWORD_TOKEN_USE_CASE,
 	useClass: CreateResetPasswordTokenUseCase
 };
 
+/* REPOSITORY */
+
 export const resetPasswordRepository = {
-	provide: TYPES.repository.ResetPasswordRepository,
+	provide: RESET_PASSWORD_REPOSITORY,
 	useClass: ResetPasswordRepository
 };
