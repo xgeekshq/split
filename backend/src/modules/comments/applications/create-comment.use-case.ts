@@ -11,7 +11,7 @@ import User from 'src/modules/users/entities/user.schema';
 import { InsertFailedException } from 'src/libs/exceptions/insertFailedBadRequestException';
 import Column from 'src/modules/columns/entities/column.schema';
 
-type HideCommentsType = {
+export type HideCommentsType = {
 	hideCards: boolean;
 	user: User;
 	comment: Comment;
