@@ -2,7 +2,116 @@
 
 All notable changes to this project will be documented in this file.
 
-## [Unreleased](https://github.com/xgeekshq/split/compare/v0.1.18...HEAD)
+## [Unreleased](https://github.com/xgeekshq/split/compare/v0.1.19...HEAD)
+
+## [v0.1.19](https://github.com/xgeekshq/split/compare/v0.1.18...v0.1.19) - 2023-05-02
+
+### What Changed 👀
+
+- refactor: extract useCases from services @CatiaAntunes96 (#1447)
+- refactor: change types for constants on azure module @CatiaAntunes96 (#1445)
+- refactor: change auth module types for constants @CatiaAntunes96 (#1444)
+- refactor: change users module types for constants @CatiaAntunes96 (#1434)
+- refactor: change types for constants on communication module @CatiaAntunes96 (#1440)
+- refactor: change type for constants on storage @CatiaAntunes96 (#1438)
+- refactor: change types for constants (socket) @CatiaAntunes96 (#1437)
+- refactor: change types for constants @CatiaAntunes96 (#1435)
+- refactor: extract usecases of columns module @CatiaAntunes96 (#1432)
+- test: team use cases @patricia-mdias (#1429)
+- feat: add board card responsiveness @juniorboos (#1425)
+- refactor: change columns module types for constants @CatiaAntunes96 (#1428)
+- refactor: change votes module types for constants @CatiaAntunes96 (#1426)
+- refactor: change cards module types for constants @CatiaAntunes96 (#1424)
+- refactor: change board user module types for constants @CatiaAntunes96 (#1422)
+- test: user use cases @patricia-mdias (#1407)
+- refactor: change board module types for constants @CatiaAntunes96 (#1418)
+- test: add hook mocks to team tests @JoaoSaIvador (#1413)
+- refactor: change team user module types for constants @CatiaAntunes96 (#1411)
+- feat(1398): global styles unnecesssary render @CatiaBarroco-xgeeks (#1400)
+- refactor: change type for constants on team module @CatiaAntunes96 (#1401)
+- refactor: usecases for the update board service @CatiaAntunes96 (#1384)
+- refactor: remove some of the codeOwners @CatiaAntunes96 (#1399)
+- test: add tests for team and user hooks @JoaoSaIvador (#1392)
+- refactor: remove unused recoil states @JoaoSaIvador (#1394)
+- refactor: add usecases for deletevoteservice @CatiaAntunes96 (#1390)
+- test: untested pages @StereoPT (#1378)
+- test: add tests for user components @JoaoSaIvador (#1374)
+- refactor: updatecardservice to usecase @GoncaloCanteiro (#1372)
+- fix(1369): rename folder @CatiaBarroco-xgeeks (#1370)
+- refactor: delete card service to usecase @GoncaloCanteiro (#1351)
+- feat(1346): change imports @CatiaBarroco-xgeeks (#1350)
+- feat: add auth page reponsiveness @juniorboos (#1367)
+- test: team user services @patricia-mdias (#1353)
+- refactor: add usecases for createvoteservice @CatiaAntunes96 (#1354)
+- refactor: usecases for the deleteboardservice @CatiaAntunes96 (#1343)
+- refactor: usecase of get board service @CatiaAntunes96 (#1338)
+- refactor: pass href to styled components anchor @juniorboos (#1335)
+- feat: add useCase for create board @CatiaAntunes96 (#1322)
+- test: team services @patricia-mdias (#1319)
+- docs: add juniorboos as a contributor for code, and doc @allcontributors (#1324)
+- test: votes services @CatiaAntunes96 (#1311)
+- test: create board service @CatiaAntunes96 (#1300)
+
+### 🚀 Features
+
+- feat: add users responsiveness @juniorboos (#1446)
+- feat: add board list responsiveness @juniorboos (#1439)
+- feat: add scheduling form to board settings @GoncaloCanteiro (#1430)
+- refactor: enums @StereoPT (#1419)
+- refactor: constants @StereoPT (#1412)
+- feat: add Button responsiveness @juniorboos (#1405)
+- feat: calendar primitive, datePicker primitive and UncontrolledInput @GoncaloCanteiro (#1395)
+- feat: add Tiles responsiveness @juniorboos (#1388)
+- refactor: suggestion of eslint config @tutods (#1368)
+- feat: add sidebar responsiveness @juniorboos (#1376)
+- feat: custom layout for auth error pages @StereoPT (#1361)
+- refactor: remove unnecessary teams recoil state @JoaoSaIvador (#1327)
+- refactor: create board pages components @JoaoSaIvador (#1314)
+- refactor: unmergecardservice to usecase and tests @GoncaloCanteiro (#1312)
+- refactor: mergecardservice to usecase @GoncaloCanteiro (#1309)
+- refactor: create card service to usecase @GoncaloCanteiro (#1306)
+
+### 🐛 Bug Fixes
+
+- fix: removed deleted import @StereoPT (#1442)
+- refactor: react query status on useeffect & toast messages @StereoPT (#1423)
+- fix: fix responsible field on divided boards @CatiaAntunes96 (#1415)
+- fix: regular board no responsible @CatiaAntunes96 (#1396)
+- fix: accessing deleted board @StereoPT (#1402)
+- fix: tsconfig paths @juniorboos (#1391)
+- fix: active sidebar item @StereoPT (#1389)
+- test: user service @patricia-mdias (#1379)
+- fix: change regular board responsible @CatiaAntunes96 (#1358)
+- fix: board not found redirect @juniorboos (#1360)
+- fix: channel id missing @GoncaloCanteiro (#1356)
+- refactor: useUser hook @StereoPT (#1329)
+- fix: storybook in dev and prod env @nunocaseiro (#1336)
+- refactor: useTeams custom hook @StereoPT (#1318)
+- refactor: votes services @CatiaAntunes96 (#1305)
+
+### 📄 Documentation
+
+- refactor: primitive tests and stories @JoaoSaIvador (#1352)
+- test: add and update tests and stories for team components @JoaoSaIvador (#1331)
+- docs: update contribution guidelines project name @juniorboos (#1316)
+
+### 🧩 Dependency Updates
+
+<details>
+<summary>10 changes</summary>
+- chore(deps): bump vm2 from 3.9.16 to 3.9.17 in /backend @dependabot (#1421)
+- chore(deps-dev): bump @commitlint/config-conventional from 17.4.4 to 17.6.1 @dependabot (#1403)
+- chore(deps-dev): bump @commitlint/cli from 17.5.1 to 17.6.1 @dependabot (#1404)
+- chore(deps): bump vm2 from 3.9.15 to 3.9.16 in /backend @dependabot (#1386)
+- chore(deps): bump xml2js and @azure/storage-blob in /backend @dependabot (#1383)
+- chore(deps): bump vm2 from 3.9.11 to 3.9.15 in /backend @dependabot (#1373)
+- chore: update storybook @nunocaseiro (#1334)
+- chore(deps): bump glob-parent, webpack and @storybook/react in /frontend @dependabot (#1333)
+- chore(deps-dev): bump concurrently from 7.6.0 to 8.0.1 @dependabot (#1330)
+- chore(deps-dev): bump @commitlint/cli from 17.4.0 to 17.5.0 @dependabot (#1307)
+
+</details>
+**Full Changelog**: https://github.com/xgeekshq/split/compare/v0.1.18...v0.1.19
 
 ## [v0.1.18](https://github.com/xgeekshq/split/compare/v0.1.17...v0.1.18) - 2023-03-24
 
