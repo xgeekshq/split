@@ -13,7 +13,7 @@ import UsersList from '@/components/Users/UsersList/UsersList';
 import { TEAMS_KEY, USERS_KEY } from '@/constants/react-query/keys';
 
 const Users = () => (
-  <Flex css={{ width: '100%' }} direction="column" gap="16">
+  <Flex css={{ width: '100%' }} direction="column" gap="32">
     <MainPageHeader title="Users" />
     <Suspense fallback={<LoadingPage />}>
       <QueryError>

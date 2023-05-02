@@ -15,17 +15,16 @@ const UsersSubHeader = ({
   handleSearchUser,
   handleClearSearch,
 }: UsersSubHeaderProps) => (
-  <Flex align="end" css={{ mt: '$16' }} data-testid="usersSubHeader" justify="between">
+  <Flex align="end" data-testid="usersSubHeader" gap="8" justify="between" wrap="wrap">
     <Text fontWeight="bold">{userAmount} registered users</Text>
-    <Flex css={{ width: '$455' }}>
-      <UncontrolledInput
-        currentValue={search}
-        handleChange={handleSearchUser}
-        handleClear={handleClearSearch}
-        iconName="search"
-        placeholder="Search user"
-      />
-    </Flex>
+    <UncontrolledInput
+      currentValue={search}
+      handleChange={handleSearchUser}
+      handleClear={handleClearSearch}
+      iconName="search"
+      placeholder="Search user"
+      width="$456"
+    />
   </Flex>
 );
 

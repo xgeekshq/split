@@ -45,7 +45,7 @@ const UsersList = () => {
   }, [search]);
 
   return (
-    <>
+    <Flex direction="column" gap="16">
       <UsersSubHeader
         handleClearSearch={handleClearSearch}
         handleSearchUser={handleSearchUser}
@@ -55,13 +55,13 @@ const UsersList = () => {
       <Flex
         data-testid="usersList"
         direction="column"
+        gap="16"
         onScroll={onScroll}
         ref={scrollRef}
         css={{
           height: '100%',
           position: 'relative',
           overflowY: 'auto',
-          pr: '$8',
         }}
       >
         <Flex direction="column" gap="8">
@@ -70,12 +70,12 @@ const UsersList = () => {
           ))}
         </Flex>
         {isFetching && (
-          <Flex css={{ mt: '$16' }} justify="center">
+          <Flex justify="center">
             <Dots />
           </Flex>
         )}
       </Flex>
-    </>
+    </Flex>
   );
 };
 

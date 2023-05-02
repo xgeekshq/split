@@ -1,6 +1,6 @@
 import { styled } from '@/styles/stitches/stitches.config';
 
-const Badge = styled('div', {
+const Badge = styled('span', {
   color: '$primary400',
   border: '1px solid $primary100',
   borderRadius: '$4',

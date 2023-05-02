@@ -18,17 +18,17 @@ import { UnauthorizedResponse } from 'src/libs/swagger/errors/unauthorized.swagg
 import { LoginResponse } from 'src/modules/auth/swagger/login.swagger';
 import { RegisterOrLoginAzureUseCaseInterface } from '../interfaces/applications/register-or-login.azure.use-case.interface';
 import { AzureToken } from '../interfaces/token.azure.dto';
-import { TYPES } from '../interfaces/types';
+import { CHECK_USER_USE_CASE, REGISTER_OR_LOGIN_USE_CASE } from '../constants';
 import { CheckUserAzureUseCaseInterface } from '../interfaces/applications/check-user.azure.use-case.interface';
 
 @ApiTags('Azure')
 @Controller('auth/azure')
 export default class AzureController {
 	constructor(
-		@Inject(TYPES.applications.RegisterOrLoginUseCase)
-		private registerOrLoginUseCase: RegisterOrLoginAzureUseCaseInterface,
-		@Inject(TYPES.applications.CheckUserUseCase)
-		private checkUserUseCase: CheckUserAzureUseCaseInterface
+		@Inject(REGISTER_OR_LOGIN_USE_CASE)
+		private readonly registerOrLoginUseCase: RegisterOrLoginAzureUseCaseInterface,
+		@Inject(CHECK_USER_USE_CASE)
+		private readonly checkUserUseCase: CheckUserAzureUseCaseInterface
 	) {}
 
 	@ApiOperation({

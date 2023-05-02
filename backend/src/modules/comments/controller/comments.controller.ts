@@ -172,19 +172,6 @@ export default class CommentsController {
 		const { boardId, cardId, itemId, commentId } = params;
 		const { text, socketId, anonymous, isCardGroup } = commentData;
 
-		// const board = await this.updateCommentApp.updateItemComment(
-		// 	boardId,
-		// 	cardId,
-		// 	itemId,
-		// 	commentId,
-		// 	text,
-		// 	anonymous
-		// );
-
-		// if (!board) {
-		// 	throw new BadRequestException(UPDATE_FAILED);
-		// }
-
 		const completionHandler = () => {
 			this.socketService.sendUpdateComment(socketId, commentData);
 		};
@@ -229,19 +216,6 @@ export default class CommentsController {
 	) {
 		const { boardId, cardId, commentId } = params;
 		const { text, socketId, anonymous, isCardGroup } = commentData;
-
-		// const board = await this.updateCommentApp.updateCardGroupComment(
-		// 	boardId,
-		// 	cardId,
-		// 	commentId,
-		// 	text,
-		// 	anonymous
-		// );
-
-		// if (!board) {
-		// 	throw new BadRequestException(UPDATE_FAILED);
-		// }
-
 		const completionHandler = () => {
 			this.socketService.sendUpdateComment(socketId, commentData);
 		};

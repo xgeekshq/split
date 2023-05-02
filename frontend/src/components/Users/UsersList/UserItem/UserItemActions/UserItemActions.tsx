@@ -49,47 +49,45 @@ const UserItemActions = React.memo(({ user }: UserItemActionsProps) => {
   };
 
   return (
-    <Flex data-testid="userItemActions" justify="end">
-      <Flex css={{ alignItems: 'center' }} gap={24}>
-        <ConfigurationSwitch
-          disabled={userId === user._id}
-          disabledInfo={userId !== user._id ? undefined : "Can't change your own role"}
-          handleCheckedChange={handleSuperAdminChange}
-          isChecked={user.isSAdmin}
-          title="Super Admin"
-        />
-        <Separator orientation="vertical" size="lg" />
-        <Flex align="center">
-          <Link href={ROUTES.UserPage(user._id)}>
-            <Button isIcon size="sm">
-              <Icon
-                name="edit"
-                css={{
-                  color: '$primary400',
-                }}
-              />
-            </Button>
-          </Link>
-        </Flex>
-        <Flex align="center">
-          <ConfirmationDialog
-            confirmationHandler={handleDeleteUser}
-            confirmationLabel="Delete"
-            description={deleteUserDescription}
-            title="Delete user"
-            tooltip="Delete user"
-            variant="danger"
-          >
-            <Button isIcon disabled={userId === user._id} size="sm">
-              <Icon
-                name="trash-alt"
-                css={{
-                  color: '$primary400',
-                }}
-              />
-            </Button>
-          </ConfirmationDialog>
-        </Flex>
+    <Flex align="center" css={{ flex: 1 }} data-testid="userItemActions" gap={24} justify="end">
+      <ConfigurationSwitch
+        disabled={userId === user._id}
+        disabledInfo={userId !== user._id ? undefined : "Can't change your own role"}
+        handleCheckedChange={handleSuperAdminChange}
+        isChecked={user.isSAdmin}
+        title="Super Admin"
+      />
+      <Separator orientation="vertical" size="lg" />
+      <Flex align="center">
+        <Link href={ROUTES.UserPage(user._id)}>
+          <Button isIcon size="sm">
+            <Icon
+              name="edit"
+              css={{
+                color: '$primary400',
+              }}
+            />
+          </Button>
+        </Link>
+      </Flex>
+      <Flex align="center">
+        <ConfirmationDialog
+          confirmationHandler={handleDeleteUser}
+          confirmationLabel="Delete"
+          description={deleteUserDescription}
+          title="Delete user"
+          tooltip="Delete user"
+          variant="danger"
+        >
+          <Button isIcon disabled={userId === user._id} size="sm">
+            <Icon
+              name="trash-alt"
+              css={{
+                color: '$primary400',
+              }}
+            />
+          </Button>
+        </ConfirmationDialog>
       </Flex>
     </Flex>
   );

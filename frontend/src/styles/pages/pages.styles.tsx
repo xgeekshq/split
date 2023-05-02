@@ -12,8 +12,8 @@ export const FlexForm = styled('form', Flex, { width: '100%' });
 export const InnerContainer = styled(Flex, Box, {
   px: '$32',
   py: '$22',
+  gap: '$10 $40',
   backgroundColor: '$white',
   borderRadius: '$12',
   position: 'relative',
-  maxHeight: '$76',
 });
