@@ -12,7 +12,7 @@ import { UpdateFailedException } from 'src/libs/exceptions/updateFailedBadReques
 
 const board: Board = BoardFactory.create();
 
-describe('CreateCardUseCase', () => {
+describe('UpdateCommentUseCase', () => {
 	let useCase: UseCase<UpdateCommentUseCaseDto, void>;
 	let commentRepositoryMock: DeepMocked<CommentRepositoryInterface>;
 
@@ -86,7 +86,7 @@ describe('CreateCardUseCase', () => {
 		expect(commentRepositoryMock.updateItemComment).toBeCalledTimes(1);
 	});
 
-	it('should throw an error when the update of a comment fails', async () => {
+	it('should throw an error when updating a comment fails', async () => {
 		commentRepositoryMock.updateItemComment.mockResolvedValueOnce(null);
 
 		const commentDto: UpdateCommentUseCaseDto = {
