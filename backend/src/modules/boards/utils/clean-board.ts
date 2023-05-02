@@ -2,7 +2,7 @@ import { boardVotesIdHidden } from 'src/libs/utils/boardVotesIdHidden';
 import { hideText } from 'src/libs/utils/hideText';
 import CardItem from 'src/modules/cards/entities/card.item.schema';
 import Card from 'src/modules/cards/entities/card.schema';
-import Comment from 'src/modules/comments/schemas/comment.schema';
+import Comment from 'src/modules/comments/entities/comment.schema';
 import User from 'src/modules/users/entities/user.schema';
 import Board from '../entities/board.schema';
 
