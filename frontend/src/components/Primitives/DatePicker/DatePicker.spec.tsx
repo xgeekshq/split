@@ -33,10 +33,10 @@ describe('Components/Primitives/Inputs/UncontrolledInput', () => {
     const setDate = jest.fn();
 
     // Act
-    const { getByText, getByTestId } = render({ setDate });
+    const { getAllByText, getByTestId } = render({ setDate });
     await userEvent.type(getByTestId('uncontrolledInput'), '{arrowdown}');
     await waitFor(() => {
-      fireEvent.click(getByText('1'));
+      fireEvent.click(getAllByText('1')[0]);
     });
     // Assert
     await waitFor(() => {
