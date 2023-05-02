@@ -7,7 +7,6 @@ const PopoverItemSquareStyled = styled(PopoverItem, {
   py: '$5',
   px: '$5',
   gap: '$8',
-  ml: '$14',
   '@hover': {
     '&:hover': {
       backgroundColor: '$transparent',
