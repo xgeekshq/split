@@ -144,8 +144,16 @@ const LoginForm = ({ setShowTroubleLogin }: LoginFormProps) => {
                 </Button>
               )}
               {NEXT_PUBLIC_ENABLE_AZURE && (
-                <Button isIcon data-loading={loading.sso} onClick={handleLoginAzure} size="xl">
-                  <Icon name="microsoft" size={60} />
+                <Button
+                  isIcon
+                  data-loading={loading.sso}
+                  disabled={loading.sso}
+                  onClick={handleLoginAzure}
+                  size="xl"
+                  type="button"
+                >
+                  {loading.sso && <Dots color="primary800" size={10} />}
+                  {!loading.sso && <Icon name="microsoft" size={60} />}
                 </Button>
               )}
             </Flex>
