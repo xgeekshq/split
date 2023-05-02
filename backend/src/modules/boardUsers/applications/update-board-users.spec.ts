@@ -6,10 +6,7 @@ import { BoardUserDtoFactory } from 'src/libs/test-utils/mocks/factories/dto/boa
 import { UpdateFailedException } from 'src/libs/exceptions/updateFailedBadRequestException';
 import { DeepMocked, createMock } from '@golevelup/ts-jest';
 import { UseCase } from 'src/libs/interfaces/use-case.interface';
-import {
-	BoardParticipantsPresenter,
-	UpdateBoardUsersUseCase
-} from './update-board-users.use-case';
+import { BoardParticipantsPresenter, UpdateBoardUsersUseCase } from './update-board-users.use-case';
 import UpdateBoardUserDto from 'src/modules/boardUsers/dto/update-board-user.dto';
 import { CreateBoardUserServiceInterface } from 'src/modules/boardUsers/interfaces/services/create.board.user.service.interface';
 import { DeleteBoardUserServiceInterface } from 'src/modules/boardUsers/interfaces/services/delete.board.user.service.interface';
