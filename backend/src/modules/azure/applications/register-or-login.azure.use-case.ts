@@ -7,7 +7,6 @@ import jwt_decode from 'jwt-decode';
 import { GetUserServiceInterface } from 'src/modules/users/interfaces/services/get.user.service.interface';
 import { CreateUserServiceInterface } from 'src/modules/users/interfaces/services/create.user.service.interface';
 import User from 'src/modules/users/entities/user.schema';
-import * as AuthType from 'src/modules/auth/interfaces/types';
 import { UpdateUserServiceInterface } from 'src/modules/users/interfaces/services/update.user.service.interface';
 import { GetTokenAuthServiceInterface } from 'src/modules/auth/interfaces/services/get-token.auth.service.interface';
 import { signIn } from 'src/modules/auth/shared/login.auth';
@@ -15,6 +14,7 @@ import { createHash } from 'node:crypto';
 import { StorageServiceInterface } from 'src/modules/storage/interfaces/services/storage.service';
 import { CREATE_USER_SERVICE, GET_USER_SERVICE } from 'src/modules/users/constants';
 import { STORAGE_SERVICE } from 'src/modules/storage/constants';
+import { GET_TOKEN_AUTH_SERVICE, UPDATE_USER_SERVICE } from 'src/modules/auth/constants';
 
 @Injectable()
 export class RegisterOrLoginAzureUseCase implements RegisterOrLoginAzureUseCaseInterface {
@@ -25,9 +25,9 @@ export class RegisterOrLoginAzureUseCase implements RegisterOrLoginAzureUseCaseI
 		private readonly getUserService: GetUserServiceInterface,
 		@Inject(CREATE_USER_SERVICE)
 		private readonly createUserService: CreateUserServiceInterface,
-		@Inject(AuthType.TYPES.services.UpdateUserService)
+		@Inject(UPDATE_USER_SERVICE)
 		private readonly updateUserService: UpdateUserServiceInterface,
-		@Inject(AuthType.TYPES.services.GetTokenAuthService)
+		@Inject(GET_TOKEN_AUTH_SERVICE)
 		private readonly getTokenService: GetTokenAuthServiceInterface,
 		@Inject(STORAGE_SERVICE)
 		private readonly storageService: StorageServiceInterface

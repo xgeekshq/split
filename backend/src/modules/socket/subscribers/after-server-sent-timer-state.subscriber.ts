@@ -8,7 +8,7 @@ import { BOARD_TIMER_SERVER_SENT_TIMER_STATE } from '../../../libs/constants/tim
 export default class AfterServerSentTimerStateSubscriber {
 	private logger = new Logger(AfterServerSentTimerStateSubscriber.name);
 
-	constructor(private socketService: SocketGateway) {}
+	constructor(private readonly socketService: SocketGateway) {}
 
 	@OnEvent(BOARD_TIMER_SERVER_SENT_TIMER_STATE)
 	handleServerSentTimerStateEvent(payload: BoardTimerStateDto) {

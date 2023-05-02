@@ -19,7 +19,7 @@ export class SlackCommunicationConsumer extends SlackCommunicationEventListeners
 		@Inject(SLACK_COMMUNICATION_APPLICATION)
 		private readonly application: CommunicationApplicationInterface,
 		@Inject(UPDATE_BOARD_SERVICE)
-		private updateBoardService: UpdateBoardServiceInterface
+		private readonly updateBoardService: UpdateBoardServiceInterface
 	) {
 		const logger = new Logger(SlackCommunicationConsumer.name);
 		super(logger);

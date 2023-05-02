@@ -21,6 +21,8 @@ import { Team } from '@/types/team/team';
 
 const InnerContainer = styled(Flex, Box, {
   px: '$18',
+  // mx is used to counter the extra spacing created by the box-shadow
+  mx: '$4',
   backgroundColor: '$white',
   borderRadius: '$12',
   position: 'relative',
