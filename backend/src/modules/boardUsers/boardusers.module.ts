@@ -4,13 +4,15 @@ import {
 	createBoardUserService,
 	deleteBoardUserService,
 	getBoardUserService,
-	updateBoardUserService
+	updateBoardUserService,
+	updateBoardUsersUseCase
 } from './boardusers.providers';
 import { mongooseBoardUserModule } from 'src/infrastructure/database/mongoose.module';
 
 @Module({
 	imports: [mongooseBoardUserModule],
 	providers: [
+		updateBoardUsersUseCase,
 		createBoardUserService,
 		getBoardUserService,
 		updateBoardUserService,

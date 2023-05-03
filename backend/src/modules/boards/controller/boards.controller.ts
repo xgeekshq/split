@@ -36,7 +36,6 @@ import { BoardPhases } from 'src/libs/enum/board.phases';
 import { TeamRoles } from 'src/libs/enum/team.roles';
 import { BoardUserGuard } from 'src/libs/guards/boardRoles.guard';
 import JwtAuthenticationGuard from 'src/libs/guards/jwtAuth.guard';
-import { UpdateBoardPermissionsGuard } from 'src/libs/guards/updateBoardPermissions.guard';
 import RequestWithUser from 'src/libs/interfaces/requestWithUser.interface';
 import { UseCase } from 'src/libs/interfaces/use-case.interface';
 import { BadRequestResponse } from 'src/libs/swagger/errors/bad-request.swagger';
@@ -305,40 +304,6 @@ export default class BoardsController {
 		};
 
 		return this.updateBoardUseCase.execute({ ...boardData, boardId, completionHandler });
-	}
-
-	@ApiOperation({ summary: 'Update participants of a specific board' })
-	@ApiParam({ type: String, name: 'boardId', required: true })
-	@ApiBody({ type: UpdateBoardUserDto })
-	@ApiOkResponse({
-		type: BoardDto,
-		description: 'Board participants updated successfully!'
-	})
-	@ApiBadRequestResponse({
-		description: 'Bad Request',
-		type: BadRequestResponse
-	})
-	@ApiUnauthorizedResponse({
-		description: 'Unauthorized',
-		type: UnauthorizedResponse
-	})
-	@ApiNotFoundResponse({
-		type: NotFoundResponse,
-		description: 'Not found!'
-	})
-	@ApiForbiddenResponse({
-		description: 'Forbidden',
-		type: ForbiddenResponse
-	})
-	@ApiInternalServerErrorResponse({
-		description: 'Internal Server Error',
-		type: InternalServerErrorResponse
-	})
-	@BoardUser([BoardRoles.RESPONSIBLE, TeamRoles.ADMIN, TeamRoles.STAKEHOLDER])
-	@UseGuards(UpdateBoardPermissionsGuard, BoardUserGuard)
-	@Put(':boardId/participants')
-	updateBoardParticipants(@Body() boardData: UpdateBoardUserDto) {
-		return this.updateBoardParticipantsUseCase.execute(boardData);
 	}
 
 	@ApiOperation({ summary: 'Delete a specific board' })
