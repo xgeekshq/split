@@ -7,7 +7,8 @@ const mockCommentData = (): Comment => {
 	return {
 		text: faker.lorem.words(),
 		createdBy: UserFactory.create(),
-		anonymous: faker.datatype.boolean()
+		anonymous: faker.datatype.boolean(),
+		_id: faker.datatype.uuid()
 	};
 };
 
