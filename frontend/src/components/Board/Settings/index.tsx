@@ -9,7 +9,6 @@ import { colors } from '@/components/Board/Column/partials/OptionsMenu';
 import { ColumnSettings } from '@/components/Board/Settings/partials/Columns';
 import { ColumnBoxAndDelete } from '@/components/Board/Settings/partials/Columns/ColumnBoxAndDelete';
 import { ConfigurationSettings } from '@/components/Board/Settings/partials/ConfigurationSettings';
-import SchedulingSettings from '@/components/Board/Settings/partials/Scheduling/Scheduling';
 import { TeamResponsibleSettings } from '@/components/Board/Settings/partials/TeamResponsible';
 import { ScrollableContent } from '@/components/Boards/MyBoards/ListBoardMembers/styles';
 import Avatar from '@/components/Primitives/Avatars/Avatar/Avatar';
@@ -26,7 +25,7 @@ import useBoard from '@/hooks/useBoard';
 import SchemaUpdateBoard from '@/schema/schemaUpdateBoardForm';
 import { boardInfoState, deletedColumnsState } from '@/store/board/atoms/board.atom';
 import { FlexForm } from '@/styles/pages/pages.styles';
-import { UpdateBoardType, UpdateScheduleType } from '@/types/board/board';
+import { UpdateBoardType } from '@/types/board/board';
 import { BoardUserToAdd } from '@/types/board/board.user';
 import ColumnType, { CreateColumn } from '@/types/column';
 import { getInitials } from '@/utils/getInitials';
@@ -116,16 +115,6 @@ const BoardSettings = ({
     addCards: initialData.addCards,
     postAnonymously: initialData.postAnonymously,
   });
-
-  // State used to change values
-  const initialSchedulingData: UpdateScheduleType = {
-    reminderViaSlack: false,
-    reminderViaEmail: false,
-    reminderPrefillingCards: false,
-  };
-
-  //state used for scheduling
-  const [schedulingData, setSchedulingData] = useState<UpdateScheduleType>(initialSchedulingData);
 
   // User Board Hook
   const {
@@ -381,12 +370,6 @@ const BoardSettings = ({
                   )}
                 </ConfigurationSettings>
 
-                {!isSubBoard && hasPermissions && (
-                  <SchedulingSettings
-                    schedulingData={schedulingData}
-                    setSchedulingData={setSchedulingData}
-                  />
-                )}
                 {isSubBoard && hasPermissions && (
                   <TeamResponsibleSettings>
                     <ConfigurationSwitch
