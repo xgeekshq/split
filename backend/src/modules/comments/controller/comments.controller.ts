@@ -216,7 +216,6 @@ export default class CommentsController {
 	) {
 		const { boardId, cardId, commentId } = params;
 		const { text, socketId, anonymous, isCardGroup } = commentData;
-
 		const completionHandler = () => {
 			this.socketService.sendUpdateComment(socketId, commentData);
 		};
