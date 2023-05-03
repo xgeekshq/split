@@ -13,6 +13,7 @@ export default class DeleteBoardUserService implements DeleteBoardUserServiceInt
 		private readonly boardUserRepository: BoardUserRepositoryInterface
 	) {}
 
+	// these functions are direct queries to the database so they won't be tested
 	deleteDividedBoardUsers(
 		dividedBoards: Board[] | Schema.Types.ObjectId[] | string[],
 		withSession: boolean,

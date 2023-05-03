@@ -1,3 +1,7 @@
+/* USE CASES */
+
+export const UPDATE_BOARD_USERS_USE_CASE = 'UpdateBoardUsersUseCase';
+
 /* SERVICES */
 
 export const CREATE_BOARD_USER_SERVICE = 'CreateBoardUserService';

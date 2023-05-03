@@ -18,7 +18,7 @@ import User from 'src/modules/users/entities/user.schema';
 export type BoardParticipantsPresenter = BoardUser | BoardUser[];
 
 @Injectable()
-export class UpdateBoardParticipantsUseCase
+export class UpdateBoardUsersUseCase
 	implements UseCase<UpdateBoardUserDto, BoardParticipantsPresenter>
 {
 	constructor(

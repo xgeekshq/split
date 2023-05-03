@@ -11,6 +11,7 @@ export default class UpdateBoardUserService implements UpdateBoardUserServiceInt
 		private readonly boardUserRepository: BoardUserRepositoryInterface
 	) {}
 
+	// these functions are direct queries to the database so they won't be tested
 	updateBoardUserRole(boardId: string, userId: string, role: string): Promise<BoardUser> {
 		return this.boardUserRepository.updateBoardUserRole(boardId, userId, role);
 	}

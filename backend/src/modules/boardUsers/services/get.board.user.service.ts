@@ -11,6 +11,7 @@ export default class GetBoardUserService implements GetBoardUserServiceInterface
 		private readonly boardUserRepository: BoardUserRepositoryInterface
 	) {}
 
+	// these functions are direct queries to the database so they won't be tested
 	getAllBoardsOfUser(userId: string): Promise<BoardUser[]> {
 		return this.boardUserRepository.getAllBoardsIdsOfUser(userId);
 	}
