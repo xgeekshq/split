@@ -44,9 +44,11 @@ const NewCircleIndicator = styled('div', {
     position: {
       absolute: {
         position: 'absolute',
-        left: '$12',
+        left: '$6',
         top: '50%',
         transform: 'translateY(-50%)',
+
+        '@md': { left: '$12' },
       },
     },
   },
