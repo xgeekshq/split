@@ -276,7 +276,7 @@ const BoardHeader = () => {
             </BoardCounter>
           </PopoverTrigger>
           <PopoverPortal>
-            <StyledPopoverContent>
+            <StyledPopoverContent onOpenAutoFocus={(e) => e.preventDefault()}>
               <Flex direction="column">
                 {dividedBoards.map((board: BoardType) => (
                   <StyledPopoverItem key={board.title.toLowerCase().split(' ').join('-')}>
