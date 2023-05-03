@@ -53,7 +53,7 @@ const QuickEditSubTeams = ({ team }: QuickEditSubTeamsProps) => {
     const error = hasError(value, minTeams, maxTeams);
     setIsSubmitDisabled(error);
 
-    if (!error) setValue('maxUsers', Math.ceil(teamLength / +value));
+    if (!error) setValue('maxUsers', Math.round(teamLength / +value));
 
     setErrors((prev) => ({
       ...prev,
@@ -87,7 +87,7 @@ const QuickEditSubTeams = ({ team }: QuickEditSubTeamsProps) => {
       count: {
         ...prev.count,
         teamsCount: Math.floor(getValues('maxTeams')),
-        maxUsersCount: Math.floor(getValues('maxUsers')),
+        maxUsersCount: Number((teamLength / Math.floor(getValues('maxTeams'))).toFixed(2)),
       },
       board: {
         ...prev.board,
@@ -98,7 +98,8 @@ const QuickEditSubTeams = ({ team }: QuickEditSubTeamsProps) => {
 
   useEffect(() => {
     setValue('maxTeams', teamsCount);
-    setValue('maxUsers', maxUsersCount);
+    setValue('maxUsers', Math.round(maxUsersCount));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [teamsCount, maxUsersCount]);
 
   useEffect(() => {

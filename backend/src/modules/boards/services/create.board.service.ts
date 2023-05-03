@@ -87,7 +87,7 @@ export default class CreateBoardService implements CreateBoardServiceInterface {
 				recurrent &&
 				teamId &&
 				maxUsers &&
-				teamName === 'xgeeks' &&
+				teamName === 'Teste BotTeam' &&
 				!fromSchedule
 			) {
 				this.addCronJobToBoard(String(createdBoard._id), userId, teamId, maxUsers);
@@ -95,7 +95,7 @@ export default class CreateBoardService implements CreateBoardServiceInterface {
 
 			this.logger.verbose(`Communication Slack Enable is set to "${boardData.slackEnable}".`);
 
-			if (slackEnable && teamId && teamName === 'xgeeks') {
+			if (slackEnable && teamId && teamName === 'Teste BotTeam') {
 				await this.callSlackCommunication(createdBoard._id);
 			}
 
@@ -272,7 +272,7 @@ export default class CreateBoardService implements CreateBoardServiceInterface {
 		const teamLength = teamUsersWotStakeholders.length;
 
 		const rawMaxTeams = teamLength / Number(configs.maxUsersPerTeam);
-		const maxTeams = Math.ceil(rawMaxTeams);
+		const maxTeams = Math.round(rawMaxTeams);
 
 		if (maxTeams < 2 || configs.maxUsersPerTeam < 2) {
 			return null;
@@ -295,7 +295,7 @@ export default class CreateBoardService implements CreateBoardServiceInterface {
 			hideCards: true,
 			postAnonymously: configs.postAnonymously,
 			hideVotes: configs.hideVotes ?? false,
-			maxUsers: Math.ceil(configs.maxUsersPerTeam),
+			maxUsers: configs.maxUsersPerTeam,
 			slackEnable: configs.slackEnable,
 			responsibles
 		};

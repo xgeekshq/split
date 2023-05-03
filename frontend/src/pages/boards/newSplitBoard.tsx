@@ -176,7 +176,7 @@ const NewSplitBoard: NextPage = () => {
         title,
         dividedBoards: newDividedBoards,
         maxVotes,
-        maxUsers,
+        maxUsers: boardState.count.maxUsersCount,
         team,
         responsibles,
         slackEnable,
