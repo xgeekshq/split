@@ -36,7 +36,6 @@ import { BoardPhases } from 'src/libs/enum/board.phases';
 import { TeamRoles } from 'src/libs/enum/team.roles';
 import { BoardUserGuard } from 'src/libs/guards/boardRoles.guard';
 import JwtAuthenticationGuard from 'src/libs/guards/jwtAuth.guard';
-import { UpdateBoardPermissionsGuard } from 'src/libs/guards/updateBoardPermissions.guard';
 import RequestWithUser from 'src/libs/interfaces/requestWithUser.interface';
 import { UseCase } from 'src/libs/interfaces/use-case.interface';
 import { BadRequestResponse } from 'src/libs/swagger/errors/bad-request.swagger';
@@ -45,7 +44,6 @@ import { InternalServerErrorResponse } from 'src/libs/swagger/errors/internal-se
 import { NotFoundResponse } from 'src/libs/swagger/errors/not-found.swagger';
 import { UnauthorizedResponse } from 'src/libs/swagger/errors/unauthorized.swagger';
 import BoardGuestUserDto from 'src/modules/boardUsers/dto/board.guest.user.dto';
-import UpdateBoardUserDto from 'src/modules/boardUsers/dto/update-board-user.dto';
 import { UpdateBoardDto } from 'src/modules/boards/dto/update-board.dto';
 import { BoardResponse } from 'src/modules/boards/swagger/board.swagger';
 import { BoardRoles } from 'src/modules/communication/dto/types';
@@ -53,7 +51,6 @@ import SocketGateway from 'src/modules/socket/gateway/socket.gateway';
 import { TeamParamOptional } from '../../../libs/dto/param/team.param.optional';
 import { GetBoardGuard } from '../../../libs/guards/getBoardPermissions.guard';
 import { DuplicateBoardDto } from '../applications/duplicate-board.use-case';
-import { BoardParticipantsPresenter } from '../applications/update-board-participants.use-case';
 import BoardDto from '../dto/board.dto';
 import CreateBoardUseCaseDto from '../dto/useCase/create-board.use-case.dto';
 import GetAllBoardsUseCaseDto from '../dto/useCase/get-all-boards.use-case.dto';
@@ -70,7 +67,6 @@ import {
 	GET_DASHBOARD_BOARDS_USE_CASE,
 	GET_PERSONAL_BOARDS_USE_CASE,
 	MERGE_BOARD_USE_CASE,
-	UPDATE_BOARD_PARTICIPANTS_USE_CASE,
 	UPDATE_BOARD_PHASE_USE_CASE,
 	UPDATE_BOARD_USE_CASE
 } from '../constants';
@@ -106,11 +102,6 @@ export default class BoardsController {
 		private readonly getBoardUseCase: UseCase<GetBoardUseCaseDto, BoardUseCasePresenter>,
 		@Inject(UPDATE_BOARD_USE_CASE)
 		private readonly updateBoardUseCase: UseCase<UpdateBoardDto, Board>,
-		@Inject(UPDATE_BOARD_PARTICIPANTS_USE_CASE)
-		private readonly updateBoardParticipantsUseCase: UseCase<
-			UpdateBoardUserDto,
-			BoardParticipantsPresenter
-		>,
 		@Inject(MERGE_BOARD_USE_CASE)
 		private readonly mergeBoardUseCase: UseCase<MergeBoardUseCaseDto, Board>,
 		@Inject(UPDATE_BOARD_PHASE_USE_CASE)
@@ -305,40 +296,6 @@ export default class BoardsController {
 		};
 
 		return this.updateBoardUseCase.execute({ ...boardData, boardId, completionHandler });
-	}
-
-	@ApiOperation({ summary: 'Update participants of a specific board' })
-	@ApiParam({ type: String, name: 'boardId', required: true })
-	@ApiBody({ type: UpdateBoardUserDto })
-	@ApiOkResponse({
-		type: BoardDto,
-		description: 'Board participants updated successfully!'
-	})
-	@ApiBadRequestResponse({
-		description: 'Bad Request',
-		type: BadRequestResponse
-	})
-	@ApiUnauthorizedResponse({
-		description: 'Unauthorized',
-		type: UnauthorizedResponse
-	})
-	@ApiNotFoundResponse({
-		type: NotFoundResponse,
-		description: 'Not found!'
-	})
-	@ApiForbiddenResponse({
-		description: 'Forbidden',
-		type: ForbiddenResponse
-	})
-	@ApiInternalServerErrorResponse({
-		description: 'Internal Server Error',
-		type: InternalServerErrorResponse
-	})
-	@BoardUser([BoardRoles.RESPONSIBLE, TeamRoles.ADMIN, TeamRoles.STAKEHOLDER])
-	@UseGuards(UpdateBoardPermissionsGuard, BoardUserGuard)
-	@Put(':boardId/participants')
-	updateBoardParticipants(@Body() boardData: UpdateBoardUserDto) {
-		return this.updateBoardParticipantsUseCase.execute(boardData);
 	}
 
 	@ApiOperation({ summary: 'Delete a specific board' })

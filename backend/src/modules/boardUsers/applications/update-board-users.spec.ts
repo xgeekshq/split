@@ -6,10 +6,7 @@ import { BoardUserDtoFactory } from 'src/libs/test-utils/mocks/factories/dto/boa
 import { UpdateFailedException } from 'src/libs/exceptions/updateFailedBadRequestException';
 import { DeepMocked, createMock } from '@golevelup/ts-jest';
 import { UseCase } from 'src/libs/interfaces/use-case.interface';
-import {
-	BoardParticipantsPresenter,
-	UpdateBoardParticipantsUseCase
-} from './update-board-participants.use-case';
+import { BoardParticipantsPresenter, UpdateBoardUsersUseCase } from './update-board-users.use-case';
 import UpdateBoardUserDto from 'src/modules/boardUsers/dto/update-board-user.dto';
 import { CreateBoardUserServiceInterface } from 'src/modules/boardUsers/interfaces/services/create.board.user.service.interface';
 import { DeleteBoardUserServiceInterface } from 'src/modules/boardUsers/interfaces/services/delete.board.user.service.interface';
@@ -24,7 +21,7 @@ const boardUserToRemove = BoardUserFactory.create();
 const removedUsers = [boardUserToRemove._id];
 const boardUserDto = BoardUserDtoFactory.create({ role: BoardRoles.MEMBER });
 
-describe('UpdateBoardParticipantsUseCase', () => {
+describe('UpdateBoardUsersUseCase', () => {
 	let useCase: UseCase<UpdateBoardUserDto, BoardParticipantsPresenter>;
 	let updateBoardUserServiceMock: DeepMocked<UpdateBoardUserServiceInterface>;
 	let createBoardUserServiceMock: DeepMocked<CreateBoardUserServiceInterface>;
@@ -33,7 +30,7 @@ describe('UpdateBoardParticipantsUseCase', () => {
 	beforeAll(async () => {
 		const module: TestingModule = await Test.createTestingModule({
 			providers: [
-				UpdateBoardParticipantsUseCase,
+				UpdateBoardUsersUseCase,
 				{
 					provide: CREATE_BOARD_USER_SERVICE,
 					useValue: createMock<CreateBoardUserServiceInterface>()
@@ -49,7 +46,7 @@ describe('UpdateBoardParticipantsUseCase', () => {
 			]
 		}).compile();
 
-		useCase = module.get(UpdateBoardParticipantsUseCase);
+		useCase = module.get(UpdateBoardUsersUseCase);
 		updateBoardUserServiceMock = module.get(UPDATE_BOARD_USER_SERVICE);
 		createBoardUserServiceMock = module.get(CREATE_BOARD_USER_SERVICE);
 		deleteBoardUserServiceMock = module.get(DELETE_BOARD_USER_SERVICE);

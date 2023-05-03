@@ -43,7 +43,6 @@ import {
 	SEND_BOARD_TIMER_TIME_LEFT_SERVICE,
 	START_BOARD_TIMER_SERVICE,
 	STOP_BOARD_TIMER_SERVICE,
-	UPDATE_BOARD_PARTICIPANTS_USE_CASE,
 	UPDATE_BOARD_PHASE_USE_CASE,
 	UPDATE_BOARD_SERVICE,
 	UPDATE_BOARD_TIMER_DURATION_SERVICE,
@@ -55,7 +54,6 @@ import DeleteBoardService from './services/delete.board.service';
 import GetBoardService from './services/get.board.service';
 import UpdateBoardService from './services/update.board.service';
 import { UpdateBoardUseCase } from './applications/update-board.use-case';
-import { UpdateBoardParticipantsUseCase } from './applications/update-board-participants.use-case';
 import { MergeBoardUseCase } from './applications/merge-board.use-case';
 import { UpdateBoardPhaseUseCase } from './applications/update-board-phase.use-case';
 
@@ -156,11 +154,6 @@ export const duplicateBoardUseCase = {
 export const isBoardPublicUseCase = {
 	provide: IS_BOARD_PUBLIC_USE_CASE,
 	useClass: IsBoardPublicUseCase
-};
-
-export const updateBoardParticipantsUseCase = {
-	provide: UPDATE_BOARD_PARTICIPANTS_USE_CASE,
-	useClass: UpdateBoardParticipantsUseCase
 };
 
 export const mergeBoardUseCase = {
