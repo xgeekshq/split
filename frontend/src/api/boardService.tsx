@@ -105,7 +105,7 @@ export const deleteBoardRequest = async ({
 export const addAndRemoveBoardParticipantsRequest = (
   boardUsers: UpdateBoardUser,
 ): Promise<CreatedBoardUser[] | BoardUser> =>
-  fetchData(`/boards/${boardUsers.boardId}/participants`, {
+  fetchData(`/boardUsers/${boardUsers.boardId}/participants`, {
     method: 'PUT',
     data: boardUsers,
   });
