@@ -18,12 +18,12 @@ import {
 import Icon from '@/components/Primitives/Icons/Icon/Icon';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Separator from '@/components/Primitives/Separator/Separator';
-import Text from '@/components/Primitives/Text/Text';
 import Tooltip from '@/components/Primitives/Tooltips/Tooltip/Tooltip';
 import { countColumnCards } from '@/helper/board/countCards';
 import { getCardVotes } from '@/helper/board/votes';
 import { filteredColumnsState } from '@/store/board/atoms/filterColumns';
 import { ColumnBoardType } from '@/types/column';
+import Badge from '@components/Primitives/Badge/Badge';
 
 type ColumMemoProps = {
   isRegularBoard?: boolean;
@@ -164,19 +164,7 @@ const Column = React.memo<ColumMemoProps>(
                             </Title>
                           )}
                         </TitleContainer>
-                        <Text
-                          color="primary400"
-                          size="xs"
-                          css={{
-                            borderRadius: '$4',
-                            border: '1px solid $colors$primary100',
-                            px: '$8',
-                            py: '$2',
-                            ml: '$10',
-                          }}
-                        >
-                          {countColumnCards(cards)} cards
-                        </Text>
+                        <Badge size="xs">{countColumnCards(cards)} cards</Badge>
                       </Flex>
                       <Flex>
                         {(isMainboard || isRegularBoard) && (
