@@ -86,7 +86,7 @@ export class UpdateBoardPhaseUseCase implements UseCase<BoardPhaseDto, void> {
 
 			//Extracts the action points to a string
 			cards.map((card) => {
-				actionPoints += ` \u2022 ${card.text.replace(/\n{2,}/g, '\n\t')} \n`;
+				actionPoints += ` \u2022 ${card.text.replace(/\n{1,}/g, '\n\t')} \n`;
 			});
 
 			return (
