@@ -33,7 +33,7 @@ const BoardUser = (permissions: string[]) => SetMetadata('permissions', permissi
 @ApiBearerAuth('access-token')
 @ApiTags('Board Users')
 @UseGuards(JwtAuthenticationGuard)
-@Controller('boards')
+@Controller('boardUsers')
 export default class BoardUsersController {
 	constructor(
 		@Inject(UPDATE_BOARD_USERS_USE_CASE)

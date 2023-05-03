@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import {
 	boardUserRepository,
 	createBoardUserService,
@@ -8,9 +8,16 @@ import {
 	updateBoardUsersUseCase
 } from './boardusers.providers';
 import { mongooseBoardUserModule } from 'src/infrastructure/database/mongoose.module';
+import BoardUsersController from './controller/board-user.controller';
+import BoardsModule from '../boards/boards.module';
+import TeamUsersModule from '../teamUsers/teamusers.module';
 
 @Module({
-	imports: [mongooseBoardUserModule],
+	imports: [
+		mongooseBoardUserModule,
+		forwardRef(() => BoardsModule),
+		forwardRef(() => TeamUsersModule)
+	],
 	providers: [
 		updateBoardUsersUseCase,
 		createBoardUserService,
@@ -19,7 +26,7 @@ import { mongooseBoardUserModule } from 'src/infrastructure/database/mongoose.mo
 		deleteBoardUserService,
 		boardUserRepository
 	],
-	controllers: [],
+	controllers: [BoardUsersController],
 	exports: [
 		createBoardUserService,
 		getBoardUserService,
