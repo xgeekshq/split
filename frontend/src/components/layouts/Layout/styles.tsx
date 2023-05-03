@@ -9,7 +9,7 @@ const Container = styled('main', {
 });
 
 const ContentSection = styled('section', Flex, {
-  flexGrow: 1,
+  height: '100%',
   mt: '$82',
   padding: '$64 $24 $24',
 
