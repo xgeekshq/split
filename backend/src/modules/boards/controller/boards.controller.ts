@@ -44,7 +44,6 @@ import { InternalServerErrorResponse } from 'src/libs/swagger/errors/internal-se
 import { NotFoundResponse } from 'src/libs/swagger/errors/not-found.swagger';
 import { UnauthorizedResponse } from 'src/libs/swagger/errors/unauthorized.swagger';
 import BoardGuestUserDto from 'src/modules/boardUsers/dto/board.guest.user.dto';
-import UpdateBoardUserDto from 'src/modules/boardUsers/dto/update-board-user.dto';
 import { UpdateBoardDto } from 'src/modules/boards/dto/update-board.dto';
 import { BoardResponse } from 'src/modules/boards/swagger/board.swagger';
 import { BoardRoles } from 'src/modules/communication/dto/types';
@@ -52,7 +51,6 @@ import SocketGateway from 'src/modules/socket/gateway/socket.gateway';
 import { TeamParamOptional } from '../../../libs/dto/param/team.param.optional';
 import { GetBoardGuard } from '../../../libs/guards/getBoardPermissions.guard';
 import { DuplicateBoardDto } from '../applications/duplicate-board.use-case';
-import { BoardParticipantsPresenter } from '../../boardUsers/applications/update-board-users.use-case';
 import BoardDto from '../dto/board.dto';
 import CreateBoardUseCaseDto from '../dto/useCase/create-board.use-case.dto';
 import GetAllBoardsUseCaseDto from '../dto/useCase/get-all-boards.use-case.dto';
@@ -69,7 +67,6 @@ import {
 	GET_DASHBOARD_BOARDS_USE_CASE,
 	GET_PERSONAL_BOARDS_USE_CASE,
 	MERGE_BOARD_USE_CASE,
-	UPDATE_BOARD_PARTICIPANTS_USE_CASE,
 	UPDATE_BOARD_PHASE_USE_CASE,
 	UPDATE_BOARD_USE_CASE
 } from '../constants';
@@ -105,11 +102,6 @@ export default class BoardsController {
 		private readonly getBoardUseCase: UseCase<GetBoardUseCaseDto, BoardUseCasePresenter>,
 		@Inject(UPDATE_BOARD_USE_CASE)
 		private readonly updateBoardUseCase: UseCase<UpdateBoardDto, Board>,
-		@Inject(UPDATE_BOARD_PARTICIPANTS_USE_CASE)
-		private readonly updateBoardParticipantsUseCase: UseCase<
-			UpdateBoardUserDto,
-			BoardParticipantsPresenter
-		>,
 		@Inject(MERGE_BOARD_USE_CASE)
 		private readonly mergeBoardUseCase: UseCase<MergeBoardUseCaseDto, Board>,
 		@Inject(UPDATE_BOARD_PHASE_USE_CASE)
