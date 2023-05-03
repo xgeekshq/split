@@ -87,7 +87,7 @@ export default class CreateBoardService implements CreateBoardServiceInterface {
 				recurrent &&
 				teamId &&
 				maxUsers &&
-				teamName === 'Teste BotTeam' &&
+				teamName === 'xgeeks' &&
 				!fromSchedule
 			) {
 				this.addCronJobToBoard(String(createdBoard._id), userId, teamId, maxUsers);
@@ -95,7 +95,7 @@ export default class CreateBoardService implements CreateBoardServiceInterface {
 
 			this.logger.verbose(`Communication Slack Enable is set to "${boardData.slackEnable}".`);
 
-			if (slackEnable && teamId && teamName === 'Teste BotTeam') {
+			if (slackEnable && teamId && teamName === 'xgeeks') {
 				await this.callSlackCommunication(createdBoard._id);
 			}
 
