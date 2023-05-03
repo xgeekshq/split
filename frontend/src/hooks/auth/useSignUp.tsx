@@ -21,11 +21,10 @@ const useSignUp = (emailName: EmailNameType, { onSuccess, onError }: UseSignUpCa
 
   return useQuery(
     ['checkUserExists', emailName.email],
-    () => {
+    () =>
       NEXT_PUBLIC_ENABLE_AZURE
         ? checkUserExistsAD(emailName.email)
-        : checkUserExists(emailName.email);
-    },
+        : checkUserExists(emailName.email),
     {
       enabled: !!emailName.email && !emailName.goback,
       refetchOnMount: false,
