@@ -45,7 +45,7 @@ const UsersList = () => {
   }, [search]);
 
   return (
-    <Flex direction="column" gap="16">
+    <Flex css={{ overflow: 'hidden' }} direction="column" gap="16">
       <UsersSubHeader
         handleClearSearch={handleClearSearch}
         handleSearchUser={handleSearchUser}
@@ -59,7 +59,6 @@ const UsersList = () => {
         onScroll={onScroll}
         ref={scrollRef}
         css={{
-          height: '100%',
           position: 'relative',
           overflowY: 'auto',
         }}
