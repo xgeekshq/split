@@ -25,6 +25,7 @@ const TimerContainer = styled('div', {
     justifySelf: 'start',
     //    position: 'absolute',
     width: '$$w',
+    zIndex: -1,
   },
   variants: {
     variant: {
@@ -67,7 +68,6 @@ const ControlPanel = styled('div', {
   display: 'flex',
   gap: '$4',
   gridArea: 'buttons',
-  marginRight: '$10',
 });
 
 const TimePanel = styled('div', {
