@@ -42,6 +42,7 @@ const Timer: React.FC<TimerProps> = ({ boardId, isAdmin, emitEvent, listenEvent 
 
   const buildTimeButton = (action: string, onClick: any) => (
     <Button
+      css={{ height: '$10' }}
       disabled={!isAdmin || isTimerRunning() || isTimerPaused()}
       onClick={onClick}
       size="xxs"
