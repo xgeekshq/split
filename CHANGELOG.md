@@ -2,7 +2,28 @@
 
 All notable changes to this project will be documented in this file.
 
-## [Unreleased](https://github.com/xgeekshq/split/compare/v0.1.19...HEAD)
+## [Unreleased](https://github.com/xgeekshq/split/compare/v0.1.20...HEAD)
+
+## [v0.1.20](https://github.com/xgeekshq/split/compare/v0.1.19...v0.1.20) - 2023-05-07
+
+### What Changed 👀
+
+- test: board users @patricia-mdias (#1452)
+- fix: remove scheduling from board settings @GoncaloCanteiro (#1456)
+- refactor: test comments module @CatiaAntunes96 (#1448)
+
+### 🐛 Bug Fixes
+
+- fix: timer design @StereoPT (#1466)
+- fix: round maxUsers to 2 decimal places @CatiaAntunes96 (#1463)
+- fix: popover border in main board @GoncaloCanteiro (#1461)
+- fix: query function without return @juniorboos (#1459)
+- fix: scroll on boards list @juniorboos (#1457)
+- fix: action point new line @GoncaloCanteiro (#1460)
+- fix: card colors position @StereoPT (#1453)
+- fix: sso trigger validations @StereoPT (#1450)
+
+**Full Changelog**: https://github.com/xgeekshq/split/compare/v0.1.19...v0.1.20
 
 ## [v0.1.19](https://github.com/xgeekshq/split/compare/v0.1.18...v0.1.19) - 2023-05-02
 
@@ -109,10 +130,8 @@ All notable changes to this project will be documented in this file.
 - chore(deps): bump glob-parent, webpack and @storybook/react in /frontend @dependabot (#1333)
 - chore(deps-dev): bump concurrently from 7.6.0 to 8.0.1 @dependabot (#1330)
 - chore(deps-dev): bump @commitlint/cli from 17.4.0 to 17.5.0 @dependabot (#1307)
-
 </details>
 **Full Changelog**: https://github.com/xgeekshq/split/compare/v0.1.18...v0.1.19
-
 ## [v0.1.18](https://github.com/xgeekshq/split/compare/v0.1.17...v0.1.18) - 2023-03-24
 
 ### What Changed 👀
