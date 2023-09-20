@@ -174,3 +174,13 @@ jobs:
       - name: Test
         run: npm run jest -- --coverage
         working-directory: frontend
+
+  test_loadmill:
+    runs-on: ubuntu-latest
+    steps:
+      - name: loadmil
+        uses: loadmill/run-test-plan-action@v1
+        with:
+          id: 'ebfb19f4-6035-4a17-9954-957c84766f04'
+          token: ${{ secrets.LOADMILL_TOKEN}}
+          additionalDescription: "Commit ${{ github.ref }} by ${{ github.actor }}" 
