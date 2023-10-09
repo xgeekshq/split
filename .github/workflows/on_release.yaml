@@ -41,7 +41,7 @@ jobs:
           latest-version: ${{ github.event.release.name }}
 
       - name: Commit changes
-        uses: stefanzweifel/git-auto-commit-action@v4
+        uses: stefanzweifel/git-auto-commit-action@v5
         with:
           branch: main
           commit_message: 'ci: update version to ${{ github.event.release.name }} [skip ci]'
