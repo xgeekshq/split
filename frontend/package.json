@@ -68,7 +68,7 @@
     "@babel/core": "^7.21.3",
     "@faker-js/faker": "^7.6.0",
     "@storybook/addon-actions": "^7.0.1",
-    "@storybook/addon-essentials": "^7.0.1",
+    "@storybook/addon-essentials": "^7.5.0",
     "@storybook/addon-interactions": "^7.0.1",
     "@storybook/addon-links": "^7.0.1",
     "@storybook/addon-mdx-gfm": "^7.0.1",
