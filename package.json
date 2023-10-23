@@ -15,7 +15,7 @@
   },
   "devDependencies": {
     "@commitlint/cli": "^17.6.1",
-    "@commitlint/config-conventional": "^17.7.0",
+    "@commitlint/config-conventional": "^18.0.0",
     "concurrently": "^8.2.0",
     "husky": "^8.0.3"
   }
