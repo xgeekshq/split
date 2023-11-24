@@ -44,7 +44,7 @@
     "@nestjs/swagger": "^6.0.4",
     "@nestjs/websockets": "^9.0.0",
     "@slack/web-api": "^6.7.1",
-    "axios": "^0.27.2",
+    "axios": "^1.6.0",
     "bcrypt": "^5.0.1",
     "bull": "^4.8.4",
     "class-transformer": "^0.5.1",
