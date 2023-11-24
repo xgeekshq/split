@@ -24,7 +24,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: ${{ inputs.ENVIRONMENT }}
     steps:
-      - uses: azure/webapps-deploy@v2
+      - uses: azure/webapps-deploy@v3
         with:
           app-name: ${{ inputs.APP_NAME }}
           publish-profile: ${{ secrets.PUBLISH_PROFILE }}
