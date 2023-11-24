@@ -50,7 +50,7 @@
     "jest-environment-jsdom": "^29.5.0",
     "joi": "^17.8.4",
     "next": "^13.5.4",
-    "next-auth": "^4.20.1",
+    "next-auth": "^4.24.5",
     "react": "^18.2.0",
     "react-beautiful-dnd": "^13.1.1",
     "react-calendar": "^4.0.0",
