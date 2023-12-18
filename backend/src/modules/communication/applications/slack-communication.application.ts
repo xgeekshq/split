@@ -59,7 +59,7 @@ export class SlackCommunicationApplication implements CommunicationApplicationIn
 			''
 		)}* \nIn order to proceed with the retro of this month, here are the random teams: \n\n
     ${textGeneralTeams} \n
-    Each team has a *random* selected responsible, in order to organize the retro and everything else that is described in the doc(https://confluence.kigroup.de/display/OX/Retro) :eyes: :thumbsup:\n\n
+    Each team has a *random* selected responsible, in order to organize the retro and everything else that is described in the doc(https://kigroup.atlassian.net/wiki/spaces/OX/pages/416055630/Retro) :eyes: :thumbsup:\n\n
     This must be done until \`${month} ${until.getDate()}${get_nth_suffix(until.getDate())}\`\n\n
     All the needed boards and channels have been automatically created for your team and another one for responsibles of the teams.\n\n
     Talent wins games, but teamwork and intelligence wins championships. :fire: :muscle:`;
