@@ -2,7 +2,61 @@
 
 All notable changes to this project will be documented in this file.
 
-## [Unreleased](https://github.com/xgeekshq/split/compare/v0.1.20...HEAD)
+## [Unreleased](https://github.com/xgeekshq/split/compare/v0.1.21...HEAD)
+
+## [v0.1.21](https://github.com/xgeekshq/split/compare/v0.1.20...v0.1.21) - 2023-12-21
+
+### What Changed 👀
+
+### 🐛 Bug Fixes
+
+- fix: storybook @nunocaseiro (#1519)
+- fix: #1514 - update retro link @nunocaseiro (#1517)
+
+### 🧩 Dependency Updates
+
+<details>
+<summary>37 changes</summary>
+- chore(deps-dev): bump @adobe/css-tools from 4.3.1 to 4.3.2 in /frontend @dependabot (#1516)
+- chore(deps-dev): bump @commitlint/config-conventional from 17.7.0 to 18.4.3 @dependabot (#1515)
+- chore(deps-dev): bump @adobe/css-tools from 4.0.1 to 4.3.1 in /frontend @dependabot (#1513)
+- chore(deps): bump next-auth from 4.20.1 to 4.24.5 in /frontend @dependabot (#1512)
+- chore(deps-dev): bump @commitlint/cli from 17.7.1 to 18.4.2 @dependabot (#1510)
+- chore(deps): bump axios from 1.3.4 to 1.6.0 in /frontend @dependabot (#1507)
+- chore(deps): bump axios from 0.27.2 to 1.6.0 in /backend @dependabot (#1506)
+- chore(deps): bump amannn/action-semantic-pull-request from 5.2.0 to 5.4.0 @dependabot (#1505)
+- chore(deps): bump actions/setup-node from 3 to 4 @dependabot (#1502)
+- chore(deps): bump next from 13.2.4 to 13.5.0 in /frontend @dependabot (#1501)
+- chore(deps): bump @babel/traverse, @storybook/addon-essentials and storybook in /frontend @dependabot (#1498)
+- chore(deps-dev): bump @babel/traverse from 7.18.10 to 7.23.2 in /backend @dependabot (#1497)
+- chore(deps): bump azure/webapps-deploy from 2 to 3 @dependabot (#1494)
+- chore(deps): bump stefanzweifel/git-auto-commit-action from 4 to 5 @dependabot (#1493)
+- chore(deps): bump postcss and next in /frontend @dependabot (#1492)
+- chore(deps): bump docker/metadata-action from 4 to 5 @dependabot (#1489)
+- chore(deps): bump docker/setup-qemu-action from 2 to 3 @dependabot (#1488)
+- chore(deps): bump docker/build-push-action from 4 to 5 @dependabot (#1487)
+- chore(deps): bump docker/setup-buildx-action from 2 to 3 @dependabot (#1486)
+- chore(deps): bump docker/login-action from 2 to 3 @dependabot (#1485)
+- chore(deps): bump actions/checkout from 3 to 4 @dependabot (#1484)
+- chore(deps): bump mongodb from 4.5.0 to 4.17.0 in /backend @dependabot (#1483)
+- chore(deps-dev): bump @commitlint/config-conventional from 17.6.1 to 17.7.0 @dependabot (#1482)
+- chore(deps-dev): bump @commitlint/cli from 17.6.1 to 17.7.1 @dependabot (#1481)
+- chore(deps): bump word-wrap from 1.2.3 to 1.2.4 in /frontend @dependabot (#1480)
+- chore(deps): bump word-wrap from 1.2.3 to 1.2.4 in /backend @dependabot (#1479)
+- chore(deps): bump mongoose from 6.7.4 to 6.11.3 in /backend @dependabot (#1478)
+- chore(deps): bump fast-xml-parser and @aws-sdk/credential-providers in /backend @dependabot (#1477)
+- chore(deps): bump semver from 5.7.1 to 5.7.2 in /backend @dependabot (#1476)
+- chore(deps): bump semver from 5.7.1 to 5.7.2 in /frontend @dependabot (#1475)
+- chore(deps): bump tough-cookie from 4.1.2 to 4.1.3 in /frontend @dependabot (#1474)
+- chore(deps-dev): bump concurrently from 8.0.1 to 8.2.0 @dependabot (#1472)
+- chore(deps): bump fast-xml-parser and @aws-sdk/credential-providers in /backend @dependabot (#1473)
+- chore(deps): bump socket.io-parser from 4.2.1 to 4.2.3 in /frontend @dependabot (#1469)
+- chore(deps): bump vm2 from 3.9.17 to 3.9.19 in /backend @dependabot (#1468)
+- chore(deps): bump socket.io-parser from 4.2.2 to 4.2.3 in /backend @dependabot (#1470)
+- chore(deps): bump engine.io, @nestjs/platform-socket.io and socket.io in /backend @dependabot (#1464)
+
+</details>
+**Full Changelog**: https://github.com/xgeekshq/split/compare/v0.1.20...v0.1.21
 
 ## [v0.1.20](https://github.com/xgeekshq/split/compare/v0.1.19...v0.1.20) - 2023-05-07
 
@@ -133,7 +187,6 @@ All notable changes to this project will be documented in this file.
 </details>
 **Full Changelog**: https://github.com/xgeekshq/split/compare/v0.1.18...v0.1.19
 ## [v0.1.18](https://github.com/xgeekshq/split/compare/v0.1.17...v0.1.18) - 2023-03-24
-
 ### What Changed 👀
 
 ### 🐛 Bug Fixes
