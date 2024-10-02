@@ -43,7 +43,7 @@ const conversationsMock = {
 		return Promise.resolve({
 			ok: true,
 			channel: {
-				id: `C${faker.random.alphaNumeric(8).toUpperCase()}`,
+				id: `C${faker.string.alphanumeric(8).toUpperCase()}`,
 				name: options?.name
 			}
 		});
@@ -54,7 +54,7 @@ const conversationsMock = {
 				resolve({
 					ok: true,
 					channel: {
-						id: options?.channelId
+						id: options?.channel
 					}
 				});
 			}
@@ -125,7 +125,7 @@ jest.mock('@slack/web-api', () => ({
 										profile: {
 											email: `${userId}@email.com`
 										}
-								  }
+									}
 								: null)
 						});
 					}

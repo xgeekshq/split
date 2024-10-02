@@ -2,7 +2,7 @@ import { GetBoardUserServiceInterface } from 'src/modules/boardUsers/interfaces/
 import { Test, TestingModule } from '@nestjs/testing';
 import { BoardFactory } from 'src/libs/test-utils/mocks/factories/board-factory.mock';
 import { DeepMocked, createMock } from '@golevelup/ts-jest';
-import faker from '@faker-js/faker';
+import { faker } from '@faker-js/faker';
 import { BoardUserFactory } from 'src/libs/test-utils/mocks/factories/boardUser-factory.mock';
 import { TeamFactory } from 'src/libs/test-utils/mocks/factories/team-factory.mock';
 import { GetTeamServiceInterface } from 'src/modules/teams/interfaces/services/get.team.service.interface';
@@ -16,7 +16,7 @@ import { BOARD_REPOSITORY } from 'src/modules/boards/constants';
 import GetBoardService from 'src/modules/boards/services/get.board.service';
 import { GET_BOARD_USER_SERVICE } from 'src/modules/boardUsers/constants';
 
-const userId = faker.datatype.uuid();
+const userId = faker.string.uuid();
 const mainBoard = BoardFactory.create({ isSubBoard: false, isPublic: false });
 const subBoard = BoardFactory.create({ isSubBoard: true, isPublic: false });
 const boardUser = BoardUserFactory.create({ board: subBoard._id });
@@ -131,6 +131,7 @@ describe('GetBoardService', () => {
 				]
 			};
 
+			//@ts-expect-error: query
 			await boardService.getBoards(true, query, 0, 10);
 
 			expect(boardRepositoryMock.getCountPage).toBeCalledTimes(1);

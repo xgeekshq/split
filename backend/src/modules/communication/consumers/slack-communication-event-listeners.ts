@@ -13,12 +13,14 @@ export class SlackCommunicationEventListeners<T, R> {
 	// https://github.com/OptimalBits/bull/blob/develop/REFERENCE.md#events
 	@OnQueueCompleted()
 	async onCompleted(job: Job<T>, _result: R[]) {
-		this.logger.verbose(`Completed Job id: "${job.id}"`);
+		this.logger.verbose(`Completed Job id: "${job.id.toString()}"`);
 	}
 
 	@OnQueueFailed()
 	async onFailed(job: Job<T>, error) {
-		this.logger.error(`Job id: "${job.id}" fails with error: "${JSON.stringify(error)}"`);
+		this.logger.error(
+			`Job id: "${job.id.toString()}" fails with error: "${JSON.stringify(error)}"`
+		);
 	}
 
 	@OnQueueError()

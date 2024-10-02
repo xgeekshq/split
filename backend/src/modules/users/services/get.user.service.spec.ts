@@ -10,7 +10,7 @@ import { USER_REPOSITORY } from 'src/modules/users/constants';
 import GetUserService from 'src/modules/users/services/get.user.service';
 
 const user: User = UserFactory.create();
-const refreshToken = faker.datatype.string();
+const refreshToken = faker.string.alpha();
 
 describe('GetUserService', () => {
 	let userService: GetUserServiceInterface;

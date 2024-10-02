@@ -5,7 +5,7 @@ import User from '../entities/user.schema';
 import { USER_REPOSITORY } from '../constants';
 import { UserRepositoryInterface } from '../repository/user.repository.interface';
 import CreateGuestUserDto from '../dto/create.guest.user.dto';
-import faker from '@faker-js/faker';
+import { faker } from '@faker-js/faker';
 import { CreateUserServiceInterface } from '../interfaces/services/create.user.service.interface';
 
 @Injectable()
@@ -37,7 +37,12 @@ export default class CreateUserService implements CreateUserServiceInterface {
 		let email: string;
 		let maxCount = 0;
 		while (maxCount < 5) {
-			email = faker.internet.email(firstName, lastName, '', { allowSpecialCharacters: true });
+			email = faker.internet.email({
+				firstName,
+				lastName,
+				provider: 'gmail',
+				allowSpecialCharacters: true
+			});
 
 			const nUsersWithTheSameEmail = await this.userRepository.countDocumentsWithQuery({ email });
 			const emailAlreadyExists = nUsersWithTheSameEmail > 0;

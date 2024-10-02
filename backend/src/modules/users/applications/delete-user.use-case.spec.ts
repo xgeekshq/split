@@ -5,15 +5,15 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { DeleteTeamUserServiceInterface } from 'src/modules/teamUsers/interfaces/services/delete.team.user.service.interface';
 import { GetTeamUserServiceInterface } from 'src/modules/teamUsers/interfaces/services/get.team.user.service.interface';
 import { UserFactory } from 'src/libs/test-utils/mocks/factories/user-factory';
-import faker from '@faker-js/faker';
+import { faker } from '@faker-js/faker';
 import { DeleteFailedException } from 'src/libs/exceptions/deleteFailedBadRequestException';
 import { DELETE_TEAM_USER_SERVICE, GET_TEAM_USER_SERVICE } from 'src/modules/teamUsers/constants';
 import { USER_REPOSITORY } from 'src/modules/users/constants';
 import { DeleteUserUseCase } from 'src/modules/users/applications/delete-user.use-case';
 
-const userId = faker.datatype.uuid();
+const userId = faker.string.uuid();
 const userDeleted = UserFactory.create({ _id: userId });
-const teamsOfUser = faker.datatype.number();
+const teamsOfUser = faker.number.int();
 
 describe('DeleteUserUseCase', () => {
 	let deleteUser: UseCase<string, boolean>;

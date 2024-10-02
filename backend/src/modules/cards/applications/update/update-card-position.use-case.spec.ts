@@ -5,7 +5,7 @@ import { CardRepositoryInterface } from '../../repository/card.repository.interf
 import { UseCase } from 'src/libs/interfaces/use-case.interface';
 import UpdateCardPositionUseCaseDto from '../../dto/useCase/update-card-position.use-case.dto';
 import { GetCardServiceInterface } from '../../interfaces/services/get.card.service.interface';
-import faker from '@faker-js/faker';
+import { faker } from '@faker-js/faker';
 import { CardFactory } from 'src/libs/test-utils/mocks/factories/card-factory.mock';
 import { UpdateResult } from 'mongodb';
 import { BoardFactory } from 'src/libs/test-utils/mocks/factories/board-factory.mock';
@@ -14,10 +14,10 @@ import { Logger } from '@nestjs/common';
 import { UpdateCardPositionUseCase } from 'src/modules/cards/applications/update/update-card-position.use-case';
 
 const updateCardPosition: UpdateCardPositionUseCaseDto = {
-	boardId: faker.datatype.uuid(),
-	cardId: faker.datatype.uuid(),
-	targetColumnId: faker.datatype.uuid(),
-	newPosition: faker.datatype.number({ max: 3 }),
+	boardId: faker.string.uuid(),
+	cardId: faker.string.uuid(),
+	targetColumnId: faker.string.uuid(),
+	newPosition: faker.number.int({ max: 3 }),
 	completionHandler() {
 		return;
 	}

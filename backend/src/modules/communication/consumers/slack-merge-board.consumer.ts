@@ -25,7 +25,7 @@ export class SlackMergeBoardConsumer extends SlackCommunicationEventListeners<
 		const data = job.data;
 
 		this.logger.verbose(
-			`Execute the sub board ${job.data.teamNumber} merged message and Job id: "${job.id}" (pid ${process.pid})`
+			`Execute the sub board ${job.data.teamNumber} merged message and Job id: "${job.id.toString()}" (pid ${process.pid})`
 		);
 
 		const result = await this.application.execute(data);

@@ -6,7 +6,7 @@ import { GetCardServiceInterface } from '../interfaces/services/get.card.service
 import { DeleteCardUseCase } from './delete-card.use-case';
 import { UpdateBoardUserServiceInterface } from 'src/modules/boardUsers/interfaces/services/update.board.user.service.interface';
 import DeleteCardUseCaseDto from '../dto/useCase/delete-card.use-case.dto';
-import faker from '@faker-js/faker';
+import { faker } from '@faker-js/faker';
 import { BulkWriteResult, UpdateResult } from 'mongodb';
 import { CardFactory } from 'src/libs/test-utils/mocks/factories/card-factory.mock';
 import { DeleteFailedException } from 'src/libs/exceptions/deleteFailedBadRequestException';
@@ -14,8 +14,8 @@ import { UseCase } from 'src/libs/interfaces/use-case.interface';
 import { UPDATE_BOARD_USER_SERVICE } from 'src/modules/boardUsers/constants';
 
 const deleteCardMock: DeleteCardUseCaseDto = {
-	boardId: faker.datatype.uuid(),
-	cardId: faker.datatype.uuid(),
+	boardId: faker.string.uuid(),
+	cardId: faker.string.uuid(),
 	completionHandler() {
 		return;
 	}
@@ -30,8 +30,8 @@ const updateResult: UpdateResult = {
 };
 
 const cardMock = CardFactory.create();
-cardMock.votes = [faker.datatype.uuid(), faker.datatype.uuid()];
-cardMock.items[0].votes = [faker.datatype.uuid(), faker.datatype.uuid()];
+cardMock.votes = [faker.string.uuid(), faker.string.uuid()];
+cardMock.items[0].votes = [faker.string.uuid(), faker.string.uuid()];
 
 const bulkWriteResult = {
 	ok: 1

@@ -25,7 +25,7 @@ export class SlackSendMessageConsumer extends SlackCommunicationEventListeners<
 		const { slackChannelId } = job.data;
 
 		this.logger.verbose(
-			`execute communication for board with id: "${slackChannelId}" and Job id: "${job.id}" (pid ${process.pid})`
+			`execute communication for board with id: "${slackChannelId}" and Job id: "${job.id.toString()}" (pid ${process.pid})`
 		);
 
 		this.application.execute(job.data);

@@ -1,11 +1,11 @@
-import faker from '@faker-js/faker';
+import { faker } from '@faker-js/faker';
 import CommentDto from 'src/modules/comments/dto/comment.dto';
 import { buildTestFactory } from '../generic-factory.mock';
 
 const mockCommentDto = () => {
 	return {
 		text: faker.lorem.words(),
-		createdBy: faker.datatype.uuid(),
+		createdBy: faker.string.uuid(),
 		anonymous: faker.datatype.boolean()
 	};
 };

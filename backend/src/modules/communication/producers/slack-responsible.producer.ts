@@ -30,7 +30,7 @@ export class SlackResponsibleProducer {
 		const job = await this.queue.add(data);
 
 		this.logger.verbose(
-			`Change responsible of team "${data.teamNumber}" in channel added to queue with Job id: "${job.id}"`
+			`Change responsible of team "${data.teamNumber}" in channel added to queue with Job id: "${job.id.toString().toString()}"`
 		);
 
 		return job;

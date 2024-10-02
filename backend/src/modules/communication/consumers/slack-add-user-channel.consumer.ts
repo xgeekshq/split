@@ -25,7 +25,7 @@ export class SlackAddUserToChannelConsumer extends SlackCommunicationEventListen
 		const { email } = job.data;
 
 		this.logger.verbose(
-			`execute communication for adding user with email: "${email}" and Job id: "${job.id}" (pid ${process.pid})`
+			`execute communication for adding user with email: "${email}" and Job id: "${job.id.toString()}" (pid ${process.pid})`
 		);
 
 		const result = await this.application.execute(email);
@@ -37,7 +37,7 @@ export class SlackAddUserToChannelConsumer extends SlackCommunicationEventListen
 	@OnQueueCompleted()
 	override async onCompleted(job: Job<AddUserMainChannelType>, result: boolean[]) {
 		this.logger.verbose(
-			`Completed Job id: "${job.id}". User with email: ${job.data.email} was ${
+			`Completed Job id: "${job.id.toString()}". User with email: ${job.data.email} was ${
 				!result[0] ? 'not' : ''
 			} added to the main channel`
 		);

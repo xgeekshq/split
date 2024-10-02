@@ -9,7 +9,7 @@ import { BadRequestException } from '@nestjs/common/exceptions/bad-request.excep
 import { DeleteTeamUserUseCase } from 'src/modules/teamUsers/applications/delete-team-user.use-case';
 import { TEAM_USER_REPOSITORY } from 'src/modules/teamUsers/constants';
 
-const removeTeamUser: string = faker.datatype.uuid();
+const removeTeamUser: string = faker.string.uuid();
 const deletedTeamUser: TeamUser = TeamUserFactory.create({ _id: removeTeamUser });
 
 describe('DeleteTeamUserUseCase', () => {

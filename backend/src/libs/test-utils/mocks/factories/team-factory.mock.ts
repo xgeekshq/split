@@ -1,15 +1,15 @@
-import faker from '@faker-js/faker';
+import { faker } from '@faker-js/faker';
 import { buildTestFactory } from './generic-factory.mock';
 import Team from 'src/modules/teams/entities/team.schema';
 
-const dateCreatedAt = faker.date.past(1);
+const dateCreatedAt = faker.date.past({ years: 1 });
 
 const mockTeamData = () => {
 	return {
 		_id: faker.database.mongodbObjectId(),
-		name: faker.company.companyName(),
+		name: faker.company.name(),
 		createdAt: dateCreatedAt,
-		updatedAt: faker.date.between(dateCreatedAt, Date.now())
+		updatedAt: faker.date.between({ from: dateCreatedAt, to: Date.now() })
 	};
 };
 

@@ -6,7 +6,7 @@ import { DeepMocked, createMock } from '@golevelup/ts-jest';
 import UpdateBoardService from './update.board.service';
 import Board from '../entities/board.schema';
 import { BoardFactory } from 'src/libs/test-utils/mocks/factories/board-factory.mock';
-import faker from '@faker-js/faker';
+import { faker } from '@faker-js/faker';
 import { BOARD_REPOSITORY } from 'src/modules/boards/constants';
 
 describe('UpdateBoardService', () => {
@@ -41,7 +41,7 @@ describe('UpdateBoardService', () => {
 	describe('updateChannelId', () => {
 		it('should call the boardRepository.updatedChannelId', async () => {
 			const teamsDto = TeamCommunicationDtoFactory.createMany(2);
-			const userId = faker.datatype.uuid();
+			const userId = faker.string.uuid();
 			const subBoards = BoardFactory.createMany(2, [
 				{ isSubBoard: true, boardNumber: 1, submitedByUser: userId, submitedAt: new Date() },
 				{ isSubBoard: true, boardNumber: 2 }

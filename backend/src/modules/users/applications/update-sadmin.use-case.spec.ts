@@ -2,7 +2,7 @@ import { DeepMocked, createMock } from '@golevelup/ts-jest';
 import { UserRepositoryInterface } from '../repository/user.repository.interface';
 import { Test, TestingModule } from '@nestjs/testing';
 import { UserFactory } from 'src/libs/test-utils/mocks/factories/user-factory';
-import faker from '@faker-js/faker';
+import { faker } from '@faker-js/faker';
 import UpdateUserDto from '../dto/update.user.dto';
 import { UserDtoFactory } from 'src/libs/test-utils/mocks/factories/dto/userDto-factory.mock';
 import { UpdateFailedException } from 'src/libs/exceptions/updateFailedBadRequestException';
@@ -17,8 +17,8 @@ const userDto = UserDtoFactory.create();
 
 const updateUserDto: UpdateUserDto = {
 	_id: user._id,
-	firstName: faker.name.firstName(),
-	lastName: faker.name.lastName(),
+	firstName: faker.person.firstName(),
+	lastName: faker.person.lastName(),
 	email: user.email,
 	isSAdmin: user.isSAdmin
 };

@@ -6,7 +6,7 @@ import { CreateVoteServiceInterface } from '../interfaces/services/create.vote.s
 import { VoteRepositoryInterface } from '../interfaces/repositories/vote.repository.interface';
 import { GetBoardUserServiceInterface } from 'src/modules/boardUsers/interfaces/services/get.board.user.service.interface';
 import { UpdateBoardServiceInterface } from 'src/modules/boards/interfaces/services/update.board.service.interface';
-import faker from '@faker-js/faker';
+import { faker } from '@faker-js/faker';
 import Board from 'src/modules/boards/entities/board.schema';
 import { BoardFactory } from 'src/libs/test-utils/mocks/factories/board-factory.mock';
 import { InsertFailedException } from 'src/libs/exceptions/insertFailedBadRequestException';
@@ -22,7 +22,7 @@ import {
 	UPDATE_BOARD_USER_SERVICE
 } from 'src/modules/boardUsers/constants';
 
-const userId: string = faker.datatype.uuid();
+const userId: string = faker.string.uuid();
 const board: Board = BoardFactory.create({ maxVotes: 3 });
 const boardUser: BoardUser = BoardUserFactory.create({ board: board._id, votesCount: 0 });
 

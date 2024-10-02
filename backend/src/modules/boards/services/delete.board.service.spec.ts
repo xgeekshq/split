@@ -25,7 +25,7 @@ const deleteFailedResult = {
 };
 const deleteSuccessfulResult = {
 	acknowledged: true,
-	deletedCount: faker.datatype.number()
+	deletedCount: faker.number.int()
 };
 const boardIdsToDelete = boards.map((board) => board._id);
 
