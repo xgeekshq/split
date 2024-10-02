@@ -60,7 +60,7 @@
     "react-resize-detector": "^8.0.4",
     "react-select": "^5.7.0",
     "recoil": "^0.7.7",
-    "socket.io-client": "^4.6.1",
+    "socket.io-client": "^4.8.0",
     "util": "^0.12.5",
     "webpack": "^5.77.0"
   },
