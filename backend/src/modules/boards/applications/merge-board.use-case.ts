@@ -47,7 +47,7 @@ export class MergeBoardUseCase implements UseCase<MergeBoardUseCaseDto, Board> {
 			await this.boardRepository.commitTransaction();
 
 			return mergedBoard;
-		} catch (e) {
+		} catch {
 			throw new UpdateFailedException();
 		} finally {
 			await this.boardRepository.endSession();
@@ -107,7 +107,7 @@ export class MergeBoardUseCase implements UseCase<MergeBoardUseCaseDto, Board> {
 			}
 
 			return mergedBoard;
-		} catch (e) {
+		} catch {
 			await this.boardRepository.abortTransaction();
 			throw new UpdateFailedException();
 		}
