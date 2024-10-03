@@ -7,12 +7,11 @@ import { useRouter } from 'next/router';
 import { SessionProvider } from 'next-auth/react';
 import {
   DehydratedState,
-  Hydrate,
+  HydrationBoundary,
   QueryClient,
   QueryClientConfig,
   QueryClientProvider,
 } from '@tanstack/react-query';
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { RecoilRoot } from 'recoil';
 
 import Sprite from '@/components/icons/Sprite';
@@ -22,7 +21,7 @@ import { JWT_EXPIRATION_TIME, RECOIL_DEV_TOOLS } from '@/constants';
 import { ROUTES } from '@/constants/routes';
 import globalStyles from '@/styles/globals';
 
-type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
+type NextPageWithLayout<P = unknown, IP = P> = NextPage<P, IP> & {
   getLayout?: (page: ReactElement) => ReactNode;
 };
 
@@ -34,7 +33,6 @@ const QUERY_OPTIONS: QueryClientConfig = {
   defaultOptions: {
     queries: {
       retry: 1,
-      suspense: false,
     },
   },
 };
@@ -60,7 +58,7 @@ function Root({
       <Sprite />
       <SessionProvider refetchInterval={JWT_EXPIRATION_TIME - 5} session={pageProps.session}>
         <QueryClientProvider client={queryClient}>
-          <Hydrate state={pageProps.dehydratedState}>
+          <HydrationBoundary state={pageProps.dehydratedState}>
             <ToastProvider duration={7000}>
               <RecoilRoot>
                 {getLayout(<Component {...pageProps} />)}
@@ -77,8 +75,8 @@ function Root({
                 }}
               />
             </ToastProvider>
-          </Hydrate>
-          <ReactQueryDevtools initialIsOpen={false} />
+          </HydrationBoundary>
+          {/* <ReactQueryDevtools initialIsOpen={false} /> */}
         </QueryClientProvider>
       </SessionProvider>
     </>

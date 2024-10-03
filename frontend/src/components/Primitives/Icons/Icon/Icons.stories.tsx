@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
-import { ComponentStory } from '@storybook/react';
+import { StoryFn } from '@storybook/react';
 import dedent from 'ts-dedent';
 
 import Sprite from '@/components/icons/Sprite';
@@ -27,7 +27,7 @@ export default {
   },
 };
 
-const Template: ComponentStory<typeof Sprite> = () => {
+const Template: StoryFn<typeof Sprite> = () => {
   const [icons, setIcons] = useState<string[]>([]);
   const [filteredIcons, setFilteredIcons] = useState<string[]>(icons);
 

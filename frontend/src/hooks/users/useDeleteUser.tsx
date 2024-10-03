@@ -12,7 +12,8 @@ const useDeleteUser = () => {
   const queryClient = useQueryClient();
   const setToastState = useSetRecoilState(toastState);
 
-  return useMutation(deleteUserRequest, {
+  return useMutation({
+    mutationFn: deleteUserRequest,
     onMutate: ({ id: userId }) => {
       queryClient.setQueryData(
         [USERS_KEY, TEAMS_KEY],
@@ -33,7 +34,7 @@ const useDeleteUser = () => {
       setToastState(createSuccessMessage(SuccessMessages.DELETE));
     },
     onError: () => {
-      queryClient.invalidateQueries([USERS_KEY, TEAMS_KEY]);
+      queryClient.invalidateQueries({ queryKey: [USERS_KEY, TEAMS_KEY] });
       setToastState(createErrorMessage(ErrorMessages.DELETE));
     },
   });

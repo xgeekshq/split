@@ -1,4 +1,4 @@
-import { ComponentStory } from '@storybook/react';
+import { StoryFn } from '@storybook/react';
 import dedent from 'ts-dedent';
 
 import Tile from '@/components/Dashboard/Tiles/Tile/Tile';
@@ -39,7 +39,7 @@ export default {
   },
 };
 
-const Template: ComponentStory<typeof Tile> = ({ ...args }) => (
+const Template: StoryFn<typeof Tile> = ({ ...args }) => (
   <div style={{ width: '450px' }}>
     <Tile {...args} />
   </div>

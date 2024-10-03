@@ -1,5 +1,5 @@
 import React from 'react';
-import { ComponentStory } from '@storybook/react';
+import { StoryFn } from '@storybook/react';
 import dedent from 'ts-dedent';
 
 import UncontrolledInput from '@/components/Primitives/Inputs/UncontrolledInput/UncontrolledInput';
@@ -61,7 +61,7 @@ export default {
   },
 };
 
-const Template: ComponentStory<typeof UncontrolledInput> = ({ ...args }) => (
+const Template: StoryFn<typeof UncontrolledInput> = ({ ...args }) => (
   <UncontrolledInput {...args} />
 );
 

@@ -10,14 +10,22 @@ import { toastState } from '@/store/toast/atom/toast.atom';
 const useTeamsWithoutUser = (userId: string) => {
   const setToastState = useSetRecoilState(toastState);
 
-  return useQuery([TEAMS_KEY, 'not', USERS_KEY, userId], () => getTeamsWithoutUser(userId), {
+  const fetchTeamsWithoutUser = useQuery({
+    queryKey: [TEAMS_KEY, 'not', USERS_KEY, userId],
+    queryFn: () => getTeamsWithoutUser(userId),
     enabled: true,
     refetchOnMount: false,
     refetchOnWindowFocus: false,
-    onError: () => {
-      setToastState(createErrorMessage(ErrorMessages.GET));
-    },
   });
+
+  const handleErrorOnFetchTeamsWithoutUser = () => {
+    setToastState(createErrorMessage(ErrorMessages.GET));
+  };
+
+  return {
+    fetchTeamsWithoutUser,
+    handleErrorOnFetchTeamsWithoutUser,
+  };
 };
 
 export default useTeamsWithoutUser;

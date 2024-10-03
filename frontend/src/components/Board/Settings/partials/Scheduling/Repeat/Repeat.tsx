@@ -1,4 +1,5 @@
 import { Dispatch, SetStateAction, useState } from 'react';
+import { Value } from 'react-calendar/dist/cjs/shared/types';
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import { styled } from '@stitches/react';
 
@@ -47,10 +48,10 @@ const RepeatSchedule = ({ schedulingData, setSchedulingData }: SchedulingProps) 
     }));
   };
 
-  const handleRepeatUnitChange = (date: Date) => {
+  const handleRepeatUnitChange = (date: Value) => {
     setSchedulingData((prev: UpdateScheduleType) => ({
       ...prev,
-      repeatMeetingUntil: date,
+      repeatMeetingUntil: date as Date,
     }));
   };
   const handleRemoveRepeatUntil = () => {
@@ -74,8 +75,8 @@ const RepeatSchedule = ({ schedulingData, setSchedulingData }: SchedulingProps) 
     (schedulingData.repeatMeetingTimeUnit === 'Day'
       ? ' days'
       : schedulingData.repeatMeetingTimeUnit === 'Week'
-      ? ' weeks'
-      : ' months') +
+        ? ' weeks'
+        : ' months') +
     (schedulingData.repeatMeetingDay ? ' on day ' + schedulingData.repeatMeetingDay : '') +
     (schedulingData.repeatMeetingWeekDay && schedulingData.repeatMeetingNWeek
       ? ' on the ' + schedulingData.repeatMeetingNWeek + ' ' + schedulingData.repeatMeetingWeekDay

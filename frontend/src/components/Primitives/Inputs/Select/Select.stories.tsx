@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ComponentStory } from '@storybook/react';
+import { StoryFn } from '@storybook/react';
 import dedent from 'ts-dedent';
 
 import Icon from '@/components/Primitives/Icons/Icon/Icon';
@@ -99,7 +99,7 @@ export default {
   },
 };
 
-const Template: ComponentStory<typeof Select> = ({ disabled, hasError }) => {
+const Template: StoryFn<typeof Select> = ({ disabled, hasError }) => {
   const [selectedOption, setSelectedOption] = useState<string | null>();
 
   return (
@@ -130,7 +130,7 @@ const Template: ComponentStory<typeof Select> = ({ disabled, hasError }) => {
 export const Default = Template.bind({});
 Default.storyName = 'Basic Usage';
 
-export const WithLabel: ComponentStory<typeof Select> = ({ disabled, hasError }) => {
+export const WithLabel: StoryFn<typeof Select> = ({ disabled, hasError }) => {
   const [selectedItem, setSelectedItem] = useState<string | null>();
 
   return (

@@ -1,6 +1,7 @@
 /* eslint-disable react/jsx-no-bind */
 import { useState } from 'react';
-import { CalendarTileProperties } from 'react-calendar';
+import { CalendarProps } from 'react-calendar';
+import { Value } from 'react-calendar/dist/cjs/shared/types';
 
 import StyledCalendar from '@/components/Dashboard/Calendar/StyledCalendar';
 import NoMeetingsImage from '@/components/images/NoMeetings';
@@ -22,15 +23,16 @@ const StyledNoMeetings = styled(NoMeetingsImage, { mx: '78px' });
 const CalendarBar = () => {
   const [currentValue, setOnChange] = useState<Date | null>(new Date());
   const hasMeetings = true;
-  const handleOnChange = (date: Date) => {
-    if (date.getTime() !== currentValue?.getTime()) {
-      setOnChange(date);
+  const handleOnChange = (date: Value) => {
+    if (!date) return;
+    if ((date as Date).getTime() !== currentValue?.getTime()) {
+      setOnChange(date as Date);
       return;
     }
     setOnChange(null);
   };
 
-  function tileContent(props: CalendarTileProperties) {
+  function tileContent(props: CalendarProps) {
     const { view } = props;
     if (view === 'month') {
       return (
@@ -73,8 +75,8 @@ const CalendarBar = () => {
           prevLabel={<Icon name="arrow-left" />}
           tileContent={tileContent}
           value={currentValue}
-          formatShortWeekday={(locale: string, date: Date) =>
-            ['Su', 'Mo', 'Th', 'We', 'Th', 'Fr', 'Sa'][date.getDay()]
+          formatShortWeekday={(locale, date) =>
+            ['Su', 'Mo', 'Th', 'We', 'Th', 'Fr', 'Sa'][(date as Date).getDay()]
           }
         />
       )}

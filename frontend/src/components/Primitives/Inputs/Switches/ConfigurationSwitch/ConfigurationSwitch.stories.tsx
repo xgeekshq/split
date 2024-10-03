@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ComponentStory } from '@storybook/react';
+import { StoryFn } from '@storybook/react';
 import dedent from 'ts-dedent';
 
 import ConfigurationSwitch from '@/components/Primitives/Inputs/Switches/ConfigurationSwitch/ConfigurationSwitch';
@@ -57,7 +57,7 @@ export default {
   },
 };
 
-const Template: ComponentStory<typeof ConfigurationSwitch> = (props) => {
+const Template: StoryFn<typeof ConfigurationSwitch> = (props) => {
   const [isChecked, setIsChecked] = useState<boolean>(false);
 
   return (

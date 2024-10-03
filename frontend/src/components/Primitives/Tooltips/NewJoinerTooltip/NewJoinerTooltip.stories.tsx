@@ -1,5 +1,5 @@
 import React from 'react';
-import { ComponentStory } from '@storybook/react';
+import { StoryFn } from '@storybook/react';
 import dedent from 'ts-dedent';
 
 import NewJoinerTooltip from '@/components/Primitives/Tooltips/NewJoinerTooltip/NewJoinerTooltip';
@@ -21,7 +21,7 @@ export default {
   },
 };
 
-const Template: ComponentStory<typeof NewJoinerTooltip> = () => <NewJoinerTooltip />;
+const Template: StoryFn<typeof NewJoinerTooltip> = () => <NewJoinerTooltip />;
 
 export const Default = Template.bind({});
 Default.storyName = 'Basic Usage';

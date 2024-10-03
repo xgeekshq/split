@@ -1,4 +1,4 @@
-import { ComponentStory } from '@storybook/react';
+import { StoryFn } from '@storybook/react';
 
 import RoleSelector from '@/components/Teams/Team/TeamMemberItem/RoleSelector/RoleSelector';
 import { TeamUserRoles } from '@/enums/teams/userRoles';
@@ -45,7 +45,7 @@ export default {
   },
 };
 
-const Template: ComponentStory<typeof RoleSelector> = (args) => <RoleSelector {...args} />;
+const Template: StoryFn<typeof RoleSelector> = (args) => <RoleSelector {...args} />;
 
 export const Default = Template.bind({});
 Default.storyName = 'Basic Usage';

@@ -29,16 +29,16 @@ export const getServerSideProps: GetServerSideProps = requireAuthentication(
   async (context: GetServerSidePropsContext) => {
     const queryClient = new QueryClient();
 
-    await queryClient.prefetchInfiniteQuery(
-      [USERS_KEY, TEAMS_KEY],
-      ({ pageParam = 0 }) => getUsersWithTeams(pageParam, '', context),
-      {
-        structuralSharing: (_, newData) => ({
-          pageParams: [null],
-          pages: newData.pages,
-        }),
-      },
-    );
+    await queryClient.prefetchInfiniteQuery({
+      queryKey: [USERS_KEY, TEAMS_KEY],
+      queryFn: ({ pageParam = 0 }) => getUsersWithTeams(pageParam, '', context),
+      structuralSharing: (_, newData) => ({
+        pageParams: [null],
+        //@ts-expect-error: check this
+        pages: newData.pages,
+      }),
+      initialPageParam: 0,
+    });
 
     return {
       props: {

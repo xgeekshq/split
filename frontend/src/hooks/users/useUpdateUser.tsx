@@ -12,7 +12,8 @@ const useUpdateUser = () => {
   const queryClient = useQueryClient();
   const setToastState = useSetRecoilState(toastState);
 
-  return useMutation(updateUserIsAdminRequest, {
+  return useMutation({
+    mutationFn: updateUserIsAdminRequest,
     onMutate: ({ _id: userId, isSAdmin }) => {
       queryClient.setQueryData(
         [USERS_KEY, TEAMS_KEY],
@@ -39,7 +40,7 @@ const useUpdateUser = () => {
       setToastState(createSuccessMessage(SuccessMessages.UPDATE));
     },
     onError: () => {
-      queryClient.invalidateQueries([USERS_KEY, TEAMS_KEY]);
+      queryClient.invalidateQueries({ queryKey: [USERS_KEY, TEAMS_KEY] });
       setToastState(createErrorMessage(ErrorMessages.UPDATE));
     },
   });

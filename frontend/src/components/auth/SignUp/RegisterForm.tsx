@@ -68,7 +68,8 @@ const RegisterForm = ({
     }
   };
 
-  const createUser = useMutation((user: RegisterUser) => registerNewUser(user), {
+  const createUser = useMutation({
+    mutationFn: (user: RegisterUser) => registerNewUser(user),
     mutationKey: ['register'],
     onError: () => {
       setToastState(createErrorMessage('Something went wrong, please try again'));

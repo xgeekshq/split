@@ -1,4 +1,4 @@
-import { ComponentStory } from '@storybook/react';
+import { StoryFn } from '@storybook/react';
 
 import Header from '@/components/Teams/Team/Header/Header';
 
@@ -36,7 +36,7 @@ export default {
   },
 };
 
-const Template: ComponentStory<typeof Header> = (props) => <Header {...props} />;
+const Template: StoryFn<typeof Header> = (props) => <Header {...props} />;
 
 export const Default = Template.bind({});
 Default.storyName = 'Basic Usage';

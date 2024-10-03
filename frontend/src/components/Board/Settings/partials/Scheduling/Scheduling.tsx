@@ -1,4 +1,5 @@
 import { Dispatch, SetStateAction } from 'react';
+import { Value } from 'react-calendar/dist/cjs/shared/types';
 
 import {
   StyledAccordionContent,
@@ -22,10 +23,10 @@ export type SchedulingProps = {
 };
 
 const SchedulingSettings = ({ schedulingData, setSchedulingData }: SchedulingProps) => {
-  const handleScheduleDateChange = (scheduleDate: Date) => {
+  const handleScheduleDateChange = (scheduleDate: Value) => {
     setSchedulingData((prev: UpdateScheduleType) => ({
       ...prev,
-      firstMeetingDay: scheduleDate,
+      firstMeetingDay: scheduleDate as Date | undefined,
     }));
   };
 

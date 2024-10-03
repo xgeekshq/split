@@ -30,7 +30,7 @@ async function getNewAccessToken(prevToken: JWT): Promise<JWT> {
       },
       error: '',
     };
-  } catch (error) {
+  } catch {
     return { ...prevToken, error: REFRESH_TOKEN_ERROR };
   }
 }
