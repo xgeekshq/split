@@ -1,5 +1,5 @@
 import React from 'react';
-import { ComponentStory } from '@storybook/react';
+import { StoryFn } from '@storybook/react';
 import dedent from 'ts-dedent';
 
 import Spinner from '@/components/Primitives/Loading/Spinner/Spinner';
@@ -49,7 +49,7 @@ export default {
   },
 };
 
-const Template: ComponentStory<typeof Spinner> = ({ ...args }) => <Spinner {...args} />;
+const Template: StoryFn<typeof Spinner> = ({ ...args }) => <Spinner {...args} />;
 
 export const Default = Template.bind({});
 Default.storyName = 'Basic Usage';

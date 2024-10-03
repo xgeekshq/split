@@ -33,15 +33,26 @@ const MyBoards = ({ userId, isSuperAdmin }: MyBoardsProps) => {
 
   const [filterState, setFilterState] = useRecoilState(filterTeamBoardsState);
 
-  const teamsQuery = useTeams(isSAdmin);
-  const userTeamsList = teamsQuery.data ?? [];
-  const { fetchBoards } = useBoard({ autoFetchBoards: true });
-  const { data: paginatedBoards, isLoading } = fetchBoards;
+  const {
+    fetchAllTeams: { data: userTeamsList, isError: isTeamsError },
+    handleErrorOnFetchAllTeams,
+  } = useTeams(isSAdmin);
+
+  const { fetchBoards, handleFetchBoardsOnError } = useBoard({ autoFetchBoards: true });
+  const { data: paginatedBoards, isLoading, isError: isBoardsError } = fetchBoards;
 
   useEffect(() => {
     if (routerTeam) setFilterState(routerTeam);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  if (isBoardsError) {
+    handleFetchBoardsOnError();
+  }
+
+  if (isTeamsError) {
+    handleErrorOnFetchAllTeams();
+  }
 
   const dataByTeamAndDate = useMemo(() => {
     const teams = new Map<string, Team>();
@@ -79,12 +90,14 @@ const MyBoards = ({ userId, isSuperAdmin }: MyBoardsProps) => {
   if (filterState === 'all' && isEmpty(dataByTeamAndDate.boardsTeamAndDate.size) && !isLoading)
     return <EmptyBoards />;
 
-  const teamNames: OptionType[] = userTeamsList.map((team) => ({
+  const teamNames: OptionType[] = (userTeamsList ?? []).map((team) => ({
     value: team.id,
     label: team.name,
   }));
 
-  const filteredTeam: Team | undefined = userTeamsList.find((team) => team.id === filterState);
+  const filteredTeam: Team | undefined = (userTeamsList ?? []).find(
+    (team) => team.id === filterState,
+  );
 
   return (
     <>

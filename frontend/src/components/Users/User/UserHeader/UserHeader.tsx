@@ -24,7 +24,10 @@ const UserHeader = ({ user }: UserHeaderProps) => {
     setIsOpen(true);
   };
 
-  const { data: teamsUserIsNotMember } = useTeamsWithoutUser(user._id);
+  const {
+    fetchTeamsWithoutUser: { data: teamsUserIsNotMember, isError },
+    handleErrorOnFetchTeamsWithoutUser,
+  } = useTeamsWithoutUser(user._id);
 
   const teamCheckedList: TeamChecked[] = useMemo(() => {
     if (!teamsUserIsNotMember) return [];
@@ -37,6 +40,10 @@ const UserHeader = ({ user }: UserHeaderProps) => {
     { title: 'Users', link: ROUTES.Users },
     { title: `${user.firstName} ${user.lastName}`, isActive: true },
   ];
+
+  if (isError) {
+    handleErrorOnFetchTeamsWithoutUser();
+  }
 
   return (
     <Flex align="center" data-testid="userHeader" justify="between">

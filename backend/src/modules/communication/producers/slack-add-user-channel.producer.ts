@@ -31,7 +31,7 @@ export class SlackAddUserToChannelProducer {
 		const job = await this.queue.add(data);
 
 		this.logger.verbose(
-			`Add user into mainchannel with email "${data.email}" to queue with Job id: "${job.id}"`
+			`Add user into mainchannel with email "${data.email}" to queue with Job id: "${job.id.toString()}"`
 		);
 
 		return job;

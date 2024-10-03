@@ -30,14 +30,16 @@ export class SlackArchiveChannelConsumer extends SlackCommunicationEventListener
 		const data = job.data;
 
 		if (data.type === ArchiveChannelDataOptions.CHANNEL_ID) {
-			this.logger.verbose(`Archive channel with id: "${data.data}" and Job id: "${job.id}"`);
+			this.logger.verbose(
+				`Archive channel with id: "${data.data}" and Job id: "${job.id.toString()}"`
+			);
 		}
 
 		if (data.type === ArchiveChannelDataOptions.BOARD) {
 			this.logger.verbose(
 				`Archive related channel(s) to board with id: "${
 					(data.data as BoardType).id
-				}" and Job id: "${job.id}"`
+				}" and Job id: "${job.id.toString()}"`
 			);
 		}
 

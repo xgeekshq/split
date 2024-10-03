@@ -12,12 +12,15 @@ type ListOfCardsProp = {
   userId: string;
   isLoading: boolean;
   fetchBoards: UseInfiniteQueryResult<
-    {
-      boards: BoardType[];
-      hasNextPage: boolean;
-      page: number;
-    },
-    unknown
+    InfiniteData<
+      {
+        boards: BoardType[];
+        hasNextPage: boolean;
+        page: number;
+      },
+      unknown
+    >,
+    Error
   >;
 };
 

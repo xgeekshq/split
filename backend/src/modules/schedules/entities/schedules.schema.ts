@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, ObjectId, SchemaTypes } from 'mongoose';
-import * as leanVirtualsPlugin from 'mongoose-lean-virtuals';
+import { mongooseLeanVirtuals } from 'mongoose-lean-virtuals';
 
 export type SchedulesDocument = Schedules & Document;
 
@@ -29,4 +29,4 @@ export default class Schedules {
 
 export const SchedulesSchema = SchemaFactory.createForClass(Schedules);
 
-SchedulesSchema.plugin(leanVirtualsPlugin);
+SchedulesSchema.plugin(mongooseLeanVirtuals);

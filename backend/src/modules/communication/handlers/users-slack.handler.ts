@@ -1,12 +1,9 @@
-import { Logger } from 'mongodb';
 import { ProfileType } from 'src/modules/communication/dto/types';
 import { CommunicationGateAdapterInterface } from 'src/modules/communication/interfaces/communication-gate.adapter.interface';
 import { UsersHandlerInterface } from 'src/modules/communication/interfaces/users.handler.interface';
 
 export class UsersSlackHandler implements UsersHandlerInterface {
 	constructor(private readonly communicationGateAdapter: CommunicationGateAdapterInterface) {}
-
-	private logger = new Logger(UsersSlackHandler.name);
 
 	async getProfilesByIds(usersIds: string[]): Promise<ProfileType[]> {
 		const profiles: ProfileType[] = [];
@@ -28,7 +25,7 @@ export class UsersSlackHandler implements UsersHandlerInterface {
 			const email = await this.communicationGateAdapter.getEmailByUserId(userId);
 
 			return { id: userId, email };
-		} catch (error) {
+		} catch {
 			return null;
 		}
 	}

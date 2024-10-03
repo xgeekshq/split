@@ -1,5 +1,5 @@
 import React from 'react';
-import { ComponentStory } from '@storybook/react';
+import { StoryFn } from '@storybook/react';
 import dedent from 'ts-dedent';
 
 import Badge from '@/components/Primitives/Badge/Badge';
@@ -52,7 +52,7 @@ export default {
   },
 };
 
-const Template: ComponentStory<typeof Badge> = ({ children, ...args }) => (
+const Template: StoryFn<typeof Badge> = ({ children, ...args }) => (
   <Badge {...args}>{children}</Badge>
 );
 

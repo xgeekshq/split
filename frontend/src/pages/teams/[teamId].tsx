@@ -34,8 +34,14 @@ const Team = () => {
   const setUsers = useSetRecoilState(usersListState);
 
   // Hooks
-  const { data: teamData, isLoading: isLoadingTeam } = useTeam(teamId as string);
-  const { data: usersData, isLoading: isLoadingUsers } = useUsers();
+  const {
+    fetchTeam: { data: teamData, isLoading: isLoadingTeam, isError: isTeamError },
+    handleErrorOnFetchTeam,
+  } = useTeam(teamId as string);
+  const {
+    fetchAllUsers: { data: usersData, isLoading: isLoadingUsers, isError: isUsersError },
+    handleErrorOnFetchAllUsers,
+  } = useUsers();
 
   const userFound = teamData?.users.find((member) => member.user?._id === userId);
   const hasPermissions =
@@ -55,6 +61,14 @@ const Team = () => {
 
     setUsers(checkedUsersData);
   }, [usersData, teamData, setUsers]);
+
+  if (isTeamError) {
+    handleErrorOnFetchTeam();
+  }
+
+  if (isUsersError) {
+    handleErrorOnFetchAllUsers();
+  }
 
   if (!teamData || !usersData) {
     replace(ROUTES.Teams);
@@ -95,8 +109,11 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
   const queryClient = new QueryClient();
   await Promise.all([
-    queryClient.prefetchQuery([TEAMS_KEY, teamId], () => getTeam(teamId, context)),
-    queryClient.prefetchQuery([USERS_KEY], () => getAllUsers(context)),
+    queryClient.prefetchQuery({
+      queryKey: [TEAMS_KEY, teamId],
+      queryFn: () => getTeam(teamId, context),
+    }),
+    queryClient.prefetchQuery({ queryKey: [USERS_KEY], queryFn: () => getAllUsers(context) }),
   ]);
 
   return {

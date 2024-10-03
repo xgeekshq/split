@@ -8,17 +8,17 @@ import { DeleteTeamUserServiceInterface } from '../interfaces/services/delete.te
 import { TEAM_USER_REPOSITORY } from 'src/modules/teamUsers/constants';
 
 const removeTeamUsers: string[] = [
-	faker.datatype.uuid(),
-	faker.datatype.uuid(),
-	faker.datatype.uuid(),
-	faker.datatype.uuid()
+	faker.string.uuid(),
+	faker.string.uuid(),
+	faker.string.uuid(),
+	faker.string.uuid()
 ];
 
-const deleteManyFailResult = { acknowledged: false, deletedCount: faker.datatype.number() };
-const deleteManySuccessResult = { acknowledged: true, deletedCount: faker.datatype.number() };
+const deleteManyFailResult = { acknowledged: false, deletedCount: faker.number.int() };
+const deleteManySuccessResult = { acknowledged: true, deletedCount: faker.number.int() };
 
-const teamId = faker.datatype.uuid();
-const userId = faker.datatype.uuid();
+const teamId = faker.string.uuid();
+const userId = faker.string.uuid();
 
 describe('DeleteTeamUserService', () => {
 	let teamUserService: DeleteTeamUserServiceInterface;

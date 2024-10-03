@@ -295,10 +295,11 @@ const useVotes = () => {
     }
   };
 
-  const handleVote = useMutation(handleVotes, {
+  const handleVote = useMutation({
+    mutationFn: handleVotes,
     onError: (_, variables) => {
-      queryClient.cancelQueries(['board', { id: variables.boardId }]);
-      queryClient.invalidateQueries(['board', { id: variables.boardId }]);
+      queryClient.cancelQueries({ queryKey: ['board', { id: variables.boardId }] });
+      queryClient.invalidateQueries({ queryKey: ['board', { id: variables.boardId }] });
       setReady(true);
       toastErrorMessage(`Error ${variables.count > 0 ? 'adding' : 'removing'} the vote`);
     },

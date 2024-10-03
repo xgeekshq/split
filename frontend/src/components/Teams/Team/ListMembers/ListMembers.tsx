@@ -27,7 +27,10 @@ const ListMembers = ({ isOpen, setIsOpen, isTeamPage }: ListMembersProps) => {
   } = useRouter();
 
   const { userId } = useCurrentSession();
-  const { data: team } = useTeam(teamId as string);
+  const {
+    fetchTeam: { data: team, isError },
+    handleErrorOnFetchTeam,
+  } = useTeam(teamId as string);
   const { mutate } = useUpdateTeamUsers(teamId as string);
 
   const [usersList, setUsersList] = useRecoilState(usersListState);
@@ -114,6 +117,10 @@ const ListMembers = ({ isOpen, setIsOpen, isTeamPage }: ListMembersProps) => {
 
     setIsOpen(false);
   };
+
+  if (isError) {
+    handleErrorOnFetchTeam();
+  }
 
   return (
     <UserListDialog

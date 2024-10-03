@@ -11,7 +11,10 @@ const UsersList = () => {
   const [search, setSearch] = useState<string>('');
   const scrollRef = useRef<HTMLDivElement>(null);
 
-  const { data, isFetching, hasNextPage, fetchNextPage, refetch } = useUsersWithTeams(search);
+  const {
+    fetchUsersWithTeams: { data, isFetching, hasNextPage, fetchNextPage, refetch, isError },
+    handleErrorOnFetchUsersWithTeams,
+  } = useUsersWithTeams(search);
   const userAmount = data?.pages[0].userAmount;
 
   const users = useMemo(() => {
@@ -43,6 +46,10 @@ const UsersList = () => {
     return () => clearTimeout(timer);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [search]);
+
+  if (isError) {
+    handleErrorOnFetchUsersWithTeams();
+  }
 
   return (
     <Flex css={{ overflow: 'hidden' }} direction="column" gap="16">

@@ -1,5 +1,5 @@
 import React from 'react';
-import { ComponentStory } from '@storybook/react';
+import { StoryFn } from '@storybook/react';
 import dedent from 'ts-dedent';
 
 import Breadcrumb from '@/components/Primitives/Breadcrumb/Breadcrumb';
@@ -47,7 +47,7 @@ export default {
   },
 };
 
-const Template: ComponentStory<typeof Breadcrumb> = (args) => <Breadcrumb {...args} />;
+const Template: StoryFn<typeof Breadcrumb> = (args) => <Breadcrumb {...args} />;
 
 export const Default = Template.bind({});
 Default.storyName = 'Basic Usage';

@@ -53,11 +53,14 @@ export const getServerSideProps: GetServerSideProps = requireAuthentication(
     const isSAdmin = session?.user.isSAdmin ?? false;
 
     const queryClient = new QueryClient();
-    await queryClient.prefetchQuery([TEAMS_KEY], () => {
-      if (isSAdmin) {
-        return getAllTeams(context);
-      }
-      return getUserTeams(userId, context);
+    await queryClient.prefetchQuery({
+      queryKey: [TEAMS_KEY],
+      queryFn: () => {
+        if (isSAdmin) {
+          return getAllTeams(context);
+        }
+        return getUserTeams(userId, context);
+      },
     });
 
     return {

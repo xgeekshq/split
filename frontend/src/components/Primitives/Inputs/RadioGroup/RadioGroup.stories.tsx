@@ -1,5 +1,5 @@
 import React from 'react';
-import { ComponentStory } from '@storybook/react';
+import { StoryFn } from '@storybook/react';
 import dedent from 'ts-dedent';
 
 import {
@@ -73,7 +73,7 @@ export default {
   },
 };
 
-const Template: ComponentStory<typeof RadioGroup> = ({ direction, size, fontWeight }: any) => (
+const Template: StoryFn<typeof RadioGroup> = ({ direction, size, fontWeight }: any) => (
   <RadioGroup defaultValue="default" direction={direction}>
     <Flex align="center">
       <RadioGroupItem id="r1" value="default">
@@ -105,11 +105,7 @@ const Template: ComponentStory<typeof RadioGroup> = ({ direction, size, fontWeig
 export const Default = Template.bind({});
 Default.storyName = 'Basic Usage';
 
-export const Multiline: ComponentStory<typeof RadioGroup> = ({
-  direction,
-  size,
-  fontWeight,
-}: any) => (
+export const Multiline: StoryFn<typeof RadioGroup> = ({ direction, size, fontWeight }: any) => (
   <RadioGroup css={{ flexWrap: 'wrap' }} defaultValue="default" direction={direction}>
     <Flex>
       <RadioGroupItem id="r4" value="default">

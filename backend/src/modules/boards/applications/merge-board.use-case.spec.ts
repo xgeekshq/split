@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { DeepMocked, createMock } from '@golevelup/ts-jest';
-import faker from '@faker-js/faker';
+import { faker } from '@faker-js/faker';
 import { BoardFactory } from 'src/libs/test-utils/mocks/factories/board-factory.mock';
 import { UseCase } from 'src/libs/interfaces/use-case.interface';
 import MergeBoardUseCaseDto from '../dto/useCase/merge-board.use-case.dto';
@@ -15,7 +15,7 @@ import { MergeBoardUseCase } from './merge-board.use-case';
 import { BOARD_REPOSITORY } from 'src/modules/boards/constants';
 import { SLACK_COMMUNICATION_SERVICE } from 'src/modules/communication/constants';
 
-const userId = faker.datatype.uuid();
+const userId = faker.string.uuid();
 const subBoards = BoardFactory.createMany(2, [
 	{ isSubBoard: true, boardNumber: 1, submitedByUser: userId, submitedAt: new Date() },
 	{ isSubBoard: true, boardNumber: 2 }
@@ -24,7 +24,7 @@ const subBoards = BoardFactory.createMany(2, [
 const splitBoardWithSlack: Board = BoardFactory.create({
 	isSubBoard: false,
 	slackEnable: true,
-	slackChannelId: faker.datatype.uuid(),
+	slackChannelId: faker.string.uuid(),
 	dividedBoards: subBoards
 });
 const subBoardUpdated = { ...subBoards[1], submitedByUser: userId, submitedAt: new Date() };
@@ -134,7 +134,7 @@ describe('MergeBoardUseCase', () => {
 			const splitBoard: Board = BoardFactory.create({
 				isSubBoard: false,
 				slackEnable: true,
-				slackChannelId: faker.datatype.uuid(),
+				slackChannelId: faker.string.uuid(),
 				dividedBoards: subBoardsWithoutAllMerged
 			});
 			const subBoardUpdatedResult = {
@@ -181,7 +181,7 @@ describe('MergeBoardUseCase', () => {
 		});
 
 		it('should return the merged board', async () => {
-			const socketId = faker.datatype.uuid();
+			const socketId = faker.string.uuid();
 
 			const result = await useCase.execute({
 				subBoardId: subBoards[1]._id,

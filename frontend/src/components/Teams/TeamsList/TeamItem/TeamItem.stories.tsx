@@ -1,5 +1,5 @@
 import { useSession } from 'next-auth/react';
-import { ComponentStory } from '@storybook/react';
+import { StoryFn } from '@storybook/react';
 
 import TeamItem from '@/components/Teams/TeamsList/TeamItem/TeamItem';
 import { createTeamUser } from '@/stories/utils/createTeamUser';
@@ -34,7 +34,7 @@ export default {
   },
 };
 
-const Template: ComponentStory<typeof TeamItem> = ({ team }) => {
+const Template: StoryFn<typeof TeamItem> = ({ team }) => {
   const { data: session } = useSession();
   const user: any = session?.user;
 

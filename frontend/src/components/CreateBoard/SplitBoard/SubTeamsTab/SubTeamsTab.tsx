@@ -24,7 +24,10 @@ const SubTeamsTab = React.memo<SubTeamsTabProps>(({ previousTeam }) => {
   const selectedTeam = useRecoilValue(createBoardTeam);
   const haveError = useRecoilValue(createBoardError);
 
-  const { data: teams } = useTeams(isSAdmin);
+  const {
+    fetchAllTeams: { data: teams, isError },
+    handleErrorOnFetchAllTeams,
+  } = useTeams(isSAdmin);
 
   useEffect(() => {
     if (selectedTeam) {
@@ -48,6 +51,10 @@ const SubTeamsTab = React.memo<SubTeamsTabProps>(({ previousTeam }) => {
 
     return () => setStakeholders([]);
   }, [teams, selectedTeam]);
+
+  if (isError) {
+    handleErrorOnFetchAllTeams();
+  }
 
   return (
     <Flex direction="column">

@@ -11,7 +11,8 @@ import { toastState } from '@/store/toast/atom/toast.atom';
 const useRegisterGuestUser = () => {
   const setToastState = useSetRecoilState(toastState);
 
-  return useMutation(registerGuest, {
+  return useMutation({
+    mutationFn: registerGuest,
     onSuccess: (data) => {
       setCookie(GUEST_USER_COOKIE, data);
     },

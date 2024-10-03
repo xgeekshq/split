@@ -9,7 +9,7 @@ import Board from 'src/modules/boards/entities/board.schema';
 import { UpdateColumnUseCase } from 'src/modules/columns/applications/update-column.use-case';
 import { ColumnRepositoryInterface } from 'src/modules/columns/repositories/column.repository.interface';
 import { UpdateColumnDto } from 'src/modules/columns/dto/update-column.dto';
-import faker from '@faker-js/faker';
+import { faker } from '@faker-js/faker';
 
 const board = BoardFactory.create();
 const boardId = board._id;
@@ -20,7 +20,7 @@ const column: UpdateColumnDto = {
 	cardText: board.columns[0].cardText,
 	color: board.columns[0].color,
 	isDefaultText: board.columns[0].isDefaultText,
-	socketId: faker.datatype.uuid()
+	socketId: faker.string.uuid()
 };
 
 const updateResult = {

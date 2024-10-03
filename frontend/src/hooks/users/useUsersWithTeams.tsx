@@ -10,24 +10,29 @@ import { toastState } from '@/store/toast/atom/toast.atom';
 const useUsersWithTeams = (searchParam?: string) => {
   const setToastState = useSetRecoilState(toastState);
 
-  return useInfiniteQuery(
-    [USERS_KEY, TEAMS_KEY],
-    ({ pageParam = 0 }) => getUsersWithTeams(pageParam, searchParam ?? ''),
-    {
-      enabled: true,
-      refetchOnMount: false,
-      refetchOnWindowFocus: false,
-      keepPreviousData: true,
-      getNextPageParam: (lastPage) => {
-        const { hasNextPage, page } = lastPage;
-        if (hasNextPage) return page + 1;
-        return undefined;
-      },
-      onError: () => {
-        setToastState(createErrorMessage(ErrorMessages.GET));
-      },
+  const fetchUsersWithTeams = useInfiniteQuery({
+    queryKey: [USERS_KEY, TEAMS_KEY],
+    queryFn: ({ pageParam = 0 }) => getUsersWithTeams(pageParam, searchParam ?? ''),
+    enabled: true,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+    placeholderData: (previousData) => previousData,
+    initialPageParam: 0,
+    getNextPageParam: (lastPage) => {
+      const { hasNextPage, page } = lastPage;
+      if (hasNextPage) return page + 1;
+      return undefined;
     },
-  );
+  });
+
+  const handleErrorOnFetchUsersWithTeams = () => {
+    setToastState(createErrorMessage(ErrorMessages.GET));
+  };
+
+  return {
+    fetchUsersWithTeams,
+    handleErrorOnFetchUsersWithTeams,
+  };
 };
 
 export default useUsersWithTeams;

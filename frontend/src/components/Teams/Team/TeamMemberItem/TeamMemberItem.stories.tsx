@@ -1,4 +1,4 @@
-import { ComponentStory } from '@storybook/react';
+import { StoryFn } from '@storybook/react';
 
 import TeamMemberItem from '@/components/Teams/Team/TeamMemberItem/TeamMemberItem';
 import { TeamUserFactory } from '@/utils/factories/user';
@@ -44,7 +44,7 @@ export default {
   },
 };
 
-const Template: ComponentStory<typeof TeamMemberItem> = (args) => <TeamMemberItem {...args} />;
+const Template: StoryFn<typeof TeamMemberItem> = (args) => <TeamMemberItem {...args} />;
 
 export const Default = Template.bind({});
 Default.storyName = 'Basic Usage';

@@ -1,4 +1,4 @@
-import faker from '@faker-js/faker';
+import { faker } from '@faker-js/faker';
 import CardDto from 'src/modules/cards/dto/card.dto';
 import { buildTestFactory } from '../generic-factory.mock';
 import { CardItemDtoFactory } from './cardItemDto-factory.mock';
@@ -9,7 +9,7 @@ const mockCardDto = () => {
 		items: [CardItemDtoFactory.create()],
 		id: faker.database.mongodbObjectId(),
 		text: faker.lorem.words(),
-		createdBy: faker.datatype.uuid(),
+		createdBy: faker.string.uuid(),
 		comments: [CommentDtoFactory.create()],
 		votes: [],
 		anonymous: faker.datatype.boolean()

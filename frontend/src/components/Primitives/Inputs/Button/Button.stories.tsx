@@ -1,5 +1,5 @@
 import React from 'react';
-import { ComponentStory } from '@storybook/react';
+import { ArgTypes, StoryFn } from '@storybook/react';
 import dedent from 'ts-dedent';
 
 import Icon from '@/components/Primitives/Icons/Icon/Icon';
@@ -90,14 +90,14 @@ export default {
   },
 };
 
-const Template: ComponentStory<typeof Button> = ({ children, ...args }) => (
+const Template: StoryFn<typeof Button> = ({ children, ...args }) => (
   <Button {...args}>{children}</Button>
 );
 
 export const Default = Template.bind({});
 Default.storyName = 'Basic Usage';
 
-export const Variants: ComponentStory<typeof Button> = ({ children, disabled }) => (
+export const Variants: StoryFn<typeof Button> = ({ children, disabled }) => (
   <Flex gap={32} justify="evenly" wrap="wrap">
     {VARIANT_OPTIONS.map((variant) => (
       <Flex key={variant} align="center" direction="column" gap={16} justify="center">
@@ -112,7 +112,7 @@ export const Variants: ComponentStory<typeof Button> = ({ children, disabled }) 
   </Flex>
 );
 
-export const IconButton: ComponentStory<typeof Button> = ({ children, disabled }) => (
+export const IconButton: StoryFn<typeof Button> = ({ children, disabled }) => (
   <Flex gap={32} justify="evenly" wrap="wrap">
     {VARIANT_OPTIONS.map((variant) => (
       <Flex key={variant} align="center" direction="column" gap={16} justify="center">
@@ -128,7 +128,7 @@ export const IconButton: ComponentStory<typeof Button> = ({ children, disabled }
   </Flex>
 );
 
-export const Icons: ComponentStory<typeof Button> = ({ disabled }) => (
+export const Icons: StoryFn<typeof Button> = ({ disabled }) => (
   <Flex gap={32} justify="evenly" wrap="wrap">
     {SIZE_OPTIONS.map((size) => (
       <Flex key={size} align="center" direction="column" gap={16} justify="start">
@@ -141,7 +141,7 @@ export const Icons: ComponentStory<typeof Button> = ({ disabled }) => (
   </Flex>
 );
 
-const DISABLE_ARG_TYPES = {
+const DISABLE_ARG_TYPES: Partial<ArgTypes> = {
   variant: {
     control: false,
   },

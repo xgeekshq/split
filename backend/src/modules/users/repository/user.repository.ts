@@ -93,7 +93,7 @@ export class UserRepository
 	getSignedUpUsersCount() {
 		return this.model
 			.find({ $or: [{ isAnonymous: false }, { isAnonymous: undefined }] })
-			.count()
+			.countDocuments()
 			.exec();
 	}
 

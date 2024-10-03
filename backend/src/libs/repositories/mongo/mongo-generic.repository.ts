@@ -1,8 +1,11 @@
-import { BulkWriteResult, DeleteResult } from 'mongodb';
+import { BulkWriteResult, CountOptions, DeleteOptions, DeleteResult, UpdateOptions } from 'mongodb';
 import {
 	ClientSession,
 	FilterQuery,
 	Model,
+	MongooseBaseQueryOptionKeys,
+	MongooseBaseQueryOptions,
+	MongooseUpdateQueryOptions,
 	PipelineStage,
 	ProjectionType,
 	QueryOptions,
@@ -27,7 +30,10 @@ export class MongoGenericRepository<T> implements BaseInterfaceRepository<T> {
 		return this._repository.countDocuments().lean().exec();
 	}
 
-	countDocumentsWithQuery(filter: FilterQuery<T>, options?: QueryOptions<T>): Promise<number> {
+	countDocumentsWithQuery(
+		filter: FilterQuery<T>,
+		options?: CountOptions & MongooseBaseQueryOptions<T>
+	): Promise<number> {
 		return this._repository.countDocuments(filter, options).lean().exec();
 	}
 
@@ -94,7 +100,8 @@ export class MongoGenericRepository<T> implements BaseInterfaceRepository<T> {
 	insertMany<Q>(listOfItems: Q[], withSession?: boolean): Promise<T[]> {
 		return this._repository.insertMany(listOfItems, {
 			session: withSession ? this._session : undefined
-		});
+		}) as Promise<T[]>;
+		// check this cast
 	}
 
 	update(id: string, item: T): Promise<T> {
@@ -126,7 +133,7 @@ export class MongoGenericRepository<T> implements BaseInterfaceRepository<T> {
 
 	findOneAndRemove(id: string, withSession = false): Promise<T> {
 		return this._repository
-			.findOneAndRemove(
+			.findOneAndDelete(
 				{
 					_id: id
 				},
@@ -137,7 +144,7 @@ export class MongoGenericRepository<T> implements BaseInterfaceRepository<T> {
 
 	findOneAndRemoveByField(fields: ModelProps<T>, withSession: boolean): Promise<T> {
 		return this._repository
-			.findOneAndRemove(fields, {
+			.findOneAndDelete(fields, {
 				session: withSession ? this._session : undefined
 			})
 			.exec();
@@ -158,7 +165,7 @@ export class MongoGenericRepository<T> implements BaseInterfaceRepository<T> {
 	updateOneByField<Q>(
 		filter: FilterQuery<T>,
 		update: UpdateQuery<T>,
-		options?: QueryOptions<T>,
+		options?: (UpdateOptions & MongooseUpdateQueryOptions<T>) | null,
 		withSession?: boolean
 	): Promise<Q> {
 		return this._repository
@@ -187,7 +194,10 @@ export class MongoGenericRepository<T> implements BaseInterfaceRepository<T> {
 			.exec();
 	}
 
-	deleteOneWithQuery(value: FilterQuery<T>, options?: QueryOptions): Promise<DeleteResult> {
+	deleteOneWithQuery(
+		value: FilterQuery<T>,
+		options?: DeleteOptions & Pick<QueryOptions<T>, MongooseBaseQueryOptionKeys>
+	): Promise<DeleteResult> {
 		return this._repository.deleteOne(value, options).exec();
 	}
 

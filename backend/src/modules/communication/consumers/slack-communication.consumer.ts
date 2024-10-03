@@ -30,7 +30,7 @@ export class SlackCommunicationConsumer extends SlackCommunicationEventListeners
 		const board = job.data;
 
 		this.logger.verbose(
-			`execute communication for board with id: "${board.id}" and Job id: "${job.id}" (pid ${process.pid})`
+			`execute communication for board with id: "${board.id}" and Job id: "${job.id.toString()}" (pid ${process.pid})`
 		);
 
 		const result = await this.application.execute(board);
@@ -41,7 +41,7 @@ export class SlackCommunicationConsumer extends SlackCommunicationEventListeners
 	// https://github.com/OptimalBits/bull/blob/develop/REFERENCE.md#events
 	@OnQueueCompleted()
 	override async onCompleted(job: Job<BoardType>, result: TeamDto[]) {
-		this.logger.verbose(`Completed Job id: "${job.id}"`);
+		this.logger.verbose(`Completed Job id: "${job.id.toString()}"`);
 		this.updateBoardService.updateChannelId(result);
 	}
 }

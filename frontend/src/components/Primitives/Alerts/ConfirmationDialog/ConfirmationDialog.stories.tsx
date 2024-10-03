@@ -1,5 +1,5 @@
 import React from 'react';
-import { ComponentStory } from '@storybook/react';
+import { StoryFn } from '@storybook/react';
 import dedent from 'ts-dedent';
 
 import ConfirmationDialog from '@/components/Primitives/Alerts/ConfirmationDialog/ConfirmationDialog';
@@ -65,7 +65,7 @@ export default {
   },
 };
 
-const Template: ComponentStory<typeof ConfirmationDialog> = (args) => (
+const Template: StoryFn<typeof ConfirmationDialog> = (args) => (
   <ConfirmationDialog {...args}>
     <Button isIcon>
       <Icon name="user" />

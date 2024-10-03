@@ -88,8 +88,11 @@ const NewSplitBoard: NextPage = () => {
   } = useBoard({ autoFetchBoard: false });
 
   // Team  Hook
-  const teamsQuery = useTeams(isSAdmin);
-  const userBasedTeams = teamsQuery.data ?? [];
+  const {
+    fetchAllTeams: { data, isError },
+    handleErrorOnFetchAllTeams,
+  } = useTeams(isSAdmin);
+  const userBasedTeams = data ?? [];
 
   // React Hook Form
   const methods = useForm<{
@@ -203,6 +206,10 @@ const NewSplitBoard: NextPage = () => {
     };
   }, [setSelectedTeam, setBoardState, setHaveError]);
 
+  if (isError) {
+    handleErrorOnFetchAllTeams();
+  }
+
   if (!session || !userBasedTeams) return null;
 
   return (
@@ -283,11 +290,14 @@ export const getServerSideProps: GetServerSideProps = requireAuthentication(
     const isSAdmin = session?.user.isSAdmin ?? false;
 
     const queryClient = new QueryClient();
-    await queryClient.prefetchQuery([TEAMS_KEY], () => {
-      if (isSAdmin) {
-        return getAllTeams(context);
-      }
-      return getUserTeams(userId, context);
+    await queryClient.prefetchQuery({
+      queryKey: [TEAMS_KEY],
+      queryFn: () => {
+        if (isSAdmin) {
+          return getAllTeams(context);
+        }
+        return getUserTeams(userId, context);
+      },
     });
 
     return {

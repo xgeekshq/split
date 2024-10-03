@@ -11,7 +11,8 @@ const useUpdateTeamUsers = (teamId: string) => {
   const queryClient = useQueryClient();
   const setToastState = useSetRecoilState(toastState);
 
-  return useMutation(updateTeamUsers, {
+  return useMutation({
+    mutationFn: updateTeamUsers,
     onSuccess: () => {
       setToastState(createSuccessMessage(SuccessMessages.UPDATE));
     },
@@ -19,7 +20,7 @@ const useUpdateTeamUsers = (teamId: string) => {
       setToastState(createErrorMessage(ErrorMessages.UPDATE));
     },
     onSettled: () => {
-      queryClient.invalidateQueries([TEAMS_KEY, teamId]);
+      queryClient.invalidateQueries({ queryKey: [TEAMS_KEY, teamId] });
     },
   });
 };

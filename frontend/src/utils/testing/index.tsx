@@ -49,8 +49,8 @@ function getItemCount(count?: BuildTestFactoryCountValue): number {
  * @example
  *
  * const UserFactory = buildTestFactory<{ name: string, age: number }>((index) => ({
- *   name: faker.name.firstName(),
- *   age: faker.datatype.number(1, index === 0 ? 50 : 100),
+ *   name: faker.person.firstName(),
+ *   age: faker.number.int(1, index === 0 ? 50 : 100),
  * }));
  * // single item
  * UserFactory.create();

@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, ObjectId, SchemaTypes } from 'mongoose';
-import * as leanVirtualsPlugin from 'mongoose-lean-virtuals';
+import { mongooseLeanVirtuals } from 'mongoose-lean-virtuals';
 import { TeamRoles } from 'src/libs/enum/team.roles';
 import BaseModel from 'src/libs/models/base.model';
 import User from 'src/modules/users/entities/user.schema';
@@ -40,7 +40,7 @@ export default class TeamUser extends BaseModel {
 
 export const TeamUserSchema = SchemaFactory.createForClass(TeamUser);
 
-TeamUserSchema.plugin(leanVirtualsPlugin);
+TeamUserSchema.plugin(mongooseLeanVirtuals);
 
 TeamUserSchema.virtual('teamData', {
 	ref: 'Team',

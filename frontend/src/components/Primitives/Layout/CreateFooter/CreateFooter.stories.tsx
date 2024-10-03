@@ -1,5 +1,5 @@
 import React from 'react';
-import { ComponentStory } from '@storybook/react';
+import { StoryFn } from '@storybook/react';
 import dedent from 'ts-dedent';
 
 import CreateFooter from '@/components/Primitives/Layout/CreateFooter/CreateFooter';
@@ -46,7 +46,7 @@ export default {
   },
 };
 
-const Template: ComponentStory<typeof CreateFooter> = ({ ...args }) => <CreateFooter {...args} />;
+const Template: StoryFn<typeof CreateFooter> = ({ ...args }) => <CreateFooter {...args} />;
 
 export const Default = Template.bind({});
 Default.storyName = 'Basic Usage';

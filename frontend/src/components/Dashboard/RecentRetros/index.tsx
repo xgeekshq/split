@@ -16,24 +16,24 @@ type RecentRetrosProp = {
 const RecentRetros = React.memo<RecentRetrosProp>(({ userId }) => {
   const setToastState = useSetRecoilState(toastState);
 
-  const fetchDashboardBoards = useInfiniteQuery(
-    ['boards/dashboard'],
-    ({ pageParam = 0 }) => getDashboardBoardsRequest(pageParam),
-    {
-      enabled: true,
-      refetchOnWindowFocus: false,
-      getNextPageParam: (lastPage) => {
-        const { hasNextPage, page } = lastPage;
-        if (hasNextPage) return page + 1;
-        return undefined;
-      },
-      onError: () => {
-        setToastState(createErrorMessage('Error getting the boards'));
-      },
+  const fetchDashboardBoards = useInfiniteQuery({
+    queryKey: ['boards/dashboard'],
+    queryFn: ({ pageParam }) => getDashboardBoardsRequest(pageParam),
+    enabled: true,
+    refetchOnWindowFocus: false,
+    getNextPageParam: (lastPage) => {
+      const { hasNextPage, page } = lastPage;
+      if (hasNextPage) return page + 1;
+      return undefined;
     },
-  );
+    initialPageParam: 0,
+  });
 
-  const { data, isFetching } = fetchDashboardBoards;
+  const { data, isFetching, isError } = fetchDashboardBoards;
+
+  if (isError) {
+    setToastState(createErrorMessage('Error getting the boards'));
+  }
 
   if (!isFetching && (!data || isEmpty(data?.pages[0].boards))) return <EmptyBoards />;
   return (

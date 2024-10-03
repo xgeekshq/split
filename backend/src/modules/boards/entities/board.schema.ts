@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, ObjectId, SchemaTypes } from 'mongoose';
-import * as leanVirtualsPlugin from 'mongoose-lean-virtuals';
+import { mongooseLeanVirtuals } from 'mongoose-lean-virtuals';
 import { BoardPhases } from 'src/libs/enum/board.phases';
 import BaseModel from 'src/libs/models/base.model';
 import BoardUserDto from 'src/modules/boardUsers/dto/board.user.dto';
@@ -92,7 +92,7 @@ export default class Board extends BaseModel {
 
 export const BoardSchema = SchemaFactory.createForClass(Board);
 
-BoardSchema.plugin(leanVirtualsPlugin);
+BoardSchema.plugin(mongooseLeanVirtuals);
 
 BoardSchema.virtual('users', {
 	ref: 'BoardUser',

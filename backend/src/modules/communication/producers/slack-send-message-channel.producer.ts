@@ -31,7 +31,7 @@ export class SlackSendMessageProducer {
 		const job = await this.queue.add(data);
 
 		this.logger.verbose(
-			`Add SlackMessage with SlackChannelid: "${data.slackChannelId}" to queue with Job id: "${job.id}"`
+			`Add SlackMessage with SlackChannelid: "${data.slackChannelId}" to queue with Job id: "${job.id.toString()}"`
 		);
 
 		return job;

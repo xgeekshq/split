@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ComponentStory } from '@storybook/react';
+import { StoryFn } from '@storybook/react';
 import dedent from 'ts-dedent';
 
 import Dialog from '@/components/Primitives/Dialogs/Dialog/Dialog';
@@ -89,7 +89,7 @@ export default {
   },
 };
 
-const Template: ComponentStory<typeof Dialog> = () => {
+const Template: StoryFn<typeof Dialog> = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const handleClick = () => {

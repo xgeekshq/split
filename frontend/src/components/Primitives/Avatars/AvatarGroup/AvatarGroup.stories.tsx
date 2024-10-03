@@ -1,5 +1,5 @@
 import React from 'react';
-import { ComponentStory } from '@storybook/react';
+import { StoryFn } from '@storybook/react';
 import dedent from 'ts-dedent';
 
 import AvatarGroup from '@/components/Primitives/Avatars/AvatarGroup/AvatarGroup';
@@ -119,12 +119,12 @@ export default {
   },
 };
 
-const Template: ComponentStory<typeof AvatarGroup> = ({ ...args }) => <AvatarGroup {...args} />;
+const Template: StoryFn<typeof AvatarGroup> = ({ ...args }) => <AvatarGroup {...args} />;
 
 export const Default = Template.bind({});
 Default.storyName = 'Basic Usage';
 
-export const AvatarGroupWithList: ComponentStory<typeof AvatarGroup> = ({ ...args }) => (
+export const AvatarGroupWithList: StoryFn<typeof AvatarGroup> = ({ ...args }) => (
   <AvatarGroup {...args} />
 );
 

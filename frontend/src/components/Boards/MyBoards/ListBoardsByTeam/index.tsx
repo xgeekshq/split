@@ -23,23 +23,19 @@ const ListBoardsByTeam = ({ filteredTeam, userId, isSuperAdmin }: ListBoardsByTe
   const setToastState = useSetRecoilState(toastState);
   const scrollRef = useRef<HTMLDivElement>(null);
 
-  const fetchBoardsByTeam = useInfiniteQuery(
-    ['boards', filteredTeam.id],
-    ({ pageParam = 0 }) => getBoardsRequest(pageParam, filteredTeam.id),
-    {
-      enabled: true,
-      refetchOnWindowFocus: false,
-      getNextPageParam: (lastPage) => {
-        const { hasNextPage, page } = lastPage;
-        if (hasNextPage) return page + 1;
-        return undefined;
-      },
-      onError: () => {
-        setToastState(createErrorMessage('Error getting the boards'));
-      },
+  const fetchBoardsByTeam = useInfiniteQuery({
+    queryKey: ['boards', filteredTeam.id],
+    queryFn: ({ pageParam = 0 }) => getBoardsRequest(pageParam, filteredTeam.id),
+    enabled: true,
+    refetchOnWindowFocus: false,
+    getNextPageParam: (lastPage) => {
+      const { hasNextPage, page } = lastPage;
+      if (hasNextPage) return page + 1;
+      return undefined;
     },
-  );
-  const { data, isLoading } = fetchBoardsByTeam;
+    initialPageParam: 0,
+  });
+  const { data, isLoading, isError } = fetchBoardsByTeam;
 
   const dataByTeamAndDate = useMemo(() => {
     const teams = new Map<string, Team>();
@@ -73,6 +69,10 @@ const ListBoardsByTeam = ({ filteredTeam, userId, isSuperAdmin }: ListBoardsByTe
       }
     }
   };
+
+  if (isError) {
+    setToastState(createErrorMessage('Error getting the boards'));
+  }
 
   if (dataByTeamAndDate.boardsTeamAndDate.size === 0 && !isLoading) {
     return (

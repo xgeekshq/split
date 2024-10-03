@@ -1,4 +1,4 @@
-import { ComponentStory } from '@storybook/react';
+import { StoryFn } from '@storybook/react';
 import dedent from 'ts-dedent';
 
 import MainPageHeader from '@/components/layouts/Layout/MainPageHeader/MainPageHeader';
@@ -29,14 +29,12 @@ export default {
   },
 };
 
-const Template: ComponentStory<typeof MainPageHeader> = ({ ...args }) => (
-  <MainPageHeader {...args} />
-);
+const Template: StoryFn<typeof MainPageHeader> = ({ ...args }) => <MainPageHeader {...args} />;
 
 export const Default = Template.bind({});
 Default.storyName = 'Basic Usage';
 
-export const WithButton: ComponentStory<typeof MainPageHeader> = ({ ...args }) => (
+export const WithButton: StoryFn<typeof MainPageHeader> = ({ ...args }) => (
   <div style={{ width: '50vw' }}>
     <MainPageHeader {...args} />
   </div>

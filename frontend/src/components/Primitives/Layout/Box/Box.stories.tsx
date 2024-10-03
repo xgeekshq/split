@@ -1,5 +1,5 @@
 import React from 'react';
-import { ComponentStory } from '@storybook/react';
+import { ArgTypes, StoryFn } from '@storybook/react';
 import dedent from 'ts-dedent';
 
 import Box from '@/components/Primitives/Layout/Box/Box';
@@ -11,7 +11,7 @@ import { capitalize } from '@/stories/utils';
 const ELEVATION_OPTIONS: ElevationType[] = [0, 1, 2, 3, 4];
 const VARIANT_OPTIONS: BoxVariantType[] = ['bordered', 'dropdown'];
 
-const DISABLE_ARG_TYPES = {
+const DISABLE_ARG_TYPES: Partial<ArgTypes> = {
   elevation: {
     control: false,
   },
@@ -63,14 +63,12 @@ export default {
   },
 };
 
-const Template: ComponentStory<typeof Box> = ({ children, ...args }) => (
-  <Box {...args}>{children}</Box>
-);
+const Template: StoryFn<typeof Box> = ({ children, ...args }) => <Box {...args}>{children}</Box>;
 
 export const Default = Template.bind({});
 Default.storyName = 'Basic Usage';
 
-export const Elevations: ComponentStory<typeof Box> = ({ children, ...args }) => (
+export const Elevations: StoryFn<typeof Box> = ({ children, ...args }) => (
   <Flex direction="column" gap={20}>
     {ELEVATION_OPTIONS.map((elevation) => (
       <Flex key={elevation} direction="column" gap={8}>
@@ -83,7 +81,7 @@ export const Elevations: ComponentStory<typeof Box> = ({ children, ...args }) =>
   </Flex>
 );
 
-export const Variants: ComponentStory<typeof Box> = ({ children, ...args }) => (
+export const Variants: StoryFn<typeof Box> = ({ children, ...args }) => (
   <Flex direction="column" gap={20}>
     {VARIANT_OPTIONS.map((variant) => (
       <Flex key={variant} direction="column" gap={8}>

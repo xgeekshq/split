@@ -1,3 +1,5 @@
+import { Value } from 'react-calendar/dist/cjs/shared/types';
+
 import StyledCalendar from '@/components/Primitives/Calendar/styles';
 import Icon from '@/components/Primitives/Icons/Icon/Icon';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
@@ -8,7 +10,7 @@ export type CalendarProps = {
   maxDate?: Date;
   tileContent?: any;
   currentDate?: Date;
-  setDate: (date: Date) => void;
+  setDate: (date: Value) => void;
 };
 
 const Calendar = ({ minDate, maxDate, tileContent, currentDate, setDate }: CalendarProps) => (
