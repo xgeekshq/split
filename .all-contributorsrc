@@ -222,6 +222,16 @@
         "code",
         "doc"
       ]
+    },
+    {
+      "login": "r-p-alves",
+      "name": "r-p-alves",
+      "avatar_url": "https://avatars.githubusercontent.com/u/183732338?v=4",
+      "profile": "https://github.com/r-p-alves",
+      "contributions": [
+        "infra",
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7,
@@ -230,5 +240,6 @@
   "repoType": "github",
   "repoHost": "https://github.com",
   "skipCi": false,
-  "commitConvention": "angular"
+  "commitConvention": "angular",
+  "commitType": "docs"
 }
