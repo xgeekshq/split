@@ -19,7 +19,7 @@ on:
         default: '.'
 
 env:
-  REGISTRY: split.azurecr.io
+  REGISTRY: splitcr.azurecr.io
   TAG: ${{ github.sha }}
 
 jobs:
