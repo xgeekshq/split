@@ -1,0 +1,12 @@
+{{- if .Values.configMap.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "split.fullname" . }}
+  labels:
+    {{- include "split.labels" . | nindent 4 }}
+data:
+  {{- range $k, $v := .Values.environment }}
+    {{ $k }}: {{ $v | quote }}
+  {{- end }}
+{{- end }}
