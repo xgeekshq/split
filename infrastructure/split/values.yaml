@@ -2,112 +2,132 @@
 ## Default values for split##
 ##############################
 
-image:
-  tag: ""
- 
-replicaCount: 1
 
-imagePullSecrets: 
-  - name: acr-split-cred
+global:
+  image:
+    tag: ""
 
-nameOverride: ""
-fullnameOverride: ""
+  imagePullSecrets: 
+    - name: acr-split-cred
 
-configMap:
-  enabled: true
-  name: "split"
+  nameOverride: ""
+  fullnameOverride: ""
 
-serviceAccount:
-  # Specifies whether a service account should be created
-  create: true
-  # Annotations to add to the service account
-  annotations: {}
-  # The name of the service account to use.
-  # If not set and create is true, a name is generated using the fullname template
-  name: ""
+  configMap:
+    enabled: true
+    name: "split"
 
-podAnnotations: {}
+  serviceAccount:
+    # Specifies whether a service account should be created
+    create: true
+    # Annotations to add to the service account
+    annotations: {}
+    # The name of the service account to use.
+    # If not set and create is true, a name is generated using the fullname template
+    name: ""
 
-podSecurityContext: {}
-  # fsGroup: 2000
+  podAnnotations: {}
 
-securityContext: {}
-  # capabilities:
-  #   drop:
-  #   - ALL
-  # readOnlyRootFilesystem: true
-  # runAsNonRoot: true
-  # runAsUser: 1000
+  podSecurityContext: {}
+    # fsGroup: 2000
 
-nodeSelector: {}
+  securityContext: {}
+    # capabilities:
+    #   drop:
+    #   - ALL
+    # readOnlyRootFilesystem: true
+    # runAsNonRoot: true
+    # runAsUser: 1000
 
-tolerations: []
+  nodeSelector: {}
 
-affinity: {}
+  tolerations: []
 
-autoscaling:
-  enabled: false
-  minReplicas: 1
-  maxReplicas: 100
-  targetCPUUtilizationPercentage: 80
-  # targetMemoryUtilizationPercentage: 80
+  affinity: {}
 
-resources:
-  limits:
-    cpu: 500m
-    memory: 512Mi
-  requests:
-    cpu: 100m
-    memory: 256Mi
+  ingress:
+    enabled: true
+    annotations: 
+      cert-manager.io/acme-challenge-type: http01
+      cert-manager.io/cluster-issuer: letsencrypt
+      nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+      nginx.ingress.kubernetes.io/from-to-www-redirect: "true"
+      nginx.ingress.kubernetes.io/proxy-body-size: 16m
+    className: nginx
+    hosts: []
+    tls: []
 
-ingress:
-  enabled: true
-  annotations: 
-    cert-manager.io/acme-challenge-type: http01
-    cert-manager.io/cluster-issuer: letsencrypt
-    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
-    nginx.ingress.kubernetes.io/from-to-www-redirect: "true"
-    nginx.ingress.kubernetes.io/proxy-body-size: 16m
-  className: nginx
-  hosts: []
-  tls: []
-
-services:
 ##############################
 ##      Frontend values     ##
 ##############################
-  - name: frontend
-    containerName: "frontend"
+frontend:
 
-    image:
-      repository: splitcr.azurecr.io/frontend
-      pullPolicy: IfNotPresent
+  replicaCount: 1
 
-    service:
-      type: ClusterIP
-      port: 3000
-      targetPort: 3000
+  containerName: "frontend"
 
-    secret:
-      enabled: true
-      create: false
-      name: split-frontend-azure-secrets
+  image:
+    repository: splitcr.azurecr.io/frontend
+    pullPolicy: IfNotPresent
+
+  service:
+    type: ClusterIP
+    port: 3000
+    targetPort: 3000
+
+  secret:
+    enabled: true
+    create: false
+    name: split-frontend-azure-secrets
+
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 100
+    targetCPUUtilizationPercentage: 80
+    # targetMemoryUtilizationPercentage: 80
+
+  resources:
+    limits:
+      cpu: 500m
+      memory: 512Mi
+    requests:
+      cpu: 100m
+      memory: 256Mi
 
 ##############################
 ##      Backend values      ##
 ##############################
-  - name: backend
-    containerName: "backend"
+backend:
 
-    image:
-      repository: splitcr.azurecr.io/backend
-      pullPolicy: IfNotPresent
+  replicaCount: 1
 
-    service:
-      type: ClusterIP
-      port: 3200
+  containerName: "backend"
 
-    secret:
-      enabled: true
-      create: false
-      name: split-backend-azure-secrets
+  image:
+    repository: splitcr.azurecr.io/backend
+    pullPolicy: IfNotPresent
+
+  service:
+    type: ClusterIP
+    port: 3200
+
+  secret:
+    enabled: true
+    create: true
+    name: split-backend-azure-secrets
+
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 100
+    targetCPUUtilizationPercentage: 80
+    # targetMemoryUtilizationPercentage: 80
+
+  resources:
+    limits:
+      cpu: 500m
+      memory: 512Mi
+    requests:
+      cpu: 100m
+      memory: 256Mi

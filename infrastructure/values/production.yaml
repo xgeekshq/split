@@ -1,24 +1,25 @@
-ingress:
-  frontend:
-    hosts:
-      - host: split.xgeeks.tech
-        paths:
-          - path: /
-            pathType: ImplementationSpecific
-  backend: 
-    annotations:
-      nginx.ingress.kubernetes.io/enable-cors: "true"
-      nginx.ingress.kubernetes.io/cors-allow-origin: "https://split.xgeeks.tech"
-    hosts:
-      - host: split-api.xgeeks.tech
-        paths:
-          - path: /
-            pathType: ImplementationSpecific
-  tls:
-    - hosts:
-        - split.xgeeks.tech
-        - split-api.xgeeks.tech
-      secretName: split-tls 
+global:
+  ingress:
+    frontend:
+      hosts:
+        - host: split.xgeeks.tech
+          paths:
+            - path: /
+              pathType: ImplementationSpecific
+    backend: 
+      annotations:
+        nginx.ingress.kubernetes.io/enable-cors: "true"
+        nginx.ingress.kubernetes.io/cors-allow-origin: "https://split.xgeeks.tech"
+      hosts:
+        - host: split-api.xgeeks.tech
+          paths:
+            - path: /
+              pathType: ImplementationSpecific
+    tls:
+      - hosts:
+          - split.xgeeks.tech
+          - split-api.xgeeks.tech
+        secretName: split-tls 
 
 environment: 
   NODE_ENV: prod
