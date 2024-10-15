@@ -8,7 +8,7 @@ frontend:
     tls:
       - hosts:
           - split.xgeeks.tech
-        secretName: split-backend-tls
+        secretName: split-frontend-tls
 
 backend: 
   ingress:
@@ -23,7 +23,7 @@ backend:
     tls:
       - hosts:
           - split-api.xgeeks.tech
-        secretName: split-frontend-tls
+        secretName: split-backend-tls
          
 
 environment: 
