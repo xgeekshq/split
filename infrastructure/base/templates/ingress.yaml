@@ -22,18 +22,16 @@ metadata:
   {{- with .Values.global.ingress.annotations }}
     {{- toYaml . | nindent 4 }}
   {{- end }}
-  {{- if eq .Chart.Name "backend" }}
-  {{- with .Values.global.ingress.backend.annotations }}
+  {{- with .Values.ingress.annotations }}
     {{- toYaml . | nindent 4 }}
-  {{- end }}
   {{- end }}
 spec:
   {{- if and .Values.global.ingress.className (semverCompare ">=1.18-0" .Capabilities.KubeVersion.GitVersion) }}
   ingressClassName: {{ .Values.global.ingress.className }}
   {{- end }}
-  {{- if .Values.global.ingress.tls }}
+  {{- if .Values.ingress.tls }}
   tls:
-    {{- range .Values.global.ingress.tls }}
+    {{- range .Values.ingress.tls }}
     - hosts:
         {{- range .hosts }}
         - {{ . | quote }}
@@ -42,8 +40,7 @@ spec:
     {{- end }}
   {{- end }}
   rules:
-    {{- if eq .Chart.Name "backend" }}
-    {{- range .Values.global.ingress.backend.hosts }}
+    {{- range .Values.ingress.hosts }}
     - host: {{ .host | quote }}
       http:
         paths:
@@ -63,28 +60,5 @@ spec:
               servicePort: {{ $svcPort }}
               {{- end }}
           {{- end }}
-    {{- end }}
-    {{- else if eq .Chart.Name "frontend" }}
-    {{- range .Values.global.ingress.frontend.hosts }}
-    - host: {{ .host | quote }}
-      http:
-        paths:
-          {{- range .paths }}
-          - path: {{ .path }}
-            {{- if and .pathType (semverCompare ">=1.18-0" $.Capabilities.KubeVersion.GitVersion) }}
-            pathType: {{ .pathType }}
-            {{- end }}
-            backend:
-              {{- if semverCompare ">=1.19-0" $.Capabilities.KubeVersion.GitVersion }}
-              service:
-                name: {{ $fullName }}
-                port:
-                  number: {{ $svcPort }}
-              {{- else }}
-              serviceName: {{ $fullName }}
-              servicePort: {{ $svcPort }}
-              {{- end }}
-          {{- end }}
-    {{- end }}
     {{- end }}
 {{- end }}

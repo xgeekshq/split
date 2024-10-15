@@ -1,22 +1,26 @@
-global:
+frontend:
   ingress:
-    frontend:
-      hosts:
-        - host: dev.split.xgeeks.tech
-          paths:
-            - path: /
-              pathType: ImplementationSpecific
-    backend:
-      hosts:
-        - host: dev.split-api.xgeeks.tech
-          paths:
-            - path: /
-              pathType: ImplementationSpecific
+    hosts:
+      - host: dev.split.xgeeks.tech
+        paths:
+          - path: /
+            pathType: ImplementationSpecific
     tls:
       - hosts:
           - dev.split.xgeeks.tech
+        secretName: split-frontend-tls
+
+backend:
+  ingress:
+    hosts:
+      - host: dev.split-api.xgeeks.tech
+        paths:
+          - path: /
+            pathType: ImplementationSpecific
+    tls:
+      - hosts:
           - dev.split-api.xgeeks.tech
-        secretName: split-tls
+        secretName: split-backend-tls
 
 environment: 
   NODE_ENV: dev
@@ -26,4 +30,3 @@ environment:
   NEXT_PUBLIC_LOGIN_SSO_ONLY: false
   NEXT_PUBLIC_REGULAR_BOARD: true
   NEXT_PUBLIC_BACKEND_URL: https://dev.split-api.xgeeks.tech
-
