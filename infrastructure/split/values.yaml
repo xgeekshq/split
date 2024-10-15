@@ -72,56 +72,42 @@ ingress:
   hosts: []
   tls: []
 
-
+services:
 ##############################
 ##      Frontend values     ##
 ##############################
-frontend:
+  - name: frontend
+    containerName: "frontend"
 
-  name: "frontend"
-  containerName: "frontend"
+    image:
+      repository: splitcr.azurecr.io/frontend
+      pullPolicy: IfNotPresent
 
-  image:
-    repository: splitcr.azurecr.io/frontend
-    pullPolicy: IfNotPresent
+    service:
+      type: ClusterIP
+      port: 3000
+      targetPort: 3000
 
-  service:
-    type: ClusterIP
-    port: 3000
-    targetPort: 3000
-
-  secret:
-    enabled: true
-    create: false
-    name: split-frontend-azure-secrets
-
+    secret:
+      enabled: true
+      create: false
+      name: split-frontend-azure-secrets
 
 ##############################
 ##      Backend values      ##
 ##############################
-backend:
+  - name: backend
+    containerName: "backend"
 
-  name: "backend"
-  containerName: "backend"
+    image:
+      repository: splitcr.azurecr.io/backend
+      pullPolicy: IfNotPresent
 
-  image:
-    repository: splitcr.azurecr.io/backend
-    pullPolicy: IfNotPresent
+    service:
+      type: ClusterIP
+      port: 3200
 
-  service:
-    type: ClusterIP
-    port: 3200
-
-  secret:
-    enabled: true
-    create: false
-    name: split-backend-azure-secrets
-
-      
-
-
-
-
-
-
-
+    secret:
+      enabled: true
+      create: false
+      name: split-backend-azure-secrets
