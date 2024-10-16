@@ -15,7 +15,6 @@ global:
 
   configMap:
     enabled: true
-    name: "split"
 
   serviceAccount:
     # Specifies whether a service account should be created
@@ -114,7 +113,7 @@ backend:
 
   secret:
     enabled: true
-    create: true
+    create: false
     name: split-backend-azure-secrets
 
   autoscaling:
