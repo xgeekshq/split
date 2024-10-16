@@ -1,0 +1,39 @@
+frontend:
+  ingress:
+    hosts:
+      - host: split.xgeeks.tech
+        paths:
+          - path: /
+            pathType: ImplementationSpecific
+    tls:
+      - hosts:
+          - split.xgeeks.tech
+        secretName: split-frontend-tls
+
+  environment: 
+    NODE_ENV: prod
+    NEXT_PUBLIC_NEXTAUTH_URL: https://split.xgeeks.tech
+    NEXT_PUBLIC_BACKEND_URL: https://split-api.xgeeks.tech
+    NEXT_PUBLIC_ENABLE_AZURE: true
+    NEXT_PUBLIC_EXPIRATION_TIME: 80000
+    NEXT_PUBLIC_LOGIN_SSO_ONLY: false
+    NEXT_PUBLIC_REGULAR_BOARD: true
+
+backend: 
+  ingress:
+    annotations:
+      nginx.ingress.kubernetes.io/enable-cors: "true"
+      nginx.ingress.kubernetes.io/cors-allow-origin: "https://split.xgeeks.tech"
+    hosts:
+      - host: split-api.xgeeks.tech
+        paths:
+          - path: /
+            pathType: ImplementationSpecific
+    tls:
+      - hosts:
+          - split-api.xgeeks.tech
+        secretName: split-backend-tls
+  
+  environment: 
+    NODE_ENV: prod
+    NEXT_PUBLIC_NEXTAUTH_URL: https://split.xgeeks.tech
