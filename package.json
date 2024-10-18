@@ -1,6 +1,6 @@
 {
   "name": "split",
-  "version": "v0.1.23",
+  "version": "v0.1.24",
   "private": true,
   "scripts": {
     "prepare": "concurrently \"npm:prepare:backend\" \"npm:prepare:frontend\" \"husky install\"",

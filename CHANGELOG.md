@@ -2,7 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
-## [Unreleased](https://github.com/xgeekshq/split/compare/v0.1.23...HEAD)
+## [Unreleased](https://github.com/xgeekshq/split/compare/v0.1.24...HEAD)
+
+## [v0.1.24](https://github.com/xgeekshq/split/compare/v0.1.23...v0.1.24) - 2024-10-18
+
+### What Changed 👀
+
+* No changes
+
+**Full Changelog**: https://github.com/xgeekshq/split/compare/v0.1.23...v0.1.24
 
 ## [v0.1.23](https://github.com/xgeekshq/split/compare/v0.1.22...v0.1.23) - 2024-10-18
 
@@ -56,7 +64,6 @@ All notable changes to this project will be documented in this file.
 </details>
 **Full Changelog**: https://github.com/xgeekshq/split/compare/v0.1.21...v0.1.22
 ## [v0.1.21](https://github.com/xgeekshq/split/compare/v0.1.20...v0.1.21) - 2023-12-21
-
 ### What Changed 👀
 
 ### 🐛 Bug Fixes
@@ -109,7 +116,6 @@ All notable changes to this project will be documented in this file.
 **Full Changelog**: https://github.com/xgeekshq/split/compare/v0.1.20...v0.1.21
 ## [v0.1.20](https://github.com/xgeekshq/split/compare/v0.1.19...v0.1.20) - 2023-05-07
 ### What Changed 👀
-
 - test: board users @patricia-mdias (#1452)
 - fix: remove scheduling from board settings @GoncaloCanteiro (#1456)
 - refactor: test comments module @CatiaAntunes96 (#1448)
@@ -238,7 +244,6 @@ All notable changes to this project will be documented in this file.
 ### What Changed 👀
 ### 🐛 Bug Fixes
 - fix: redirect guest user on public board @CatiaAntunes96 (#1304)
-
 **Full Changelog**: https://github.com/xgeekshq/split/compare/v0.1.17...v0.1.18
 
 ## [v0.1.17](https://github.com/xgeekshq/split/compare/v0.1.16...v0.1.17) - 2023-03-23
