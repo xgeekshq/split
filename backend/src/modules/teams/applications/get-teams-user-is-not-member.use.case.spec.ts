@@ -5,7 +5,7 @@ import { TeamRepositoryInterface } from '../interfaces/repositories/team.reposit
 import { TEAM_REPOSITORY } from 'src/modules/teams/constants';
 import { UseCase } from 'src/libs/interfaces/use-case.interface';
 import { GetTeamUserServiceInterface } from 'src/modules/teamUsers/interfaces/services/get.team.user.service.interface';
-import faker from '@faker-js/faker';
+import { faker } from '@faker-js/faker';
 import { teamUsers, teamsWithUsers } from './get-team-mocked-results';
 import { GET_TEAM_USER_SERVICE } from 'src/modules/teamUsers/constants';
 import { GetTeamsUserIsNotMemberUseCase } from './get-teams-user-is-not-member.use-case';
@@ -51,7 +51,7 @@ describe('GetTeamsUserIsNotMemberUseCase', () => {
 		it('should return an array of objects with team.name and team._id where user is not team member', async () => {
 			getTeamUserServiceMock.getAllTeamsOfUser.mockResolvedValue([]);
 
-			const userId = faker.datatype.uuid();
+			const userId = faker.string.uuid();
 
 			const expectedResult = teamsWithUsers.map(({ _id, name }) => ({
 				_id,

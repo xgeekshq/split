@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { ComponentStory } from '@storybook/react';
+import { Value } from 'react-calendar/dist/cjs/shared/types';
+import { StoryFn } from '@storybook/react';
 import dedent from 'ts-dedent';
 
 import Calendar from '@/components/Primitives/Calendar/Calendar';
@@ -63,12 +64,12 @@ export default {
   },
 };
 
-const Template: ComponentStory<typeof Calendar> = () => {
-  const [currentDate, setDate] = useState<Date>();
+const Template: StoryFn<typeof Calendar> = () => {
+  const [currentDate, setDate] = useState<Value>();
 
   return (
     <>
-      <Calendar currentDate={currentDate} setDate={setDate} />
+      <Calendar currentDate={currentDate as Date | undefined} setDate={setDate} />
     </>
   );
 };

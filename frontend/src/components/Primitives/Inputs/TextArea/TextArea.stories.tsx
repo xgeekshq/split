@@ -1,6 +1,6 @@
 import React, { ReactNode } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
-import { ComponentStory } from '@storybook/react';
+import { StoryFn } from '@storybook/react';
 import dedent from 'ts-dedent';
 
 import TextArea from '@/components/Primitives/Inputs/TextArea/TextArea';
@@ -59,7 +59,7 @@ const StorybookFormProvider = ({ children }: { children: ReactNode }) => {
   );
 };
 
-const Template: ComponentStory<typeof TextArea> = ({ placeholder, disabled }) => (
+const Template: StoryFn<typeof TextArea> = ({ placeholder, disabled }) => (
   <StorybookFormProvider>
     <TextArea disabled={disabled} id="text" placeholder={placeholder} />
   </StorybookFormProvider>

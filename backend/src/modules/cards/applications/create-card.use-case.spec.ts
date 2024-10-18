@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { CARD_REPOSITORY } from '../constants';
 import { DeepMocked, createMock } from '@golevelup/ts-jest';
 import { CardRepositoryInterface } from '../repository/card.repository.interface';
-import faker from '@faker-js/faker';
+import { faker } from '@faker-js/faker';
 import { CardDtoFactory } from 'src/libs/test-utils/mocks/factories/dto/cardDto-factory.mock';
 import CreateCardUseCaseDto from '../dto/useCase/create-card.use-case.dto';
 import { CardFactory } from 'src/libs/test-utils/mocks/factories/card-factory.mock';
@@ -29,7 +29,7 @@ const cardItemFactory = CardItemFactory.create({
 
 //Create Card Mocks
 const cardDtoMock = CardDtoFactory.create({
-	_id: faker.datatype.uuid(),
+	_id: faker.string.uuid(),
 	text: 'New Card',
 	comments: [],
 	votes: [],
@@ -77,13 +77,13 @@ describe('CreateCardUseCase', () => {
 
 		//Create Mock CreateCardUseCaseDto
 		createCardUseCaseDtoMock = {
-			boardId: faker.datatype.uuid(),
-			userId: faker.datatype.uuid(),
+			boardId: faker.string.uuid(),
+			userId: faker.string.uuid(),
 			createCardDto: {
-				socketId: faker.datatype.uuid(),
+				socketId: faker.string.uuid(),
 				colIdToAdd: 'colId',
 				card: cardDtoMock,
-				boardId: faker.datatype.uuid(),
+				boardId: faker.string.uuid(),
 				newCard: null
 			}
 		};

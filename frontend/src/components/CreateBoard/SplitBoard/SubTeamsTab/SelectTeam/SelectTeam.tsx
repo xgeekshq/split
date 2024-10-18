@@ -35,8 +35,11 @@ const SelectTeam = ({ previousTeam }: SelectTeamProps) => {
   const [selectedTeam, setSelectedTeam] = useRecoilState(createBoardTeam);
   const setHaveError = useSetRecoilState(createBoardError);
   const { handleSplitBoards, setCreateBoardData, teamMembers } = useCreateBoard(selectedTeam);
-  const teamsQuery = useTeams(isSAdmin);
-  const teams = teamsQuery.data ?? [];
+  const {
+    fetchAllTeams: { data, isError },
+    handleErrorOnFetchAllTeams,
+  } = useTeams(isSAdmin);
+  const teams = data ?? [];
 
   const {
     setValue,
@@ -152,6 +155,10 @@ const SelectTeam = ({ previousTeam }: SelectTeamProps) => {
     setHaveError(availableTeams.length <= 0);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  if (isError) {
+    handleErrorOnFetchAllTeams();
+  }
 
   return (
     <Flex css={{ flex: 1 }} direction="column">

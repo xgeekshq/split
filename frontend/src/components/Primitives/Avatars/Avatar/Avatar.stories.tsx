@@ -1,5 +1,5 @@
 import React from 'react';
-import { ComponentStory } from '@storybook/react';
+import { StoryFn } from '@storybook/react';
 import dedent from 'ts-dedent';
 
 import Avatar from '@/components/Primitives/Avatars/Avatar/Avatar';
@@ -58,7 +58,7 @@ export default {
   },
 };
 
-const Template: ComponentStory<typeof Avatar> = (args) => <Avatar {...args} />;
+const Template: StoryFn<typeof Avatar> = (args) => <Avatar {...args} />;
 
 export const Default = Template.bind({});
 Default.storyName = 'Basic Usage';

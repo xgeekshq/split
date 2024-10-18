@@ -10,14 +10,22 @@ import { toastState } from '@/store/toast/atom/toast.atom';
 const useUser = (userId: string) => {
   const setToastState = useSetRecoilState(toastState);
 
-  return useQuery([USERS_KEY, userId], () => getUser(userId), {
+  const fetchUser = useQuery({
+    queryKey: [USERS_KEY, userId],
+    queryFn: () => getUser(userId),
     enabled: !!userId,
     refetchOnMount: false,
     refetchOnWindowFocus: false,
-    onError: () => {
-      setToastState(createErrorMessage(ErrorMessages.GET_ONE));
-    },
   });
+
+  const handleOnErrorFetchUser = () => {
+    setToastState(createErrorMessage(ErrorMessages.GET_ONE));
+  };
+
+  return {
+    fetchUser,
+    handleOnErrorFetchUser,
+  };
 };
 
 export default useUser;

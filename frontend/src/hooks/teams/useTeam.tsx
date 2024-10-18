@@ -10,14 +10,22 @@ import { toastState } from '@/store/toast/atom/toast.atom';
 const useTeam = (teamId: string) => {
   const setToastState = useSetRecoilState(toastState);
 
-  return useQuery([TEAMS_KEY, teamId], () => getTeam(teamId), {
+  const fetchTeam = useQuery({
+    queryKey: [TEAMS_KEY, teamId],
+    queryFn: () => getTeam(teamId),
     enabled: !!teamId,
     refetchOnMount: false,
     refetchOnWindowFocus: false,
-    onError: () => {
-      setToastState(createErrorMessage(ErrorMessages.GET_ONE));
-    },
   });
+
+  const handleErrorOnFetchTeam = () => {
+    setToastState(createErrorMessage(ErrorMessages.GET_ONE));
+  };
+
+  return {
+    fetchTeam,
+    handleErrorOnFetchTeam,
+  };
 };
 
 export default useTeam;

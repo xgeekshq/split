@@ -10,11 +10,11 @@ import { TeamRepositoryInterface } from '../interfaces/repositories/team.reposit
 import { TEAM_REPOSITORY } from 'src/modules/teams/constants';
 import { DELETE_TEAM_USER_SERVICE } from 'src/modules/teamUsers/constants';
 import { DELETE_BOARD_SERVICE } from 'src/modules/boards/constants';
-import { User } from '@slack/web-api/dist/response/AdminAppsRequestsListResponse';
 import { UseCase } from 'src/libs/interfaces/use-case.interface';
 import { UserFactory } from 'src/libs/test-utils/mocks/factories/user-factory';
 import TeamUser from 'src/modules/teamUsers/entities/team.user.schema';
 import { DeleteTeamUseCase } from './delete-team.use-case';
+import User from 'src/modules/users/entities/user.schema';
 
 const teams: Team[] = TeamFactory.createMany(4);
 const teamUsers: TeamUser[] = TeamUserFactory.createMany(5);

@@ -1,5 +1,5 @@
 import React from 'react';
-import { ComponentStory } from '@storybook/react';
+import { StoryFn } from '@storybook/react';
 import { useSetRecoilState } from 'recoil';
 import dedent from 'ts-dedent';
 
@@ -56,7 +56,7 @@ export default {
   },
 };
 
-const Template: ComponentStory<typeof Toast> = ({ type }: any) => {
+const Template: StoryFn<typeof Toast> = ({ type }: any) => {
   const setToastState = useSetRecoilState(toastState);
 
   return (

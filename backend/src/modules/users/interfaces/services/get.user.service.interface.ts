@@ -1,11 +1,7 @@
-import { LeanDocument } from 'mongoose';
-import User, { UserDocument } from 'src/modules/users/entities/user.schema';
+import User from 'src/modules/users/entities/user.schema';
 
 export interface GetUserServiceInterface {
-	getUserIfRefreshTokenMatches(
-		refreshToken: string,
-		userId: string
-	): Promise<LeanDocument<UserDocument> | false>;
+	getUserIfRefreshTokenMatches(refreshToken: string, userId: string): Promise<User | false>;
 
 	getByEmail(email: string): Promise<User>;
 

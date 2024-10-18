@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { DeepMocked, createMock } from '@golevelup/ts-jest';
 import { GetBoardServiceInterface } from '../interfaces/services/get.board.service.interface';
-import faker from '@faker-js/faker';
+import { faker } from '@faker-js/faker';
 import { BoardFactory } from 'src/libs/test-utils/mocks/factories/board-factory.mock';
 import { TeamFactory } from 'src/libs/test-utils/mocks/factories/team-factory.mock';
 import { UseCase } from 'src/libs/interfaces/use-case.interface';
@@ -20,7 +20,7 @@ const boards = BoardFactory.createMany(5, [
 	{ isSubBoard: true, team: teamIds[1] }
 ]);
 const boardIds = boards.map((board) => board._id);
-const userId = faker.datatype.uuid();
+const userId = faker.string.uuid();
 
 describe('GetAllBoardsUseCase', () => {
 	let useCase: UseCase<GetAllBoardsUseCaseDto, BoardsPaginatedPresenter>;

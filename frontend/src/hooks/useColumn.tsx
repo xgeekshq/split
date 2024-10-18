@@ -14,7 +14,7 @@ const useColumn = () => {
 
   const getPrevData = async (id: string | undefined): Promise<BoardType | undefined> => {
     const query = getBoardQuery(id);
-    await queryClient.cancelQueries(query);
+    await queryClient.cancelQueries({ queryKey: query });
     const prevData = queryClient.getQueryData<{ board: BoardType }>(query);
     return prevData?.board;
   };
@@ -37,7 +37,8 @@ const useColumn = () => {
     );
   };
 
-  const updateColumn = useMutation(updateColumnRequest, {
+  const updateColumn = useMutation({
+    mutationFn: updateColumnRequest,
     onMutate: async (data) => {
       const prevBoard = await getPrevData(data.boardId);
 
@@ -63,7 +64,7 @@ const useColumn = () => {
       return { previousBoard: prevBoard, data };
     },
     onError: (_, variables) => {
-      queryClient.invalidateQueries(getBoardQuery(variables.boardId));
+      queryClient.invalidateQueries({ queryKey: getBoardQuery(variables.boardId) });
       setToastState({
         open: true,
         content: 'Error updating the column',
@@ -72,7 +73,8 @@ const useColumn = () => {
     },
   });
 
-  const deleteCardsFromColumn = useMutation(deleteCardsFromColumnRequest, {
+  const deleteCardsFromColumn = useMutation({
+    mutationFn: deleteCardsFromColumnRequest,
     onSuccess: async (data) => {
       const prevBoard = await getPrevData(data._id);
       updateBoard(data._id, data.columns, data.users);
@@ -80,7 +82,7 @@ const useColumn = () => {
       return { previousBoard: prevBoard, data };
     },
     onError: (_, variables) => {
-      queryClient.invalidateQueries(getBoardQuery(variables.boardId));
+      queryClient.invalidateQueries({ queryKey: getBoardQuery(variables.boardId) });
       setToastState({
         open: true,
         content: 'Error updating the column',

@@ -30,7 +30,7 @@ export class SlackMergeBoardProducer {
 		const job = await this.queue.add(data);
 
 		this.logger.verbose(
-			`The sub board ${job.data.teamNumber} was merged and the message was added to queue with Job id: "${job.id}"`
+			`The sub board ${data.teamNumber} was merged and the message was added to queue with Job id: "${job.id.toString()}"`
 		);
 
 		return job;

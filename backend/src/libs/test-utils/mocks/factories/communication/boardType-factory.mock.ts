@@ -1,4 +1,4 @@
-import faker from '@faker-js/faker';
+import { faker } from '@faker-js/faker';
 import { buildTestFactory } from '../generic-factory.mock';
 import { BoardType } from 'src/modules/communication/dto/types';
 import { UserRoleTypeFactory } from './UserRoleType-factory.mock';
@@ -15,7 +15,7 @@ const mockBoardData = () => {
 		},
 		users: UserRoleTypeFactory.createMany(3),
 		slackChannelId: faker.lorem.word(),
-		boardNumber: Number(faker.random.numeric())
+		boardNumber: Number(faker.number.int())
 	};
 };
 

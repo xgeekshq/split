@@ -46,10 +46,15 @@ const BoardParticipants = () => {
 
   // Hooks
   const {
-    fetchBoard: { data: boardData },
+    fetchBoard: { data: boardData, isError },
+    handleFetchBoardOnError,
   } = useBoard({
     autoFetchBoard: true,
   });
+
+  if (isError) {
+    handleFetchBoardOnError();
+  }
 
   useEffect(() => {
     if (boardData) {
@@ -58,7 +63,9 @@ const BoardParticipants = () => {
     }
   }, [boardData, setBoardParticipants, setRecoilBoard]);
 
-  const { data: usersData } = useUsers();
+  const {
+    fetchAllUsers: { data: usersData },
+  } = useUsers();
 
   const setUsersListState = useSetRecoilState(usersListState);
 
@@ -100,11 +107,12 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
   const queryClient = new QueryClient();
   try {
-    await queryClient.fetchQuery(['board', { id: boardId }], () =>
-      getBoardRequest(boardId, context),
-    );
-    await queryClient.prefetchQuery([USERS_KEY], () => getAllUsers(context));
-  } catch (e) {
+    await queryClient.fetchQuery({
+      queryKey: ['board', { id: boardId }],
+      queryFn: () => getBoardRequest(boardId, context),
+    });
+    await queryClient.prefetchQuery({ queryKey: [USERS_KEY], queryFn: () => getAllUsers(context) });
+  } catch {
     return {
       redirect: {
         permanent: false,

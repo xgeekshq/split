@@ -23,11 +23,11 @@ export class TeamUserRepository
 	// GET
 
 	countTeamsOfUser(userId: string): Promise<number> {
-		return this._repository.find({ user: userId }).distinct('team').count().exec();
+		return this._repository.find({ user: userId }).distinct('team').countDocuments().exec();
 	}
 
 	getAllTeamsOfUser(userId: string): Promise<TeamUser[]> {
-		return this._repository.find({ user: userId }).distinct('team').exec();
+		return this._repository.find({ user: userId }).exec();
 	}
 
 	getUsersOfTeam(teamId: string) {

@@ -1,9 +1,8 @@
 import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
-import { LeanDocument } from 'mongoose';
 import { Strategy } from 'passport-local';
 import { INVALID_CREDENTIALS } from 'src/libs/exceptions/messages';
-import { UserDocument } from 'src/modules/users/entities/user.schema';
+import User from 'src/modules/users/entities/user.schema';
 import { ValidateUserAuthServiceInterface } from '../interfaces/services/validate-user.auth.service.interface';
 import { VALIDATE_AUTH_SERVICE } from '../constants';
 
@@ -18,7 +17,7 @@ export default class LocalStrategy extends PassportStrategy(Strategy) {
 		});
 	}
 
-	async validate(email: string, password: string): Promise<LeanDocument<UserDocument> | null> {
+	async validate(email: string, password: string): Promise<User | null> {
 		const user = await this.validateUserAuthService.validateUserWithCredentials(email, password);
 
 		if (!user) throw new UnauthorizedException(INVALID_CREDENTIALS);

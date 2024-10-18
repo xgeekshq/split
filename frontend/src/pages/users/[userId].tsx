@@ -25,8 +25,22 @@ const UserDetails = () => {
   } = useRouter();
 
   // Hooks
-  const { data: userData, isLoading: isLoadingUser } = useUser(userId as string);
-  const { data: userTeams, isLoading: isLoadingTeams } = useUserTeams(userId as string);
+  const {
+    fetchUser: { data: userData, isLoading: isLoadingUser, isError: isUserError },
+    handleOnErrorFetchUser,
+  } = useUser(userId as string);
+  const {
+    fetchUserTeams: { data: userTeams, isLoading: isLoadingTeams, isError: isTeamsError },
+    handleErrorOnFetchUserTeams,
+  } = useUserTeams(userId as string);
+
+  if (isUserError) {
+    handleOnErrorFetchUser();
+  }
+
+  if (isTeamsError) {
+    handleErrorOnFetchUserTeams();
+  }
 
   if (!userData || !userTeams) {
     replace(ROUTES.Users);
@@ -63,11 +77,18 @@ export const getServerSideProps: GetServerSideProps = requireAuthentication(asyn
 
   const queryClient = new QueryClient();
   await Promise.all([
-    queryClient.prefetchQuery([USERS_KEY, userId], () => getUser(userId, context)),
-    queryClient.prefetchQuery([TEAMS_KEY, USERS_KEY, userId], () => getUserTeams(userId, context)),
-    queryClient.prefetchQuery([TEAMS_KEY, 'not', USERS_KEY, userId], () =>
-      getTeamsWithoutUser(userId, context),
-    ),
+    queryClient.prefetchQuery({
+      queryKey: [USERS_KEY, userId],
+      queryFn: () => getUser(userId, context),
+    }),
+    queryClient.prefetchQuery({
+      queryKey: [TEAMS_KEY, USERS_KEY, userId],
+      queryFn: () => getUserTeams(userId, context),
+    }),
+    queryClient.prefetchQuery({
+      queryKey: [TEAMS_KEY, 'not', USERS_KEY, userId],
+      queryFn: () => getTeamsWithoutUser(userId, context),
+    }),
   ]);
 
   return {

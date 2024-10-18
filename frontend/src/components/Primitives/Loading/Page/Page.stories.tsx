@@ -1,5 +1,5 @@
 import React from 'react';
-import { ComponentStory } from '@storybook/react';
+import { StoryFn } from '@storybook/react';
 import dedent from 'ts-dedent';
 
 import LoadingPage from '@/components/Primitives/Loading/Page/Page';
@@ -38,7 +38,7 @@ export default {
   },
 };
 
-const Template: ComponentStory<typeof LoadingPage> = ({ ...args }) => <LoadingPage {...args} />;
+const Template: StoryFn<typeof LoadingPage> = ({ ...args }) => <LoadingPage {...args} />;
 
 export const Default = Template.bind({});
 Default.storyName = 'Basic Usage';

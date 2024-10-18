@@ -106,7 +106,7 @@ describe('UpdateUserService', () => {
 		});
 
 		it('should throw error when token is not valid', async () => {
-			resetPassword.updatedAt = faker.date.past(2);
+			resetPassword.updatedAt = faker.date.past({ years: 2 });
 			validateAuthServiceMock.getUserByToken.mockResolvedValue(resetPassword);
 			await expect(userService.checkEmailOfToken(resetPassword.token)).rejects.toThrowError(
 				HttpException

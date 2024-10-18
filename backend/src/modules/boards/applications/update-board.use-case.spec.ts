@@ -8,7 +8,7 @@ import { NotFoundException } from '@nestjs/common';
 import { UpdateBoardUserServiceInterface } from 'src/modules/boardUsers/interfaces/services/update.board.user.service.interface';
 import { GetBoardUserServiceInterface } from 'src/modules/boardUsers/interfaces/services/get.board.user.service.interface';
 import ColumnDto from 'src/modules/columns/dto/column.dto';
-import faker from '@faker-js/faker';
+import { faker } from '@faker-js/faker';
 import { BoardRoles } from 'src/libs/enum/board.roles';
 import { BoardUserDtoFactory } from 'src/libs/test-utils/mocks/factories/dto/boardUserDto-factory.mock';
 import { UserFactory } from 'src/libs/test-utils/mocks/factories/user-factory';
@@ -32,7 +32,7 @@ import { DELETE_VOTE_SERVICE } from 'src/modules/votes/constants';
 import { SLACK_COMMUNICATION_SERVICE } from 'src/modules/communication/constants';
 
 const regularBoard = BoardFactory.create({ isSubBoard: false, dividedBoards: [] });
-const userId = faker.datatype.uuid();
+const userId = faker.string.uuid();
 const updateBoardDto = UpdateBoardDtoFactory.create({ maxVotes: null });
 const subBoards = BoardFactory.createMany(2, [
 	{ isSubBoard: true, boardNumber: 1, submitedByUser: userId, submitedAt: new Date() },
@@ -42,7 +42,7 @@ const splitBoard: Board = BoardFactory.create({ isSubBoard: false, dividedBoards
 const splitBoardWithSlack: Board = BoardFactory.create({
 	isSubBoard: false,
 	slackEnable: true,
-	slackChannelId: faker.datatype.uuid(),
+	slackChannelId: faker.string.uuid(),
 	dividedBoards: subBoards
 });
 const currentResponsible = BoardUserFactory.create({
@@ -192,7 +192,7 @@ describe('UpdateBoardUseCase', () => {
 			const boardWithSlack: Board = {
 				...subBoards[1],
 				slackEnable: true,
-				slackChannelId: faker.datatype.uuid()
+				slackChannelId: faker.string.uuid()
 			};
 
 			const updateBoardDtoWithBoardWithSlack: UpdateBoardDto = {

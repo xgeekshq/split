@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import * as mongoose from 'mongoose';
-import * as leanVirtualsPlugin from 'mongoose-lean-virtuals';
+import { mongooseLeanVirtuals } from 'mongoose-lean-virtuals';
 import Card, { CardSchema } from 'src/modules/cards/entities/card.schema';
 
 export type ColumnDocument = Column & mongoose.Document;
@@ -27,4 +27,4 @@ export default class Column {
 
 export const ColumnSchema = SchemaFactory.createForClass(Column);
 
-ColumnSchema.plugin(leanVirtualsPlugin);
+ColumnSchema.plugin(mongooseLeanVirtuals);

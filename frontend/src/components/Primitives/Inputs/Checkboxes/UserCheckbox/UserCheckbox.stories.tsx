@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ComponentStory } from '@storybook/react';
+import { StoryFn } from '@storybook/react';
 import dedent from 'ts-dedent';
 
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
@@ -40,7 +40,7 @@ export default {
   },
 };
 
-const Template: ComponentStory<typeof UserCheckbox> = ({ disabled }) => {
+const Template: StoryFn<typeof UserCheckbox> = ({ disabled }) => {
   const [user, setUser] = useState<UserList>(UserListFactory.create());
 
   return (

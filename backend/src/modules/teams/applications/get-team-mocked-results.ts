@@ -1,10 +1,10 @@
-import { User } from '@slack/web-api/dist/response/AdminAppsRequestsListResponse';
 import { BoardFactory } from 'src/libs/test-utils/mocks/factories/board-factory.mock';
 import { TeamFactory } from 'src/libs/test-utils/mocks/factories/team-factory.mock';
 import { TeamUserFactory } from 'src/libs/test-utils/mocks/factories/teamUser-factory.mock';
 import { UserFactory } from 'src/libs/test-utils/mocks/factories/user-factory';
 import TeamUser from 'src/modules/teamUsers/entities/team.user.schema';
 import Team from '../entities/team.schema';
+import User from 'src/modules/users/entities/user.schema';
 
 export const teams: Team[] = TeamFactory.createMany(4);
 

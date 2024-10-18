@@ -10,23 +10,27 @@ import { toastState } from '@/store/toast/atom/toast.atom';
 const useTeams = (isSAdmin: boolean) => {
   const setToastState = useSetRecoilState(toastState);
 
-  return useQuery(
-    [TEAMS_KEY],
-    () => {
+  const fetchAllTeams = useQuery({
+    queryKey: [TEAMS_KEY],
+    queryFn: () => {
       if (isSAdmin) {
         return getAllTeams();
       }
       return getUserTeams();
     },
-    {
-      enabled: true,
-      refetchOnMount: false,
-      refetchOnWindowFocus: false,
-      onError: () => {
-        setToastState(createErrorMessage(ErrorMessages.GET));
-      },
-    },
-  );
+    enabled: true,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+  });
+
+  const handleErrorOnFetchAllTeams = () => {
+    setToastState(createErrorMessage(ErrorMessages.GET));
+  };
+
+  return {
+    fetchAllTeams,
+    handleErrorOnFetchAllTeams,
+  };
 };
 
 export default useTeams;

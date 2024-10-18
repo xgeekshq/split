@@ -5,12 +5,12 @@ import { UseCase } from 'src/libs/interfaces/use-case.interface';
 import { CommentRepositoryInterface } from 'src/modules/comments/interfaces/repositories/comment.repository.interface';
 import { BoardFactory } from 'src/libs/test-utils/mocks/factories/board-factory.mock';
 import Board from 'src/modules/boards/entities/board.schema';
-import faker from '@faker-js/faker';
+import { faker } from '@faker-js/faker';
 import DeleteCommentUseCaseDto from 'src/modules/comments/dto/useCase/delete-comment.use-case.dto';
 import { DeleteCommentUseCase } from 'src/modules/comments/applications/delete-comment.use-case';
 import { DeleteFailedException } from 'src/libs/exceptions/deleteFailedBadRequestException';
 
-const userId: string = faker.datatype.uuid();
+const userId: string = faker.string.uuid();
 const board: Board = BoardFactory.create();
 
 describe('DeleteCommentUseCase', () => {

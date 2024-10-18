@@ -10,7 +10,9 @@ import { toastState } from '@/store/toast/atom/toast.atom';
 const useResetToken = () => {
   const setToastState = useSetRecoilState(toastState);
 
-  return useMutation([USERS_KEY, 'forgotPassword'], resetTokenEmail, {
+  return useMutation({
+    mutationKey: [USERS_KEY, 'forgotPassword'],
+    mutationFn: resetTokenEmail,
     onSuccess: (res) => {
       setToastState(createInfoMessage(InfoMessages.RESET_TOKEN(res.message)));
     },

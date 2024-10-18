@@ -1,5 +1,5 @@
 import React from 'react';
-import { ComponentStory } from '@storybook/react';
+import { StoryFn } from '@storybook/react';
 import dedent from 'ts-dedent';
 
 import Button from '@/components/Primitives/Inputs/Button/Button';
@@ -104,7 +104,7 @@ export default {
   },
 };
 
-const Template: ComponentStory<typeof Flex> = ({ ...args }) => (
+const Template: StoryFn<typeof Flex> = ({ ...args }) => (
   <Flex {...args}>
     <Button>Flex 1</Button>
     <Button>Flex 2</Button>

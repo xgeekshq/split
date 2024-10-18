@@ -23,7 +23,10 @@ const NewTeam: NextPage = () => {
   const { session, userId } = useCurrentSession({ required: true });
   const { replace } = useRouter();
 
-  const { data: usersData, isLoading } = useUsers();
+  const {
+    fetchAllUsers: { data: usersData, isLoading, isError },
+    handleErrorOnFetchAllUsers,
+  } = useUsers();
 
   const setUsersListState = useSetRecoilState(usersListState);
   const setCreateTeamState = useSetRecoilState(createTeamState);
@@ -53,6 +56,10 @@ const NewTeam: NextPage = () => {
     setUsersListState(usersWithChecked);
   }, [usersData, userId, setUsersListState, setCreateTeamState]);
 
+  if (isError) {
+    handleErrorOnFetchAllUsers();
+  }
+
   if (!session || !usersData) {
     replace(ROUTES.Teams);
     return null;
@@ -77,7 +84,7 @@ export const getServerSideProps: GetServerSideProps = requireAuthentication(
   async (context: GetServerSidePropsContext) => {
     const queryClient = new QueryClient();
 
-    await queryClient.prefetchQuery([USERS_KEY], () => getAllUsers(context));
+    await queryClient.prefetchQuery({ queryKey: [USERS_KEY], queryFn: () => getAllUsers(context) });
 
     return {
       props: {

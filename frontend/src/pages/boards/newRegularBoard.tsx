@@ -77,10 +77,16 @@ const NewRegularBoard: NextPage = () => {
   const setSelectedTeam = useSetRecoilState(createBoardTeam);
 
   // Team  Hook
-  const { data: userBasedTeams } = useTeams(isSAdmin);
+  const {
+    fetchAllTeams: { data: userBasedTeams, isError: isTeamsError },
+    handleErrorOnFetchAllTeams,
+  } = useTeams(isSAdmin);
 
   // User Hook
-  const { data: allUsers } = useUsers();
+  const {
+    fetchAllUsers: { data: allUsers, isError: isUsersError },
+    handleErrorOnFetchAllUsers,
+  } = useUsers();
 
   useEffect(() => {
     if (allUsers) {
@@ -224,6 +230,14 @@ const NewRegularBoard: NextPage = () => {
     };
   }, [setSelectedTeam, setBoardState]);
 
+  if (isTeamsError) {
+    handleErrorOnFetchAllTeams();
+  }
+
+  if (isUsersError) {
+    handleErrorOnFetchAllUsers();
+  }
+
   if (!session || !userBasedTeams) return null;
 
   return (
@@ -312,13 +326,16 @@ export const getServerSideProps: GetServerSideProps = requireAuthentication(
 
     const queryClient = new QueryClient();
     await Promise.all([
-      queryClient.prefetchQuery([TEAMS_KEY], () => {
-        if (isSAdmin) {
-          return getAllTeams(context);
-        }
-        return getUserTeams(userId, context);
+      queryClient.prefetchQuery({
+        queryKey: [TEAMS_KEY],
+        queryFn: () => {
+          if (isSAdmin) {
+            return getAllTeams(context);
+          }
+          return getUserTeams(userId, context);
+        },
       }),
-      queryClient.prefetchQuery([USERS_KEY], () => getAllUsers(context)),
+      queryClient.prefetchQuery({ queryKey: [USERS_KEY], queryFn: () => getAllUsers(context) }),
     ]);
 
     return {

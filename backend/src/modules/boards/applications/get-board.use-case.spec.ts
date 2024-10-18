@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { DeepMocked, createMock } from '@golevelup/ts-jest';
-import faker from '@faker-js/faker';
+import { faker } from '@faker-js/faker';
 import { UseCase } from 'src/libs/interfaces/use-case.interface';
 import GetBoardUseCaseDto from '../dto/useCase/get-board.use-case.dto';
 import BoardUseCasePresenter from '../presenter/board.use-case.presenter';
@@ -120,11 +120,11 @@ describe('GetBoardUseCase', () => {
 			const boardUser = BoardUserFactory.create();
 			const tokens: Tokens = {
 				accessToken: {
-					expiresIn: String(faker.datatype.number()),
+					expiresIn: String(faker.number.int()),
 					token: faker.lorem.word()
 				},
 				refreshToken: {
-					expiresIn: String(faker.datatype.number()),
+					expiresIn: String(faker.number.int()),
 					token: faker.lorem.word()
 				}
 			};

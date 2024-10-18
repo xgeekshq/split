@@ -22,14 +22,19 @@ export const getServerSideProps: GetServerSideProps = requireAuthentication(asyn
 const Dashboard = () => {
   const { data: session } = useSession();
 
-  const { data, isLoading } = useQuery(['dashboardInfo'], () => getDashboardHeaderInfo(), {
+  const { data, isLoading } = useQuery({
+    queryKey: ['dashboardInfo'],
+    queryFn: () => getDashboardHeaderInfo(),
     enabled: true,
     refetchOnWindowFocus: false,
   });
-  if (!isLoading && !data) return null;
+
   if (isLoading) {
     return <LoadingPage />;
   }
+
+  if (!data) return null;
+
   return (
     <Flex css={{ width: '100%' }} direction="column" gap="40">
       <MainPageHeader

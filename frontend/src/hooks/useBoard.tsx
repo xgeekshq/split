@@ -59,41 +59,45 @@ const useBoard = ({
     setReady(true);
   };
 
-  const fetchBoard = useQuery(['board', { id: boardId }], () => getBoardRequest(boardId), {
+  const fetchBoard = useQuery({
+    queryKey: ['board', { id: boardId }],
+    queryFn: () => getBoardRequest(boardId),
     enabled: autoFetchBoard,
     refetchOnWindowFocus: true,
-    onError: () => {
-      queryClient.invalidateQueries(['board', { id: boardId }]);
-      setToastState({
-        open: true,
-        content: 'Error getting the board',
-        type: ToastStateEnum.ERROR,
-      });
-    },
   });
 
-  const fetchBoards = useInfiniteQuery(
-    ['boards'],
-    ({ pageParam = 0 }) => getBoardsRequest(pageParam),
-    {
-      enabled: autoFetchBoards,
-      refetchOnWindowFocus: false,
-      getNextPageParam: (lastPage) => {
-        const { hasNextPage, page } = lastPage;
-        if (hasNextPage) return page + 1;
-        return undefined;
-      },
-      onError: () => {
-        setToastState({
-          open: true,
-          content: 'Error getting the boards',
-          type: ToastStateEnum.ERROR,
-        });
-      },
-    },
-  );
+  const handleFetchBoardOnError = () => {
+    queryClient.invalidateQueries({ queryKey: ['board', { id: boardId }] });
+    setToastState({
+      open: true,
+      content: 'Error getting the board',
+      type: ToastStateEnum.ERROR,
+    });
+  };
 
-  const createBoard = useMutation(createBoardRequest, {
+  const fetchBoards = useInfiniteQuery({
+    queryKey: ['boards'],
+    queryFn: ({ pageParam }) => getBoardsRequest(pageParam),
+    enabled: autoFetchBoards,
+    refetchOnWindowFocus: false,
+    getNextPageParam: (lastPage) => {
+      const { hasNextPage, page } = lastPage;
+      if (hasNextPage) return page + 1;
+      return undefined;
+    },
+    initialPageParam: 0,
+  });
+
+  const handleFetchBoardsOnError = () => {
+    setToastState({
+      open: true,
+      content: 'Error getting the boards',
+      type: ToastStateEnum.ERROR,
+    });
+  };
+
+  const createBoard = useMutation({
+    mutationFn: createBoardRequest,
     onSuccess: (data) => setNewBoard(data._id),
     onError: () => {
       setToastState({
@@ -104,9 +108,10 @@ const useBoard = ({
     },
   });
 
-  const duplicateBoard = useMutation(duplicateBoardRequest, {
+  const duplicateBoard = useMutation({
+    mutationFn: duplicateBoardRequest,
     onSuccess: async () => {
-      queryClient.invalidateQueries(['boards']);
+      queryClient.invalidateQueries({ queryKey: ['boards'] });
 
       setToastState({
         open: true,
@@ -123,7 +128,8 @@ const useBoard = ({
     },
   });
 
-  const deleteBoard = useMutation(deleteBoardRequest, {
+  const deleteBoard = useMutation({
+    mutationFn: deleteBoardRequest,
     onSuccess: (data, variables) => {
       queryClient.setQueryData(['boards'], (oldData: InfiniteData<InfiniteBoards> | undefined) => {
         if (!oldData) return { pages: [], pageParams: [] };
@@ -152,9 +158,10 @@ const useBoard = ({
     },
   });
 
-  const updateBoard = useMutation(updateBoardRequest, {
+  const updateBoard = useMutation({
+    mutationFn: updateBoardRequest,
     onSuccess: () => {
-      queryClient.invalidateQueries(['board', { id: boardId }]);
+      queryClient.invalidateQueries({ queryKey: ['board', { id: boardId }] });
 
       setToastState({
         open: true,
@@ -163,7 +170,7 @@ const useBoard = ({
       });
     },
     onError: (error: AxiosError<{ message: string }>) => {
-      queryClient.invalidateQueries(['board', { id: boardId }]);
+      queryClient.invalidateQueries({ queryKey: ['board', { id: boardId }] });
       const errorMessage = error.response?.data.message.includes('max votes')
         ? error.response?.data.message
         : 'Error updating the board';
@@ -176,12 +183,13 @@ const useBoard = ({
     },
   });
 
-  const updateBoardPhaseMutation = useMutation(updateBoardPhaseRequest, {
+  const updateBoardPhaseMutation = useMutation({
+    mutationFn: updateBoardPhaseRequest,
     onSuccess: async () => {
-      queryClient.invalidateQueries(['board', { id: boardId }]);
+      queryClient.invalidateQueries({ queryKey: ['board', { id: boardId }] });
     },
     onError: (_data, variables) => {
-      queryClient.invalidateQueries(getBoardQuery(variables.boardId));
+      queryClient.invalidateQueries({ queryKey: getBoardQuery(variables.boardId) });
       setToastState({
         open: true,
         content: 'Error updating the phase',
@@ -231,6 +239,8 @@ const useBoard = ({
     setQueryDataAddBoardUser,
     updateBoardPhase,
     updateBoardPhaseMutation,
+    handleFetchBoardOnError,
+    handleFetchBoardsOnError,
   };
 };
 

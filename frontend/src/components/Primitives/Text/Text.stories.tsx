@@ -1,5 +1,5 @@
 import React from 'react';
-import { ComponentStory } from '@storybook/react';
+import { ArgTypes, StoryFn } from '@storybook/react';
 import dedent from 'ts-dedent';
 
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
@@ -31,7 +31,7 @@ const COLOR_OPTIONS: ColorType[] = [
 ];
 const OVERFLOW_OPTIONS: OverflowType[] = ['wrap'];
 
-const DISABLE_ARG_TYPES = {
+const DISABLE_ARG_TYPES: Partial<ArgTypes> = {
   display: {
     control: false,
   },
@@ -192,14 +192,12 @@ export default {
   },
 };
 
-const Template: ComponentStory<typeof Text> = ({ children, ...args }) => (
-  <Text {...args}>{children}</Text>
-);
+const Template: StoryFn<typeof Text> = ({ children, ...args }) => <Text {...args}>{children}</Text>;
 
 export const Default = Template.bind({});
 Default.storyName = 'Basic Usage';
 
-export const Displays: ComponentStory<typeof Text> = ({ color, underline }) => (
+export const Displays: StoryFn<typeof Text> = ({ color, underline }) => (
   <Flex align="center" direction="column" gap={40} justify="center" wrap="wrap">
     {DISPLAY_OPTIONS.map((display) => (
       <Text key={display} color={color} display={display} underline={underline}>
@@ -209,7 +207,7 @@ export const Displays: ComponentStory<typeof Text> = ({ color, underline }) => (
   </Flex>
 );
 
-export const Headings: ComponentStory<typeof Text> = ({ color, underline }) => (
+export const Headings: StoryFn<typeof Text> = ({ color, underline }) => (
   <Flex align="center" direction="column" gap={40} justify="center" wrap="wrap">
     {HEADING_OPTIONS.map((heading) => (
       <Text key={heading} color={color} heading={heading} underline={underline}>
@@ -219,7 +217,7 @@ export const Headings: ComponentStory<typeof Text> = ({ color, underline }) => (
   </Flex>
 );
 
-export const SizesAndWeights: ComponentStory<typeof Text> = ({ children, color, underline }) => (
+export const SizesAndWeights: StoryFn<typeof Text> = ({ children, color, underline }) => (
   <Flex gap="32" justify="evenly" wrap="wrap">
     {FONT_WEIGHT_OPTIONS.map((fontWeight) => (
       <Flex key={fontWeight} align="center" direction="column" gap={20} justify="center">
@@ -234,7 +232,7 @@ export const SizesAndWeights: ComponentStory<typeof Text> = ({ children, color, 
   </Flex>
 );
 
-export const Other: ComponentStory<typeof Text> = ({ children, underline }) => (
+export const Other: StoryFn<typeof Text> = ({ children, underline }) => (
   <Flex gap="32" justify="evenly" wrap="wrap">
     <Flex align="center" direction="column" gap={20}>
       <Text heading="4">Overline</Text>

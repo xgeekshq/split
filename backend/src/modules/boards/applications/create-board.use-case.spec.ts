@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { DeepMocked, createMock } from '@golevelup/ts-jest';
 import { CreateBoardUserServiceInterface } from 'src/modules/boardUsers/interfaces/services/create.board.user.service.interface';
-import faker from '@faker-js/faker';
+import { faker } from '@faker-js/faker';
 import { BoardDtoFactory } from 'src/libs/test-utils/mocks/factories/dto/boardDto-factory.mock';
 import { CreateBoardServiceInterface } from '../interfaces/services/create.board.service.interface';
 import { UseCase } from 'src/libs/interfaces/use-case.interface';
@@ -40,7 +40,7 @@ describe('CreateBoardUseCase', () => {
 	describe('execute', () => {
 		it('should be called with argument of type createBoardUseCaseDto', async () => {
 			const boardData = BoardDtoFactory.create();
-			const userId = faker.datatype.uuid();
+			const userId = faker.string.uuid();
 
 			await useCase.execute({ userId, boardData });
 

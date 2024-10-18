@@ -1,4 +1,4 @@
-import faker from '@faker-js/faker';
+import { faker } from '@faker-js/faker';
 import { buildTestFactory } from '../generic-factory.mock';
 import { BoardRoles } from 'src/libs/enum/board.roles';
 import { UserRoleType } from 'src/modules/communication/dto/types';

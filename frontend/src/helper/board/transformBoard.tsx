@@ -168,7 +168,7 @@ export const handleUpdateCardPosition = (board: BoardType, changes: UpdateCardPo
       try {
         colToRemove.cards = removeElementAtIndex(colToRemove.cards, currentCardPosition);
         colToAdd.cards = addElementAtIndex(colToAdd.cards, newPosition, cardToAdd);
-      } catch (e) {
+      } catch {
         return boardData;
       }
     }
@@ -197,7 +197,7 @@ export const handleMergeCard = (board: BoardType, changes: MergeCardsDto) => {
           ...selectedCard.items[idx],
         });
       });
-    } catch (e) {
+    } catch {
       return boardData;
     }
   }
@@ -239,7 +239,7 @@ export const handleUnMergeCard = (board: BoardType, changes: RemoveFromCardGroup
           card.items[0]._id = newCardItemId;
         }
       }
-    } catch (e) {
+    } catch {
       return boardData;
     }
   }
@@ -347,7 +347,11 @@ export const handleDeleteComments = (board: BoardType, changes: DeleteCommentDto
   }
 
   if (commentIndex !== undefined) {
-    cardItem ? cardItem?.comments.splice(commentIndex, 1) : card?.comments.splice(commentIndex, 1);
+    if (cardItem) {
+      cardItem?.comments.splice(commentIndex, 1);
+    } else {
+      card?.comments.splice(commentIndex, 1);
+    }
   }
 
   return boardData;

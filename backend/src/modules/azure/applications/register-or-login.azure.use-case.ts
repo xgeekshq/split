@@ -3,7 +3,7 @@ import { RegisterOrLoginAzureUseCaseInterface } from '../interfaces/applications
 import { AuthAzureServiceInterface } from '../interfaces/services/auth.azure.service.interface';
 import { AUTH_AZURE_SERVICE } from '../constants';
 import { AzureDecodedUser } from '../services/auth.azure.service';
-import jwt_decode from 'jwt-decode';
+import { jwtDecode } from 'jwt-decode';
 import { GetUserServiceInterface } from 'src/modules/users/interfaces/services/get.user.service.interface';
 import { CreateUserServiceInterface } from 'src/modules/users/interfaces/services/create.user.service.interface';
 import User from 'src/modules/users/entities/user.schema';
@@ -35,7 +35,7 @@ export class RegisterOrLoginAzureUseCase implements RegisterOrLoginAzureUseCaseI
 
 	async execute(azureToken: string) {
 		const { unique_name, email, name, given_name, family_name } = <AzureDecodedUser>(
-			jwt_decode(azureToken)
+			jwtDecode(azureToken)
 		);
 
 		const emailOrUniqueName = email ?? unique_name;
@@ -103,7 +103,7 @@ export class RegisterOrLoginAzureUseCase implements RegisterOrLoginAzureUseCaseI
 				mimetype: blob.type,
 				originalname: `${hash}.${blob.type.split('/').pop()}`
 			});
-		} catch (ex) {
+		} catch {
 			return '';
 		}
 	}

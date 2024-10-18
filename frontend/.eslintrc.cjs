@@ -20,7 +20,7 @@ const tsconfigPaths = [
 
 module.exports = {
   root: true,
-  extends: ['next/core-web-vitals', 'prettier', 'plugin:storybook/recommended'],
+  extends: ['next/core-web-vitals', 'prettier', 'plugin:storybook/recommended', 'plugin:@typescript-eslint/recommended'],
   plugins: ['prettier'],
   rules: {
     'prettier/prettier': ['error', { usePrettierrc: true }],
@@ -28,7 +28,7 @@ module.exports = {
   overrides: [
     {
       files: ['**/*.ts?(x)'],
-      extends: ['plugin:@typescript-eslint/recommended'],
+      extends: ['eslint:recommended', 'plugin:@typescript-eslint/recommended'],
       parser: '@typescript-eslint/parser',
       parserOptions: {
         ecmaFeatures: {
@@ -41,7 +41,7 @@ module.exports = {
       },
       plugins: ['@typescript-eslint', 'simple-import-sort', 'import', 'unused-imports'],
       rules: {
-        '@typescript-eslint/ban-types': 'warn',
+        '@typescript-eslint/ban-types': 'off',
         '@typescript-eslint/no-empty-function': 'warn',
         '@typescript-eslint/no-this-alias': 'warn',
         '@typescript-eslint/no-explicit-any': 'warn',

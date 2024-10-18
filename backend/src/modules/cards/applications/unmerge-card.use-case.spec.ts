@@ -4,7 +4,7 @@ import { DeepMocked, createMock } from '@golevelup/ts-jest';
 import { CardRepositoryInterface } from '../repository/card.repository.interface';
 import { GetCardServiceInterface } from '../interfaces/services/get.card.service.interface';
 import UnmergeCardUseCaseDto from '../dto/useCase/unmerge-card.use-case.dto';
-import faker from '@faker-js/faker';
+import { faker } from '@faker-js/faker';
 import { CardFactory } from 'src/libs/test-utils/mocks/factories/card-factory.mock';
 import { BoardFactory } from 'src/libs/test-utils/mocks/factories/board-factory.mock';
 import { BadRequestException } from '@nestjs/common';
@@ -12,11 +12,11 @@ import { UseCase } from 'src/libs/interfaces/use-case.interface';
 import { UnmergeCardUseCase } from 'src/modules/cards/applications/unmerge-card.use-case';
 
 const unmergeCardDto: UnmergeCardUseCaseDto = {
-	boardId: faker.datatype.uuid(),
-	cardGroupId: faker.datatype.uuid(),
-	draggedCardId: faker.datatype.uuid(),
-	columnId: faker.datatype.uuid(),
-	position: faker.datatype.number()
+	boardId: faker.string.uuid(),
+	cardGroupId: faker.string.uuid(),
+	draggedCardId: faker.string.uuid(),
+	columnId: faker.string.uuid(),
+	position: faker.number.int()
 };
 
 const updateResultMock = {

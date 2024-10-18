@@ -30,7 +30,9 @@ export class SlackCommunicationProducer {
 	async add(data: BoardType): Promise<Job<BoardType>> {
 		const job = await this.queue.add(data);
 
-		this.logger.verbose(`Add board with id: "${data.id}" to queue with Job id: "${job.id}"`);
+		this.logger.verbose(
+			`Add board with id: "${data.id}" to queue with Job id: "${job.id.toString()}"`
+		);
 
 		return job;
 	}

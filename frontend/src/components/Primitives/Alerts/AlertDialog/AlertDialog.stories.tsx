@@ -1,5 +1,5 @@
 import React from 'react';
-import { ComponentStory } from '@storybook/react';
+import { StoryFn } from '@storybook/react';
 import dedent from 'ts-dedent';
 
 import {
@@ -47,7 +47,7 @@ export default {
   },
 };
 
-const Template: ComponentStory<typeof AlertDialog> = ({ children, ...args }) => (
+const Template: StoryFn<typeof AlertDialog> = ({ children, ...args }) => (
   <AlertDialog>
     {/* Button to Open the Dialog */}
     <AlertDialogTrigger asChild>

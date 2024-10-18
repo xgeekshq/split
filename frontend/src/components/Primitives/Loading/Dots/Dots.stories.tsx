@@ -1,5 +1,5 @@
 import React from 'react';
-import { ComponentStory } from '@storybook/react';
+import { StoryFn } from '@storybook/react';
 import dedent from 'ts-dedent';
 
 import Dots from '@/components/Primitives/Loading/Dots/Dots';
@@ -35,7 +35,7 @@ export default {
   },
 };
 
-const Template: ComponentStory<typeof Dots> = ({ ...args }) => <Dots {...args} />;
+const Template: StoryFn<typeof Dots> = ({ ...args }) => <Dots {...args} />;
 
 export const Default = Template.bind({});
 Default.storyName = 'Basic Usage';

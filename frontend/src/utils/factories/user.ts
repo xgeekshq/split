@@ -11,11 +11,11 @@ import { buildTestFactory } from '@/utils/testing';
 
 export const UserFactory = buildTestFactory<User>(() => {
   const _id = faker.database.mongodbObjectId();
-  const firstName = faker.name.firstName();
-  const lastName = faker.name.lastName();
-  const email = faker.internet.email(firstName, lastName);
+  const firstName = faker.person.firstName();
+  const lastName = faker.person.lastName();
+  const email = faker.internet.email({ firstName, lastName });
   const isSAdmin = faker.datatype.boolean();
-  const joinedAt = faker.datatype.datetime().toString();
+  const joinedAt = faker.date.anytime().toString();
 
   const user: User = {
     _id,
@@ -31,11 +31,11 @@ export const UserFactory = buildTestFactory<User>(() => {
 
 export const SessionUserFactory = buildTestFactory(() => {
   const id = faker.database.mongodbObjectId();
-  const firstName = faker.name.firstName();
-  const lastName = faker.name.lastName();
-  const email = faker.internet.email(firstName, lastName);
+  const firstName = faker.person.firstName();
+  const lastName = faker.person.lastName();
+  const email = faker.internet.email({ firstName, lastName });
   const isSAdmin = faker.datatype.boolean();
-  const joinedAt = faker.datatype.datetime().toString();
+  const joinedAt = faker.date.anytime().toString();
   const accessToken = {
     token: faker.commerce.product(),
     expiresIn: faker.date.soon().toString(),
@@ -63,7 +63,7 @@ export const BoardUserFactory = buildTestFactory<BoardUser>(() => {
     BoardUserRoles.RESPONSIBLE,
     BoardUserRoles.STAKEHOLDER,
   ]);
-  const votesCount = faker.datatype.number(16);
+  const votesCount = faker.number.int(16);
 
   return {
     id,
@@ -135,11 +135,11 @@ export const CreateTeamUserFactory = buildTestFactory<CreatedTeamUser>(() => {
 
 export const UserListFactory = buildTestFactory<UserList>(() => {
   const _id = faker.database.mongodbObjectId();
-  const firstName = faker.name.firstName();
-  const lastName = faker.name.lastName();
-  const email = faker.internet.email(firstName, lastName);
+  const firstName = faker.person.firstName();
+  const lastName = faker.person.lastName();
+  const email = faker.internet.email({ firstName, lastName });
   const isSAdmin = faker.datatype.boolean();
-  const joinedAt = faker.datatype.datetime().toString();
+  const joinedAt = faker.date.anytime().toString();
   const isChecked = faker.datatype.boolean();
 
   return {

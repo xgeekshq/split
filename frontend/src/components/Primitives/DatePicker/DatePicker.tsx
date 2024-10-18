@@ -1,3 +1,4 @@
+import { Value } from 'react-calendar/dist/cjs/shared/types';
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 
 import Calendar from '@/components/Primitives/Calendar/Calendar';
@@ -17,7 +18,7 @@ export type DatePickerProps = {
   currentDate?: Date;
   minDate?: Date;
   maxDate?: Date;
-  setDate: (date: Date) => void;
+  setDate: (date: Value) => void;
 };
 
 const DatePicker = ({ currentDate, disabled, minDate, maxDate, setDate }: DatePickerProps) => (

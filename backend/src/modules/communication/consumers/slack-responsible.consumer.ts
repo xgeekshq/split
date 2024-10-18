@@ -25,7 +25,7 @@ export class SlackResponsibleConsumer extends SlackCommunicationEventListeners<
 		const data = job.data;
 
 		this.logger.verbose(
-			`Execute change responsible of team "${data.teamNumber}" channel added to queue with Job id: "${job.id}"`
+			`Execute change responsible of team "${data.teamNumber}" channel added to queue with Job id: "${job.id.toString()}"`
 		);
 
 		const result = await this.application.execute(data);
