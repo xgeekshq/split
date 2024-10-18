@@ -21,18 +21,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: "check is AZURE_CREDENTIALS exists"
-        env: 
-            super_secret: ${{ secrets.AZURE_CREDENTIALS }}
-        if: ${{ env.super_secret == '' }}
-        run: 'echo "echo the secret \"AZURE_CREDENTIALS\" has not been made; echo please go to \"settings \> secrets \> actions\" to create it"'
-
       - name: Azure login
         uses: azure/login@v2
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      # Use kubelogin to configure your kubeconfig for Azure auth
       - name: Set up kubelogin for non-interactive login
         uses: azure/use-kubelogin@v1
         with:
@@ -50,5 +43,4 @@ jobs:
         uses: azure/setup-helm@v4.2.0
 
       - name: Deploy
-        #environment: ${{ inputs.ENVIRONMENT }}
         run: helm upgrade --install split ${{ env.CHART-PATH }} -f ${{ inputs.CHART_OVERRIDE_PATH }} --set global.image.tag=${{ env.TAG }} --namespace=split-${{ inputs.ENVIRONMENT }} --create-namespace --atomic

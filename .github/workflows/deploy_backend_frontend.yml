@@ -39,7 +39,6 @@ jobs:
       CHART_OVERRIDE_PATH: './infrastructure/values/development.yaml'
     secrets: inherit
 
-
   deploy_prod:
     name: Deploy PROD
     needs: deploy_dev
