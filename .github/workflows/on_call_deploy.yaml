@@ -6,26 +6,35 @@ on:
       ENVIRONMENT: 
         required: true
         type: string
-      APP_NAME:
+      CHART_OVERRIDE_PATH:
         required: true
         type: string
-      REPOSITORY:
-        required: true
-        type: string
-    secrets:
-      PUBLISH_PROFILE:
-        required: true
 
 env:
   TAG: ${{ github.sha }}
+  CHART-PATH: './infrastructure/split'
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    environment: ${{ inputs.ENVIRONMENT }}
     steps:
-      - uses: azure/webapps-deploy@v3
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Azure login
+        uses: azure/login@v2
         with:
-          app-name: ${{ inputs.APP_NAME }}
-          publish-profile: ${{ secrets.PUBLISH_PROFILE }}
-          images: split.azurecr.io/${{ inputs.REPOSITORY }}:${{ env.TAG }}
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Set AKS context
+        uses: azure/aks-set-context@v4
+        with: 
+          resource-group: '${{ secrets.RESOURCE_GROUP }}'
+          cluster-name: '${{ secrets.CLUSTER_NAME }}'
+
+      - name: Install Helm
+        uses: azure/setup-helm@v4.2.0
+
+      - name: Deploy
+        #environment: ${{ inputs.ENVIRONMENT }}
+        run: helm upgrade --install split ${{ env.CHART-PATH }} -f ${{ inputs.CHART_OVERRIDE_PATH }} --set global.image.tag=${{ env.TAG }} --namespace=split-${{ inputs.ENVIRONMENT }} --create-namespace --atomic
