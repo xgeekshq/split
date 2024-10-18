@@ -12,12 +12,6 @@ frontend:
 
   environment:
     NODE_ENV: dev
-    NEXT_PUBLIC_NEXTAUTH_URL: https://split-dev.xgeeks.com
-    NEXT_PUBLIC_BACKEND_URL: https://split-dev-api.xgeeks.com
-    NEXT_PUBLIC_ENABLE_AZURE: true
-    NEXT_PUBLIC_EXPIRATION_TIME: 80000
-    NEXT_PUBLIC_LOGIN_SSO_ONLY: true
-    NEXT_PUBLIC_REGULAR_BOARD: true
 
 backend:
   ingress:
