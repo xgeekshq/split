@@ -62,7 +62,7 @@
     "recoil": "^0.7.7",
     "socket.io-client": "^4.8.0",
     "util": "^0.12.5",
-    "webpack": "^5.77.0"
+    "webpack": "^5.95.0"
   },
   "devDependencies": {
     "@babel/core": "^7.21.3",
