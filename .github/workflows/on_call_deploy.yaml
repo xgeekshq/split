@@ -21,6 +21,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - name: "check is AZURE_CREDENTIALS exists"
+        env: 
+            super_secret: ${{ secrets.AZURE_CREDENTIALS }}
+        if: ${{ env.super_secret == '' }}
+        run: 'echo "echo the secret \"AZURE_CREDENTIALS\" has not been made; echo please go to \"settings \> secrets \> actions\" to create it"'
+
       - name: Azure login
         uses: azure/login@v2
         with:
