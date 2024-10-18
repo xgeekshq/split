@@ -2,7 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
-## [Unreleased](https://github.com/xgeekshq/split/compare/v0.1.22...HEAD)
+## [Unreleased](https://github.com/xgeekshq/split/compare/v0.1.23...HEAD)
+
+## [v0.1.23](https://github.com/xgeekshq/split/compare/v0.1.22...v0.1.23) - 2024-10-18
+
+### What Changed 👀
+
+* No changes
+
+**Full Changelog**: https://github.com/xgeekshq/split/compare/v0.1.22...v0.1.23
 
 ## [v0.1.22](https://github.com/xgeekshq/split/compare/v0.1.21...v0.1.22) - 2024-10-18
 
@@ -45,10 +53,8 @@ All notable changes to this project will be documented in this file.
 - chore(deps): bump release-drafter/release-drafter from 5 to 6 @dependabot (#1528)
 - chore(deps): bump actions/cache from 3 to 4 @dependabot (#1523)
 - chore(deps): bump msgpackr from 1.6.2 to 1.10.1 in /backend @dependabot (#1520)
-
 </details>
 **Full Changelog**: https://github.com/xgeekshq/split/compare/v0.1.21...v0.1.22
-
 ## [v0.1.21](https://github.com/xgeekshq/split/compare/v0.1.20...v0.1.21) - 2023-12-21
 
 ### What Changed 👀
@@ -102,7 +108,6 @@ All notable changes to this project will be documented in this file.
 </details>
 **Full Changelog**: https://github.com/xgeekshq/split/compare/v0.1.20...v0.1.21
 ## [v0.1.20](https://github.com/xgeekshq/split/compare/v0.1.19...v0.1.20) - 2023-05-07
-
 ### What Changed 👀
 
 - test: board users @patricia-mdias (#1452)
@@ -232,7 +237,6 @@ All notable changes to this project will be documented in this file.
 ## [v0.1.18](https://github.com/xgeekshq/split/compare/v0.1.17...v0.1.18) - 2023-03-24
 ### What Changed 👀
 ### 🐛 Bug Fixes
-
 - fix: redirect guest user on public board @CatiaAntunes96 (#1304)
 
 **Full Changelog**: https://github.com/xgeekshq/split/compare/v0.1.17...v0.1.18
