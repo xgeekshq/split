@@ -16,7 +16,7 @@ frontend:
     NEXT_PUBLIC_BACKEND_URL: https://split-api.xgeeks.com
     NEXT_PUBLIC_ENABLE_AZURE: true
     NEXT_PUBLIC_EXPIRATION_TIME: 80000
-    NEXT_PUBLIC_LOGIN_SSO_ONLY: false
+    NEXT_PUBLIC_LOGIN_SSO_ONLY: true
     NEXT_PUBLIC_REGULAR_BOARD: true
 
 backend: 
