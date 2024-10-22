@@ -2,7 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
-## [Unreleased](https://github.com/xgeekshq/split/compare/v0.1.24...HEAD)
+## [Unreleased](https://github.com/xgeekshq/split/compare/v0.1.25...HEAD)
+
+## [v0.1.25](https://github.com/xgeekshq/split/compare/v0.1.24...v0.1.25) - 2024-10-22
+
+### What Changed 👀
+
+- feat: change and add split env vars  @r-p-alves (#1580)
+
+**Full Changelog**: https://github.com/xgeekshq/split/compare/v0.1.24...v0.1.25
 
 ## [v0.1.24](https://github.com/xgeekshq/split/compare/v0.1.23...v0.1.24) - 2024-10-18
 
@@ -65,7 +73,6 @@ All notable changes to this project will be documented in this file.
 **Full Changelog**: https://github.com/xgeekshq/split/compare/v0.1.21...v0.1.22
 ## [v0.1.21](https://github.com/xgeekshq/split/compare/v0.1.20...v0.1.21) - 2023-12-21
 ### What Changed 👀
-
 ### 🐛 Bug Fixes
 
 - fix: storybook @nunocaseiro (#1519)
@@ -119,7 +126,6 @@ All notable changes to this project will be documented in this file.
 - test: board users @patricia-mdias (#1452)
 - fix: remove scheduling from board settings @GoncaloCanteiro (#1456)
 - refactor: test comments module @CatiaAntunes96 (#1448)
-
 ### 🐛 Bug Fixes
 
 - fix: timer design @StereoPT (#1466)
@@ -245,7 +251,6 @@ All notable changes to this project will be documented in this file.
 ### 🐛 Bug Fixes
 - fix: redirect guest user on public board @CatiaAntunes96 (#1304)
 **Full Changelog**: https://github.com/xgeekshq/split/compare/v0.1.17...v0.1.18
-
 ## [v0.1.17](https://github.com/xgeekshq/split/compare/v0.1.16...v0.1.17) - 2023-03-23
 
 ### What Changed 👀
