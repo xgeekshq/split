@@ -49,7 +49,11 @@ export const GetBoardDataPopulate: PopulateOptions[] = [
 	{
 		path: 'users',
 		select: 'user role -board votesCount',
-		populate: { path: 'user', select: 'firstName email lastName _id isAnonymous' }
+		populate: {
+			path: 'user',
+			select: 'firstName email lastName _id isAnonymous isDeleted',
+			match: { isDeleted: { $in: [true, false] } }
+		}
 	},
 	{
 		path: 'team',
@@ -57,50 +61,64 @@ export const GetBoardDataPopulate: PopulateOptions[] = [
 		populate: {
 			path: 'users',
 			select: 'user role -_id',
-			populate: { path: 'user', select: 'firstName lastName email' }
+			populate: {
+				path: 'user',
+				select: 'firstName lastName email isDeleted',
+				match: { isDeleted: { $in: [true, false] } }
+			}
 		}
 	},
 	{
 		path: 'columns.cards.createdBy',
-		select: '_id firstName lastName'
+		select: '_id firstName lastName isDeleted',
+		match: { isDeleted: { $in: [true, false] } }
 	},
 	{
 		path: 'columns.cards.comments.createdBy',
-		select: '_id  firstName lastName'
+		select: '_id  firstName lastName isDeleted',
+		match: { isDeleted: { $in: [true, false] } }
 	},
 	{
 		path: 'columns.cards.items.createdBy',
-		select: '_id firstName lastName'
+		select: '_id firstName lastName isDeleted',
+		match: { isDeleted: { $in: [true, false] } }
 	},
 	{
 		path: 'columns.cards.items.comments.createdBy',
-		select: '_id firstName lastName'
+		select: '_id firstName lastName isDeleted',
+		match: { isDeleted: { $in: [true, false] } }
 	},
 	{
 		path: 'createdBy',
-		select: '_id firstName lastName'
+		select: '_id firstName lastName isDeleted',
+		match: { isDeleted: { $in: [true, false] } }
 	},
 	{
 		path: 'dividedBoards',
-		select: 'title _id submitedAt'
+		select: 'title _id submitedAt isDeleted',
+		match: { isDeleted: { $in: [true, false] } }
 	}
 ];
 
 export const GetCardFromBoardPopulate: PopulateOptions[] = [
 	{
 		path: 'columns.cards.createdBy',
-		select: '_id firstName lastName'
+		select: '_id firstName lastName isDeleted',
+		match: { isDeleted: { $in: [true, false] } }
 	},
 	{
 		path: 'columns.cards.comments.createdBy',
-		select: '_id  firstName lastName'
+		select: '_id  firstName lastName isDeleted',
+		match: { isDeleted: { $in: [true, false] } }
 	},
 	{
 		path: 'columns.cards.items.createdBy',
-		select: '_id firstName lastName'
+		select: '_id firstName lastName isDeleted',
+		match: { isDeleted: { $in: [true, false] } }
 	},
 	{
 		path: 'columns.cards.items.comments.createdBy',
-		select: '_id firstName lastName'
+		select: '_id firstName lastName isDeleted',
+		match: { isDeleted: { $in: [true, false] } }
 	}
 ];
