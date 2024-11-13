@@ -5,6 +5,8 @@ export interface GetBoardUserServiceInterface {
 
 	getAllBoardUsersOfBoard(boardId: string): Promise<BoardUser[]>;
 
+	getAllOpenBoardsOfUser(userId: string): Promise<BoardUser[]>;
+
 	getBoardResponsible(boardId: string): Promise<BoardUser>;
 
 	getVotesCount(boardId: string): Promise<BoardUser[]>;
