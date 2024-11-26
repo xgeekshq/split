@@ -4,14 +4,7 @@ import { ConfidentialClientApplication } from '@azure/msal-node';
 import { Client } from '@microsoft/microsoft-graph-client';
 import { ConfigService } from '@nestjs/config';
 import { AZURE_AUTHORITY, AZURE_CLIENT_ID, AZURE_CLIENT_SECRET } from 'src/libs/constants/azure';
-
-export type AzureUserFound = {
-	id: string;
-	mail: string;
-	displayName: string;
-	userPrincipalName: string;
-	createdDateTime: Date;
-};
+import { AzureUserDTO } from '../dto/azure-user.dto';
 
 export type AzureDecodedUser = {
 	unique_name: string;
@@ -54,10 +47,19 @@ export default class AuthAzureService implements AuthAzureServiceInterface {
 		});
 	}
 
-	async getUserFromAzure(email: string): Promise<AzureUserFound | undefined> {
+	async getUserFromAzure(email: string): Promise<AzureUserDTO | undefined> {
 		const { value } = await this.graphClient
 			.api('/users')
-			.select(['id', 'displayName', 'mail', 'userPrincipalName', 'createdDateTime'])
+			.select([
+				'id',
+				'mail',
+				'displayName',
+				'userPrincipalName',
+				'createdDateTime',
+				'accountEnabled',
+				'deletedDateTime',
+				'employeeLeaveDateTime'
+			])
 			.search(`"mail:${email}" OR "displayName:${email}" OR "userPrincipalName:${email}"`)
 			.orderby('displayName')
 			.get();

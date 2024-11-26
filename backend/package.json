@@ -54,6 +54,7 @@
     "dotenv": "^16.0.0",
     "express": "^4.17.3",
     "joi": "^17.6.0",
+    "jwks-rsa": "^3.1.0",
     "jwt-decode": "^3.1.2",
     "lint-staged": "^13.0.3",
     "moment": "^2.29.4",

@@ -1,6 +1,6 @@
-import { AzureUserFound } from '../../services/auth.azure.service';
+import { AzureUserDTO } from '../../dto/azure-user.dto';
 
 export interface AuthAzureServiceInterface {
-	getUserFromAzure(email: string): Promise<AzureUserFound | undefined>;
+	getUserFromAzure(email: string): Promise<AzureUserDTO | undefined>;
 	fetchUserPhoto(userId: string): Promise<any>;
 }

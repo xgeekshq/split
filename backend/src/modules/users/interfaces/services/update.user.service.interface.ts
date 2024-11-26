@@ -10,4 +10,6 @@ export interface UpdateUserServiceInterface {
 	updateUserAvatar(avatar: string, userId: string): Promise<User>;
 
 	updateUserUpdatedAtField(user: string): Promise<User>;
+
+	restoreUser(userId: string): Promise<User>;
 }

@@ -7,7 +7,7 @@ export interface GetUserServiceInterface {
 		userId: string
 	): Promise<LeanDocument<UserDocument> | false>;
 
-	getByEmail(email: string): Promise<User>;
+	getByEmail(email: string, checkDeleted?: boolean): Promise<User>;
 
 	getById(id: string): Promise<User>;
 
