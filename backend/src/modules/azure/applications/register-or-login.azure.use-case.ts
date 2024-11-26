@@ -100,7 +100,7 @@ export class RegisterOrLoginAzureUseCase implements RegisterOrLoginAzureUseCaseI
 			userToAuthenticate.avatar = avatarUrl;
 		}
 
-		return await signIn(userToAuthenticate, this.getTokenService, 'azure');
+		return signIn(userToAuthenticate, this.getTokenService, 'azure');
 	}
 
 	private async getUserPhoto(user: User) {
