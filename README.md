@@ -85,6 +85,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     <tr>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/r-p-alves"><img src="https://avatars.githubusercontent.com/u/183732338?v=4?s=50" width="50px;" alt="r-p-alves"/><br /><sub><b>r-p-alves</b></sub></a><br /><a href="#infra-r-p-alves" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a> <a href="https://github.com/xgeekshq/split/commits?author=r-p-alves" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/sousadax12"><img src="https://avatars.githubusercontent.com/u/8426477?v=4?s=50" width="50px;" alt="João Sousa"/><br /><sub><b>João Sousa</b></sub></a><br /><a href="#infra-sousadax12" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a> <a href="https://github.com/xgeekshq/split/commits?author=sousadax12" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/joaofrparreira"><img src="https://avatars.githubusercontent.com/u/158507411?v=4?s=50" width="50px;" alt="João Parreira"/><br /><sub><b>João Parreira</b></sub></a><br /><a href="https://github.com/xgeekshq/split/commits?author=joaofrparreira" title="Code">💻</a> <a href="https://github.com/xgeekshq/split/commits?author=joaofrparreira" title="Tests">⚠️</a></td>
     </tr>
   </tbody>
 </table>
