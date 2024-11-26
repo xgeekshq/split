@@ -2,7 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
-## [Unreleased](https://github.com/xgeekshq/split/compare/v0.1.27...HEAD)
+## [Unreleased](https://github.com/xgeekshq/split/compare/v0.1.28...HEAD)
+
+## [v0.1.28](https://github.com/xgeekshq/split/compare/v0.1.27...v0.1.28) - 2024-11-26
+
+### What Changed 👀
+
+- fix: issue-1593- validate access token on login register @joaofrparreira (#1595)
+
+**Full Changelog**: https://github.com/xgeekshq/split/compare/v0.1.27...v0.1.28
 
 ## [v0.1.27](https://github.com/xgeekshq/split/compare/v0.1.26...v0.1.27) - 2024-11-26
 
@@ -93,7 +101,6 @@ All notable changes to this project will be documented in this file.
 - fix: storybook @nunocaseiro (#1519)
 - fix: #1514 - update retro link @nunocaseiro (#1517)
 ### 🧩 Dependency Updates
-
 <details>
 <summary>37 changes</summary>
 - chore(deps-dev): bump @adobe/css-tools from 4.3.1 to 4.3.2 in /frontend @dependabot (#1516)
@@ -150,7 +157,6 @@ All notable changes to this project will be documented in this file.
 - fix: card colors position @StereoPT (#1453)
 - fix: sso trigger validations @StereoPT (#1450)
 **Full Changelog**: https://github.com/xgeekshq/split/compare/v0.1.19...v0.1.20
-
 ## [v0.1.19](https://github.com/xgeekshq/split/compare/v0.1.18...v0.1.19) - 2023-05-02
 
 ### What Changed 👀
@@ -281,7 +287,6 @@ All notable changes to this project will be documented in this file.
 - test: communication consumers tests @GoncaloCanteiro (#1249)
 - chore: update next and react @nunocaseiro (#1251)
 - feat: option to force a user not to be selected as responsible @JoaoSaIvador (#1237)
-
 ### 🚀 Features
 
 - refactor: user components @StereoPT (#1272)
