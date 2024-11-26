@@ -22,8 +22,15 @@ export default class GetUserService implements GetUserServiceInterface {
 	}
 
 	// these functions won't be tested since they make direct queries to the database
-	getByEmail(email: string) {
-		return this.userRepository.findOneByField({ email });
+	getByEmail(email: string, checkDeleted = false) {
+		if (!checkDeleted) {
+			return this.userRepository.findOneByField({ email });
+		} else {
+			return this.userRepository.findOneByFieldWithQuery({
+				email,
+				isDeleted: { $in: [true, false] }
+			});
+		}
 	}
 
 	getById(_id: string) {
