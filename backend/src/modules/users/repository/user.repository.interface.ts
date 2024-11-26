@@ -14,6 +14,7 @@ export interface UserRepositoryInterface extends BaseInterfaceRepository<User> {
 	getAllWithPagination(page: number, size: number, searchUser?: string): Promise<User[]>;
 	getAllSignedUpUsers(): Promise<User[]>;
 	getSignedUpUsersCount(): Promise<number>;
+	getAllUsersIncludeDeleted(): Promise<Array<TSoftDelete<User>>>;
 	updateUserUpdatedAt(user: string): Promise<User>;
 	findDeleted(): Promise<Array<TSoftDelete<User>>>;
 	forceDelete(query: FilterQuery<User>, options?: QueryOptions<User>): Promise<DeleteResult>;
