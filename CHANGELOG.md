@@ -2,7 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
-## [Unreleased](https://github.com/xgeekshq/split/compare/v0.1.26...HEAD)
+## [Unreleased](https://github.com/xgeekshq/split/compare/v0.1.27...HEAD)
+
+## [v0.1.27](https://github.com/xgeekshq/split/compare/v0.1.26...v0.1.27) - 2024-11-26
+
+### What Changed 👀
+
+- docs: add joaofrparreira as a contributor for code, and test @allcontributors (#1584)
+
+**Full Changelog**: https://github.com/xgeekshq/split/compare/v0.1.26...v0.1.27
 
 ## [v0.1.26](https://github.com/xgeekshq/split/compare/v0.1.25...v0.1.26) - 2024-11-26
 
@@ -84,7 +92,6 @@ All notable changes to this project will be documented in this file.
 ### 🐛 Bug Fixes
 - fix: storybook @nunocaseiro (#1519)
 - fix: #1514 - update retro link @nunocaseiro (#1517)
-
 ### 🧩 Dependency Updates
 
 <details>
@@ -142,7 +149,6 @@ All notable changes to this project will be documented in this file.
 - fix: action point new line @GoncaloCanteiro (#1460)
 - fix: card colors position @StereoPT (#1453)
 - fix: sso trigger validations @StereoPT (#1450)
-
 **Full Changelog**: https://github.com/xgeekshq/split/compare/v0.1.19...v0.1.20
 
 ## [v0.1.19](https://github.com/xgeekshq/split/compare/v0.1.18...v0.1.19) - 2023-05-02
@@ -259,7 +265,6 @@ All notable changes to this project will be documented in this file.
 **Full Changelog**: https://github.com/xgeekshq/split/compare/v0.1.17...v0.1.18
 ## [v0.1.17](https://github.com/xgeekshq/split/compare/v0.1.16...v0.1.17) - 2023-03-23
 ### What Changed 👀
-
 - feat: duplicate regular board @JoaoSaIvador (#1281)
 - test: get card service @GoncaloCanteiro (#1289)
 - refactor: create board service @CatiaAntunes96 (#1276)
