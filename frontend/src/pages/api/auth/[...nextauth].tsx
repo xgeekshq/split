@@ -41,6 +41,11 @@ export default NextAuth({
       clientId: CLIENT_ID ?? UNDEFINED,
       clientSecret: CLIENT_SECRET ?? UNDEFINED,
       tenantId: TENANT_ID,
+      authorization: {
+        params: {
+          scope: `openid profile email ${CLIENT_ID}/.default`,
+        },
+      },
     }),
     CredentialsProvider({
       name: 'Credentials',
