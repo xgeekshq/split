@@ -1,20 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { AuthAzureServiceInterface } from '../interfaces/services/auth.azure.service.interface';
 import { ConfidentialClientApplication } from '@azure/msal-node';
-import { Client, PageCollection } from '@microsoft/microsoft-graph-client';
+import { Client } from '@microsoft/microsoft-graph-client';
 import { ConfigService } from '@nestjs/config';
 import { AZURE_AUTHORITY, AZURE_CLIENT_ID, AZURE_CLIENT_SECRET } from 'src/libs/constants/azure';
 import { AzureUserDTO } from '../dto/azure-user.dto';
-
-export type AzureUserFound = {
-	id: string;
-	mail: string;
-	displayName: string;
-	userPrincipalName: string;
-	createdDateTime: Date;
-	accountEnabled: boolean;
-	deletedDateTime: Date | null;
-};
 
 export type AzureDecodedUser = {
 	unique_name: string;
@@ -57,35 +47,9 @@ export default class AuthAzureService implements AuthAzureServiceInterface {
 		});
 	}
 
-	async getUserFromAzure(email: string): Promise<AzureUserFound | undefined> {
+	async getUserFromAzure(email: string): Promise<AzureUserDTO | undefined> {
 		const { value } = await this.graphClient
 			.api('/users')
-			.select([
-				'id',
-				'displayName',
-				'mail',
-				'userPrincipalName',
-				'createdDateTime',
-				'accountEnabled',
-				'deletedDateTime'
-			])
-			.search(`"mail:${email}" OR "displayName:${email}" OR "userPrincipalName:${email}"`)
-			.orderby('displayName')
-			.get();
-
-		return value[0];
-	}
-
-	fetchUserPhoto(userId: string) {
-		return this.graphClient.api(`/users/${userId}/photo/$value`).get();
-	}
-
-	async getADUsers(): Promise<Array<AzureUserDTO>> {
-		let response: PageCollection = await this.graphClient
-			.api('/users')
-			.header('ConsistencyLevel', 'eventual')
-			.count(true)
-			.filter("endswith(mail,'xgeeks.com') AND accountEnabled eq true")
 			.select([
 				'id',
 				'mail',
@@ -96,20 +60,14 @@ export default class AuthAzureService implements AuthAzureServiceInterface {
 				'deletedDateTime',
 				'employeeLeaveDateTime'
 			])
+			.search(`"mail:${email}" OR "displayName:${email}" OR "userPrincipalName:${email}"`)
+			.orderby('displayName')
 			.get();
 
-		let users = [];
+		return value[0];
+	}
 
-		while (response.value.length > 0) {
-			users = users.concat(response.value);
-
-			if (response['@odata.nextLink']) {
-				response = await this.graphClient.api(response['@odata.nextLink']).get();
-			} else {
-				break;
-			}
-		}
-
-		return users;
+	fetchUserPhoto(userId: string) {
+		return this.graphClient.api(`/users/${userId}/photo/$value`).get();
 	}
 }
