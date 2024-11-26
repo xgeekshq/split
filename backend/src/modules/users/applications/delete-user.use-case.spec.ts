@@ -10,6 +10,8 @@ import { DeleteFailedException } from 'src/libs/exceptions/deleteFailedBadReques
 import { DELETE_TEAM_USER_SERVICE, GET_TEAM_USER_SERVICE } from 'src/modules/teamUsers/constants';
 import { USER_REPOSITORY } from 'src/modules/users/constants';
 import { DeleteUserUseCase } from 'src/modules/users/applications/delete-user.use-case';
+import { DELETE_BOARD_USER_SERVICE } from 'src/modules/boardUsers/constants';
+import { DeleteBoardUserServiceInterface } from 'src/modules/boardUsers/interfaces/services/delete.board.user.service.interface';
 
 const userId = faker.datatype.uuid();
 const userDeleted = UserFactory.create({ _id: userId });
@@ -36,6 +38,10 @@ describe('DeleteUserUseCase', () => {
 				{
 					provide: GET_TEAM_USER_SERVICE,
 					useValue: createMock<GetTeamUserServiceInterface>()
+				},
+				{
+					provide: DELETE_BOARD_USER_SERVICE,
+					useValue: createMock<DeleteBoardUserServiceInterface>()
 				}
 			]
 		}).compile();

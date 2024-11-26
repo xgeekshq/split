@@ -20,6 +20,10 @@ export default class GetBoardUserService implements GetBoardUserServiceInterface
 		return this.boardUserRepository.getAllBoardUsersOfBoard(boardId);
 	}
 
+	getAllOpenBoardsOfUser(userId: string): Promise<BoardUser[]> {
+		return this.boardUserRepository.getAllOpenBoardsIdsOfUser(userId);
+	}
+
 	getBoardResponsible(boardId: string): Promise<BoardUser> {
 		return this.boardUserRepository.getBoardResponsible(boardId);
 	}

@@ -19,12 +19,14 @@ import {
 	userRepository
 } from './users.providers';
 import TeamUsersModule from '../teamUsers/teamusers.module';
+import BoardUsersModule from '../boardUsers/boardusers.module';
 
 @Module({
 	imports: [
 		mongooseUserModule,
 		TeamsModule,
 		TeamUsersModule,
+		BoardUsersModule,
 		mongooseResetModule,
 		mongooseTeamUserModule,
 		forwardRef(() => AuthModule)

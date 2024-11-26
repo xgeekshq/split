@@ -8,6 +8,7 @@ import { BulkWriteResult, DeleteResult } from 'mongodb';
 export interface BoardUserRepositoryInterface extends BaseInterfaceRepository<BoardUser> {
 	getAllBoardsIdsOfUser(userId: string): Promise<BoardUser[]>;
 	getAllBoardUsersOfBoard(boardId: string): Promise<BoardUser[]>;
+	getAllOpenBoardsIdsOfUser(userId: string);
 	getBoardResponsible(boardId: string): Promise<BoardUser>;
 	getVotesCount(boardId: string): Promise<BoardUser[]>;
 	getBoardUser(board: string, user: string): Promise<BoardUser>;
@@ -27,7 +28,7 @@ export interface BoardUserRepositoryInterface extends BaseInterfaceRepository<Bo
 		boardId: ObjectId | string
 	): Promise<number>;
 	deleteSimpleBoardUsers(boardId: ObjectId | string, withSession: boolean): Promise<number>;
-	deleteBoardUsers(boardUsers: string[]): Promise<number>;
+	deleteBoardUsers(boardUsers: string[], withSession?: boolean): Promise<number>;
 	deleteBoardUsersByBoardList(
 		teamBoardsIds: string[],
 		withSession?: boolean
