@@ -8,6 +8,7 @@ import Schedules, { SchedulesSchema } from 'src/modules/schedules/entities/sched
 import TeamUser, { TeamUserSchema } from 'src/modules/teamUsers/entities/team.user.schema';
 import Team, { TeamSchema } from 'src/modules/teams/entities/team.schema';
 import User, { UserSchema } from 'src/modules/users/entities/user.schema';
+import { SoftDeletePlugin } from './plugins/soft-delete.plugin';
 
 export const mongooseBoardModule = MongooseModule.forFeature([
 	{ name: Board.name, schema: BoardSchema }
@@ -17,8 +18,16 @@ export const mongooseBoardUserModule = MongooseModule.forFeature([
 	{ name: BoardUser.name, schema: BoardUserSchema }
 ]);
 
-export const mongooseUserModule = MongooseModule.forFeature([
-	{ name: User.name, schema: UserSchema }
+export const mongooseUserModule = MongooseModule.forFeatureAsync([
+	{
+		name: User.name,
+		useFactory: () => {
+			const schema = UserSchema;
+			schema.plugin(SoftDeletePlugin);
+
+			return schema;
+		}
+	}
 ]);
 
 export const mongooseResetModule = MongooseModule.forFeature([

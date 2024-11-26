@@ -15,4 +15,9 @@ export interface DeleteBoardUserServiceInterface extends SessionInterface {
 		teamBoardsIds: string[],
 		withSession?: boolean
 	): Promise<DeleteResult>;
+	deleteBoardUserFromOpenBoards(userId: string, withSession?: boolean);
+	startTransaction(): Promise<void>;
+	commitTransaction(): Promise<void>;
+	abortTransaction(): Promise<void>;
+	endSession(): Promise<void>;
 }
