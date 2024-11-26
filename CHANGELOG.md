@@ -2,7 +2,23 @@
 
 All notable changes to this project will be documented in this file.
 
-## [Unreleased](https://github.com/xgeekshq/split/compare/v0.1.25...HEAD)
+## [Unreleased](https://github.com/xgeekshq/split/compare/v0.1.27...HEAD)
+
+## [v0.1.27](https://github.com/xgeekshq/split/compare/v0.1.26...v0.1.27) - 2024-11-26
+
+### What Changed 👀
+
+- docs: add joaofrparreira as a contributor for code, and test @allcontributors (#1584)
+
+**Full Changelog**: https://github.com/xgeekshq/split/compare/v0.1.26...v0.1.27
+
+## [v0.1.26](https://github.com/xgeekshq/split/compare/v0.1.25...v0.1.26) - 2024-11-26
+
+### What Changed 👀
+
+- feat: issue 945 soft delete users @joaofrparreira (#1583)
+
+**Full Changelog**: https://github.com/xgeekshq/split/compare/v0.1.25...v0.1.26
 
 ## [v0.1.25](https://github.com/xgeekshq/split/compare/v0.1.24...v0.1.25) - 2024-10-22
 
@@ -74,10 +90,8 @@ All notable changes to this project will be documented in this file.
 ## [v0.1.21](https://github.com/xgeekshq/split/compare/v0.1.20...v0.1.21) - 2023-12-21
 ### What Changed 👀
 ### 🐛 Bug Fixes
-
 - fix: storybook @nunocaseiro (#1519)
 - fix: #1514 - update retro link @nunocaseiro (#1517)
-
 ### 🧩 Dependency Updates
 
 <details>
@@ -127,7 +141,6 @@ All notable changes to this project will be documented in this file.
 - fix: remove scheduling from board settings @GoncaloCanteiro (#1456)
 - refactor: test comments module @CatiaAntunes96 (#1448)
 ### 🐛 Bug Fixes
-
 - fix: timer design @StereoPT (#1466)
 - fix: round maxUsers to 2 decimal places @CatiaAntunes96 (#1463)
 - fix: popover border in main board @GoncaloCanteiro (#1461)
@@ -136,7 +149,6 @@ All notable changes to this project will be documented in this file.
 - fix: action point new line @GoncaloCanteiro (#1460)
 - fix: card colors position @StereoPT (#1453)
 - fix: sso trigger validations @StereoPT (#1450)
-
 **Full Changelog**: https://github.com/xgeekshq/split/compare/v0.1.19...v0.1.20
 
 ## [v0.1.19](https://github.com/xgeekshq/split/compare/v0.1.18...v0.1.19) - 2023-05-02
@@ -252,9 +264,7 @@ All notable changes to this project will be documented in this file.
 - fix: redirect guest user on public board @CatiaAntunes96 (#1304)
 **Full Changelog**: https://github.com/xgeekshq/split/compare/v0.1.17...v0.1.18
 ## [v0.1.17](https://github.com/xgeekshq/split/compare/v0.1.16...v0.1.17) - 2023-03-23
-
 ### What Changed 👀
-
 - feat: duplicate regular board @JoaoSaIvador (#1281)
 - test: get card service @GoncaloCanteiro (#1289)
 - refactor: create board service @CatiaAntunes96 (#1276)
