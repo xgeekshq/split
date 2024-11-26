@@ -7,3 +7,5 @@ export const AZURE_CLIENT_SECRET = 'azure.clientSecret';
 export const AZURE_TENANT_ID = 'azure.tenantId';
 
 export const AZURE_AUTHORITY = 'azure.authority';
+
+export const AZURE_WELLKNOWN = 'azure.wellknown';
