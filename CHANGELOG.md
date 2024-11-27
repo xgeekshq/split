@@ -2,7 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
-## [Unreleased](https://github.com/xgeekshq/split/compare/v0.1.28...HEAD)
+## [Unreleased](https://github.com/xgeekshq/split/compare/v0.1.29...HEAD)
+
+## [v0.1.29](https://github.com/xgeekshq/split/compare/v0.1.28...v0.1.29) - 2024-11-27
+
+### What Changed 👀
+
+- feat: issue 1594 synchronize users ad app @joaofrparreira (#1596)
+
+**Full Changelog**: https://github.com/xgeekshq/split/compare/v0.1.28...v0.1.29
 
 ## [v0.1.28](https://github.com/xgeekshq/split/compare/v0.1.27...v0.1.28) - 2024-11-26
 
@@ -158,7 +166,6 @@ All notable changes to this project will be documented in this file.
 - fix: sso trigger validations @StereoPT (#1450)
 **Full Changelog**: https://github.com/xgeekshq/split/compare/v0.1.19...v0.1.20
 ## [v0.1.19](https://github.com/xgeekshq/split/compare/v0.1.18...v0.1.19) - 2023-05-02
-
 ### What Changed 👀
 
 - refactor: extract useCases from services @CatiaAntunes96 (#1447)
@@ -288,7 +295,6 @@ All notable changes to this project will be documented in this file.
 - chore: update next and react @nunocaseiro (#1251)
 - feat: option to force a user not to be selected as responsible @JoaoSaIvador (#1237)
 ### 🚀 Features
-
 - refactor: user components @StereoPT (#1272)
 - refactor: team pages state logic @JoaoSaIvador (#1256)
 - feat: add test_request issue @GoncaloCanteiro (#1254)
