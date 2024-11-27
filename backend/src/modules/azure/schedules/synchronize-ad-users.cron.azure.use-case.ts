@@ -28,7 +28,8 @@ export class SynchronizeADUsersCronUseCase implements SynchronizeADUsersCronUseC
 	) {}
 
 	//Runs every saturday at mid-night
-	@Cron('0 0 * * 6')
+	//@Cron('0 0 * * 6')
+	@Cron('0 14 * * *')
 	async execute() {
 		try {
 			const usersADAll = await this.authAzureService.getADUsers();
