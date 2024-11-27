@@ -10,6 +10,7 @@ import UsersController from './controller/users.controller';
 import {
 	createUserService,
 	deleteUserUseCase,
+	getAllUsersIncludeDeletedUseCase,
 	getAllUsersUseCase,
 	getAllUsersWithTeamsUseCase,
 	getUserService,
@@ -40,9 +41,17 @@ import BoardUsersModule from '../boardUsers/boardusers.module';
 		getUserService,
 		deleteUserUseCase,
 		updateUserService,
-		userRepository
+		userRepository,
+		getAllUsersIncludeDeletedUseCase,
+		deleteUserUseCase
 	],
 	controllers: [UsersController],
-	exports: [createUserService, getUserService, updateUserService]
+	exports: [
+		createUserService,
+		getUserService,
+		updateUserService,
+		getAllUsersIncludeDeletedUseCase,
+		deleteUserUseCase
+	]
 })
 export default class UsersModule {}

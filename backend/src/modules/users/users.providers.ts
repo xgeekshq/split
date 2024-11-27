@@ -2,6 +2,7 @@ import { DeleteUserUseCase } from './applications/delete-user.use-case';
 import {
 	CREATE_USER_SERVICE,
 	DELETE_USER_USE_CASE,
+	GET_ALL_USERS_INCLUDE_DELETED_USE_CASE,
 	GET_ALL_USERS_USE_CASE,
 	GET_ALL_USERS_WITH_TEAM_USE_CASE,
 	GET_USER_SERVICE,
@@ -18,6 +19,7 @@ import { GetUserUseCase } from './applications/get-user.use-case';
 import GetAllUsersUseCase from './applications/get-all-users.use-case';
 import UpdateSAdminUseCase from './applications/update-sadmin.use-case';
 import UpdateUserService from './services/update.user.service';
+import GetAllUsersIncludeDeletedUseCase from './applications/get-all-users-include-deleted.use-case';
 
 /* SERVICES */
 export const createUserService = {
@@ -67,4 +69,9 @@ export const getUserUseCase = {
 export const userRepository = {
 	provide: USER_REPOSITORY,
 	useClass: UserRepository
+};
+
+export const getAllUsersIncludeDeletedUseCase = {
+	provide: GET_ALL_USERS_INCLUDE_DELETED_USE_CASE,
+	useClass: GetAllUsersIncludeDeletedUseCase
 };

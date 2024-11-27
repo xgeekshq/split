@@ -99,6 +99,13 @@ export class UserRepository
 			.exec();
 	}
 
+	getAllUsersIncludeDeleted() {
+		return this.model
+			.find({ isDeleted: { $in: [true, false] } })
+			.select('-password -__v -currentHashedRefreshToken -strategy -updatedAt')
+			.exec();
+	}
+
 	updateUserUpdatedAt(user: string) {
 		return this.findOneByFieldAndUpdate({ _id: user }, { $set: { updatedAt: new Date() } });
 	}

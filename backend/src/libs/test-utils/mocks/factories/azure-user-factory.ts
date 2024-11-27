@@ -3,11 +3,14 @@ import { buildTestFactory } from './generic-factory.mock';
 import { AzureUserDTO } from 'src/modules/azure/dto/azure-user.dto';
 
 const mockUserData = (): AzureUserDTO => {
-	const mail = faker.internet.email();
+	//xGeeks AD style, the '.' is mandatory for some tests
+	const firstName = faker.name.firstName();
+	const lastName = faker.name.lastName();
+	const mail = firstName[0].toLowerCase() + '.' + lastName.toLowerCase() + '@xgeeks.com';
 
 	return {
 		id: faker.datatype.uuid(),
-		displayName: faker.name.firstName() + faker.name.lastName(),
+		displayName: firstName + ' ' + lastName,
 		mail: mail,
 		userPrincipalName: mail,
 		createdDateTime: faker.date.past(5),
