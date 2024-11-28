@@ -2,7 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
-## [Unreleased](https://github.com/xgeekshq/split/compare/v0.1.29...HEAD)
+## [Unreleased](https://github.com/xgeekshq/split/compare/v0.1.30...HEAD)
+
+## [v0.1.30](https://github.com/xgeekshq/split/compare/v0.1.29...v0.1.30) - 2024-11-28
+
+### What Changed 👀
+
+- fix: issue 1598 fix users synchronization cron time @joaofrparreira (#1599)
+
+**Full Changelog**: https://github.com/xgeekshq/split/compare/v0.1.29...v0.1.30
 
 ## [v0.1.29](https://github.com/xgeekshq/split/compare/v0.1.28...v0.1.29) - 2024-11-27
 
@@ -167,7 +175,6 @@ All notable changes to this project will be documented in this file.
 **Full Changelog**: https://github.com/xgeekshq/split/compare/v0.1.19...v0.1.20
 ## [v0.1.19](https://github.com/xgeekshq/split/compare/v0.1.18...v0.1.19) - 2023-05-02
 ### What Changed 👀
-
 - refactor: extract useCases from services @CatiaAntunes96 (#1447)
 - refactor: change types for constants on azure module @CatiaAntunes96 (#1445)
 - refactor: change auth module types for constants @CatiaAntunes96 (#1444)
@@ -298,7 +305,6 @@ All notable changes to this project will be documented in this file.
 - refactor: user components @StereoPT (#1272)
 - refactor: team pages state logic @JoaoSaIvador (#1256)
 - feat: add test_request issue @GoncaloCanteiro (#1254)
-
 ### 🐛 Bug Fixes
 
 - fix: duplicate board without team @nunocaseiro (#1299)
