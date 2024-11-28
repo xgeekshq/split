@@ -63,6 +63,7 @@ export class SynchronizeADUsersCronUseCase implements SynchronizeADUsersCronUseC
 
 			await this.removeUsersFromApp(usersADFiltered, usersApp);
 			await this.addUsersToApp(usersADFiltered, usersApp);
+
 			this.logger.log('Synchronization of users between App and AD runned successfully.');
 		} catch (err) {
 			this.logger.error(
