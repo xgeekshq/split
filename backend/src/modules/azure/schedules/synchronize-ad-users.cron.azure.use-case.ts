@@ -28,8 +28,7 @@ export class SynchronizeADUsersCronUseCase implements SynchronizeADUsersCronUseC
 	) {}
 
 	//Runs every saturday at mid-night
-	//@Cron('0 0 * * 6')
-	@Cron('0 14 * * *')
+	@Cron('0 0 * * 6')
 	async execute() {
 		try {
 			const usersADAll = await this.authAzureService.getADUsers();
@@ -64,6 +63,8 @@ export class SynchronizeADUsersCronUseCase implements SynchronizeADUsersCronUseC
 
 			await this.removeUsersFromApp(usersADFiltered, usersApp);
 			await this.addUsersToApp(usersADFiltered, usersApp);
+
+			this.logger.log('Synchronization of users between App and AD runned successfully.');
 		} catch (err) {
 			this.logger.error(
 				`An error occurred while synchronizing users between AD and Aplit Application. Message: ${err.message}`
