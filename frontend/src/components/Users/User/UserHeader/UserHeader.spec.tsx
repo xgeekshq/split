@@ -1,10 +1,10 @@
 import React from 'react';
-import { UseQueryResult } from '@tanstack/react-query';
 import { fireEvent, waitFor } from '@testing-library/react';
 
 import UserHeader, { UserHeaderProps } from '@/components/Users/User/UserHeader/UserHeader';
 import { USERS_ROUTE } from '@/constants/routes';
 import useTeamsWithoutUser from '@/hooks/teams/useTeamsWithoutUser';
+import { UseTeamsWithoutUserQueryReturnType } from '@/types/hooks/teams/useTeamsWithoutUserQueryReturnType';
 import { TeamCheckedFactory } from '@/utils/factories/team';
 import { UserFactory } from '@/utils/factories/user';
 import { libraryMocks } from '@/utils/testing/mocks';
@@ -12,7 +12,9 @@ import { renderWithProviders } from '@/utils/testing/renderWithProviders';
 
 const { mockRouter } = libraryMocks.mockNextRouter({ pathname: '/users' });
 
-const mockUseTeamsWithoutUser = useTeamsWithoutUser as jest.Mock<Partial<UseQueryResult>>;
+const mockUseTeamsWithoutUser = useTeamsWithoutUser as jest.Mock<
+  Partial<UseTeamsWithoutUserQueryReturnType>
+>;
 jest.mock('@/hooks/teams/useTeamsWithoutUser');
 
 const render = (props: Partial<UserHeaderProps> = {}) =>
@@ -23,8 +25,10 @@ const render = (props: Partial<UserHeaderProps> = {}) =>
 describe('Components/Users/User/Header', () => {
   beforeEach(() => {
     mockUseTeamsWithoutUser.mockReturnValue({
-      data: TeamCheckedFactory.createMany(3),
-    } as Partial<UseQueryResult>);
+      fetchTeamsWithoutUser: {
+        data: TeamCheckedFactory.createMany(3),
+      },
+    } as Partial<UseTeamsWithoutUserQueryReturnType>);
   });
 
   it('should render correctly', () => {
@@ -61,6 +65,7 @@ describe('Components/Users/User/Header', () => {
   it('should be able to open the teams dialog', async () => {
     // Arrange
     const setState = jest.fn();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const useStateMock: any = (initState: boolean) => [initState, setState];
     jest.spyOn(React, 'useState').mockImplementationOnce(useStateMock);
 

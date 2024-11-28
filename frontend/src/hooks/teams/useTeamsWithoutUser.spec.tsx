@@ -1,4 +1,4 @@
-import { renderHook, waitFor } from '@testing-library/react';
+import { act, renderHook, waitFor } from '@testing-library/react';
 
 import { getTeamsWithoutUser } from '@/api/teamService';
 import { createErrorMessage } from '@/constants/toasts';
@@ -33,9 +33,9 @@ describe('Hooks/Teams/useTeamsWithoutUser', () => {
   it('should fetch teams without user', async () => {
     const { result } = render('thisIsTheUserId');
 
-    await waitFor(() => expect(result.current.isSuccess).toBeTruthy());
-    expect(mockGetTeamsWithoutUser).toBeCalled();
-    expect(result.current.data).toBe(DUMMY_TEAMS);
+    await waitFor(() => expect(result.current.fetchTeamsWithoutUser.isSuccess).toBeTruthy());
+    expect(mockGetTeamsWithoutUser).toHaveBeenCalled();
+    expect(result.current.fetchTeamsWithoutUser.data).toBe(DUMMY_TEAMS);
   });
 
   it('should set toast error', async () => {
@@ -46,11 +46,12 @@ describe('Hooks/Teams/useTeamsWithoutUser', () => {
     const { result } = render('thisIsTheUserId', {
       recoilOptions: { recoilState: toastState, recoilHandler },
     });
+    act(() => result.current.handleErrorOnFetchTeamsWithoutUser());
 
     // Assert
     await waitFor(() => {
-      expect(result.current.isError).toBeTruthy();
-      expect(result.current.data).not.toBeDefined();
+      expect(result.current.fetchTeamsWithoutUser.isError).toBeTruthy();
+      expect(result.current.fetchTeamsWithoutUser.data).not.toBeDefined();
       expect(recoilHandler).toHaveBeenCalledWith(createErrorMessage(ErrorMessages.GET));
     });
   });

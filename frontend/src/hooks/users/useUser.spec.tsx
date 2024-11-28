@@ -1,4 +1,4 @@
-import { renderHook, waitFor } from '@testing-library/react';
+import { act, renderHook, waitFor } from '@testing-library/react';
 
 import { getUser } from '@/api/userService';
 import { createErrorMessage } from '@/constants/toasts';
@@ -34,8 +34,8 @@ describe('hooks/users/useUser', () => {
     const { result } = render(DUMMY_USER._id);
 
     // Assert
-    await waitFor(() => expect(result.current.isSuccess).toBeTruthy());
-    expect(result.current.data).toBe(DUMMY_USER);
+    await waitFor(() => expect(result.current.fetchUser.isSuccess).toBeTruthy());
+    expect(result.current.fetchUser.data).toBe(DUMMY_USER);
   });
 
   it('should set toast error', async () => {
@@ -47,11 +47,12 @@ describe('hooks/users/useUser', () => {
     const { result } = render(DUMMY_USER._id, {
       recoilOptions: { recoilState: toastState, recoilHandler },
     });
+    act(() => result.current.handleOnErrorFetchUser());
 
     // Assert
     await waitFor(() => {
-      expect(result.current.isError).toBeTruthy();
-      expect(result.current.data).not.toBeDefined();
+      expect(result.current.fetchUser.isError).toBeTruthy();
+      expect(result.current.fetchUser.data).not.toBeDefined();
       expect(recoilHandler).toHaveBeenCalledWith(createErrorMessage(ErrorMessages.GET_ONE));
     });
   });

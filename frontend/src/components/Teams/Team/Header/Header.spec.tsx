@@ -8,7 +8,7 @@ import { libraryMocks } from '@/utils/testing/mocks';
 import { renderWithProviders } from '@/utils/testing/renderWithProviders';
 
 const { mockRouter } = libraryMocks.mockNextRouter({ pathname: '/teams' });
-libraryMocks.mockReactQuery();
+//libraryMocks.mockReactQuery();
 const render = (props: Partial<TeamHeaderProps> = {}) =>
   renderWithProviders(<TeamHeader hasPermissions title="MyTeam" {...props} />, {
     routerOptions: mockRouter,

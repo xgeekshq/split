@@ -1,13 +1,14 @@
-import { UseInfiniteQueryResult } from '@tanstack/react-query';
-
 import useUsersWithTeams from '@/hooks/users/useUsersWithTeams';
 import Users from '@/pages/users';
+import { UseUsersWithTeamsQueryReturnType } from '@/types/hooks/users/useUsersWithTeamsQueryReturnType';
 import { libraryMocks } from '@/utils/testing/mocks';
 import { renderWithProviders } from '@/utils/testing/renderWithProviders';
 
 const { mockRouter } = libraryMocks.mockNextRouter({ pathname: '/users' });
 
-const mockUseUsersWithTeams = useUsersWithTeams as jest.Mock<Partial<UseInfiniteQueryResult>>;
+const mockUseUsersWithTeams = useUsersWithTeams as jest.Mock<
+  Partial<UseUsersWithTeamsQueryReturnType>
+>;
 jest.mock('@/hooks/users/useUsersWithTeams');
 
 const render = () => renderWithProviders(<Users />, { routerOptions: mockRouter });
@@ -15,8 +16,10 @@ const render = () => renderWithProviders(<Users />, { routerOptions: mockRouter 
 describe('Pages/Users', () => {
   beforeEach(() => {
     mockUseUsersWithTeams.mockReturnValue({
-      status: 'loading',
-    } as Partial<UseInfiniteQueryResult>);
+      fetchUsersWithTeams: {
+        status: 'loading',
+      },
+    } as unknown as Partial<UseUsersWithTeamsQueryReturnType>);
   });
 
   it('should render correctly', () => {

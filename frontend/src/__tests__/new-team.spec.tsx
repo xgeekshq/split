@@ -1,15 +1,14 @@
-import { UseQueryResult } from '@tanstack/react-query';
 import { waitFor } from '@testing-library/react';
 
 import { ROUTES } from '@/constants/routes';
 import useUsers from '@/hooks/users/useUsers';
 import NewTeam from '@/pages/teams/new';
-import { User } from '@/types/user/user';
+import { UseUsersQueryReturnType } from '@/types/hooks/users/useUsersQueryReturnType';
 import { UserFactory } from '@/utils/factories/user';
 import { libraryMocks } from '@/utils/testing/mocks';
 import { renderWithProviders } from '@/utils/testing/renderWithProviders';
 
-const mockUseUsers = useUsers as jest.Mock<UseQueryResult<User[]>>;
+const mockUseUsers = useUsers as jest.Mock<Partial<UseUsersQueryReturnType>>;
 jest.mock('@/hooks/users/useUsers');
 
 const { mockRouter } = libraryMocks.mockNextRouter({ pathname: '/teams/new' });
@@ -20,8 +19,10 @@ describe('Pages/Teams/[teamId]', () => {
   it('should render correctly', () => {
     // Arrange
     mockUseUsers.mockReturnValue({
-      data: UserFactory.createMany(10),
-    } as UseQueryResult<User[]>);
+      fetchAllUsers: {
+        data: UserFactory.createMany(10),
+      },
+    } as Partial<UseUsersQueryReturnType>);
 
     // Act
     const { getByTestId } = render();
@@ -33,8 +34,10 @@ describe('Pages/Teams/[teamId]', () => {
   it('should redirect when no data is fetched', async () => {
     // Arrange
     mockUseUsers.mockReturnValue({
-      isLoading: true,
-    } as UseQueryResult<User[]>);
+      fetchAllUsers: {
+        isLoading: true,
+      },
+    } as Partial<UseUsersQueryReturnType>);
 
     render();
 
