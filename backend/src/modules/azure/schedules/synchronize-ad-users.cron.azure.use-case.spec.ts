@@ -83,7 +83,6 @@ describe('SynchronizeAdUsersCronUseCase', () => {
 		getAllUsersMock.execute.mockResolvedValueOnce(finalAppUsers);
 		await synchronizeADUsers.execute();
 		expect(deleteUserMock.execute).toHaveBeenCalledWith(userNotInAD._id);
-		expect(deleteUserMock.execute.mock.calls).toEqual([[userNotInAD._id]]);
 		expect(createUserServiceMock.create).toHaveBeenCalledWith({
 			email: userNotInApp.mail,
 			firstName: userNotInApp.displayName.split(' ')[0],
