@@ -32,7 +32,8 @@ export const configuration = (): Configuration => {
 			clientSecret: process.env.AZURE_CLIENT_SECRET as string,
 			tenantId: process.env.AZURE_TENANT_ID as string,
 			enabled: process.env.AZURE_ENABLE === 'true',
-			authority: `https://login.microsoftonline.com/${process.env.AZURE_TENANT_ID}`
+			authority: `https://login.microsoftonline.com/${process.env.AZURE_TENANT_ID}`,
+			wellknown: `https://login.microsoftonline.com/${process.env.AZURE_TENANT_ID}/.well-known/openid-configuration`
 		},
 		smtp: {
 			host: process.env.SMTP_HOST as string,

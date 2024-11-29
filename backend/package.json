@@ -1,6 +1,6 @@
 {
   "name": "backend",
-  "version": "v0.1.21",
+  "version": "v0.1.30",
   "description": "",
   "author": "",
   "private": true,
@@ -54,6 +54,7 @@
     "dotenv": "^16.4.5",
     "express": "^4.21.0",
     "joi": "^17.13.3",
+    "jwks-rsa": "^3.1.0",
     "jwt-decode": "^4.0.0",
     "lint-staged": "^15.2.10",
     "moment": "^2.30.1",

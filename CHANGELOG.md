@@ -2,19 +2,121 @@
 
 All notable changes to this project will be documented in this file.
 
-## [Unreleased](https://github.com/xgeekshq/split/compare/v0.1.21...HEAD)
+## [Unreleased](https://github.com/xgeekshq/split/compare/v0.1.30...HEAD)
 
-## [v0.1.21](https://github.com/xgeekshq/split/compare/v0.1.20...v0.1.21) - 2023-12-21
+## [v0.1.30](https://github.com/xgeekshq/split/compare/v0.1.29...v0.1.30) - 2024-11-28
 
 ### What Changed 👀
 
-### 🐛 Bug Fixes
+- fix: issue 1598 fix users synchronization cron time @joaofrparreira (#1599)
 
-- fix: storybook @nunocaseiro (#1519)
-- fix: #1514 - update retro link @nunocaseiro (#1517)
+**Full Changelog**: https://github.com/xgeekshq/split/compare/v0.1.29...v0.1.30
+
+## [v0.1.29](https://github.com/xgeekshq/split/compare/v0.1.28...v0.1.29) - 2024-11-27
+
+### What Changed 👀
+
+- feat: issue 1594 synchronize users ad app @joaofrparreira (#1596)
+
+**Full Changelog**: https://github.com/xgeekshq/split/compare/v0.1.28...v0.1.29
+
+## [v0.1.28](https://github.com/xgeekshq/split/compare/v0.1.27...v0.1.28) - 2024-11-26
+
+### What Changed 👀
+
+- fix: issue-1593- validate access token on login register @joaofrparreira (#1595)
+
+**Full Changelog**: https://github.com/xgeekshq/split/compare/v0.1.27...v0.1.28
+
+## [v0.1.27](https://github.com/xgeekshq/split/compare/v0.1.26...v0.1.27) - 2024-11-26
+
+### What Changed 👀
+
+- docs: add joaofrparreira as a contributor for code, and test @allcontributors (#1584)
+
+**Full Changelog**: https://github.com/xgeekshq/split/compare/v0.1.26...v0.1.27
+
+## [v0.1.26](https://github.com/xgeekshq/split/compare/v0.1.25...v0.1.26) - 2024-11-26
+
+### What Changed 👀
+
+- feat: issue 945 soft delete users @joaofrparreira (#1583)
+
+**Full Changelog**: https://github.com/xgeekshq/split/compare/v0.1.25...v0.1.26
+
+## [v0.1.25](https://github.com/xgeekshq/split/compare/v0.1.24...v0.1.25) - 2024-10-22
+
+### What Changed 👀
+
+- feat: change and add split env vars  @r-p-alves (#1580)
+
+**Full Changelog**: https://github.com/xgeekshq/split/compare/v0.1.24...v0.1.25
+
+## [v0.1.24](https://github.com/xgeekshq/split/compare/v0.1.23...v0.1.24) - 2024-10-18
+
+### What Changed 👀
+
+* No changes
+
+**Full Changelog**: https://github.com/xgeekshq/split/compare/v0.1.23...v0.1.24
+
+## [v0.1.23](https://github.com/xgeekshq/split/compare/v0.1.22...v0.1.23) - 2024-10-18
+
+### What Changed 👀
+
+* No changes
+
+**Full Changelog**: https://github.com/xgeekshq/split/compare/v0.1.22...v0.1.23
+
+## [v0.1.22](https://github.com/xgeekshq/split/compare/v0.1.21...v0.1.22) - 2024-10-18
+
+### What Changed 👀
+
+- feat: change split domain @r-p-alves (#1577)
+- feat: create helm chart for split @r-p-alves (#1574)
+- docs: add sousadax12 as a contributor for infra, and code @allcontributors (#1573)
+- docs: add r-p-alves as a contributor for infra, and code @allcontributors (#1572)
+- feat: update ci/cd to push docker image to the new container registry @r-p-alves (#1569)
 
 ### 🧩 Dependency Updates
 
+<details>
+<summary>27 changes</summary>
+- chore(deps): bump tar from 6.1.11 to 6.2.1 in /backend @dependabot (#1561)
+- chore(deps): bump ejs from 3.1.8 to 3.1.10 in /backend @dependabot (#1560)
+- chore(deps-dev): bump ejs from 3.1.9 to 3.1.10 in /frontend @dependabot (#1559)
+- chore(deps): bump pug from 3.0.2 to 3.0.3 in /backend @dependabot (#1558)
+- chore(deps): bump ws and socket.io-client in /frontend @dependabot (#1557)
+- chore(deps): bump fast-xml-parser and @aws-sdk/credential-providers in /backend @dependabot (#1556)
+- chore(deps): bump socket.io and @nestjs/platform-socket.io in /backend @dependabot (#1555)
+- chore(deps-dev): bump elliptic from 6.5.4 to 6.5.7 in /frontend @dependabot (#1554)
+- chore(deps): bump micromatch from 4.0.5 to 4.0.8 in /backend @dependabot (#1553)
+- chore(deps): bump axios and start-server-and-test in /frontend @dependabot (#1552)
+- chore(deps): bump micromatch from 4.0.5 to 4.0.8 in /frontend @dependabot (#1551)
+- chore(deps): bump webpack and @nestjs/cli in /backend @dependabot (#1550)
+- chore(deps): bump next from 13.5.4 to 14.2.14 in /frontend @dependabot (#1547)
+- chore(deps): bump send and express in /frontend @dependabot (#1545)
+- chore(deps-dev): bump @commitlint/cli from 18.4.2 to 19.2.1 @dependabot (#1543)
+- chore(deps-dev): bump webpack-dev-middleware from 6.1.1 to 6.1.2 in /frontend @dependabot (#1542)
+- chore(deps-dev): bump @commitlint/config-conventional from 18.4.3 to 19.1.0 @dependabot (#1541)
+- chore(deps): bump follow-redirects from 1.15.2 to 1.15.6 in /frontend @dependabot (#1539)
+- chore(deps): bump follow-redirects from 1.15.1 to 1.15.6 in /backend @dependabot (#1538)
+- chore(deps): bump nodemailer from 6.7.7 to 6.9.9 in /backend @dependabot (#1537)
+- chore(deps): bump jose from 4.13.1 to 4.15.5 in /frontend @dependabot (#1536)
+- chore(deps-dev): bump ip from 2.0.0 to 2.0.1 in /frontend @dependabot (#1533)
+- chore(deps): bump ip from 1.1.8 to 1.1.9 in /backend @dependabot (#1532)
+- chore(deps-dev): bump husky from 8.0.3 to 9.0.11 @dependabot (#1529)
+- chore(deps): bump release-drafter/release-drafter from 5 to 6 @dependabot (#1528)
+- chore(deps): bump actions/cache from 3 to 4 @dependabot (#1523)
+- chore(deps): bump msgpackr from 1.6.2 to 1.10.1 in /backend @dependabot (#1520)
+</details>
+**Full Changelog**: https://github.com/xgeekshq/split/compare/v0.1.21...v0.1.22
+## [v0.1.21](https://github.com/xgeekshq/split/compare/v0.1.20...v0.1.21) - 2023-12-21
+### What Changed 👀
+### 🐛 Bug Fixes
+- fix: storybook @nunocaseiro (#1519)
+- fix: #1514 - update retro link @nunocaseiro (#1517)
+### 🧩 Dependency Updates
 <details>
 <summary>37 changes</summary>
 - chore(deps-dev): bump @adobe/css-tools from 4.3.1 to 4.3.2 in /frontend @dependabot (#1516)
@@ -54,20 +156,14 @@ All notable changes to this project will be documented in this file.
 - chore(deps): bump vm2 from 3.9.17 to 3.9.19 in /backend @dependabot (#1468)
 - chore(deps): bump socket.io-parser from 4.2.2 to 4.2.3 in /backend @dependabot (#1470)
 - chore(deps): bump engine.io, @nestjs/platform-socket.io and socket.io in /backend @dependabot (#1464)
-
 </details>
 **Full Changelog**: https://github.com/xgeekshq/split/compare/v0.1.20...v0.1.21
-
 ## [v0.1.20](https://github.com/xgeekshq/split/compare/v0.1.19...v0.1.20) - 2023-05-07
-
 ### What Changed 👀
-
 - test: board users @patricia-mdias (#1452)
 - fix: remove scheduling from board settings @GoncaloCanteiro (#1456)
 - refactor: test comments module @CatiaAntunes96 (#1448)
-
 ### 🐛 Bug Fixes
-
 - fix: timer design @StereoPT (#1466)
 - fix: round maxUsers to 2 decimal places @CatiaAntunes96 (#1463)
 - fix: popover border in main board @GoncaloCanteiro (#1461)
@@ -76,13 +172,9 @@ All notable changes to this project will be documented in this file.
 - fix: action point new line @GoncaloCanteiro (#1460)
 - fix: card colors position @StereoPT (#1453)
 - fix: sso trigger validations @StereoPT (#1450)
-
 **Full Changelog**: https://github.com/xgeekshq/split/compare/v0.1.19...v0.1.20
-
 ## [v0.1.19](https://github.com/xgeekshq/split/compare/v0.1.18...v0.1.19) - 2023-05-02
-
 ### What Changed 👀
-
 - refactor: extract useCases from services @CatiaAntunes96 (#1447)
 - refactor: change types for constants on azure module @CatiaAntunes96 (#1445)
 - refactor: change auth module types for constants @CatiaAntunes96 (#1444)
@@ -188,17 +280,11 @@ All notable changes to this project will be documented in this file.
 **Full Changelog**: https://github.com/xgeekshq/split/compare/v0.1.18...v0.1.19
 ## [v0.1.18](https://github.com/xgeekshq/split/compare/v0.1.17...v0.1.18) - 2023-03-24
 ### What Changed 👀
-
 ### 🐛 Bug Fixes
-
 - fix: redirect guest user on public board @CatiaAntunes96 (#1304)
-
 **Full Changelog**: https://github.com/xgeekshq/split/compare/v0.1.17...v0.1.18
-
 ## [v0.1.17](https://github.com/xgeekshq/split/compare/v0.1.16...v0.1.17) - 2023-03-23
-
 ### What Changed 👀
-
 - feat: duplicate regular board @JoaoSaIvador (#1281)
 - test: get card service @GoncaloCanteiro (#1289)
 - refactor: create board service @CatiaAntunes96 (#1276)
@@ -215,13 +301,10 @@ All notable changes to this project will be documented in this file.
 - test: communication consumers tests @GoncaloCanteiro (#1249)
 - chore: update next and react @nunocaseiro (#1251)
 - feat: option to force a user not to be selected as responsible @JoaoSaIvador (#1237)
-
 ### 🚀 Features
-
 - refactor: user components @StereoPT (#1272)
 - refactor: team pages state logic @JoaoSaIvador (#1256)
 - feat: add test_request issue @GoncaloCanteiro (#1254)
-
 ### 🐛 Bug Fixes
 
 - fix: duplicate board without team @nunocaseiro (#1299)

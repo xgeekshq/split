@@ -23,6 +23,16 @@ export class BoardUserRepository
 		return this.findAllWithQuery({ user: userId }, null, 'board');
 	}
 
+	async getAllOpenBoardsIdsOfUser(userId: string) {
+		const boards = await this.findAllWithQuery({ user: userId }, null, 'board', {
+			path: 'board',
+			select: '_id',
+			match: { submitedAt: { $eq: null } }
+		});
+
+		return boards.filter((b) => b.board !== null).map((b) => b._id);
+	}
+
 	getAllBoardUsersOfBoard(boardId: string) {
 		return this.findAllWithQuery({ board: boardId });
 	}
@@ -108,10 +118,13 @@ export class BoardUserRepository
 		);
 	}
 
-	deleteBoardUsers(boardUsers: string[]) {
-		return this.deleteMany({
-			_id: { $in: boardUsers }
-		});
+	deleteBoardUsers(boardUsers: string[], withSession?: boolean) {
+		return this.deleteMany(
+			{
+				_id: { $in: boardUsers }
+			},
+			withSession
+		);
 	}
 
 	deleteBoardUsersByBoardList(teamBoardsIds: string[], withSession?: boolean) {

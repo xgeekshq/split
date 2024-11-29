@@ -9,6 +9,8 @@ export const UPDATE_USER_SERVICE = 'UpdateUserService';
 
 export const GET_ALL_USERS_USE_CASE = 'GetAllUsersUseCase';
 
+export const GET_ALL_USERS_INCLUDE_DELETED_USE_CASE = 'GetAllUsersIncludeDeletedUseCase';
+
 export const GET_ALL_USERS_WITH_TEAM_USE_CASE = 'GetAllUsersWithTeamsUseCase';
 
 export const GET_USER_USE_CASE = 'GetUserUseCase';

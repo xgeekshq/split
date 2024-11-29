@@ -1,0 +1,132 @@
+##############################
+## Default values for split##
+##############################
+
+
+global:
+  image:
+    tag: ""
+
+  imagePullSecrets: 
+    - name: acr-split-cred
+
+  nameOverride: ""
+  fullnameOverride: ""
+
+  configMap:
+    enabled: true
+
+  serviceAccount:
+    # Specifies whether a service account should be created
+    create: true
+    # Annotations to add to the service account
+    annotations: {}
+    # The name of the service account to use.
+    # If not set and create is true, a name is generated using the fullname template
+    name: ""
+
+  podAnnotations: {}
+
+  podSecurityContext: {}
+    # fsGroup: 2000
+
+  securityContext: {}
+    # capabilities:
+    #   drop:
+    #   - ALL
+    # readOnlyRootFilesystem: true
+    # runAsNonRoot: true
+    # runAsUser: 1000
+
+  nodeSelector: {}
+
+  tolerations: []
+
+  affinity: {}
+
+  ingress:
+    enabled: true
+    annotations: 
+      cert-manager.io/acme-challenge-type: http01
+      cert-manager.io/cluster-issuer: letsencrypt
+      nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+      nginx.ingress.kubernetes.io/from-to-www-redirect: "true"
+      nginx.ingress.kubernetes.io/proxy-body-size: 16m
+    className: nginx
+    hosts: []
+    tls: []
+
+##############################
+##      Frontend values     ##
+##############################
+frontend:
+
+  replicaCount: 1
+
+  containerName: "frontend"
+
+  image:
+    repository: splitcr.azurecr.io/frontend
+    pullPolicy: IfNotPresent
+
+  service:
+    type: ClusterIP
+    port: 3000
+    targetPort: 3000
+
+  secret:
+    enabled: true
+    create: false
+    name: split-frontend-azure-secrets
+
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 100
+    targetCPUUtilizationPercentage: 80
+    # targetMemoryUtilizationPercentage: 80
+
+  resources:
+    limits:
+      cpu: 500m
+      memory: 512Mi
+    requests:
+      cpu: 100m
+      memory: 256Mi
+
+##############################
+##      Backend values      ##
+##############################
+backend:
+
+  replicaCount: 1
+
+  containerName: "backend"
+
+  image:
+    repository: splitcr.azurecr.io/backend
+    pullPolicy: IfNotPresent
+
+  service:
+    type: ClusterIP
+    port: 3200
+
+  secret:
+    enabled: true
+    create: false
+    name: split-backend-azure-secrets
+
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 100
+    targetCPUUtilizationPercentage: 80
+    # targetMemoryUtilizationPercentage: 80
+
+  resources:
+    limits:
+      cpu: 500m
+      memory: 512Mi
+    requests:
+      cpu: 100m
+      memory: 256Mi

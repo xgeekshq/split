@@ -1,9 +1,8 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, Logger } from '@nestjs/common';
 import { RegisterOrLoginAzureUseCaseInterface } from '../interfaces/applications/register-or-login.azure.use-case.interface';
 import { AuthAzureServiceInterface } from '../interfaces/services/auth.azure.service.interface';
 import { AUTH_AZURE_SERVICE } from '../constants';
 import { AzureDecodedUser } from '../services/auth.azure.service';
-import { jwtDecode } from 'jwt-decode';
 import { GetUserServiceInterface } from 'src/modules/users/interfaces/services/get.user.service.interface';
 import { CreateUserServiceInterface } from 'src/modules/users/interfaces/services/create.user.service.interface';
 import User from 'src/modules/users/entities/user.schema';
@@ -15,9 +14,16 @@ import { StorageServiceInterface } from 'src/modules/storage/interfaces/services
 import { CREATE_USER_SERVICE, GET_USER_SERVICE } from 'src/modules/users/constants';
 import { STORAGE_SERVICE } from 'src/modules/storage/constants';
 import { GET_TOKEN_AUTH_SERVICE, UPDATE_USER_SERVICE } from 'src/modules/auth/constants';
+import { JwksClient } from 'jwks-rsa';
+import { AZURE_CLIENT_ID, AZURE_WELLKNOWN } from 'src/libs/constants/azure';
+import { ConfigService } from '@nestjs/config';
+import { JwtService } from '@nestjs/jwt';
+import axios from 'axios';
 
 @Injectable()
 export class RegisterOrLoginAzureUseCase implements RegisterOrLoginAzureUseCaseInterface {
+	private readonly logger: Logger = new Logger(RegisterOrLoginAzureUseCase.name);
+
 	constructor(
 		@Inject(AUTH_AZURE_SERVICE)
 		private readonly authAzureService: AuthAzureServiceInterface,
@@ -30,12 +36,19 @@ export class RegisterOrLoginAzureUseCase implements RegisterOrLoginAzureUseCaseI
 		@Inject(GET_TOKEN_AUTH_SERVICE)
 		private readonly getTokenService: GetTokenAuthServiceInterface,
 		@Inject(STORAGE_SERVICE)
-		private readonly storageService: StorageServiceInterface
+		private readonly storageService: StorageServiceInterface,
+		private readonly configService: ConfigService,
+		private readonly jwtService: JwtService
 	) {}
 
 	async execute(azureToken: string) {
+		const validAccessToken = await this.validateAccessToken(azureToken);
+
+		if (!validAccessToken) {
+			return null;
+		}
 		const { unique_name, email, name, given_name, family_name } = <AzureDecodedUser>(
-			jwtDecode(azureToken)
+			validAccessToken
 		);
 
 		const emailOrUniqueName = email ?? unique_name;
@@ -44,11 +57,23 @@ export class RegisterOrLoginAzureUseCase implements RegisterOrLoginAzureUseCaseI
 
 		if (!userFromAzure) return null;
 
-		const user = await this.getUserService.getByEmail(emailOrUniqueName);
+		//This will check if user exists, and if the acount is disabled
+		if (
+			!userFromAzure ||
+			!userFromAzure.accountEnabled ||
+			(userFromAzure.deletedDateTime !== null && userFromAzure.deletedDateTime <= new Date())
+		) {
+			return null;
+		}
+
+		const user = await this.getUserService.getByEmail(emailOrUniqueName, true);
 
 		let userToAuthenticate: User;
 
 		if (user) {
+			if (user.isDeleted) {
+				await this.updateUserService.restoreUser(user._id);
+			}
 			userToAuthenticate = user;
 		} else {
 			const splitedName = name ? name.split(' ') : [];
@@ -106,5 +131,55 @@ export class RegisterOrLoginAzureUseCase implements RegisterOrLoginAzureUseCaseI
 		} catch {
 			return '';
 		}
+	}
+
+	/**
+	 * Validate Azure access token using issuer public key
+	 * @param token
+	 * @returns false or decoded token payload
+	 */
+	private async validateAccessToken(token: string): Promise<Record<string, any> | boolean> {
+		try {
+			//Use wellknown to get issuer and jwks uri's
+			const wellKnown = this.configService.get(AZURE_WELLKNOWN);
+
+			const { data } = await axios.get(wellKnown);
+
+			const client = new JwksClient({
+				jwksUri: data.jwks_uri
+			});
+
+			const { header } = this.jwtService.decode(token, { complete: true }) as {
+				header: any;
+				payload: any;
+				signature: any;
+			};
+
+			if (!header) {
+				return false;
+			}
+
+			const secret = await client.getSigningKey(header.kid);
+
+			const decodedToken = await this.jwtService.verifyAsync(token, {
+				algorithms: ['RS256'],
+				audience: this.configService.get(AZURE_CLIENT_ID),
+				secret: secret.getPublicKey(),
+				complete: true,
+				issuer: data.issuer
+			});
+
+			if (decodedToken) {
+				const { payload } = decodedToken;
+
+				return payload;
+			}
+		} catch (err) {
+			this.logger.error(
+				`An error occurred while validating azure access token. Message: ${err.message}`
+			);
+		}
+
+		return false;
 	}
 }

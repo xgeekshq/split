@@ -10,6 +10,7 @@ import UsersController from './controller/users.controller';
 import {
 	createUserService,
 	deleteUserUseCase,
+	getAllUsersIncludeDeletedUseCase,
 	getAllUsersUseCase,
 	getAllUsersWithTeamsUseCase,
 	getUserService,
@@ -19,12 +20,14 @@ import {
 	userRepository
 } from './users.providers';
 import TeamUsersModule from '../teamUsers/teamusers.module';
+import BoardUsersModule from '../boardUsers/boardusers.module';
 
 @Module({
 	imports: [
 		mongooseUserModule,
 		TeamsModule,
 		TeamUsersModule,
+		BoardUsersModule,
 		mongooseResetModule,
 		mongooseTeamUserModule,
 		forwardRef(() => AuthModule)
@@ -38,9 +41,17 @@ import TeamUsersModule from '../teamUsers/teamusers.module';
 		getUserService,
 		deleteUserUseCase,
 		updateUserService,
-		userRepository
+		userRepository,
+		getAllUsersIncludeDeletedUseCase,
+		deleteUserUseCase
 	],
 	controllers: [UsersController],
-	exports: [createUserService, getUserService, updateUserService]
+	exports: [
+		createUserService,
+		getUserService,
+		updateUserService,
+		getAllUsersIncludeDeletedUseCase,
+		deleteUserUseCase
+	]
 })
 export default class UsersModule {}

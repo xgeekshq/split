@@ -40,6 +40,12 @@ export default class DeleteBoardUserService implements DeleteBoardUserServiceInt
 		return this.boardUserRepository.deleteBoardUsers(boardUsers);
 	}
 
+	async deleteBoardUserFromOpenBoards(userId: string, withSession?: boolean) {
+		const boardUsers = await this.boardUserRepository.getAllOpenBoardsIdsOfUser(userId);
+
+		return this.boardUserRepository.deleteBoardUsers(boardUsers, withSession);
+	}
+
 	startTransaction(): Promise<void> {
 		return this.boardUserRepository.startTransaction();
 	}

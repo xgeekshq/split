@@ -1,16 +1,18 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { FilterQuery, Model } from 'mongoose';
+import { FilterQuery, QueryOptions } from 'mongoose';
 import { MongoGenericRepository } from 'src/libs/repositories/mongo/mongo-generic.repository';
 import User from 'src/modules/users/entities/user.schema';
 import { UserRepositoryInterface } from './user.repository.interface';
+import { SoftDeleteModel } from 'src/infrastructure/database/plugins/soft-delete.plugin';
+import { DeleteResult } from 'mongodb';
 
 @Injectable()
 export class UserRepository
 	extends MongoGenericRepository<User>
 	implements UserRepositoryInterface
 {
-	constructor(@InjectModel(User.name) private readonly model: Model<User>) {
+	constructor(@InjectModel(User.name) private readonly model: SoftDeleteModel<User>) {
 		super(model);
 	}
 
@@ -97,7 +99,29 @@ export class UserRepository
 			.exec();
 	}
 
+	getAllUsersIncludeDeleted() {
+		return this.model
+			.find({ isDeleted: { $in: [true, false] } })
+			.select('-password -__v -currentHashedRefreshToken -strategy -updatedAt')
+			.exec();
+	}
+
 	updateUserUpdatedAt(user: string) {
 		return this.findOneByFieldAndUpdate({ _id: user }, { $set: { updatedAt: new Date() } });
+	}
+
+	findDeleted() {
+		return this.model.findDeleted();
+	}
+
+	forceDelete(query: FilterQuery<User>, options?: QueryOptions<User>): Promise<DeleteResult> {
+		return this.model.forceDelete(query, options);
+	}
+	restore(query: FilterQuery<User>): Promise<Array<User>> {
+		return this.model.restore(query);
+	}
+
+	softDelete(query: FilterQuery<User>, options?: QueryOptions<User>): Promise<Array<User>> {
+		return this.model.softDelete(query, options);
 	}
 }

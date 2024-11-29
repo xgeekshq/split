@@ -1,0 +1,39 @@
+frontend:
+  ingress:
+    hosts:
+      - host: split-dev.xgeeks.com
+        paths:
+          - path: /
+            pathType: ImplementationSpecific
+    tls:
+      - hosts:
+          - split-dev.xgeeks.com
+        secretName: split-frontend-tls
+
+  environment:
+    NODE_ENV: dev
+    NEXT_PUBLIC_NEXTAUTH_URL: https://split-dev.xgeeks.com
+    NEXT_PUBLIC_BACKEND_URL: https://split-dev-api.xgeeks.com
+    NEXT_PUBLIC_ENABLE_AZURE: true
+    NEXT_PUBLIC_EXPIRATION_TIME: 80000
+    NEXT_PUBLIC_LOGIN_SSO_ONLY: true
+    NEXT_PUBLIC_REGULAR_BOARD: true
+    NEXT_PUBLIC_RECOIL_DEV_TOOLS: false
+    NEXT_PUBLIC_ENABLE_GOOGLE: false
+    NEXT_PUBLIC_ENABLE_GIT: false
+
+backend:
+  ingress:
+    hosts:
+      - host: split-dev-api.xgeeks.com
+        paths:
+          - path: /
+            pathType: ImplementationSpecific
+    tls:
+      - hosts:
+          - split-dev-api.xgeeks.com
+        secretName: split-backend-tls
+
+  environment: 
+    NODE_ENV: dev
+    NEXT_PUBLIC_NEXTAUTH_URL: https://split-dev.xgeeks.com
