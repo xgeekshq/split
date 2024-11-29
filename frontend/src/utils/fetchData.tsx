@@ -84,8 +84,6 @@ const fetchData = async <T,>(url: string, options?: Options): Promise<T> => {
     ? await instance(instanceOptions)
     : await serverSideInstance(instanceOptions);
 
-  //console.log(data);
-
   return data;
 };
 
