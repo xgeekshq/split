@@ -78,11 +78,11 @@ describe('SynchronizeAdUsersCronUseCase', () => {
 		});
 		const finalADUsers = [userNotInApp, ...usersAD];
 		authAzureServiceMock.getADUsers.mockResolvedValueOnce(finalADUsers);
-		const userNotInAD = UserFactory.create();
+		const userNotInAD = UserFactory.create({ isDeleted: false });
 		const finalAppUsers = [userNotInAD, ...users];
 		getAllUsersMock.execute.mockResolvedValueOnce(finalAppUsers);
 		await synchronizeADUsers.execute();
-		expect(deleteUserMock.execute).toBeCalledWith(userNotInAD._id);
+		expect(deleteUserMock.execute).toHaveBeenCalledWith(userNotInAD._id);
 		expect(deleteUserMock.execute.mock.calls).toEqual([[userNotInAD._id]]);
 		expect(createUserServiceMock.create).toHaveBeenCalledWith({
 			email: userNotInApp.mail,

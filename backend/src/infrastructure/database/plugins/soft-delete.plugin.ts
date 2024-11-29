@@ -1,8 +1,9 @@
-import { DeleteResult } from 'mongodb';
+import { DeleteOptions, DeleteResult } from 'mongodb';
 import mongoose, {
 	Document,
 	FilterQuery,
 	Model,
+	MongooseDefaultQueryMiddleware,
 	MongooseDocumentMiddleware,
 	MongooseQueryMiddleware,
 	Query,
@@ -29,6 +30,7 @@ type TSoftDeleteDocument = TSoftDelete<Document>;
 type SoftDeleteQuery = Query<any, any> & {
 	deletedCount: number;
 	isForceDelete: boolean;
+	op: string;
 };
 
 //Find hooks for pre
@@ -104,6 +106,10 @@ export function SoftDeletePlugin(schema: Schema) {
 			}
 
 			if (!('forceDelete' in this.getFilter())) {
+				//Mongoose changes the query operation type after the find from 'delete*' to 'find',
+				//that needs to be re-set to 'delete*' for post hooks to run
+				const op = this.op;
+
 				const docs: Array<TSoftDeleteDocument> = await this.find(
 					this.getQuery(),
 					undefined,
@@ -121,6 +127,9 @@ export function SoftDeletePlugin(schema: Schema) {
 
 					this.deletedCount++;
 				}
+
+				//Re-setting query operation type
+				this.op = op;
 			} else {
 				this.isForceDelete = true;
 				// eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -134,18 +143,16 @@ export function SoftDeletePlugin(schema: Schema) {
 		deleteTypesDocumentMiddleware as Array<MongooseDocumentMiddleware>,
 		{ document: true, query: false },
 		async function softDelete() {
-			const doc = this as TSoftDeleteDocument;
-			doc.isDeleted = true;
-			doc.deletedAt = new Date();
-			doc.$isDeleted(true);
-			await doc.save();
+			this.isDeleted = true;
+			this.deletedAt = new Date();
+			this.$isDeleted(true);
+			await this.save();
 		}
 	);
 
 	schema.post(
-		['deleteOne', 'deleteMany', 'remove'] as Array<MongooseQueryMiddleware>,
-		{ query: true, document: false },
-		async function (this: SoftDeleteQuery): Promise<DeleteResult> {
+		['deleteOne', 'deleteMany', 'remove'] as Array<MongooseDefaultQueryMiddleware>,
+		async function postDelete(this: SoftDeleteQuery): Promise<DeleteResult> {
 			if (!this.isForceDelete) {
 				// eslint-disable-next-line @typescript-eslint/no-unused-vars
 				const { isDeleted, ...query } = this.getFilter();
@@ -161,7 +168,7 @@ export function SoftDeletePlugin(schema: Schema) {
 	schema.post(
 		['findOneAndRemove', 'findOneAndDelete'] as Array<MongooseQueryMiddleware>,
 		{ query: true, document: false },
-		async function (): Promise<TSoftDeleteDocument> {
+		async function postFindRemove(): Promise<TSoftDeleteDocument> {
 			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 			const { isDeleted, ...query } = this.getFilter();
 			this.setQuery({ ...query, isDeleted: true });
@@ -174,7 +181,7 @@ export function SoftDeletePlugin(schema: Schema) {
 	//Helper to find deleted documents
 	schema.static(
 		'findDeleted',
-		async function (query?: FilterQuery<TSoftDelete<any>>): Promise<number> {
+		async function findDeleted(query?: FilterQuery<TSoftDelete<any>>): Promise<number> {
 			if (!query) {
 				query = {};
 			}
@@ -188,7 +195,7 @@ export function SoftDeletePlugin(schema: Schema) {
 
 	schema.static(
 		'countDeleted',
-		async function (query?: FilterQuery<TSoftDelete<any>>): Promise<number> {
+		async function countDeleted(query?: FilterQuery<TSoftDelete<any>>): Promise<number> {
 			if (!query) {
 				query = {};
 			}
@@ -196,17 +203,15 @@ export function SoftDeletePlugin(schema: Schema) {
 			const { isDeleted, ...rest } = query;
 			query = { ...rest, isDeleted: true };
 
-			return this.count(query).clone().exec();
+			return this.countDocuments(query).clone().exec();
 		}
 	);
 
 	//Helper to restore documents
-	schema.static('restore', async function (query: FilterQuery<TSoftDelete<any>>): Promise<
+	schema.static('restore', async function restore(query: FilterQuery<TSoftDelete<any>>): Promise<
 		Array<TSoftDelete<Document & any>>
 	> {
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
-		const { isDeleted, ...rest } = query;
-		query = { ...rest, isDeleted: true };
+		query.isDeleted = true;
 
 		return this.updateMany(query, {
 			$set: {
@@ -219,7 +224,10 @@ export function SoftDeletePlugin(schema: Schema) {
 	//Helper to force delete documents
 	schema.static(
 		'forceDelete',
-		async function (query: FilterQuery<any>, options?: QueryOptions<any>): Promise<DeleteResult> {
+		async function forceDelete(
+			query: FilterQuery<any>,
+			options?: DeleteOptions
+		): Promise<DeleteResult> {
 			if (!('forceDelete' in query)) {
 				query = { ...query, forceDelete: true };
 			}
@@ -229,7 +237,7 @@ export function SoftDeletePlugin(schema: Schema) {
 	);
 
 	//Helper to soft delete documents
-	schema.static('softDelete', async function <
+	schema.static('softDelete', async function softDelete<
 		T
 	>(query: FilterQuery<T>, options?: QueryOptions<T>): Promise<Array<TSoftDelete<Document & T>>> {
 		const docs: Array<TSoftDelete<Document & T>> = await this.find(query, null, options)

@@ -4,7 +4,7 @@ import { UserRepositoryInterface } from '../repository/user.repository.interface
 import { Test, TestingModule } from '@nestjs/testing';
 import { DeleteTeamUserServiceInterface } from 'src/modules/teamUsers/interfaces/services/delete.team.user.service.interface';
 import { GetTeamUserServiceInterface } from 'src/modules/teamUsers/interfaces/services/get.team.user.service.interface';
-import faker from '@faker-js/faker';
+import { faker } from '@faker-js/faker';
 import { DELETE_TEAM_USER_SERVICE, GET_TEAM_USER_SERVICE } from 'src/modules/teamUsers/constants';
 import { USER_REPOSITORY } from 'src/modules/users/constants';
 import { DeleteUserUseCase } from 'src/modules/users/applications/delete-user.use-case';
@@ -31,13 +31,13 @@ jest.mock('mongoose', () => {
 	return newObj;
 });
 
-const userId = faker.datatype.uuid();
+const userId = faker.string.uuid();
 const userDeleted = UserFactory.create({ _id: userId });
-const teamsOfUser = faker.datatype.number();
+const teamsOfUser = faker.number.int();
 
 class UsersFindResult extends Array {
-	toArray(cb: CallableFunction) {
-		return cb(null, this);
+	toArray() {
+		return this;
 	}
 }
 
@@ -196,7 +196,7 @@ describe('DeleteUserUseCase', () => {
 		});
 
 		it('should throw error when user is not deleted', async () => {
-			await expect(deleteUser.execute(userId)).rejects.toThrowError(DeleteFailedException);
+			await expect(deleteUser.execute(userId)).rejects.toThrow(DeleteFailedException);
 		});
 
 		it('should throw error when commitTransaction fails', async () => {
@@ -204,19 +204,18 @@ describe('DeleteUserUseCase', () => {
 			deleteTeamUserServiceMock.deleteTeamUsersOfUser.mockResolvedValue(teamsOfUser);
 			const spyDelete = jest.spyOn(userRepository, 'deleteUser').mockResolvedValueOnce(userDeleted);
 			userRepository.commitTransaction = jest.fn().mockRejectedValueOnce(new Error());
-			await expect(deleteUser.execute(userId)).rejects.toThrowError(DeleteFailedException);
+			await expect(deleteUser.execute(userId)).rejects.toThrow(DeleteFailedException);
 			spyDelete.mockRestore();
 		});
 	});
 	describe('integration', () => {
 		it('should create and soft delete the user', async () => {
 			//This will test various aspects of the softdelete plugin
-			jest
-				.spyOn(collectionProto, 'insertOne')
-				.mockImplementation((doc, _options, callback: CallableFunction) => {
-					usersRepositoryHelper.create(doc as User);
-					callback(null, doc);
-				});
+			jest.spyOn(collectionProto, 'insertOne').mockImplementation(async (doc, _options) => {
+				usersRepositoryHelper.create(doc as User);
+
+				return doc;
+			});
 			const email = faker.internet.email();
 			const email2 = faker.internet.email();
 			const userTest = await createUserService.create({
@@ -233,12 +232,11 @@ describe('DeleteUserUseCase', () => {
 				password: 'test2',
 				providerAccountCreatedAt: new Date()
 			});
-			jest
-				.spyOn(collectionProto, 'find')
-				.mockImplementation((filter, _options, callback: CallableFunction) => {
-					expect(filter).toHaveProperty('isDeleted');
-					callback(null, usersRepositoryHelper.find(filter));
-				});
+			jest.spyOn(collectionProto, 'find').mockImplementation(async (filter, _options) => {
+				expect(filter).toHaveProperty('isDeleted');
+
+				return usersRepositoryHelper.find(filter);
+			});
 			let users: Array<User> = await userRepository.getAllSignedUpUsers();
 			expect(
 				users.filter(
@@ -250,22 +248,21 @@ describe('DeleteUserUseCase', () => {
 
 			jest
 				.spyOn(collectionProto, 'findOneAndDelete')
-				.mockImplementationOnce((filter, _options, callback: CallableFunction) => {
+				.mockImplementationOnce(async (filter, _options) => {
 					usersRepositoryHelper.deleteOne(filter);
-					callback(null);
 				});
 			jest
 				.spyOn(collectionProto, 'updateOne')
-				.mockImplementation((filter, update, _options, callback: CallableFunction) => {
+				.mockImplementation(async (filter, update, _options) => {
 					const u = usersRepositoryHelper.updateOne(filter, update);
-					callback(null, u);
+
+					return u;
 				});
-			jest
-				.spyOn(collectionProto, 'findOne')
-				.mockImplementation((filter, _options, callback: CallableFunction) => {
-					const u = usersRepositoryHelper.find(filter);
-					callback(null, u[0]);
-				});
+			jest.spyOn(collectionProto, 'findOne').mockImplementation(async (filter, _options) => {
+				const u = usersRepositoryHelper.find(filter);
+
+				return u[0];
+			});
 			await userRepository.deleteUser(userTest._id.toString(), true);
 			users = await userRepository.getAllSignedUpUsers();
 			expect(users.find((u) => u._id.toString() === userTest._id.toString())).toBeUndefined();
@@ -275,21 +272,19 @@ describe('DeleteUserUseCase', () => {
 			expect(users).toHaveLength(1);
 			jest
 				.spyOn(collectionProto, 'updateMany')
-				.mockImplementation((filter, update, _options, callback: CallableFunction) => {
+				.mockImplementation(async (filter, update, _options) => {
 					const users = usersRepositoryHelper.updateMany(filter, update);
-					callback(null, { modifiedCount: users.length });
+
+					return { modifiedCount: users.length };
 				});
 			expect(await userRepository.restore({ _id: userTest._id.toString() })).toHaveProperty(
 				'modifiedCount',
 				1
 			);
 			expect(await userRepository.findAll()).toHaveLength(2);
-			jest
-				.spyOn(collectionProto, 'deleteMany')
-				.mockImplementation((filter, options, callback: CallableFunction) => {
-					usersRepositoryHelper.deleteMany(filter);
-					callback(null);
-				});
+			jest.spyOn(collectionProto, 'deleteMany').mockImplementation(async (filter) => {
+				usersRepositoryHelper.deleteMany(filter);
+			});
 			await userRepository.forceDelete({
 				_id: { $in: [userTest._id.toString(), userTest2._id.toString()] }
 			});
