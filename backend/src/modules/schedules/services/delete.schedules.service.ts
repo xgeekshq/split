@@ -20,6 +20,7 @@ export class DeleteSchedulesService implements DeleteSchedulesServiceInterface {
 			this.schedulerRegistry.deleteCronJob(boardId);
 
 			return deletedSchedule;
+			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		} catch (e) {
 			this.logger.log('Delete cron job failed');
 		}

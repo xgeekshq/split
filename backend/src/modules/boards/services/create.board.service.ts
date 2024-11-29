@@ -100,6 +100,7 @@ export default class CreateBoardService implements CreateBoardServiceInterface {
 			}
 
 			return createdBoard;
+			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		} catch (e) {
 			throw new CreateFailedException();
 		} finally {
@@ -160,6 +161,7 @@ export default class CreateBoardService implements CreateBoardServiceInterface {
 				createdBoard,
 				teamName
 			};
+			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		} catch (e) {
 			await this.boardRepository.abortTransaction();
 			await this.createBoardUserService.abortTransaction();

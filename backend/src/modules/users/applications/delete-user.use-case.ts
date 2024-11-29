@@ -37,6 +37,7 @@ export class DeleteUserUseCase implements UseCase<string, boolean> {
 			await this.deleteBoardUserService.commitTransaction();
 
 			return true;
+			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		} catch (e) {
 			await this.userRepository.abortTransaction();
 			await this.deleteTeamUserService.abortTransaction();
@@ -56,6 +57,7 @@ export class DeleteUserUseCase implements UseCase<string, boolean> {
 			if (teamsOfUser > 0) {
 				await this.deleteTeamUserService.deleteTeamUsersOfUser(userId, true);
 			}
+			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		} catch (error) {
 			throw new DeleteFailedException();
 		}
@@ -70,6 +72,7 @@ export class DeleteUserUseCase implements UseCase<string, boolean> {
 	private async deleteUserFromOpenBoards(userId: string) {
 		try {
 			await this.deleteBoardUserService.deleteBoardUserFromOpenBoards(userId);
+			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		} catch (err) {
 			throw new DeleteFailedException();
 		}

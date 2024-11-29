@@ -29,7 +29,7 @@ const Teams = () => {
     handleErrorOnFetchAllTeams();
   }
 
-  console.log('ATAO', teamsList);
+  //console.log('ATAO', teamsList);
 
   return (
     <Flex css={{ width: '100%' }} direction="column" gap="40">

@@ -50,6 +50,7 @@ export class BoardUserGuard implements CanActivate {
 				permissions.includes(teamUser?.role);
 
 			return hasPermissions;
+			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		} catch (error) {
 			throw new ForbiddenException();
 		}

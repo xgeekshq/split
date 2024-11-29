@@ -56,6 +56,7 @@ export class CardGroupVoteUseCase implements UseCase<CardGroupVoteUseCaseDto, vo
 			await this.addVoteToCardGroupAndUserOperations(boardId, userId, count, cardId, retryCount);
 			await this.updateBoardUserService.commitTransaction();
 			await this.voteRepository.commitTransaction();
+			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		} catch (e) {
 			throw new InsertFailedException(INSERT_VOTE_FAILED);
 		} finally {

@@ -201,7 +201,7 @@ export class SlackCommunicationApplication implements CommunicationApplicationIn
 				participants: board.isSubBoard
 					? ([this.getUsersInBoardByRole(board, BoardRoles.RESPONSIBLE)].filter(
 							(i) => !!i
-					  ) as UserDto[])
+						) as UserDto[])
 					: this.getAllUsersInDividedBoardsByRole(board, BoardRoles.RESPONSIBLE)
 			}
 		];

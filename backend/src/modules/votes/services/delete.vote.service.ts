@@ -57,6 +57,7 @@ export default class DeleteVoteService implements DeleteVoteServiceInterface {
 		try {
 			await this.deleteVotesFromCards(boardId, cardsArray);
 			await this.updateBoardUserService.commitTransaction();
+			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		} catch (e) {
 			throw new DeleteFailedException(DELETE_VOTE_FAILED);
 		} finally {

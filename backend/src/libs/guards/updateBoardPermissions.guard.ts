@@ -40,6 +40,7 @@ export class UpdateBoardPermissionsGuard implements CanActivate {
 				: hasMembersToAddOrRemove;
 
 			return canUserUpdateRole;
+			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		} catch (error) {
 			throw new ForbiddenException();
 		}

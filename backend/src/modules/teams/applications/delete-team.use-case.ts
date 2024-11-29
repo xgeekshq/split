@@ -30,6 +30,7 @@ export class DeleteTeamUseCase implements UseCase<string, boolean> {
 			await this.deleteTeamUserService.commitTransaction();
 
 			return true;
+			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		} catch (error) {
 			throw new BadRequestException(DELETE_FAILED);
 		} finally {
@@ -45,6 +46,7 @@ export class DeleteTeamUseCase implements UseCase<string, boolean> {
 			await this.deleteTeam(teamId, true);
 			await this.deleteTeamUserService.deleteTeamUsersOfTeam(teamId, true);
 			await this.deleteBoardService.deleteBoardsByTeamId(teamId);
+			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		} catch (e) {
 			await this.teamRepository.abortTransaction();
 			await this.deleteTeamUserService.abortTransaction();

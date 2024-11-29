@@ -49,6 +49,7 @@ export default class DeleteBoardService implements DeleteBoardServiceInterface {
 			this.archiveBoardsChannels(boardsToDelete);
 
 			return true;
+			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		} catch (error) {
 			throw new BadRequestException(DELETE_FAILED);
 		} finally {
@@ -86,6 +87,7 @@ export default class DeleteBoardService implements DeleteBoardServiceInterface {
 				)
 			)
 				throw new BadRequestException(DELETE_FAILED);
+			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		} catch (e) {
 			await this.boardRepository.abortTransaction();
 			await this.deleteBoardUserService.abortTransaction();

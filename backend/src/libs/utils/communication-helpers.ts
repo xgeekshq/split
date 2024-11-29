@@ -29,7 +29,7 @@ export function fillDividedBoardsUsersWithTeamUsers(board: any): any {
 		return userRole
 			? {
 					...userRole.user
-			  }
+				}
 			: id;
 	}
 
