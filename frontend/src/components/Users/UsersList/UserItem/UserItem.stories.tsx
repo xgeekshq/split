@@ -1,4 +1,4 @@
-import { ComponentStory } from '@storybook/react';
+import { StoryFn } from '@storybook/react';
 
 import UserItem from '@/components/Users/UsersList/UserItem/UserItem';
 import { UserWithTeamsFactory } from '@/utils/factories/user';
@@ -28,7 +28,7 @@ export default {
   },
 };
 
-const Template: ComponentStory<typeof UserItem> = ({ userWithTeams }) => (
+const Template: StoryFn<typeof UserItem> = ({ userWithTeams }) => (
   <UserItem userWithTeams={userWithTeams} />
 );
 

@@ -68,6 +68,7 @@ export class CardItemVoteUseCase implements UseCase<CardItemVoteUseCaseDto, void
 			);
 			await this.updateBoardUserService.commitTransaction();
 			await this.voteRepository.commitTransaction();
+			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		} catch (e) {
 			throw new InsertFailedException(INSERT_VOTE_FAILED);
 		} finally {

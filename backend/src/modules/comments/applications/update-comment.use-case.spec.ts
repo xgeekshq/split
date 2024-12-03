@@ -7,7 +7,7 @@ import { UpdateCommentUseCase } from 'src/modules/comments/applications/update-c
 import UpdateCommentUseCaseDto from 'src/modules/comments/dto/useCase/update-comment.use-case.dto';
 import { BoardFactory } from 'src/libs/test-utils/mocks/factories/board-factory.mock';
 import Board from 'src/modules/boards/entities/board.schema';
-import faker from '@faker-js/faker';
+import { faker } from '@faker-js/faker';
 import { UpdateFailedException } from 'src/libs/exceptions/updateFailedBadRequestException';
 
 const board: Board = BoardFactory.create();
@@ -51,7 +51,7 @@ describe('UpdateCommentUseCase', () => {
 			commentId: board.columns[0].cards[0].comments[0]._id,
 			anonymous: false,
 			text: 'Test',
-			socketId: faker.datatype.uuid(),
+			socketId: faker.string.uuid(),
 			completionHandler: () => {
 				return;
 			}
@@ -75,7 +75,7 @@ describe('UpdateCommentUseCase', () => {
 			commentId: board.columns[0].cards[0].items[0].comments[0]._id,
 			anonymous: false,
 			text: 'Test item',
-			socketId: faker.datatype.uuid(),
+			socketId: faker.string.uuid(),
 			completionHandler: () => {
 				return;
 			}
@@ -97,7 +97,7 @@ describe('UpdateCommentUseCase', () => {
 			commentId: board.columns[0].cards[0].items[0].comments[0]._id,
 			anonymous: false,
 			text: 'Test item',
-			socketId: faker.datatype.uuid(),
+			socketId: faker.string.uuid(),
 			completionHandler: () => {
 				return;
 			}

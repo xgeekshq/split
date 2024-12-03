@@ -1,5 +1,5 @@
 import React from 'react';
-import { ComponentStory } from '@storybook/react';
+import { StoryFn } from '@storybook/react';
 import dedent from 'ts-dedent';
 
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
@@ -51,7 +51,7 @@ export default {
   },
 };
 
-const Template: ComponentStory<typeof Separator> = ({ ...args }) => (
+const Template: StoryFn<typeof Separator> = ({ ...args }) => (
   <Flex align="center" css={{ height: '100vh', width: '100vh' }} justify="center">
     <Separator {...args} />
   </Flex>

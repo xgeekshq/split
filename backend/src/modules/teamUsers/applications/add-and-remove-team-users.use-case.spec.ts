@@ -9,7 +9,7 @@ import { TeamUserFactory } from 'src/libs/test-utils/mocks/factories/teamUser-fa
 import UpdateTeamUserDto from '../dto/update.team.user.dto';
 import { CreateTeamUserServiceInterface } from '../interfaces/services/create.team.user.service.interface';
 import { DeleteTeamUserServiceInterface } from '../interfaces/services/delete.team.user.service.interface';
-import faker from '@faker-js/faker';
+import { faker } from '@faker-js/faker';
 import { AddAndRemoveTeamUsersUseCase } from 'src/modules/teamUsers/applications/add-and-remove-team-users.use-case';
 import {
 	CREATE_TEAM_USER_SERVICE,
@@ -26,10 +26,10 @@ const createdTeamUsers: TeamUser[] = TeamUserFactory.createMany(4, [
 ]);
 
 const removeTeamUsers: string[] = [
-	faker.datatype.uuid(),
-	faker.datatype.uuid(),
-	faker.datatype.uuid(),
-	faker.datatype.uuid()
+	faker.string.uuid(),
+	faker.string.uuid(),
+	faker.string.uuid(),
+	faker.string.uuid()
 ];
 const updateTeamUsers: UpdateTeamUserDto = {
 	addUsers: createTeamUserDtos,

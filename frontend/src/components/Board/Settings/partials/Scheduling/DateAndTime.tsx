@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Value } from 'react-calendar/dist/cjs/shared/types';
 
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Text from '@/components/Primitives/Text/Text';
@@ -17,7 +18,7 @@ import isEmpty from '@utils/isEmpty';
 
 export type SchedulingProps = {
   currentDate?: Date;
-  setDate: (date: Date) => void;
+  setDate: (date: Value) => void;
 };
 
 let customRange: TimeSlot[] = [];

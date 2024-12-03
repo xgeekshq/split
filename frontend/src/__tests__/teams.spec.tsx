@@ -1,13 +1,11 @@
-import { UseQueryResult } from '@tanstack/react-query';
-
 import useTeams from '@/hooks/teams/useTeams';
 import Teams from '@/pages/teams';
-import { Team } from '@/types/team/team';
+import { UseTeamsQueryReturnType } from '@/types/hooks/teams/useTeamsQueryReturnType';
 import { TeamFactory } from '@/utils/factories/team';
 import { libraryMocks } from '@/utils/testing/mocks';
 import { renderWithProviders } from '@/utils/testing/renderWithProviders';
 
-const mockUseTeams = useTeams as jest.Mock<UseQueryResult<Team[]>>;
+const mockUseTeams = useTeams as jest.Mock<Partial<UseTeamsQueryReturnType>>;
 jest.mock('@/hooks/teams/useTeams');
 
 const { mockRouter } = libraryMocks.mockNextRouter({ pathname: '/teams' });
@@ -18,8 +16,10 @@ describe('Pages/Teams', () => {
   it('should render correctly', () => {
     // Arrange
     mockUseTeams.mockReturnValue({
-      data: TeamFactory.createMany(3),
-    } as UseQueryResult<Team[]>);
+      fetchAllTeams: {
+        data: TeamFactory.createMany(3),
+      },
+    } as Partial<UseTeamsQueryReturnType>);
 
     // Act
     const { getByTestId } = render();
@@ -32,8 +32,10 @@ describe('Pages/Teams', () => {
   it('should be loading', () => {
     // Arrange
     mockUseTeams.mockReturnValue({
-      isLoading: true,
-    } as UseQueryResult<Team[]>);
+      fetchAllTeams: {
+        isLoading: true,
+      },
+    } as Partial<UseTeamsQueryReturnType>);
 
     const { getByTestId } = render();
 

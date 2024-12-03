@@ -1,4 +1,4 @@
-import { renderHook, waitFor } from '@testing-library/react';
+import { act, renderHook, waitFor } from '@testing-library/react';
 
 import { getUserTeams } from '@/api/teamService';
 import { createErrorMessage } from '@/constants/toasts';
@@ -33,9 +33,9 @@ describe('Hooks/Teams/useUserTeams', () => {
   it('should fetch user teams', async () => {
     const { result } = render('thisIsTheUserId');
 
-    await waitFor(() => expect(result.current.isSuccess).toBeTruthy());
-    expect(mockGetUserTeams).toBeCalled();
-    expect(result.current.data).toBe(DUMMY_TEAMS);
+    await waitFor(() => expect(result.current.fetchUserTeams.isSuccess).toBeTruthy());
+    expect(mockGetUserTeams).toHaveBeenCalled();
+    expect(result.current.fetchUserTeams.data).toBe(DUMMY_TEAMS);
   });
 
   it('should set toast error', async () => {
@@ -47,10 +47,12 @@ describe('Hooks/Teams/useUserTeams', () => {
       recoilOptions: { recoilState: toastState, recoilHandler },
     });
 
+    act(() => result.current.handleErrorOnFetchUserTeams());
+
     // Assert
     await waitFor(() => {
-      expect(result.current.isError).toBeTruthy();
-      expect(result.current.data).not.toBeDefined();
+      expect(result.current.fetchUserTeams.isError).toBeTruthy();
+      expect(result.current.fetchUserTeams.data).not.toBeDefined();
       expect(recoilHandler).toHaveBeenCalledWith(createErrorMessage(ErrorMessages.GET));
     });
   });

@@ -33,9 +33,8 @@ export class DeleteBoardUseCase implements UseCase<DeleteBoardUseCaseDto, boolea
 			boardIdsToDelete.push(...dividedBoards);
 		}
 
-		const wasDeleted = await this.deleteBoardService.deleteBoardBoardUsersAndSchedules(
-			boardIdsToDelete
-		);
+		const wasDeleted =
+			await this.deleteBoardService.deleteBoardBoardUsersAndSchedules(boardIdsToDelete);
 
 		if (wasDeleted) {
 			completionHandler(boardIdsToDelete);

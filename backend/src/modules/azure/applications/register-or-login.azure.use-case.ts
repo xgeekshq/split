@@ -128,7 +128,7 @@ export class RegisterOrLoginAzureUseCase implements RegisterOrLoginAzureUseCaseI
 				mimetype: blob.type,
 				originalname: `${hash}.${blob.type.split('/').pop()}`
 			});
-		} catch (ex) {
+		} catch {
 			return '';
 		}
 	}

@@ -4,7 +4,7 @@ import { DeepMocked, createMock } from '@golevelup/ts-jest';
 import { VoteRepositoryInterface } from '../interfaces/repositories/vote.repository.interface';
 import { GetBoardUserServiceInterface } from 'src/modules/boardUsers/interfaces/services/get.board.user.service.interface';
 import { UpdateBoardServiceInterface } from 'src/modules/boards/interfaces/services/update.board.service.interface';
-import faker from '@faker-js/faker';
+import { faker } from '@faker-js/faker';
 import Board from 'src/modules/boards/entities/board.schema';
 import { BoardFactory } from 'src/libs/test-utils/mocks/factories/board-factory.mock';
 import { CardFactory } from 'src/libs/test-utils/mocks/factories/card-factory.mock';
@@ -27,7 +27,7 @@ import {
 } from 'src/modules/boardUsers/constants';
 import { GET_CARD_SERVICE } from 'src/modules/cards/constants';
 
-const userId: string = faker.datatype.uuid();
+const userId: string = faker.string.uuid();
 const board: Board = BoardFactory.create({ maxVotes: 3 });
 const boardUser: BoardUser = BoardUserFactory.create({ board: board._id, votesCount: 1 });
 const card: Card = CardFactory.create({ votes: [boardUser._id, userId] });

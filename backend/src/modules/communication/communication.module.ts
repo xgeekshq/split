@@ -101,7 +101,7 @@ import { SlackSendMessageProducer } from './producers/slack-send-message-channel
 							priority: SlackSendMessageProducer.PRIORITY
 						}
 					})
-			  ]
+				]
 			: [])
 	],
 	providers: [
@@ -132,7 +132,7 @@ import { SlackSendMessageProducer } from './producers/slack-send-message-channel
 					SlackArchiveChannelConsumer,
 					SlackAddUserToChannelConsumer,
 					SlackAddUserToChannelProducer
-			  ]
+				]
 			: [])
 	],
 	exports: [CommunicationService, ArchiveChannelService, SendMessageService]

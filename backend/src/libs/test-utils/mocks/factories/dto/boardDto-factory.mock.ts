@@ -1,4 +1,4 @@
-import faker from '@faker-js/faker';
+import { faker } from '@faker-js/faker';
 import { BoardPhases } from 'src/libs/enum/board.phases';
 import BoardDto from 'src/modules/boards/dto/board.dto';
 import { buildTestFactory } from '../generic-factory.mock';
@@ -10,14 +10,14 @@ const mockBoardDto = () => {
 		title: faker.lorem.words(),
 		columns: ColumnDtoFactory.createMany(3),
 		isPublic: faker.datatype.boolean(),
-		maxVotes: faker.datatype.number({ min: 0, max: 6 }),
+		maxVotes: faker.number.int({ min: 0, max: 6 }),
 		maxUsers: 0,
 		maxTeams: '1',
 		hideCards: faker.datatype.boolean(),
 		hideVotes: faker.datatype.boolean(),
 		dividedBoards: [],
 		team: '1',
-		socketId: faker.datatype.uuid(),
+		socketId: faker.string.uuid(),
 		users: [],
 		recurrent: faker.datatype.boolean(),
 		isSubBoard: faker.datatype.boolean(),
@@ -25,10 +25,10 @@ const mockBoardDto = () => {
 		slackEnable: faker.datatype.boolean(),
 		addCards: faker.datatype.boolean(),
 		responsibles: ['1'],
-		createdBy: faker.datatype.uuid(),
+		createdBy: faker.string.uuid(),
 		addcards: faker.datatype.boolean(),
 		postAnonymously: faker.datatype.boolean(),
-		createdAt: faker.datatype.datetime().toISOString(),
+		createdAt: faker.date.anytime().toISOString(),
 		phase: faker.helpers.arrayElement([
 			BoardPhases.ADDCARDS,
 			BoardPhases.SUBMITTED,

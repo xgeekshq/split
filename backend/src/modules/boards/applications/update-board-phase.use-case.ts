@@ -1,7 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { EventEmitter2 } from '@nestjs/event-emitter';
-import { Team } from '@slack/web-api/dist/response/AdminAppsRequestsListResponse';
 import { FRONTEND_URL } from 'src/libs/constants/frontend';
 import { BOARD_PHASE_SERVER_UPDATED } from 'src/libs/constants/phase';
 import { SLACK_ENABLE, SLACK_MASTER_CHANNEL_ID } from 'src/libs/constants/slack';
@@ -15,6 +14,7 @@ import PhaseChangeEvent from 'src/modules/socket/events/user-updated-phase.event
 import { BOARD_REPOSITORY } from '../constants';
 import { BoardRepositoryInterface } from '../repositories/board.repository.interface';
 import { SLACK_SEND_MESSAGE_SERVICE } from 'src/modules/communication/constants';
+import Team from 'src/modules/teams/entities/team.schema';
 
 @Injectable()
 export class UpdateBoardPhaseUseCase implements UseCase<BoardPhaseDto, void> {
@@ -59,7 +59,7 @@ export class UpdateBoardPhaseUseCase implements UseCase<BoardPhaseDto, void> {
 			} else {
 				throw new UpdateFailedException();
 			}
-		} catch (err) {
+		} catch {
 			throw new UpdateFailedException();
 		}
 	}

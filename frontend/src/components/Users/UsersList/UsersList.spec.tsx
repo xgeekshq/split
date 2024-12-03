@@ -1,10 +1,10 @@
 import React from 'react';
-import { UseInfiniteQueryResult } from '@tanstack/react-query';
 import { waitFor } from '@testing-library/dom';
 import userEvent from '@testing-library/user-event';
 
 import UserList from '@/components/Users/UsersList/UsersList';
 import useUsersWithTeams from '@/hooks/users/useUsersWithTeams';
+import { UseUsersWithTeamsQueryReturnType } from '@/types/hooks/users/useUsersWithTeamsQueryReturnType';
 import { UserWithTeams } from '@/types/user/user';
 import { UserFactory, UserWithTeamsFactory } from '@/utils/factories/user';
 import { libraryMocks } from '@/utils/testing/mocks';
@@ -17,14 +17,18 @@ const render = () =>
     routerOptions: mockRouter,
   });
 
-const mockUseUsersWithTeams = useUsersWithTeams as jest.Mock<Partial<UseInfiniteQueryResult>>;
+const mockUseUsersWithTeams = useUsersWithTeams as jest.Mock<
+  Partial<UseUsersWithTeamsQueryReturnType>
+>;
 jest.mock('@/hooks/users/useUsersWithTeams');
 
 describe('Components/Users/User/UsersList/UserList/UserList', () => {
   beforeEach(() => {
     mockUseUsersWithTeams.mockReturnValue({
-      status: 'loading',
-    } as Partial<UseInfiniteQueryResult>);
+      fetchUsersWithTeams: {
+        status: 'loading',
+      },
+    } as unknown as Partial<UseUsersWithTeamsQueryReturnType>);
   });
 
   afterEach(() => {
@@ -35,23 +39,25 @@ describe('Components/Users/User/UsersList/UserList/UserList', () => {
     // Arrange
     const usersWithTeams: UserWithTeams[] = UserWithTeamsFactory.createMany(5);
     mockUseUsersWithTeams.mockReturnValueOnce({
-      status: 'success',
-      data: {
-        pages: [
-          {
-            hasNextPage: false,
-            page: 0,
-            userAmount: usersWithTeams.length,
-            userWithTeams: usersWithTeams,
-          },
-        ],
-        pageParams: [null],
+      fetchUsersWithTeams: {
+        status: 'success',
+        data: {
+          pages: [
+            {
+              hasNextPage: false,
+              page: 0,
+              userAmount: usersWithTeams.length,
+              userWithTeams: usersWithTeams,
+            },
+          ],
+          pageParams: [null],
+        },
+        isFetching: false,
+        hasNextPage: false,
+        fetchNextPage: jest.fn(),
+        refetch: jest.fn(),
       },
-      isFetching: false,
-      hasNextPage: false,
-      fetchNextPage: jest.fn(),
-      refetch: jest.fn(),
-    } as Partial<UseInfiniteQueryResult>);
+    } as unknown as Partial<UseUsersWithTeamsQueryReturnType>);
 
     // Act
     const { getByTestId, findAllByTestId } = render();
@@ -76,23 +82,25 @@ describe('Components/Users/User/UsersList/UserList/UserList', () => {
     const refetchMock = jest.fn();
 
     mockUseUsersWithTeams.mockReturnValue({
-      status: 'success',
-      data: {
-        pages: [
-          {
-            hasNextPage: false,
-            page: 0,
-            userAmount: usersWithTeams.length,
-            userWithTeams: usersWithTeams,
-          },
-        ],
-        pageParams: [null],
+      fetchUsersWithTeams: {
+        status: 'success',
+        data: {
+          pages: [
+            {
+              hasNextPage: false,
+              page: 0,
+              userAmount: usersWithTeams.length,
+              userWithTeams: usersWithTeams,
+            },
+          ],
+          pageParams: [null],
+        },
+        isFetching: false,
+        hasNextPage: false,
+        fetchNextPage: jest.fn(),
+        refetch: refetchMock,
       },
-      isFetching: false,
-      hasNextPage: false,
-      fetchNextPage: jest.fn(),
-      refetch: refetchMock,
-    } as Partial<UseInfiniteQueryResult>);
+    } as unknown as Partial<UseUsersWithTeamsQueryReturnType>);
 
     // Act
     const { getByLabelText } = render();
@@ -102,7 +110,7 @@ describe('Components/Users/User/UsersList/UserList/UserList', () => {
 
     // Assert
     await waitFor(() => {
-      expect(refetchMock).toBeCalled();
+      expect(refetchMock).toHaveBeenCalled();
     });
   });
 });

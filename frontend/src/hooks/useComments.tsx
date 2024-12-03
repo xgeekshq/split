@@ -52,7 +52,8 @@ const useComments = () => {
     setReady(true);
   };
 
-  const addCommentInCard = useMutation(addCommentRequest, {
+  const addCommentInCard = useMutation({
+    mutationFn: addCommentRequest,
     onMutate: async (data) => {
       setQueryDataAddComment(data);
       return { previousBoard: null, data };
@@ -64,7 +65,7 @@ const useComments = () => {
       }
     },
     onError: (data, variables) => {
-      queryClient.invalidateQueries(['board', { id: variables.boardId }]);
+      queryClient.invalidateQueries({ queryKey: ['board', { id: variables.boardId }] });
       setToastState({
         open: true,
         content: 'Error adding the comment',
@@ -94,14 +95,15 @@ const useComments = () => {
     setReady(true);
   };
 
-  const deleteComment = useMutation(deleteCommentRequest, {
+  const deleteComment = useMutation({
+    mutationFn: deleteCommentRequest,
     onMutate: async (data) => {
       setQueryDataDeleteComment(data);
 
       return { previousBoard: null, data };
     },
     onError: (data, variables) => {
-      queryClient.invalidateQueries(['board', { id: variables.boardId }]);
+      queryClient.invalidateQueries({ queryKey: ['board', { id: variables.boardId }] });
       setToastState({
         open: true,
         content: 'Error updating the comment',
@@ -131,14 +133,15 @@ const useComments = () => {
     setReady(true);
   };
 
-  const updateComment = useMutation(updateCommentRequest, {
+  const updateComment = useMutation({
+    mutationFn: updateCommentRequest,
     onMutate: async (data) => {
       setQueryDataUpdateComment(data);
 
       return { previousBoard: null, data };
     },
     onError: (_, variables) => {
-      queryClient.invalidateQueries(['board', { id: variables.boardId }]);
+      queryClient.invalidateQueries({ queryKey: ['board', { id: variables.boardId }] });
       setToastState({
         open: true,
         content: 'Error updating the comment',

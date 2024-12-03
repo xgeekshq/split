@@ -1,4 +1,4 @@
-import { ComponentStory } from '@storybook/react';
+import { StoryFn } from '@storybook/react';
 
 import EmptyTeams from '@/components/Teams/TeamsList/EmptyTeams/EmptyTeams';
 
@@ -15,7 +15,7 @@ export default {
   },
 };
 
-const Template: ComponentStory<typeof EmptyTeams> = () => <EmptyTeams />;
+const Template: StoryFn<typeof EmptyTeams> = () => <EmptyTeams />;
 
 export const Default = Template.bind({});
 Default.storyName = 'Basic Usage';

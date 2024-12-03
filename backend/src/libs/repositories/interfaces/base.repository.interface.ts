@@ -1,6 +1,9 @@
-import { DeleteResult } from 'mongodb';
+import { CountOptions, DeleteOptions, DeleteResult, UpdateOptions } from 'mongodb';
 import {
 	FilterQuery,
+	MongooseBaseQueryOptionKeys,
+	MongooseBaseQueryOptions,
+	MongooseUpdateQueryOptions,
 	PipelineStage,
 	PopulateOptions,
 	ProjectionType,
@@ -46,7 +49,10 @@ export interface BaseInterfaceRepository<T> {
 
 	countDocuments(): Promise<number>;
 
-	countDocumentsWithQuery(filter: FilterQuery<T>, options?: QueryOptions<T>): Promise<number>;
+	countDocumentsWithQuery(
+		filter: FilterQuery<T>,
+		options?: CountOptions & MongooseBaseQueryOptions<T>
+	): Promise<number>;
 
 	findOneByFieldAndUpdate(
 		value: FilterQuery<T>,
@@ -63,13 +69,16 @@ export interface BaseInterfaceRepository<T> {
 	updateOneByField<Q>(
 		filter: FilterQuery<T>,
 		update: UpdateQuery<T>,
-		options?: QueryOptions<T>,
+		options?: (UpdateOptions & MongooseUpdateQueryOptions<T>) | null,
 		withSession?: boolean
 	): Promise<Q>;
 
 	deleteManyWithAcknowledged(field: FilterQuery<T>, withSession: boolean): Promise<DeleteResult>;
 
-	deleteOneWithQuery(value: FilterQuery<T>, options?: QueryOptions): Promise<DeleteResult>;
+	deleteOneWithQuery(
+		value: FilterQuery<T>,
+		options?: DeleteOptions & Pick<QueryOptions<T>, MongooseBaseQueryOptionKeys>
+	): Promise<DeleteResult>;
 
 	startTransaction(): Promise<void>;
 

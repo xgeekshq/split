@@ -20,7 +20,14 @@ import useCurrentSession from '@/hooks/useCurrentSession';
 
 const Teams = () => {
   const { isSAdmin } = useCurrentSession();
-  const { data: teamsList, isLoading } = useTeams(isSAdmin);
+  const {
+    fetchAllTeams: { data: teamsList, isLoading, isError },
+    handleErrorOnFetchAllTeams,
+  } = useTeams(isSAdmin);
+
+  if (isError) {
+    handleErrorOnFetchAllTeams();
+  }
 
   return (
     <Flex css={{ width: '100%' }} direction="column" gap="40">
@@ -59,11 +66,14 @@ export const getServerSideProps: GetServerSideProps = requireAuthentication(
     const isSAdmin = session?.user.isSAdmin ?? false;
 
     const queryClient = new QueryClient();
-    await queryClient.prefetchQuery([TEAMS_KEY], () => {
-      if (isSAdmin) {
-        return getAllTeams(context);
-      }
-      return getUserTeams(userId, context);
+    await queryClient.prefetchQuery({
+      queryKey: [TEAMS_KEY],
+      queryFn: () => {
+        if (isSAdmin) {
+          return getAllTeams(context);
+        }
+        return getUserTeams(userId, context);
+      },
     });
 
     return {

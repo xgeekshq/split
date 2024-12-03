@@ -1,5 +1,5 @@
 import React from 'react';
-import { ComponentStory } from '@storybook/react';
+import { StoryFn } from '@storybook/react';
 import dedent from 'ts-dedent';
 
 import TeamRolePopover from '@/components/Primitives/Popovers/TeamRolePopover/TeamRolePopover';
@@ -28,7 +28,7 @@ export default {
   },
 };
 
-const Template: ComponentStory<typeof TeamRolePopover> = () => (
+const Template: StoryFn<typeof TeamRolePopover> = () => (
   <TeamRolePopover handleRoleChange={() => {}} />
 );
 

@@ -31,30 +31,32 @@ const SignUpForm = ({ setShowSignUp, setEmailName, emailName }: SignUpFormProps)
     resolver: joiResolver(SchemaEmail),
   });
 
-  useSignUp(emailName, {
-    onSuccess: (data) => {
-      if (data === 'az') {
-        setShowSignUp(SignUpEnum.SIGN_UP_OPTIONS);
-        return;
-      }
+  const { data, isSuccess, isError, error } = useSignUp(emailName);
 
-      if (!data) {
-        setShowSignUp(SignUpEnum.REGISTER);
-        return;
-      }
+  if (isSuccess) {
+    if (data === 'az') {
+      setShowSignUp(SignUpEnum.SIGN_UP_OPTIONS);
+      return;
+    }
 
-      methods.setError('email', { type: 'custom', message: 'This email already exists!' });
-    },
-    onError: (error: Error) => {
-      /**
-       * When checkUserExistsAD returns 404, allow manual sign up
-       */
-      if (error.message.includes('404')) {
-        setShowSignUp(SignUpEnum.REGISTER);
-        return;
-      }
-    },
-  });
+    if (!data) {
+      setShowSignUp(SignUpEnum.REGISTER);
+      return;
+    }
+
+    methods.setError('email', { type: 'custom', message: 'This email already exists!' });
+  }
+
+  if (isError) {
+    /**
+     * When checkUserExistsAD returns 404, allow manual sign up
+     */
+    setToastState(createErrorMessage('Connection error, please try again!'));
+    if (error.message.includes('404')) {
+      setShowSignUp(SignUpEnum.REGISTER);
+      return;
+    }
+  }
 
   const handleCheckUserExists = async (email: string) => {
     setEmailName({ goback: false, email });

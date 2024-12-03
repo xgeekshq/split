@@ -1,5 +1,5 @@
 import React from 'react';
-import { ComponentStory } from '@storybook/react';
+import { StoryFn } from '@storybook/react';
 import dedent from 'ts-dedent';
 
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
@@ -61,7 +61,7 @@ export default {
   },
 };
 
-const Template: ComponentStory<typeof Tab> = ({ ...args }) => <Tab {...args} />;
+const Template: StoryFn<typeof Tab> = ({ ...args }) => <Tab {...args} />;
 
 export const Default = Template.bind({});
 Default.storyName = 'Basic Usage';

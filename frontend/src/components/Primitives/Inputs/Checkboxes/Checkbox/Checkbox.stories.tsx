@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ComponentStory } from '@storybook/react';
+import { StoryFn } from '@storybook/react';
 import dedent from 'ts-dedent';
 
 import Checkbox from '@/components/Primitives/Inputs/Checkboxes/Checkbox/Checkbox';
@@ -58,7 +58,7 @@ export default {
   },
 };
 
-const Template: ComponentStory<typeof Checkbox> = ({ size, variant, label, disabled }) => {
+const Template: StoryFn<typeof Checkbox> = ({ size, variant, label, disabled }) => {
   const [state, setState] = useState<boolean>(false);
 
   return (

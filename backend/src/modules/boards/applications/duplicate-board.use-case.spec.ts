@@ -6,7 +6,7 @@ import { CreateBoardUserServiceInterface } from 'src/modules/boardUsers/interfac
 import { BoardRepositoryInterface } from '../repositories/board.repository.interface';
 import { GetBoardServiceInterface } from '../interfaces/services/get.board.service.interface';
 import { NotFoundException } from '@nestjs/common';
-import faker from '@faker-js/faker';
+import { faker } from '@faker-js/faker';
 import { GetUserServiceInterface } from 'src/modules/users/interfaces/services/get.user.service.interface';
 import { BoardFactory } from 'src/libs/test-utils/mocks/factories/board-factory.mock';
 import { UserFactory } from 'src/libs/test-utils/mocks/factories/user-factory';
@@ -18,8 +18,8 @@ import { CREATE_BOARD_USER_SERVICE } from 'src/modules/boardUsers/constants';
 import { GET_USER_SERVICE } from 'src/modules/users/constants';
 
 const DEFAULT_PROPS = {
-	boardId: faker.datatype.uuid(),
-	userId: faker.datatype.uuid(),
+	boardId: faker.string.uuid(),
+	userId: faker.string.uuid(),
 	boardTitle: 'My Board'
 };
 const board = BoardFactory.create({

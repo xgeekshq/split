@@ -9,9 +9,10 @@ import { BoardUser } from '@/types/board/board.user';
 const useParticipants = () => {
   const { boardId, queryClient, setToastState, usersList } = useBoardUtils();
 
-  const addAndRemoveBoardParticipants = useMutation(addAndRemoveBoardParticipantsRequest, {
+  const addAndRemoveBoardParticipants = useMutation({
+    mutationFn: addAndRemoveBoardParticipantsRequest,
     onMutate: async (updateBoardParticipants) => {
-      await queryClient.cancelQueries(['board', { id: boardId }]);
+      await queryClient.cancelQueries({ queryKey: ['board', { id: boardId }] });
 
       const previousBoard = queryClient.getQueryData<GetBoardResponse>(['board', { id: boardId }]);
 

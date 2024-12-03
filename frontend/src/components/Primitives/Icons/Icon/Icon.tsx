@@ -6,11 +6,10 @@ type Props = CSSProps & {
   size?: 100 | 60 | 48 | 40 | 32 | 28 | 24 | 20 | 18 | 16 | 12;
 };
 
-const Icon = ({ name, size, css, ...props }: Props) => (
+const Icon = ({ name, size = 24, css, ...props }: Props) => (
   <Svg css={css} size={size} {...props}>
     <use href={`#${name}`} />
   </Svg>
 );
-Icon.defaultProps = { size: 24 };
 
 export default Icon;

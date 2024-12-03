@@ -38,6 +38,7 @@ export class CreateTeamUseCase implements UseCase<CreateTeamDto, Team> {
 			await this.createTeamUserService.commitTransaction();
 
 			return teamCreated;
+			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		} catch (error) {
 			throw new BadRequestException(INSERT_FAILED);
 		} finally {
@@ -65,6 +66,7 @@ export class CreateTeamUseCase implements UseCase<CreateTeamDto, Team> {
 			}
 
 			return { ...newTeam, users: teamUsers };
+			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		} catch (error) {
 			await this.teamRepository.abortTransaction();
 			await this.createTeamUserService.abortTransaction();

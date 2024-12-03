@@ -29,7 +29,7 @@ export class TeamRepository
 		);
 	}
 
-	getTeamsWithUsers(teamIds: string[]): Promise<Team[]> {
+	async getTeamsWithUsers(teamIds: string[]): Promise<Team[]> {
 		return this.findAllWithQuery({ _id: { $in: teamIds } }, null, { _id: 1, name: 1 }, [
 			{
 				path: 'users',

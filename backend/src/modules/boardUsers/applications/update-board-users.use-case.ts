@@ -50,6 +50,7 @@ export class UpdateBoardUsersUseCase
 			if (!isEmpty(removeUsers)) await this.deleteBoardUsers(removeUsers);
 
 			return createdBoardUsers;
+			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		} catch (error) {
 			throw new UpdateFailedException();
 		}

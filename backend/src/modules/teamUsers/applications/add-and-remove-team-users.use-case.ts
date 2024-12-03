@@ -25,6 +25,7 @@ export class AddAndRemoveTeamUsersUseCase implements UseCase<UpdateTeamUserDto, 
 			await this.deleteTeamUserService.commitTransaction();
 
 			return createdTeamUsers;
+			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		} catch (error) {
 			throw new BadRequestException(UPDATE_FAILED);
 		}
@@ -46,6 +47,7 @@ export class AddAndRemoveTeamUsersUseCase implements UseCase<UpdateTeamUserDto, 
 
 			if (removeUsers.length > 0)
 				await this.deleteTeamUserService.deleteTeamUsers(removeUsers, true);
+			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		} catch (error) {
 			await this.createTeamUserService.abortTransaction();
 			await this.deleteTeamUserService.abortTransaction();

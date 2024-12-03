@@ -77,7 +77,7 @@ export const useSocketIO = (boardId: string): SocketInterface => {
 
   useEffect(() => {
     socket?.on('updateAllBoard', () => {
-      queryClient.invalidateQueries(['board', { id: boardId }]);
+      queryClient.invalidateQueries({ queryKey: ['board', { id: boardId }] });
     });
 
     socket?.on('deleteBoard', () => {

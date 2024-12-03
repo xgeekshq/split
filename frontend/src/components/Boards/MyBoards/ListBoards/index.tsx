@@ -30,8 +30,11 @@ interface ListBoardsProps {
 const ListBoards = React.memo<ListBoardsProps>(
   ({ userId, isSuperAdmin, dataByTeamAndDate, scrollRef, onScroll, filter, isLoading }) => {
     const currentDate = new Date().toDateString();
-    const teamsQuery = useTeams(isSuperAdmin);
-    const allTeamsList = teamsQuery.data ?? [];
+    const {
+      fetchAllTeams: { data, isError },
+      handleErrorOnFetchAllTeams,
+    } = useTeams(isSuperAdmin);
+    const allTeamsList = data ?? [];
 
     const isTeamAdmin = (boards: Map<string, BoardType[]>) => {
       const { team } = Array.from(boards)[0][1][0];
@@ -43,6 +46,10 @@ const ListBoards = React.memo<ListBoardsProps>(
           [TeamUserRoles.ADMIN, TeamUserRoles.STAKEHOLDER].includes(user.role),
       );
     };
+
+    if (isError) {
+      handleErrorOnFetchAllTeams();
+    }
 
     return (
       <ScrollableContent

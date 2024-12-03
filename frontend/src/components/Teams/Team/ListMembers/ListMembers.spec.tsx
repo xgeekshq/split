@@ -1,4 +1,4 @@
-import { UseMutationResult, UseQueryResult } from '@tanstack/react-query';
+import { UseMutationResult } from '@tanstack/react-query';
 import { fireEvent, waitFor } from '@testing-library/react';
 
 import { ROUTES } from '@/constants/routes';
@@ -6,6 +6,7 @@ import { TeamUserRoles } from '@/enums/teams/userRoles';
 import useTeam from '@/hooks/teams/useTeam';
 import { createTeamState } from '@/store/team.atom';
 import { usersListState } from '@/store/user.atom';
+import { UseTeamQueryReturnType } from '@/types/hooks/teams/useTeamQueryReturnType';
 import {
   renderWithProviders,
   RenderWithProvidersOptions,
@@ -27,7 +28,7 @@ const render = (props?: Partial<ListMembersProps>, options?: Partial<RenderWithP
   });
 
 const mockUseUpdateTeamUsers = useUpdateTeamUsers as jest.Mock<Partial<UseMutationResult>>;
-const mockUseTeam = useTeam as jest.Mock<Partial<UseQueryResult>>;
+const mockUseTeam = useTeam as jest.Mock<Partial<UseTeamQueryReturnType>>;
 const mockUseCurrentSession = useCurrentSession as jest.Mock<Partial<UseCurrentSessionResult>>;
 
 jest.mock('@/hooks/teams/useUpdateTeamUsers');
@@ -41,8 +42,10 @@ describe('Teams/CreateTeam', () => {
     } as Partial<UseMutationResult>);
 
     mockUseTeam.mockReturnValue({
-      data: TeamFactory.create(),
-    } as Partial<UseQueryResult>);
+      fetchTeam: {
+        data: TeamFactory.create(),
+      },
+    } as Partial<UseTeamQueryReturnType>);
 
     mockUseCurrentSession.mockReturnValue({
       isSAdmin: true,
@@ -61,8 +64,10 @@ describe('Teams/CreateTeam', () => {
     const updateTeamUsersMutation = jest.fn();
 
     mockUseTeam.mockReturnValue({
-      data: team,
-    } as Partial<UseQueryResult>);
+      fetchTeam: {
+        data: team,
+      },
+    } as Partial<UseTeamQueryReturnType>);
 
     mockUseUpdateTeamUsers.mockReturnValue({
       mutate: updateTeamUsersMutation,
@@ -91,7 +96,7 @@ describe('Teams/CreateTeam', () => {
     fireEvent.click(getByText('Update'));
 
     await waitFor(() => {
-      expect(updateTeamUsersMutation).toBeCalledWith({
+      expect(updateTeamUsersMutation).toHaveBeenCalledWith({
         addUsers: [
           {
             user: users[0]._id,
@@ -134,7 +139,7 @@ describe('Teams/CreateTeam', () => {
     fireEvent.click(getByText('Update'));
 
     await waitFor(() => {
-      expect(recoilHandler).toBeCalledWith([
+      expect(recoilHandler).toHaveBeenCalledWith([
         {
           user,
           role: TeamUserRoles.MEMBER,

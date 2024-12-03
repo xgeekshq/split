@@ -9,7 +9,10 @@ import { ContainerNameEnum } from 'src/modules/storage/enum';
 export class StorageService implements StorageServiceInterface {
 	private blobServiceClient: BlobServiceClient;
 
-	constructor(private readonly configService: ConfigService, private readonly logger: Logger) {
+	constructor(
+		private readonly configService: ConfigService,
+		private readonly logger: Logger
+	) {
 		const connectionString = this.configService.get(CONNECTION_STRING);
 
 		this.blobServiceClient = BlobServiceClient.fromConnectionString(connectionString);

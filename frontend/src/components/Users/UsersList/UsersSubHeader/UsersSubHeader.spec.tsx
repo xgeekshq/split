@@ -22,7 +22,7 @@ describe('Users/UsersList/UsersSubHeader', () => {
     const { getByText } = render();
 
     // Assert
-    expect(getByText('2 registered users')).toBeInTheDocument;
+    expect(getByText('2 registered users')).toBeInTheDocument();
   });
 
   it('should handle clear search', async () => {

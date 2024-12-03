@@ -10,7 +10,8 @@ import { toastState } from '@/store/toast/atom/toast.atom';
 const useCreateTeam = () => {
   const setToastState = useSetRecoilState(toastState);
 
-  return useMutation(createTeamRequest, {
+  return useMutation({
+    mutationFn: createTeamRequest,
     onSuccess: () => {
       setToastState(createSuccessMessage(SuccessMessages.CREATE));
     },

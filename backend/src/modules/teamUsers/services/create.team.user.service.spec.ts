@@ -20,7 +20,7 @@ const createdTeamUsers: TeamUser[] = TeamUserFactory.createMany(4, [
 	{ ...createTeamUserDtos[3] }
 ]);
 
-const teamId = faker.datatype.uuid();
+const teamId = faker.string.uuid();
 
 describe('CreateTeamUserService', () => {
 	let teamUserService: CreateTeamUserServiceInterface;

@@ -57,7 +57,7 @@ describe('CreateBoardUserService', () => {
 		it('should create board users', async () => {
 			boardUserRepositoryMock.createBoardUsers.mockResolvedValue(createdBoardUsers);
 			await expect(
-				boardUserService.saveBoardUsers(createBoardUserDtos, faker.datatype.uuid())
+				boardUserService.saveBoardUsers(createBoardUserDtos, faker.string.uuid())
 			).resolves.toStrictEqual(createdBoardUsers);
 		});
 
@@ -71,7 +71,7 @@ describe('CreateBoardUserService', () => {
 
 	describe('createBoardUser', () => {
 		it('should create board user', async () => {
-			const user = faker.datatype.uuid();
+			const user = faker.string.uuid();
 			const boardUser: BoardUser = BoardUserFactory.create({ user });
 			boardUser.role = BoardRoles.MEMBER;
 
@@ -86,10 +86,7 @@ describe('CreateBoardUserService', () => {
 		it('should throw Bad Request when board user already exists', async () => {
 			boardUserRepositoryMock.findOneByField.mockResolvedValue(createdBoardUsers[0]);
 			await expect(
-				boardUserService.createBoardUser(
-					createdBoardUsers[0].board as string,
-					faker.datatype.uuid()
-				)
+				boardUserService.createBoardUser(createdBoardUsers[0].board as string, faker.string.uuid())
 			).rejects.toThrowError(BadRequestException);
 		});
 
@@ -97,7 +94,7 @@ describe('CreateBoardUserService', () => {
 			boardUserRepositoryMock.findOneByField.mockResolvedValue(null);
 			boardUserRepositoryMock.create.mockResolvedValue(null);
 			await expect(
-				boardUserService.createBoardUser(createBoardUserDtos[0].board, faker.datatype.uuid())
+				boardUserService.createBoardUser(createBoardUserDtos[0].board, faker.string.uuid())
 			).rejects.toThrowError(BadRequestException);
 		});
 	});

@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { DeepMocked, createMock } from '@golevelup/ts-jest';
 import { GetBoardServiceInterface } from '../interfaces/services/get.board.service.interface';
-import faker from '@faker-js/faker';
+import { faker } from '@faker-js/faker';
 import { BoardFactory } from 'src/libs/test-utils/mocks/factories/board-factory.mock';
 import { TeamFactory } from 'src/libs/test-utils/mocks/factories/team-factory.mock';
 import GetBoardsUseCaseDto from '../dto/useCase/get-boards.use-case.dto';
@@ -10,7 +10,7 @@ import { UseCase } from 'src/libs/interfaces/use-case.interface';
 import { GetDashboardBoardsUseCase } from './get-dashboard-boards.use-case';
 import { GET_BOARD_SERVICE } from 'src/modules/boards/constants';
 
-const userId = faker.datatype.uuid();
+const userId = faker.string.uuid();
 
 describe('GetDashboardBoardsUseCase', () => {
 	let useCase: UseCase<GetBoardsUseCaseDto, BoardsPaginatedPresenter>;

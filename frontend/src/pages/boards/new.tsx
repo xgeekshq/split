@@ -65,7 +65,7 @@ const NewBoard: NextPage = () => {
           </Link>
         </Flex>
       </Flex>
-      {status === 'loading' && <LoadingPage />}
+      {status === 'pending' && <LoadingPage />}
     </Flex>
   );
 };

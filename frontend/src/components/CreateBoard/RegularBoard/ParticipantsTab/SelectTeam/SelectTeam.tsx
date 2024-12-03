@@ -30,8 +30,11 @@ const SelectTeam = () => {
   const [selectedTeam, setSelectedTeam] = useRecoilState(createBoardTeam);
   const setUsersList = useSetRecoilState(usersListState);
   const { setCreateBoardData } = useCreateBoard(selectedTeam);
-  const teamsQuery = useTeams(isSAdmin);
-  const teams = teamsQuery.data ?? [];
+  const {
+    fetchAllTeams: { data, isError },
+    handleErrorOnFetchAllTeams,
+  } = useTeams(isSAdmin);
+  const teams = data ?? [];
 
   const hasPermissions = (team: Team) =>
     isSAdmin ||
@@ -111,6 +114,10 @@ const SelectTeam = () => {
       createBoard();
     }
   }, [routerTeam, createBoard, selectedTeam]);
+
+  if (isError) {
+    handleErrorOnFetchAllTeams();
+  }
 
   return (
     <Flex css={{ flex: 1 }} direction="column">

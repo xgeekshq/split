@@ -5,7 +5,7 @@ import { UseCase } from 'src/libs/interfaces/use-case.interface';
 import { CommentRepositoryInterface } from 'src/modules/comments/interfaces/repositories/comment.repository.interface';
 import { BoardFactory } from 'src/libs/test-utils/mocks/factories/board-factory.mock';
 import Board from 'src/modules/boards/entities/board.schema';
-import faker from '@faker-js/faker';
+import { faker } from '@faker-js/faker';
 import CreateCommentUseCaseDto from 'src/modules/comments/dto/useCase/create-comment.use-case.dto';
 import { CreateCommentUseCase } from 'src/modules/comments/applications/create-comment.use-case';
 import User from 'src/modules/users/entities/user.schema';
@@ -61,7 +61,7 @@ describe('CreateCommentUseCase', () => {
 			anonymous: false,
 			user: userMock,
 			text: 'Test: Add comment',
-			socketId: faker.datatype.uuid(),
+			socketId: faker.string.uuid(),
 			columnId: board.columns[0]._id,
 			completionHandler: jest.fn()
 		};
@@ -81,7 +81,7 @@ describe('CreateCommentUseCase', () => {
 			anonymous: false,
 			user: userMock,
 			text: 'Test: Add comment',
-			socketId: faker.datatype.uuid(),
+			socketId: faker.string.uuid(),
 			columnId: board.columns[0]._id,
 			completionHandler: jest.fn()
 		};
@@ -102,7 +102,7 @@ describe('CreateCommentUseCase', () => {
 			anonymous: false,
 			user: userMock,
 			text: 'Test: Add comment',
-			socketId: faker.datatype.uuid(),
+			socketId: faker.string.uuid(),
 			columnId: board.columns[0]._id,
 			completionHandler: jest.fn()
 		};
@@ -123,7 +123,7 @@ describe('CreateCommentUseCase', () => {
 			anonymous: false,
 			user: userMock,
 			text: 'Test: Add comment',
-			socketId: faker.datatype.uuid(),
+			socketId: faker.string.uuid(),
 			columnId: board.columns[0]._id,
 			completionHandler: jest.fn()
 		};

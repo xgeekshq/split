@@ -3,7 +3,7 @@ import { CARD_REPOSITORY } from '../../constants';
 import { DeepMocked, createMock } from '@golevelup/ts-jest';
 import { CardRepositoryInterface } from '../../repository/card.repository.interface';
 import { UseCase } from 'src/libs/interfaces/use-case.interface';
-import faker from '@faker-js/faker';
+import { faker } from '@faker-js/faker';
 import { UpdateResult } from 'mongodb';
 import { BoardFactory } from 'src/libs/test-utils/mocks/factories/board-factory.mock';
 import { UpdateFailedException } from 'src/libs/exceptions/updateFailedBadRequestException';
@@ -12,10 +12,10 @@ import UpdateCardGroupTextUseCaseDto from '../../dto/useCase/update-card-group-t
 import { UpdateCardGroupTextUseCase } from 'src/modules/cards/applications/update/update-card-group-text.use-case';
 
 const updateCardGroupTextDto: UpdateCardGroupTextUseCaseDto = {
-	boardId: faker.datatype.uuid(),
-	cardId: faker.datatype.uuid(),
-	userId: faker.datatype.uuid(),
-	text: faker.datatype.string(),
+	boardId: faker.string.uuid(),
+	cardId: faker.string.uuid(),
+	userId: faker.string.uuid(),
+	text: faker.string.alpha(),
 	completionHandler() {
 		return;
 	}

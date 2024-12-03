@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ComponentStory } from '@storybook/react';
+import { StoryFn } from '@storybook/react';
 import dedent from 'ts-dedent';
 
 import Icon from '@/components/Primitives/Icons/Icon/Icon';
@@ -75,7 +75,7 @@ export default {
   },
 };
 
-const Template: ComponentStory<typeof Popover> = ({ variant, size, disabled }: any) => {
+const Template: StoryFn<typeof Popover> = ({ variant, size, disabled }: any) => {
   const [selectedOption, setSelectedOption] = useState('sort');
 
   return (

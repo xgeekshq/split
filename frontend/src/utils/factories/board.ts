@@ -19,8 +19,8 @@ export const BoardFactory = buildTestFactory<BoardType>(() => {
   const users = BoardUserFactory.createMany();
   const createdBy = UserFactory.create();
   const isSubBoard = faker.datatype.boolean();
-  const boardNumber = faker.datatype.number({ min: 0, max: 10 });
-  const maxVotes = faker.datatype.number({ min: 6, max: 10 });
+  const boardNumber = faker.number.int({ min: 0, max: 10 });
+  const maxVotes = faker.number.int({ min: 6, max: 10 });
   const votes: string | undefined = undefined;
   const submitedByUser = undefined;
   const hideCards = faker.datatype.boolean();

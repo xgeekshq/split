@@ -28,6 +28,7 @@ export class TeamUserGuard implements CanActivate {
 			const hasPermissions = permissions.includes(userFound?.role) || user.isSAdmin;
 
 			return hasPermissions;
+			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		} catch (error) {
 			throw new ForbiddenException();
 		}

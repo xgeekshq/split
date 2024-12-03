@@ -1,22 +1,21 @@
-import { UseQueryResult } from '@tanstack/react-query';
 import { waitFor } from '@testing-library/react';
 
 import { ROUTES } from '@/constants/routes';
 import useTeam from '@/hooks/teams/useTeam';
 import useUsers from '@/hooks/users/useUsers';
 import TeamDetails from '@/pages/teams/[teamId]';
-import { Team } from '@/types/team/team';
-import { User } from '@/types/user/user';
+import { UseTeamQueryReturnType } from '@/types/hooks/teams/useTeamQueryReturnType';
+import { UseUsersQueryReturnType } from '@/types/hooks/users/useUsersQueryReturnType';
 import { TeamFactory } from '@/utils/factories/team';
 import { UserFactory } from '@/utils/factories/user';
 import { libraryMocks } from '@/utils/testing/mocks';
 import { renderWithProviders } from '@/utils/testing/renderWithProviders';
 
 const randomTeam = TeamFactory.create();
-const mockUseTeam = useTeam as jest.Mock<UseQueryResult<Team>>;
+const mockUseTeam = useTeam as jest.Mock<Partial<UseTeamQueryReturnType>>;
 jest.mock('@/hooks/teams/useTeam');
 
-const mockUseUsers = useUsers as jest.Mock<UseQueryResult<User[]>>;
+const mockUseUsers = useUsers as jest.Mock<Partial<UseUsersQueryReturnType>>;
 jest.mock('@/hooks/users/useUsers');
 
 const { mockRouter } = libraryMocks.mockNextRouter({
@@ -30,12 +29,16 @@ describe('Pages/Teams/[teamId]', () => {
   it('should render correctly', () => {
     // Arrange
     mockUseTeam.mockReturnValue({
-      data: TeamFactory.create(),
-    } as UseQueryResult<Team>);
+      fetchTeam: {
+        data: TeamFactory.create(),
+      },
+    } as Partial<UseTeamQueryReturnType>);
 
     mockUseUsers.mockReturnValue({
-      data: UserFactory.createMany(10),
-    } as UseQueryResult<User[]>);
+      fetchAllUsers: {
+        data: UserFactory.createMany(10),
+      },
+    } as Partial<UseUsersQueryReturnType>);
 
     // Act
     const { getByTestId } = render();
@@ -48,12 +51,16 @@ describe('Pages/Teams/[teamId]', () => {
   it('should redirect when no data is fetched', async () => {
     // Arrange
     mockUseTeam.mockReturnValue({
-      isLoading: true,
-    } as UseQueryResult<Team>);
+      fetchTeam: {
+        isLoading: true,
+      },
+    } as Partial<UseTeamQueryReturnType>);
 
     mockUseUsers.mockReturnValue({
-      isLoading: true,
-    } as UseQueryResult<User[]>);
+      fetchAllUsers: {
+        isLoading: true,
+      },
+    } as Partial<UseUsersQueryReturnType>);
 
     // Act
     render();

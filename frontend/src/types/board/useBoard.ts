@@ -1,10 +1,14 @@
-import { UseInfiniteQueryResult, UseMutationResult, UseQueryResult } from '@tanstack/react-query';
+import {
+  InfiniteData,
+  UseInfiniteQueryResult,
+  UseMutationResult,
+  UseQueryResult,
+} from '@tanstack/react-query';
 
 import BoardType, {
   CreateBoardDto,
   DuplicateBoardType,
   GetBoardResponse,
-  InfiniteBoards,
   PhaseChangeEventType,
   UpdateBoardType,
 } from '@/types/board/board';
@@ -27,8 +31,20 @@ export default interface UseBoardType {
     unknown
   >;
   fetchBoard: UseQueryResult<GetBoardResponse | null, unknown>;
+  handleFetchBoardOnError: () => void;
 
-  fetchBoards: UseInfiniteQueryResult<InfiniteBoards, unknown>;
+  fetchBoards: UseInfiniteQueryResult<
+    InfiniteData<
+      {
+        boards: BoardType[];
+        hasNextPage: boolean;
+        page: number;
+      },
+      unknown
+    >,
+    Error
+  >;
+  handleFetchBoardsOnError: () => void;
 
   setQueryDataAddBoardUser: (data: BoardUser) => void;
 

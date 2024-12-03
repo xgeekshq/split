@@ -1,5 +1,5 @@
 import React from 'react';
-import { ComponentStory } from '@storybook/react';
+import { StoryFn } from '@storybook/react';
 import dedent from 'ts-dedent';
 
 import Sprite from '@/components/icons/Sprite';
@@ -44,7 +44,7 @@ export default {
   },
 };
 
-const Template: ComponentStory<any> = () => {
+const Template: StoryFn<any> = () => {
   const colorsArray = Object.entries(colors);
   const groupedColors: any = {};
 

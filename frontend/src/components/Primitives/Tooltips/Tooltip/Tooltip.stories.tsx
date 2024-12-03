@@ -1,5 +1,5 @@
 import React from 'react';
-import { ComponentStory } from '@storybook/react';
+import { StoryFn } from '@storybook/react';
 import dedent from 'ts-dedent';
 
 import Icon from '@/components/Primitives/Icons/Icon/Icon';
@@ -43,7 +43,7 @@ export default {
   },
 };
 
-const Template: ComponentStory<typeof Tooltip> = ({ content, color }) => (
+const Template: StoryFn<typeof Tooltip> = ({ content, color }) => (
   <Tooltip color={color} content={content}>
     <Button isIcon>
       <Icon

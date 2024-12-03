@@ -66,10 +66,11 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       }
     }
 
-    await queryClient.fetchQuery(['board', { id: boardId }], () =>
-      getBoardRequest(boardId, context),
-    );
-  } catch (e) {
+    await queryClient.fetchQuery({
+      queryKey: ['board', { id: boardId }],
+      queryFn: () => getBoardRequest(boardId, context),
+    });
+  } catch {
     return {
       redirect: {
         permanent: false,
@@ -116,7 +117,8 @@ const Board: NextPage<Props> = ({ boardId }) => {
 
   // Hooks
   const {
-    fetchBoard: { data },
+    fetchBoard: { data, isError },
+    handleFetchBoardOnError,
     updateBoardPhaseMutation,
   } = useBoard({
     autoFetchBoard: true,
@@ -246,6 +248,10 @@ const Board: NextPage<Props> = ({ boardId }) => {
   const shouldShowRightSection =
     hasAdminRole && !board?.submitedAt && board?.phase !== BoardPhases.SUBMITTED;
   const shouldShowTimer = !board?.submitedAt && board?.phase !== BoardPhases.SUBMITTED;
+
+  if (isError) {
+    handleFetchBoardOnError();
+  }
 
   if (isEmpty(recoilBoard) || !userId || !socketId || !board) {
     return <LoadingPage />;

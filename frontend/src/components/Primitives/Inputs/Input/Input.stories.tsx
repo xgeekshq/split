@@ -1,6 +1,6 @@
 import React, { ReactNode } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
-import { ComponentStory } from '@storybook/react';
+import { StoryFn } from '@storybook/react';
 import dedent from 'ts-dedent';
 
 import Input from '@/components/Primitives/Inputs/Input/Input';
@@ -81,7 +81,7 @@ const StorybookFormProvider = ({ children }: { children: ReactNode }) => {
   );
 };
 
-const Template: ComponentStory<typeof Input> = ({ ...args }) => (
+const Template: StoryFn<typeof Input> = ({ ...args }) => (
   <StorybookFormProvider>
     <Input {...args} />
   </StorybookFormProvider>

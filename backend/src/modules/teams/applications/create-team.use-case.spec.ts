@@ -15,7 +15,7 @@ import { CreateTeamUseCase } from './create-team.use-case';
 import { CREATE_TEAM_USER_SERVICE } from 'src/modules/teamUsers/constants';
 
 const createTeamDto: CreateTeamDto = {
-	name: faker.name.findName(),
+	name: faker.person.fullName(),
 	users: TeamUserDtoFactory.createMany(4)
 };
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import { ComponentStory } from '@storybook/react';
+import { StoryFn } from '@storybook/react';
 import dedent from 'ts-dedent';
 
 import CreateHeader from '@/components/Primitives/Layout/CreateHeader/CreateHeader';
@@ -38,7 +38,7 @@ export default {
   },
 };
 
-const Template: ComponentStory<typeof CreateHeader> = ({ ...args }) => <CreateHeader {...args} />;
+const Template: StoryFn<typeof CreateHeader> = ({ ...args }) => <CreateHeader {...args} />;
 
 export const Default = Template.bind({});
 Default.storyName = 'Basic Usage';

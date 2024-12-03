@@ -1,4 +1,4 @@
-import faker from '@faker-js/faker';
+import { faker } from '@faker-js/faker';
 import ColumnDto from 'src/modules/columns/dto/column.dto';
 import { buildTestFactory } from '../generic-factory.mock';
 import { CardDtoFactory } from './cardDto-factory.mock';

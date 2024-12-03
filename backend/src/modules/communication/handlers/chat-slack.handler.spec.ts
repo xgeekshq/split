@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/lines-between-class-members */
 import { ChatSlackHandler } from 'src/modules/communication/handlers/chat-slack.handler';
 import { CommunicationGateAdapterInterface } from 'src/modules/communication/interfaces/communication-gate.adapter.interface';
 

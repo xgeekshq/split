@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ComponentStory } from '@storybook/react';
+import { StoryFn } from '@storybook/react';
 import dedent from 'ts-dedent';
 
 import BoardRolePopover from '@/components/Primitives/Popovers/BoardRolePopover/BoardRolePopover';
@@ -40,7 +40,7 @@ export default {
   },
 };
 
-const Template: ComponentStory<typeof BoardRolePopover> = () => {
+const Template: StoryFn<typeof BoardRolePopover> = () => {
   const [isNewJoiner, setIsNewJoiner] = useState(false);
   const [canBeResponsible, setCanBeResponsible] = useState(false);
 

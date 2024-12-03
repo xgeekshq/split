@@ -39,7 +39,7 @@ export class SlackArchiveChannelProducer {
 			this.logger.verbose(
 				`Add channel with id: "${
 					(data.data as PartialBoardType).id
-				}" to be archived to queue with Job id: "${job.id}"`
+				}" to be archived to queue with Job id: "${job.id.toString()}"`
 			);
 		}
 
@@ -47,7 +47,7 @@ export class SlackArchiveChannelProducer {
 			this.logger.verbose(
 				`Add board with id: "${
 					(data.data as BoardType).id
-				}" to archived related channels to queue with Job id: "${job.id}"`
+				}" to archived related channels to queue with Job id: "${job.id.toString()}"`
 			);
 		}
 

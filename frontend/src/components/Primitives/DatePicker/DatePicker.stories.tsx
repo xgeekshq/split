@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { ComponentStory } from '@storybook/react';
+import { Value } from 'react-calendar/dist/cjs/shared/types';
+import { StoryFn } from '@storybook/react';
 import dedent from 'ts-dedent';
 
 import DatePicker from '@/components/Primitives/DatePicker/DatePicker';
@@ -54,12 +55,12 @@ export default {
   },
 };
 
-const Template: ComponentStory<typeof DatePicker> = () => {
-  const [currentDate, setDate] = useState<Date>();
+const Template: StoryFn<typeof DatePicker> = () => {
+  const [currentDate, setDate] = useState<Value>();
 
   return (
     <>
-      <DatePicker currentDate={currentDate} setDate={setDate} />
+      <DatePicker currentDate={currentDate as Date | undefined} setDate={setDate} />
     </>
   );
 };

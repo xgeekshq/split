@@ -1,5 +1,5 @@
 import React from 'react';
-import { ComponentStory } from '@storybook/react';
+import { StoryFn } from '@storybook/react';
 import dedent from 'ts-dedent';
 
 import Svg from '@/components/Primitives/Icons/Svg/Svg';
@@ -36,7 +36,7 @@ export default {
   },
 };
 
-const Template: ComponentStory<typeof Svg> = ({ size }) => (
+const Template: StoryFn<typeof Svg> = ({ size }) => (
   <Flex>
     <Svg size={size}>
       <use href="#user" />

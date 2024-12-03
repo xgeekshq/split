@@ -95,7 +95,7 @@ const CardFooter = ({
   const { cardItemId, votesInThisCard, votesOfUserInThisCard } = calculateVotes();
 
   const handleDeleteVote = () => {
-    if ((hideCards && createdBy?._id !== userId) || status === 'loading') return;
+    if ((hideCards && createdBy?._id !== userId) || status === 'pending') return;
     if (maxVotes) {
       toastInfoMessage(`You have ${maxVotes! - (userVotes - 1)} votes left.`);
     }
@@ -113,7 +113,7 @@ const CardFooter = ({
   };
 
   const handleAddVote = () => {
-    if (status === 'loading') return;
+    if (status === 'pending') return;
     if (maxVotes) {
       toastInfoMessage(`You have ${maxVotes - (userVotes + 1)} votes left.`);
     }

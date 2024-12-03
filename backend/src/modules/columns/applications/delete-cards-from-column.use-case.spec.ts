@@ -1,7 +1,7 @@
 import { GetBoardServiceInterface } from 'src/modules/boards/interfaces/services/get.board.service.interface';
 import { DeepMocked, createMock } from '@golevelup/ts-jest';
 import { EventEmitterModule } from '@nestjs/event-emitter';
-import faker from '@faker-js/faker';
+import { faker } from '@faker-js/faker';
 import { NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { BoardFactory } from 'src/libs/test-utils/mocks/factories/board-factory.mock';
@@ -19,7 +19,7 @@ import { DeleteCardsFromColumnUseCase } from 'src/modules/columns/applications/d
 const board = BoardFactory.create();
 const columnToDeleteCards = {
 	id: board.columns[0]._id,
-	socketId: faker.datatype.uuid()
+	socketId: faker.string.uuid()
 };
 
 const boardId = board._id;
@@ -112,8 +112,8 @@ describe('DeleteCardsFromColumnUseCase', () => {
 
 		it("throw an error, when given column_id doesn't exist, ", async () => {
 			const columnToDeleteCardsWithFakeId = {
-				id: faker.datatype.uuid(),
-				socketId: faker.datatype.uuid()
+				id: faker.string.uuid(),
+				socketId: faker.string.uuid()
 			};
 
 			expect(async () => {

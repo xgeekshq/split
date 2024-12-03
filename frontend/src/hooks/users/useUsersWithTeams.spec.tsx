@@ -1,5 +1,5 @@
 import { waitFor } from '@testing-library/dom';
-import { renderHook } from '@testing-library/react';
+import { act, renderHook } from '@testing-library/react';
 
 import { getUsersWithTeams } from '@/api/userService';
 import { createErrorMessage } from '@/constants/toasts';
@@ -40,10 +40,10 @@ describe('hooks/users/useUsersWithTeams', () => {
     const { result } = render();
 
     // Assert
-    await waitFor(() => expect(result.current.isSuccess).toBeTruthy());
-    expect(result.current.data).toStrictEqual({
+    await waitFor(() => expect(result.current.fetchUsersWithTeams.isSuccess).toBeTruthy());
+    expect(result.current.fetchUsersWithTeams.data).toStrictEqual({
       pages: [DUMMY_USERS],
-      pageParams: [undefined],
+      pageParams: [0],
     });
   });
 
@@ -54,11 +54,12 @@ describe('hooks/users/useUsersWithTeams', () => {
 
     // Act
     const { result } = render({ recoilOptions: { recoilState: toastState, recoilHandler } });
+    act(() => result.current.handleErrorOnFetchUsersWithTeams());
 
     // Assert
     await waitFor(() => {
-      expect(result.current.isError).toBeTruthy();
-      expect(result.current.data).not.toBeDefined();
+      expect(result.current.fetchUsersWithTeams.isError).toBeTruthy();
+      expect(result.current.fetchUsersWithTeams.data).not.toBeDefined();
       expect(recoilHandler).toHaveBeenCalledWith(createErrorMessage(ErrorMessages.GET));
     });
   });

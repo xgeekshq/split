@@ -8,7 +8,7 @@ import { GetTeamUserServiceInterface } from 'src/modules/teamUsers/interfaces/se
 import { UpdateTeamUserServiceInterface } from 'src/modules/teamUsers/interfaces/services/update.team.user.service.interface';
 import { CreateSchedulesServiceInterface } from 'src/modules/schedules/interfaces/services/create.schedules.service.interface';
 import { BoardDtoFactory } from 'src/libs/test-utils/mocks/factories/dto/boardDto-factory.mock';
-import faker from '@faker-js/faker';
+import { faker } from '@faker-js/faker';
 import { CreateFailedException } from 'src/libs/exceptions/createFailedBadRequestException';
 import { BoardFactory } from 'src/libs/test-utils/mocks/factories/board-factory.mock';
 import BoardDto from '../dto/board.dto';
@@ -34,7 +34,7 @@ import { CREATE_BOARD_USER_SERVICE } from 'src/modules/boardUsers/constants';
 import { CREATE_SCHEDULES_SERVICE } from 'src/modules/schedules/constants';
 import { SLACK_COMMUNICATION_SERVICE } from 'src/modules/communication/constants';
 
-const userId: string = faker.datatype.uuid();
+const userId: string = faker.string.uuid();
 
 const team: Team = TeamFactory.create();
 
@@ -79,7 +79,7 @@ const users: User[] = UserFactory.createMany(9, [
 	{ _id: subBoardUsers[3].user as string, providerAccountCreatedAt: new Date() },
 	{ _id: subBoardUsers[4].user as string, providerAccountCreatedAt: new Date() },
 	{ _id: subBoardUsers[5].user as string, providerAccountCreatedAt: new Date() },
-	{ _id: subBoardUsers[6].user as string, providerAccountCreatedAt: faker.date.past(1) },
+	{ _id: subBoardUsers[6].user as string, providerAccountCreatedAt: faker.date.past({ years: 1 }) },
 	{ _id: subBoardUsers[7].user as string, providerAccountCreatedAt: new Date() },
 	{}
 ]);
@@ -185,7 +185,7 @@ const configs: Configs = {
 	hideVotes: faker.datatype.boolean(),
 	maxUsersPerTeam: 2,
 	slackEnable: faker.datatype.boolean(),
-	date: faker.datatype.datetime(),
+	date: faker.date.anytime(),
 	postAnonymously: faker.datatype.boolean()
 };
 
@@ -455,7 +455,7 @@ describe('CreateBoardService', () => {
 				hideVotes: faker.datatype.boolean(),
 				maxUsersPerTeam: 1,
 				slackEnable: faker.datatype.boolean(),
-				date: faker.datatype.datetime(),
+				date: faker.date.anytime(),
 				postAnonymously: faker.datatype.boolean()
 			};
 			updateTeamUserServiceMock.updateTeamUser.mockResolvedValue(teamUsers[0]);
@@ -474,10 +474,10 @@ describe('CreateBoardService', () => {
 			const newUsers: User[] = UserFactory.createMany(9, [
 				{
 					_id: subBoardUsers[0].user as string,
-					providerAccountCreatedAt: faker.date.between(
-						'2022-02-02T00:00:00.000Z',
-						'2022-09-02T00:00:00.000Z'
-					)
+					providerAccountCreatedAt: faker.date.between({
+						from: '2022-02-02T00:00:00.000Z',
+						to: '2022-09-02T00:00:00.000Z'
+					})
 				},
 				{ _id: subBoardUsers[1].user as string, providerAccountCreatedAt: new Date() },
 				{ _id: subBoardUsers[2].user as string, providerAccountCreatedAt: new Date() },
@@ -486,10 +486,10 @@ describe('CreateBoardService', () => {
 				{ _id: subBoardUsers[5].user as string, providerAccountCreatedAt: new Date() },
 				{
 					_id: subBoardUsers[6].user as string,
-					providerAccountCreatedAt: faker.date.between(
-						'2022-02-02T00:00:00.000Z',
-						'2022-09-02T00:00:00.000Z'
-					)
+					providerAccountCreatedAt: faker.date.between({
+						from: '2022-02-02T00:00:00.000Z',
+						to: '2022-09-02T00:00:00.000Z'
+					})
 				},
 				{ _id: subBoardUsers[7].user as string, providerAccountCreatedAt: new Date() },
 				{}

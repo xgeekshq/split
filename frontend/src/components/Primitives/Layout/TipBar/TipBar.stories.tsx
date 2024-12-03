@@ -1,5 +1,5 @@
 import React from 'react';
-import { ComponentStory } from '@storybook/react';
+import { StoryFn } from '@storybook/react';
 import dedent from 'ts-dedent';
 
 import TipBar from '@/components/Primitives/Layout/TipBar/TipBar';
@@ -52,7 +52,7 @@ export default {
   },
 };
 
-const Template: ComponentStory<typeof TipBar> = ({ ...args }) => <TipBar {...args} />;
+const Template: StoryFn<typeof TipBar> = ({ ...args }) => <TipBar {...args} />;
 
 export const Default = Template.bind({});
 Default.storyName = 'Basic Usage';

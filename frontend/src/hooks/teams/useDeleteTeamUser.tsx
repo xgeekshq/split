@@ -12,7 +12,8 @@ const useDeleteTeamUser = (userId: string) => {
   const queryClient = useQueryClient();
   const setToastState = useSetRecoilState(toastState);
 
-  return useMutation(deleteTeamUser, {
+  return useMutation({
+    mutationFn: deleteTeamUser,
     onMutate: ({ team: teamId }) => {
       queryClient.setQueryData([TEAMS_KEY, USERS_KEY, userId], (oldTeams: Team[] | undefined) => {
         if (!oldTeams) return oldTeams;
@@ -40,8 +41,8 @@ const useDeleteTeamUser = (userId: string) => {
       setToastState(createSuccessMessage(SuccessMessages.DELETE_USER));
     },
     onError: () => {
-      queryClient.invalidateQueries([TEAMS_KEY, USERS_KEY, userId]);
-      queryClient.invalidateQueries([TEAMS_KEY, 'not', USERS_KEY, userId]);
+      queryClient.invalidateQueries({ queryKey: [TEAMS_KEY, USERS_KEY, userId] });
+      queryClient.invalidateQueries({ queryKey: [TEAMS_KEY, 'not', USERS_KEY, userId] });
 
       setToastState(createErrorMessage(ErrorMessages.DELETE_USER));
     },

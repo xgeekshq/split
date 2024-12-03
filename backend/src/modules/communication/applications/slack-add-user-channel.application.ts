@@ -21,6 +21,7 @@ export class SlackAddUserIntoChannelApplication implements AddUserIntoChannelApp
 		try {
 			const userId = await this.usersHandler.getSlackUserIdByEmail(email);
 			await this.conversationsHandler.inviteUserToChannel(this.config.slackMasterChannelId, userId);
+			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		} catch (e) {
 			return false;
 		}

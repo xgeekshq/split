@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, ObjectId, SchemaTypes } from 'mongoose';
-import * as leanVirtualsPlugin from 'mongoose-lean-virtuals';
+import { mongooseLeanVirtuals } from 'mongoose-lean-virtuals';
 import BaseModel from 'src/libs/models/base.model';
 import User from 'src/modules/users/entities/user.schema';
 import Comment, { CommentSchema } from '../../comments/entities/comment.schema';
@@ -41,4 +41,4 @@ export default class Card extends BaseModel {
 
 export const CardSchema = SchemaFactory.createForClass(Card);
 
-CardSchema.plugin(leanVirtualsPlugin);
+CardSchema.plugin(mongooseLeanVirtuals);

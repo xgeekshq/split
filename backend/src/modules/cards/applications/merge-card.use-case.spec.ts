@@ -4,7 +4,7 @@ import { CardRepositoryInterface } from '../repository/card.repository.interface
 import { CARD_REPOSITORY, GET_CARD_SERVICE } from '../constants';
 import { GetCardServiceInterface } from '../interfaces/services/get.card.service.interface';
 import MergeCardUseCaseDto from '../dto/useCase/merge-card.use-case.dto';
-import faker from '@faker-js/faker';
+import { faker } from '@faker-js/faker';
 import { BadRequestException } from '@nestjs/common';
 import { CardFactory } from 'src/libs/test-utils/mocks/factories/card-factory.mock';
 import { UpdateResult } from 'mongodb';
@@ -13,9 +13,9 @@ import { UseCase } from 'src/libs/interfaces/use-case.interface';
 import { MergeCardUseCase } from 'src/modules/cards/applications/merge-card.use-case';
 
 const mergeCardDtoMock: MergeCardUseCaseDto = {
-	boardId: faker.datatype.uuid(),
-	draggedCardId: faker.datatype.uuid(),
-	targetCardId: faker.datatype.uuid()
+	boardId: faker.string.uuid(),
+	draggedCardId: faker.string.uuid(),
+	targetCardId: faker.string.uuid()
 };
 const cardMock = CardFactory.createMany(2, [
 	{ items: CardItemFactory.createMany(1) },

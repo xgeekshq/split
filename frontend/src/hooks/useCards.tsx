@@ -64,7 +64,8 @@ const useCards = () => {
     setReady(true);
   };
 
-  const addCardInColumn = useMutation(addCardRequest, {
+  const addCardInColumn = useMutation({
+    mutationFn: addCardRequest,
     onMutate: async (data) => {
       if (user) {
         data.user = { ...user, joinedAt: '', _id: user?.id };
@@ -78,7 +79,7 @@ const useCards = () => {
       }
     },
     onError: (_, variables) => {
-      queryClient.invalidateQueries(getBoardQuery(variables.boardId));
+      queryClient.invalidateQueries({ queryKey: getBoardQuery(variables.boardId) });
       setToastState({
         open: true,
         content: 'Error adding the card',
@@ -109,12 +110,13 @@ const useCards = () => {
     setReady(true);
   };
 
-  const updateCardPosition = useMutation(updateCardPositionRequest, {
+  const updateCardPosition = useMutation({
+    mutationFn: updateCardPositionRequest,
     onMutate: async (data) => {
       setQueryDataUpdateCardPosition(data);
     },
     onError: (data, variables) => {
-      queryClient.invalidateQueries(getBoardQuery(variables.boardId));
+      queryClient.invalidateQueries({ queryKey: getBoardQuery(variables.boardId) });
       setToastState({
         open: true,
         content: 'Error updating the card position',
@@ -144,13 +146,14 @@ const useCards = () => {
     setReady(true);
   };
 
-  const updateCard = useMutation(updateCardRequest, {
+  const updateCard = useMutation({
+    mutationFn: updateCardRequest,
     onMutate: async (data) => {
       setQueryDataUpdateCard(data);
       return { previousBoard: null, data };
     },
     onError: (data, variables) => {
-      queryClient.invalidateQueries(getBoardQuery(variables.boardId));
+      queryClient.invalidateQueries({ queryKey: getBoardQuery(variables.boardId) });
       setToastState({
         open: true,
         content: 'Error updating the card',
@@ -180,7 +183,8 @@ const useCards = () => {
     setReady(true);
   };
 
-  const deleteCard = useMutation(deleteCardRequest, {
+  const deleteCard = useMutation({
+    mutationFn: deleteCardRequest,
     onMutate: async (data) => {
       setQueryDataDeleteCard(data);
       return { previousBoard: null, data };
@@ -193,7 +197,7 @@ const useCards = () => {
       });
     },
     onError: (_, variables) => {
-      queryClient.invalidateQueries(getBoardQuery(variables.boardId));
+      queryClient.invalidateQueries({ queryKey: getBoardQuery(variables.boardId) });
       setToastState({
         open: true,
         content: 'Error deleting the card',
@@ -202,9 +206,10 @@ const useCards = () => {
     },
   });
 
-  const mergeBoard = useMutation(mergeBoardRequest, {
+  const mergeBoard = useMutation({
+    mutationFn: mergeBoardRequest,
     onSuccess: (_, variables) => {
-      queryClient.invalidateQueries(getBoardQuery(variables.subBoardId));
+      queryClient.invalidateQueries({ queryKey: getBoardQuery(variables.subBoardId) });
     },
     onError: () => {
       setToastState({
@@ -238,12 +243,13 @@ const useCards = () => {
     setReady(true);
   };
 
-  const mergeCards = useMutation(mergeCardsRequest, {
+  const mergeCards = useMutation({
+    mutationFn: mergeCardsRequest,
     onMutate: async (data) => {
       setQueryDataMergeCard(data);
     },
     onError: (data, variables) => {
-      queryClient.invalidateQueries(getBoardQuery(variables.boardId));
+      queryClient.invalidateQueries({ queryKey: getBoardQuery(variables.boardId) });
       setMergeCard(undefined);
       setToastState({
         open: true,
@@ -274,7 +280,8 @@ const useCards = () => {
     setReady(true);
   };
 
-  const removeFromMergeCard = useMutation(removeFromMergeRequest, {
+  const removeFromMergeCard = useMutation({
+    mutationFn: removeFromMergeRequest,
     onMutate: async (data) => {
       setQueryDataUnmergeCard(data);
     },
@@ -299,7 +306,7 @@ const useCards = () => {
       }
     },
     onError: (data, variables) => {
-      queryClient.invalidateQueries(getBoardQuery(variables.boardId));
+      queryClient.invalidateQueries({ queryKey: getBoardQuery(variables.boardId) });
       setToastState({
         open: true,
         content: 'Error unmerge the card',

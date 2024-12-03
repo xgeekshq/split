@@ -16,7 +16,7 @@ import { ConfigService } from '@nestjs/config';
 								tls: {
 									host: configService.get('redis.host')
 								}
-						  }
+							}
 						: null)
 				}
 			})

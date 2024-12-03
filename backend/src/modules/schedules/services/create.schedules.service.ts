@@ -106,9 +106,8 @@ export class CreateSchedulesService implements CreateSchedulesServiceInterface {
 
 	async handleComplete(ownerId: string, teamId: string, oldBoardId: string) {
 		try {
-			const deletedSchedule = await this.deleteSchedulesService.findAndDeleteScheduleByBoardId(
-				oldBoardId
-			);
+			const deletedSchedule =
+				await this.deleteSchedulesService.findAndDeleteScheduleByBoardId(oldBoardId);
 
 			const oldBoard = await this.getBoardService.getBoardPopulated(oldBoardId);
 
