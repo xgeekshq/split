@@ -16,6 +16,8 @@ export const GET_TEAM_USE_CASE = 'GetTeamUseCase';
 
 export const GET_TEAMS_OF_USER_USE_CASE = 'GetTeamsOfUserUseCase';
 
+export const GET_TEAM_BY_NAME_USE_CASE = 'GetTeamByNameUseCase';
+
 /* REPOSITORY */
 
 export const TEAM_REPOSITORY = 'TeamRepository';
