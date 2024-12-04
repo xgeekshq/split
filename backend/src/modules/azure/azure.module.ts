@@ -11,9 +11,19 @@ import {
 } from './azure.providers';
 import AzureController from './controller/azure.controller';
 import { JwtRegister } from 'src/infrastructure/config/jwt.register';
+import TeamsModule from '../teams/teams.module';
+import TeamUsersModule from '../teamUsers/teamusers.module';
 
 @Module({
-	imports: [UsersModule, AuthModule, CommunicationModule, StorageModule, JwtRegister],
+	imports: [
+		UsersModule,
+		AuthModule,
+		CommunicationModule,
+		StorageModule,
+		JwtRegister,
+		TeamsModule,
+		TeamUsersModule
+	],
 	controllers: [AzureController],
 	providers: [
 		authAzureService,

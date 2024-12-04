@@ -26,7 +26,8 @@ import TeamUsersController from './controller/teamUser.controller';
 		createTeamUsersUseCase,
 		updateTeamUserUseCase,
 		addAndRemoveTeamUsersUseCase,
-		deleteTeamUserUseCase
+		deleteTeamUserUseCase,
+		addAndRemoveTeamUsersUseCase
 	],
 	controllers: [TeamUsersController],
 	exports: [
@@ -38,7 +39,8 @@ import TeamUsersController from './controller/teamUser.controller';
 		createTeamUsersUseCase,
 		updateTeamUserUseCase,
 		addAndRemoveTeamUsersUseCase,
-		deleteTeamUserUseCase
+		deleteTeamUserUseCase,
+		addAndRemoveTeamUsersUseCase
 	]
 })
 export default class TeamUsersModule {}

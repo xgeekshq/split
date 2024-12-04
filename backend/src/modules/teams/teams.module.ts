@@ -6,6 +6,7 @@ import {
 	createTeamUseCase,
 	deleteTeamUseCase,
 	getAllTeamsUseCase,
+	getTeamByNameUseCase,
 	getTeamService,
 	getTeamUseCase,
 	getTeamsOfUserUseCase,
@@ -24,9 +25,10 @@ import TeamUsersModule from 'src/modules/teamUsers/teamusers.module';
 		getTeamsOfUserUseCase,
 		deleteTeamUseCase,
 		getTeamService,
-		teamRepository
+		teamRepository,
+		getTeamByNameUseCase
 	],
 	controllers: [TeamsController],
-	exports: [getTeamService]
+	exports: [getTeamService, getTeamByNameUseCase]
 })
 export default class TeamsModule {}

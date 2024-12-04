@@ -5,4 +5,5 @@ export interface TeamRepositoryInterface extends BaseInterfaceRepository<Team> {
 	getTeam(teamId: string): Promise<Team>;
 	getTeamsWithUsers(teamIds: string[]): Promise<Team[]>;
 	getAllTeams(): Promise<Team[]>;
+	getTeamByName(teamName: string): Promise<Team>;
 }

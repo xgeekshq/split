@@ -54,4 +54,8 @@ export class TeamRepository
 			}
 		]);
 	}
+
+	getTeamByName(teamName: string): Promise<Team> {
+		return this.findOneByField({ name: teamName });
+	}
 }

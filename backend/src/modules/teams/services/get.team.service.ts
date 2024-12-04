@@ -54,4 +54,14 @@ export default class GetTeamService implements GetTeamServiceInterface {
 
 		return teamsResult.sort((a, b) => (a.name < b.name ? -1 : 1));
 	}
+
+	async getTeamByName(teamName: string) {
+		const team = await this.teamRepository.getTeamByName(teamName);
+
+		if (!team) {
+			throw new NotFoundException(TEAM_NOT_FOUND);
+		}
+
+		return team;
+	}
 }

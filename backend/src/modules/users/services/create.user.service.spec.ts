@@ -81,4 +81,15 @@ describe('CreateUserService', () => {
 			);
 		});
 	});
+	describe('createMany', () => {
+		it('should create many users', async () => {
+			userRepositoryMock.insertMany.mockResolvedValue([createdUser]);
+			await expect(userService.createMany([createUserDto])).resolves.toEqual([createdUser]);
+		});
+
+		it('should throw error when users are not created', async () => {
+			userRepositoryMock.insertMany.mockResolvedValue(null);
+			await expect(userService.createMany([createUserDto])).rejects.toThrow(BadRequestException);
+		});
+	});
 });

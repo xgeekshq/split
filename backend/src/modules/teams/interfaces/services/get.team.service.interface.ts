@@ -5,4 +5,5 @@ export interface GetTeamServiceInterface {
 	getTeam(teamId: string, teamQueryParams?: TeamQueryParams): Promise<Team | null>;
 	getTeamsOfUser(userId: string): Promise<Team[]>;
 	countAllTeams(): Promise<number>;
+	getTeamByName(teamName: string): Promise<Team | null>;
 }

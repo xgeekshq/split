@@ -105,4 +105,18 @@ describe('GetTeamService', () => {
 			expect(result).toHaveLength(expectedResult.length);
 		});
 	});
+	describe('getTeamByName', () => {
+		it('should return team with users sorted by name', async () => {
+			teamRepositoryMock.getTeamByName.mockResolvedValue(team1);
+
+			await expect(teamService.getTeamByName(team1.name)).resolves.toEqual(team1);
+		});
+
+		it('should throw Not Found Exception when team not found', async () => {
+			teamRepositoryMock.getTeamByName.mockResolvedValue(null);
+
+			await expect(teamService.getTeamByName('')).rejects.toThrow(NotFoundException);
+			expect(teamRepositoryMock.getTeamByName).toHaveBeenCalled();
+		});
+	});
 });

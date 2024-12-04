@@ -1,6 +1,7 @@
 import { CreateTeamUseCase } from './applications/create-team.use-case';
 import { DeleteTeamUseCase } from './applications/delete-team.use-case';
 import { GetAllTeamsUseCase } from './applications/get-all-teams.use-case';
+import { GetTeamByNameUseCase } from './applications/get-team-by-name.use-case';
 import { GetTeamUseCase } from './applications/get-team.use-case';
 import { GetTeamsOfUserUseCase } from './applications/get-teams-of-user.use-case';
 import { GetTeamsUserIsNotMemberUseCase } from './applications/get-teams-user-is-not-member.use-case';
@@ -10,6 +11,7 @@ import {
 	GET_ALL_TEAMS_USE_CASE,
 	GET_TEAMS_OF_USER_USE_CASE,
 	GET_TEAMS_USER_IS_NOT_MEMBER_USE_CASE,
+	GET_TEAM_BY_NAME_USE_CASE,
 	GET_TEAM_SERVICE,
 	GET_TEAM_USE_CASE,
 	TEAM_REPOSITORY
@@ -54,6 +56,11 @@ export const getTeamsOfUserUseCase = {
 export const deleteTeamUseCase = {
 	provide: DELETE_TEAM_USE_CASE,
 	useClass: DeleteTeamUseCase
+};
+
+export const getTeamByNameUseCase = {
+	provide: GET_TEAM_BY_NAME_USE_CASE,
+	useClass: GetTeamByNameUseCase
 };
 
 /* REPOSITORY */
