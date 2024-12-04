@@ -46,6 +46,7 @@ export class SynchronizeADUsersCronUseCase implements SynchronizeADUsersCronUseC
 		try {
 			let team;
 			const teamName = this.configService.get('AD_SYNCHRONIZATION_AUTO_ADD_USER_TEAM_NAME');
+			const userEmailDomain = this.configService.get('AD_SYNCHRONIZATION_EMAIL_DOMAIN');
 
 			if (teamName !== '') {
 				team = await this.getTeamByNameUseCase.execute(teamName);
@@ -66,7 +67,12 @@ export class SynchronizeADUsersCronUseCase implements SynchronizeADUsersCronUseC
 				throw new Error('Split app users list is empty.');
 			}
 
-			const usersAppFiltered = usersApp.filter((user) => user.email.endsWith('@xgeeks.com'));
+			let usersAppFiltered = usersApp;
+
+			if (userEmailDomain) {
+				const emailDomain = '@' + userEmailDomain;
+				usersAppFiltered = usersAppFiltered.filter((user) => user.email.endsWith(emailDomain));
+			}
 
 			const today = new Date();
 			//Filter out users that don't have a '.' in the beggining of the email
@@ -142,7 +148,7 @@ export class SynchronizeADUsersCronUseCase implements SynchronizeADUsersCronUseC
 
 			const createdUsers = await this.createUserService.createMany(usersToCreate);
 
-			if (typeof team !== 'undefined') {
+			if (team) {
 				const updateTeamUser: UpdateTeamUserDto = {
 					addUsers: createdUsers.map((user) => {
 						return {

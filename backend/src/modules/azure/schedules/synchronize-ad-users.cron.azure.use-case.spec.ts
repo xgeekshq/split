@@ -83,6 +83,9 @@ describe('SynchronizeAdUsersCronUseCase', () => {
 								case 'AD_SYNCHRONIZATION_AUTO_ADD_USER_TEAM_NAME':
 									return 'xgeeks';
 
+								case 'AD_SYNCHRONIZATION_EMAIL_DOMAIN':
+									return 'xgeeks.com';
+
 								default:
 									return 'UNKNOWN';
 							}
