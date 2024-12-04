@@ -81,7 +81,8 @@ import { configuration } from './configuration';
 				REDIS_PASSWORD: Joi.string(),
 				REDIS_HOST: Joi.string().required(),
 				REDIS_PORT: Joi.number().required(),
-				AZURE_STORAGE_CONNECTION_STRING: Joi.string().required()
+				AZURE_STORAGE_CONNECTION_STRING: Joi.string().required(),
+				AD_SYNCHRONIZATION_AUTO_ADD_USER_TEAM_NAME: Joi.string().default('')
 			})
 		})
 	],
