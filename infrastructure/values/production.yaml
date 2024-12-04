@@ -40,3 +40,5 @@ backend:
   environment: 
     NODE_ENV: prod
     NEXT_PUBLIC_NEXTAUTH_URL: https://split.xgeeks.com
+    AD_SYNCHRONIZATION_AUTO_ADD_USER_TEAM_NAME: xgeeks
+    AD_SYNCHRONIZATION_EMAIL_DOMAIN: xgeeks.com

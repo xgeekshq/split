@@ -51,9 +51,9 @@ const Home = () => {
         <StyledImage
           alt="xgeeks_logo"
           css={{ ml: '$8', mt: '$6' }}
-          height={13}
+          height={20}
           src="/xgeeks_logo.svg"
-          width={66}
+          width={50}
         />
       </Flex>
     );
