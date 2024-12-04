@@ -12,6 +12,14 @@ import { UseCase } from 'src/libs/interfaces/use-case.interface';
 import User from 'src/modules/users/entities/user.schema';
 import { AzureUserDTO } from '../dto/azure-user.dto';
 import { CreateUserServiceInterface } from 'src/modules/users/interfaces/services/create.user.service.interface';
+import { GET_TEAM_BY_NAME_USE_CASE } from 'src/modules/teams/constants';
+import Team from 'src/modules/teams/entities/team.schema';
+import { ADD_AND_REMOVE_TEAM_USER_USE_CASE } from 'src/modules/teamUsers/constants';
+import UpdateTeamUserDto from 'src/modules/teamUsers/dto/update.team.user.dto';
+import TeamUser from 'src/modules/teamUsers/entities/team.user.schema';
+import { TeamRoles } from 'src/libs/enum/team.roles';
+import CreateUserAzureDto from 'src/modules/users/dto/create.user.azure.dto';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class SynchronizeADUsersCronUseCase implements SynchronizeADUsersCronUseCaseInterface {
@@ -24,13 +32,28 @@ export class SynchronizeADUsersCronUseCase implements SynchronizeADUsersCronUseC
 		@Inject(DELETE_USER_USE_CASE)
 		private readonly deleteUserUseCase: UseCase<string, boolean>,
 		@Inject(CREATE_USER_SERVICE)
-		private readonly createUserService: CreateUserServiceInterface
+		private readonly createUserService: CreateUserServiceInterface,
+		@Inject(GET_TEAM_BY_NAME_USE_CASE)
+		private readonly getTeamByNameUseCase: UseCase<string, Team>,
+		@Inject(ADD_AND_REMOVE_TEAM_USER_USE_CASE)
+		private readonly addAndRemoveTeamUserUseCase: UseCase<UpdateTeamUserDto, TeamUser[]>,
+		private readonly configService: ConfigService
 	) {}
 
 	//Runs every saturday at mid-night
 	@Cron('0 0 * * 6')
 	async execute() {
 		try {
+			let team;
+			const teamName = this.configService.get('AD_SYNCHRONIZATION_AUTO_ADD_USER_TEAM_NAME');
+
+			if (teamName !== '') {
+				team = await this.getTeamByNameUseCase.execute(teamName);
+
+				if (!team) {
+					throw new Error(`Error retrieving '${teamName}' team.`);
+				}
+			}
 			const usersADAll = await this.authAzureService.getADUsers();
 
 			if (!usersADAll.length) {
@@ -42,6 +65,8 @@ export class SynchronizeADUsersCronUseCase implements SynchronizeADUsersCronUseC
 			if (!usersApp.length) {
 				throw new Error('Split app users list is empty.');
 			}
+
+			const usersAppFiltered = usersApp.filter((user) => user.email.endsWith('@xgeeks.com'));
 
 			const today = new Date();
 			//Filter out users that don't have a '.' in the beggining of the email
@@ -61,8 +86,8 @@ export class SynchronizeADUsersCronUseCase implements SynchronizeADUsersCronUseC
 					: true
 			);
 
-			await this.removeUsersFromApp(usersADFiltered, usersApp);
-			await this.addUsersToApp(usersADFiltered, usersApp);
+			await this.removeUsersFromApp(usersADFiltered, usersAppFiltered);
+			await this.addUsersToApp(usersADFiltered, usersAppFiltered, team);
 
 			this.logger.log('Synchronization of users between App and AD runned successfully.');
 		} catch (err) {
@@ -91,7 +116,11 @@ export class SynchronizeADUsersCronUseCase implements SynchronizeADUsersCronUseC
 			}
 		}
 	}
-	private async addUsersToApp(usersADFiltered: Array<AzureUserDTO>, usersApp: Array<User>) {
+	private async addUsersToApp(
+		usersADFiltered: Array<AzureUserDTO>,
+		usersApp: Array<User>,
+		team: Team
+	) {
 		const notIntersectedUsers = usersADFiltered.filter(
 			(userAd) =>
 				usersApp.findIndex(
@@ -99,20 +128,39 @@ export class SynchronizeADUsersCronUseCase implements SynchronizeADUsersCronUseC
 				) === -1
 		);
 
-		for (const user of notIntersectedUsers) {
-			try {
+		try {
+			const usersToCreate: Array<CreateUserAzureDto> = notIntersectedUsers.map((user) => {
 				const splittedName = user.displayName.split(' ');
-				await this.createUserService.create({
-					email: user.mail,
+
+				return {
+					email: user.mail ?? user.userPrincipalName,
 					firstName: splittedName[0],
-					lastName: splittedName.at(-1),
+					lastName: splittedName[-1],
 					providerAccountCreatedAt: user.createdDateTime
-				});
-			} catch (err) {
-				this.logger.error(
-					`An error as occurred while creating user with email '${user.mail}' through the syncronize AD Users Cron. Message: ${err.message}`
-				);
+				};
+			});
+
+			const createdUsers = await this.createUserService.createMany(usersToCreate);
+
+			if (typeof team !== 'undefined') {
+				const updateTeamUser: UpdateTeamUserDto = {
+					addUsers: createdUsers.map((user) => {
+						return {
+							role: TeamRoles.MEMBER,
+							user: user._id,
+							canBeResponsible: false,
+							isNewJoiner: true,
+							team: team._id
+						};
+					}),
+					removeUsers: []
+				};
+				this.addAndRemoveTeamUserUseCase.execute(updateTeamUser);
 			}
+		} catch (err) {
+			this.logger.error(
+				`An error as occurred while creating users through the syncronize AD Users Cron. Message: ${err.message}`
+			);
 		}
 	}
 }
