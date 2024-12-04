@@ -31,6 +31,27 @@ export default class CreateUserService implements CreateUserServiceInterface {
 		return createdUser;
 	}
 
+	async createMany(usersData: Array<CreateUserDto>): Promise<Array<User>> {
+		const now = new Date();
+		const users: Array<User> = usersData.map((user) => {
+			return {
+				...user,
+				strategy: '',
+				isSAdmin: false,
+				isDeleted: false,
+				joinedAt: now,
+				isAnonymous: false
+			};
+		});
+		const createdUsers = await this.userRepository.insertMany(users);
+
+		if (!createdUsers || createdUsers.length === 0) {
+			throw new BadRequestException(CREATE_FAILED);
+		}
+
+		return createdUsers;
+	}
+
 	async createGuest(guestUserData: CreateGuestUserDto) {
 		const { firstName, lastName } = guestUserData;
 
