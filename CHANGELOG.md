@@ -2,7 +2,20 @@
 
 All notable changes to this project will be documented in this file.
 
-## [Unreleased](https://github.com/xgeekshq/split/compare/v0.1.30...HEAD)
+## [Unreleased](https://github.com/xgeekshq/split/compare/v0.1.31...HEAD)
+
+## [v0.1.31](https://github.com/xgeekshq/split/compare/v0.1.30...v0.1.31) - 2024-12-05
+
+### What Changed 👀
+
+- fix: logos and new env vars @joaofrparreira (#1604)
+- feat:  automatically add users to team during synchronization @joaofrparreira (#1602)
+
+### 🧩 Dependency Updates
+
+- chore(deps): bump serve-static, @nestjs/core, @nestjs/mongoose, @nestjs/platform-express, @nestjs/platform-socket.io, @nestjs/swagger, @nestjs/websockets, express and @nestjs/testing in /backend @dependabot (#1548)
+
+**Full Changelog**: https://github.com/xgeekshq/split/compare/v0.1.30...v0.1.31
 
 ## [v0.1.30](https://github.com/xgeekshq/split/compare/v0.1.29...v0.1.30) - 2024-11-28
 
@@ -218,7 +231,6 @@ All notable changes to this project will be documented in this file.
 - docs: add juniorboos as a contributor for code, and doc @allcontributors (#1324)
 - test: votes services @CatiaAntunes96 (#1311)
 - test: create board service @CatiaAntunes96 (#1300)
-
 ### 🚀 Features
 
 - feat: add users responsiveness @juniorboos (#1446)
@@ -306,7 +318,6 @@ All notable changes to this project will be documented in this file.
 - refactor: team pages state logic @JoaoSaIvador (#1256)
 - feat: add test_request issue @GoncaloCanteiro (#1254)
 ### 🐛 Bug Fixes
-
 - fix: duplicate board without team @nunocaseiro (#1299)
 - fix: delete cards @nunocaseiro (#1298)
 - fix: delete team fails @patricia-mdias (#1296)
