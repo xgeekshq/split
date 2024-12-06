@@ -39,7 +39,7 @@ export default class GetTeamService implements GetTeamServiceInterface {
 		const teamsOfUser = await this.getTeamUserService.getAllTeamsOfUser(userId);
 
 		const teams: Team[] = await this.teamRepository.getTeamsWithUsers(
-			teamsOfUser.map((teamUser) => teamUser._id)
+			teamsOfUser.map((teamUser) => teamUser.team.toString())
 		);
 
 		const allBoards = await this.getBoardService.getAllMainBoards();
