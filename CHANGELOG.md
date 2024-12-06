@@ -2,7 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
-## [Unreleased](https://github.com/xgeekshq/split/compare/v0.1.31...HEAD)
+## [Unreleased](https://github.com/xgeekshq/split/compare/v0.1.32...HEAD)
+
+## [v0.1.32](https://github.com/xgeekshq/split/compare/v0.1.31...v0.1.32) - 2024-12-06
+
+### What Changed 👀
+
+- fix: query team id @joaofrparreira (#1607)
+
+**Full Changelog**: https://github.com/xgeekshq/split/compare/v0.1.31...v0.1.32
 
 ## [v0.1.31](https://github.com/xgeekshq/split/compare/v0.1.30...v0.1.31) - 2024-12-05
 
@@ -232,7 +240,6 @@ All notable changes to this project will be documented in this file.
 - test: votes services @CatiaAntunes96 (#1311)
 - test: create board service @CatiaAntunes96 (#1300)
 ### 🚀 Features
-
 - feat: add users responsiveness @juniorboos (#1446)
 - feat: add board list responsiveness @juniorboos (#1439)
 - feat: add scheduling form to board settings @GoncaloCanteiro (#1430)
@@ -328,7 +335,6 @@ All notable changes to this project will be documented in this file.
 - fix: fix minus size and plus color @CatiaAntunes96 (#1284)
 - refactor: user components @StereoPT (#1272)
 - fix: split teams @nunocaseiro (#1279)
-
 ### 🧩 Dependency Updates
 
 - chore(deps): bump webpack and @nestjs/cli in /backend @dependabot (#1270)
