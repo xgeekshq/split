@@ -71,7 +71,9 @@ export class SynchronizeADUsersCronUseCase implements SynchronizeADUsersCronUseC
 
 			if (userEmailDomain) {
 				const emailDomain = '@' + userEmailDomain;
-				usersAppFiltered = usersAppFiltered.filter((user) => user.email.endsWith(emailDomain));
+				usersAppFiltered = usersAppFiltered.filter(
+					(user) => user.email && user.email.endsWith(emailDomain)
+				);
 			}
 
 			const today = new Date();
@@ -98,7 +100,7 @@ export class SynchronizeADUsersCronUseCase implements SynchronizeADUsersCronUseC
 			this.logger.log('Synchronization of users between App and AD runned successfully.');
 		} catch (err) {
 			this.logger.error(
-				`An error occurred while synchronizing users between AD and Aplit Application. Message: ${err.message}`
+				`An error occurred while synchronizing users between AD and Split Application. Message: ${err.message}`
 			);
 		}
 	}
