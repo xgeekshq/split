@@ -14,7 +14,7 @@ type Props = {
   disabled?: boolean;
 };
 
-const SortMenu = ({ setFilter, filter, disabled }: Props) => {
+const SortMenu = ({ setFilter, filter, disabled = false }: Props) => {
   /**
    * Make a switch case to set icon
    * by current filter
@@ -62,10 +62,6 @@ const SortMenu = ({ setFilter, filter, disabled }: Props) => {
       )}
     </Popover>
   );
-};
-
-SortMenu.defaultProps = {
-  disabled: false,
 };
 
 export default SortMenu;
