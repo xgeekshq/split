@@ -16,6 +16,7 @@ export interface User {
   joinedAt: string;
   providerAccountCreatedAt?: string;
   isAnonymous?: boolean;
+  avatar?: string;
 }
 
 export interface UseUserType {

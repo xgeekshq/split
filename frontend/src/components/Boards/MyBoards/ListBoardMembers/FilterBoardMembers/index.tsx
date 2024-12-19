@@ -25,6 +25,7 @@ const FilterBoardMembers = ({ title, users }: FilterBoardMembersProps) => (
               css={{ position: 'relative', mr: '$10' }}
               fallbackText={getInitials(member.firstName ?? '-', member.lastName ?? '-')}
               size={32}
+              src={member.avatar}
             />
             <Text color="primary800" size="sm">
               {`${member.firstName} ${member.lastName}`}

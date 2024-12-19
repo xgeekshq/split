@@ -14,7 +14,7 @@ const CardTitle: React.FC<CardTitleProps> = ({
   boardId,
   title,
   isSubBoard,
-  mainBoardId,
+  mainBoardId = undefined,
 }) =>
   isSubBoard ? (
     <Tooltip content="It’s a sub-team board. A huge team got split into sub teams.">
@@ -35,9 +35,5 @@ const CardTitle: React.FC<CardTitleProps> = ({
       userIsParticipating={userIsParticipating}
     />
   );
-
-CardTitle.defaultProps = {
-  mainBoardId: undefined,
-};
 
 export default CardTitle;

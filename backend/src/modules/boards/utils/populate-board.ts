@@ -4,7 +4,7 @@ export const BoardDataPopulate: PopulateOptions[] = [
 	{
 		path: 'users',
 		select: 'user role -board votesCount',
-		populate: { path: 'user', select: 'firstName email lastName _id isAnonymous' }
+		populate: { path: 'user', select: 'firstName email lastName _id isAnonymous avatar' }
 	},
 	{
 		path: 'team',
@@ -51,7 +51,7 @@ export const GetBoardDataPopulate: PopulateOptions[] = [
 		select: 'user role -board votesCount',
 		populate: {
 			path: 'user',
-			select: 'firstName email lastName _id isAnonymous isDeleted',
+			select: 'firstName email lastName _id isAnonymous isDeleted avatar',
 			match: { isDeleted: { $in: [true, false] } }
 		}
 	},
@@ -63,34 +63,34 @@ export const GetBoardDataPopulate: PopulateOptions[] = [
 			select: 'user role -_id',
 			populate: {
 				path: 'user',
-				select: 'firstName lastName email isDeleted',
+				select: 'firstName lastName email isDeleted avatar',
 				match: { isDeleted: { $in: [true, false] } }
 			}
 		}
 	},
 	{
 		path: 'columns.cards.createdBy',
-		select: '_id firstName lastName isDeleted',
+		select: '_id firstName lastName isDeleted avatar',
 		match: { isDeleted: { $in: [true, false] } }
 	},
 	{
 		path: 'columns.cards.comments.createdBy',
-		select: '_id  firstName lastName isDeleted',
+		select: '_id  firstName lastName isDeleted avatar',
 		match: { isDeleted: { $in: [true, false] } }
 	},
 	{
 		path: 'columns.cards.items.createdBy',
-		select: '_id firstName lastName isDeleted',
+		select: '_id firstName lastName isDeleted avatar',
 		match: { isDeleted: { $in: [true, false] } }
 	},
 	{
 		path: 'columns.cards.items.comments.createdBy',
-		select: '_id firstName lastName isDeleted',
+		select: '_id firstName lastName isDeleted avatar',
 		match: { isDeleted: { $in: [true, false] } }
 	},
 	{
 		path: 'createdBy',
-		select: '_id firstName lastName isDeleted',
+		select: '_id firstName lastName isDeleted avatar',
 		match: { isDeleted: { $in: [true, false] } }
 	},
 	{
@@ -103,22 +103,22 @@ export const GetBoardDataPopulate: PopulateOptions[] = [
 export const GetCardFromBoardPopulate: PopulateOptions[] = [
 	{
 		path: 'columns.cards.createdBy',
-		select: '_id firstName lastName isDeleted',
+		select: '_id firstName lastName isDeleted avatar',
 		match: { isDeleted: { $in: [true, false] } }
 	},
 	{
 		path: 'columns.cards.comments.createdBy',
-		select: '_id  firstName lastName isDeleted',
+		select: '_id  firstName lastName isDeleted avatar',
 		match: { isDeleted: { $in: [true, false] } }
 	},
 	{
 		path: 'columns.cards.items.createdBy',
-		select: '_id firstName lastName isDeleted',
+		select: '_id firstName lastName isDeleted avatar',
 		match: { isDeleted: { $in: [true, false] } }
 	},
 	{
 		path: 'columns.cards.items.comments.createdBy',
-		select: '_id firstName lastName isDeleted',
+		select: '_id firstName lastName isDeleted avatar',
 		match: { isDeleted: { $in: [true, false] } }
 	}
 ];

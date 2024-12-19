@@ -10,6 +10,7 @@ import UserTitle from '@/components/Users/UsersList/UserItem/UserTitle/UserTitle
 import useCurrentSession from '@/hooks/useCurrentSession';
 import { InnerContainer } from '@/styles/pages/pages.styles';
 import { UserWithTeams } from '@/types/user/user';
+import Avatar from '@components/Primitives/Avatars/Avatar/Avatar';
 
 export type UserItemProps = {
   userWithTeams: UserWithTeams;
@@ -35,7 +36,17 @@ const UserItem = React.memo<UserItemProps>(({ userWithTeams }) => {
     <Flex data-testid="userItem" direction="column">
       <InnerContainer align="center" elevation="1" wrap="wrap">
         <Flex align="center" css={{ width: '$300' }} gap="8">
-          <Icon css={{ flexShrink: 0 }} name="blob-personal" size={32} />
+          {user.avatar ? (
+            <Avatar
+              key={`${user}-${user._id}-${Math.random()}`}
+              css={{ position: 'relative', mr: '$10' }}
+              fallbackText={user.firstName.charAt(0) + user.lastName.charAt(0)}
+              size={32}
+              src={user.avatar}
+            />
+          ) : (
+            <Icon css={{ flexShrink: 0 }} name="blob-personal" size={32} />
+          )}
           <UserTitle hasPermissions={isSAdmin} user={user} />
         </Flex>
 

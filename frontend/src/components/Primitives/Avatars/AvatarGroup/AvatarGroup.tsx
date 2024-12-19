@@ -128,6 +128,7 @@ const AvatarGroup = ({
       avatarColor: AvatarColor | undefined,
       fallbackText: string,
       id: string,
+      avatar: string,
     ) => (
       <AvatarButton
         key={`${keyValue}-${idx}-${Math.random()}`}
@@ -145,6 +146,7 @@ const AvatarGroup = ({
           id={id}
           isDefaultColor={id === userId}
           size={32}
+          src={avatar}
         />
       </AvatarButton>
     ),
@@ -155,7 +157,7 @@ const AvatarGroup = ({
     (value: User | string, avatarColor: AvatarColor | undefined, idx: number) => {
       // Only used for the User Amount:
       if (typeof value === 'string') {
-        return renderAvatarWithButton(value, idx, avatarColor, value, value);
+        return renderAvatarWithButton(value, idx, avatarColor, value, value, '');
       }
 
       return (
@@ -169,6 +171,7 @@ const AvatarGroup = ({
             avatarColor,
             getInitials(value.firstName, value.lastName),
             value._id,
+            value.avatar ?? '',
           )}
         </Tooltip>
       );

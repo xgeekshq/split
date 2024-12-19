@@ -86,7 +86,7 @@ export class BoardRepository
 		const boardDataToPopulate: PopulateOptions[] = [
 			{
 				path: 'createdBy',
-				select: 'firstName lastName isDeleted',
+				select: 'firstName lastName isDeleted avatar',
 				match: { isDeleted: { $in: [true, false] } }
 			},
 			{
@@ -97,7 +97,7 @@ export class BoardRepository
 					select: 'user role',
 					populate: {
 						path: 'user',
-						select: '_id firstName lastName joinedAt isDeleted',
+						select: '_id firstName lastName joinedAt isDeleted avatar',
 						match: { isDeleted: { $in: [true, false] } }
 					}
 				}
@@ -112,7 +112,7 @@ export class BoardRepository
 						populate: {
 							path: 'user',
 							model: 'User',
-							select: 'firstName email lastName isDeleted',
+							select: 'firstName email lastName isDeleted avatar',
 							match: { isDeleted: { $in: [true, false] } }
 						}
 					}
@@ -123,7 +123,7 @@ export class BoardRepository
 				select: 'user role -board',
 				populate: {
 					path: 'user',
-					select: '_id firstName email lastName isAnonymous isDeleted',
+					select: '_id firstName email lastName isAnonymous isDeleted avatar',
 					match: { isDeleted: { $in: [true, false] } }
 				}
 			}

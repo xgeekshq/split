@@ -10,7 +10,13 @@ type Props = {
   mainBoardId?: string;
 };
 
-const Title = ({ userIsParticipating, boardId, title, isSubBoard, mainBoardId }: Props) =>
+const Title = ({
+  userIsParticipating,
+  boardId,
+  title,
+  isSubBoard,
+  mainBoardId = undefined,
+}: Props) =>
   userIsParticipating ? (
     <Link
       key={boardId}
@@ -24,9 +30,5 @@ const Title = ({ userIsParticipating, boardId, title, isSubBoard, mainBoardId }:
   ) : (
     <StyledBoardTitle data-disabled={!userIsParticipating}>{title}</StyledBoardTitle>
   );
-
-Title.defaultProps = {
-  mainBoardId: undefined,
-};
 
 export { Title };

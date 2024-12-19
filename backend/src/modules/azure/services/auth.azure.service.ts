@@ -68,7 +68,7 @@ export default class AuthAzureService implements AuthAzureServiceInterface {
 	}
 
 	fetchUserPhoto(userId: string) {
-		return this.graphClient.api(`/users/${userId}/photo/$value`).get();
+		return this.graphClient.api(`/users/${userId}/photos/240x240/$value`).get();
 	}
 
 	async getADUsers(): Promise<Array<AzureUserDTO>> {

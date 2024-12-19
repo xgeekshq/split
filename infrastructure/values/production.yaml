@@ -21,6 +21,7 @@ frontend:
     NEXT_PUBLIC_RECOIL_DEV_TOOLS: false
     NEXT_PUBLIC_ENABLE_GOOGLE: false
     NEXT_PUBLIC_ENABLE_GIT: false
+    AZURE_STORAGE_HOSTNAME: splitsa.blob.core.windows.net
 
 backend: 
   ingress:

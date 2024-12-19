@@ -19,7 +19,7 @@ const render = (props: SidebarHeaderProps = DEFAULT_PROPS) =>
   renderWithProviders(<Header {...props} />, { routerOptions: mockRouter });
 
 describe('Components/Sidebar/Header', () => {
-  it('should render correctly', () => {
+  it('should render correctly', async () => {
     // Arrange
     const headerProps = { ...DEFAULT_PROPS };
 
@@ -33,6 +33,24 @@ describe('Components/Sidebar/Header', () => {
     expect(getByText(headerProps.email)).toBeInTheDocument();
     expect(getByTestId('splitLogo')).toBeInTheDocument();
     expect(userIcon).toBeDefined();
+    expect(menuIcon).toBeDefined();
+    expect(getByText(getInitials(headerProps.firstName, headerProps.lastName).toUpperCase()));
+  });
+
+  it('should render correctly with user avatar', async () => {
+    // Arrange
+    const headerProps = { ...DEFAULT_PROPS, avatar: '/avatar.jpeg' };
+
+    // Act
+    const { getByText, getByTestId } = render(headerProps);
+    const userIcon = getByTestId('sidebarHeader').querySelector('[href="#userIcon"]');
+    const menuIcon = getByTestId('sidebarHeader').querySelector('[href="#menu"]');
+
+    // Assert
+    expect(getByText(`${headerProps.firstName} ${headerProps.lastName}`)).toBeInTheDocument();
+    expect(getByText(headerProps.email)).toBeInTheDocument();
+    expect(getByTestId('splitLogo')).toBeInTheDocument();
+    expect(userIcon).toBeNull();
     expect(menuIcon).toBeDefined();
     expect(getByText(getInitials(headerProps.firstName, headerProps.lastName).toUpperCase()));
   });

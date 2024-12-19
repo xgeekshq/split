@@ -38,7 +38,7 @@ const CardTitle: React.FC<CardTitleProps> = ({
   boardId,
   title,
   isSubBoard,
-  mainBoardId,
+  mainBoardId = undefined,
   mainBoardTitle,
 }) => {
   const getTitle = useCallback(() => {
@@ -81,10 +81,6 @@ const CardTitle: React.FC<CardTitleProps> = ({
     );
   }
   return getTitle();
-};
-
-CardTitle.defaultProps = {
-  mainBoardId: undefined,
 };
 
 export default CardTitle;

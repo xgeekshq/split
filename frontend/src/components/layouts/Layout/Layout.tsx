@@ -22,6 +22,7 @@ const Layout = ({ children }: LayoutProps) => {
   return (
     <Container>
       <Sidebar
+        avatar={session.user.avatar}
         email={session.user.email}
         firstName={session.user.firstName}
         lastName={session.user.lastName}

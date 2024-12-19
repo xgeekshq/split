@@ -16,12 +16,8 @@ interface PopoverSettingsContentProps {
 
 const PopoverCommentSettingsContent: React.FC<PopoverSettingsContentProps> = ({
   setEditCard,
-  setDeleteCard,
+  setDeleteCard = undefined,
 }) => {
-  PopoverCommentSettingsContent.defaultProps = {
-    setDeleteCard: undefined,
-  };
-
   return (
     <PopoverContent>
       <PopoverItem onClick={setEditCard}>
@@ -46,10 +42,7 @@ interface PopoverSettingsProps {
 }
 
 const PopoverCommentSettings: React.FC<PopoverSettingsProps> = React.memo(
-  ({ handleEditing, handleDeleteComment }) => {
-    PopoverCommentSettings.defaultProps = {
-      handleDeleteComment: undefined,
-    };
+  ({ handleEditing, handleDeleteComment = undefined }) => {
     return (
       <Popover>
         <PopoverTrigger size="sm" variant="dark">

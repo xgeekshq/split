@@ -29,8 +29,4 @@ const Tooltip = ({ children, content, color }: Props) => (
   </TooltipPrimitive.TooltipProvider>
 );
 
-Tooltip.defaultProps = {
-  color: undefined,
-};
-
 export default Tooltip;

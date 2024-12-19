@@ -5,8 +5,6 @@ import Button from '@/components/Primitives/Inputs/Button/Button';
 
 const RecoilDevTools = () => {
   const getAtomValues = async (snapshot: any) => {
-    // eslint-disable-next-line no-console
-    console.log('Atom Values:');
     const state: any = {};
     // eslint-disable-next-line no-restricted-syntax
     for (const node of snapshot.getNodes_UNSTABLE()) {
@@ -14,8 +12,6 @@ const RecoilDevTools = () => {
       const value = await snapshot.getPromise(node);
       state[node.key] = value;
     }
-    // eslint-disable-next-line no-console
-    console.log(state);
   };
 
   const dumpRecoilState = useRecoilCallback(

@@ -5,6 +5,7 @@ export type SidebarProps = {
   lastName: string;
   email: string;
   strategy: string;
+  avatar?: string;
 };
 
 export type CollapsibleProps = {
