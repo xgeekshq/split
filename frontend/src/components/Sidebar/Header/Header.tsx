@@ -1,5 +1,6 @@
 import Link from 'next/link';
 
+import Avatar from '@/components/Primitives/Avatars/Avatar/Avatar';
 import Icon from '@/components/Primitives/Icons/Icon/Icon';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Separator from '@/components/Primitives/Separator/Separator';
@@ -14,6 +15,7 @@ export interface SidebarHeaderProps extends CollapsibleProps {
   firstName: string;
   lastName: string;
   email: string;
+  avatar?: string;
 }
 
 const Header = ({
@@ -21,6 +23,7 @@ const Header = ({
   lastName,
   email,
   isCollapsed,
+  avatar,
   handleCollapse,
 }: SidebarHeaderProps) => {
   const initialLetters = firstName.charAt(0) + lastName.charAt(0);
@@ -58,22 +61,34 @@ const Header = ({
             css={{ width: '$58', height: '$58', position: 'relative' }}
             justify="center"
           >
-            <Icon
-              name="userIcon"
-              css={{
-                width: '100%',
-                height: '100%',
-                position: 'absolute',
-                top: '0',
-                bottom: '0',
-                zIndex: '0',
-                left: '0',
-                right: '0',
-              }}
-            />
-            <Text color="primary800" css={{ zIndex: 1 }} fontWeight="bold" size="md">
-              {initialLetters}
-            </Text>
+            {avatar ? (
+              <Avatar
+                key="avatarUserIcon"
+                css={{ position: 'relative', mr: '$10' }}
+                fallbackText={initialLetters}
+                size={32}
+                src={avatar}
+              />
+            ) : (
+              <>
+                <Icon
+                  name="userIcon"
+                  css={{
+                    width: '100%',
+                    height: '100%',
+                    position: 'absolute',
+                    top: '0',
+                    bottom: '0',
+                    zIndex: '0',
+                    left: '0',
+                    right: '0',
+                  }}
+                />
+                <Text color="primary800" css={{ zIndex: 1 }} fontWeight="bold" size="md">
+                  {initialLetters}
+                </Text>
+              </>
+            )}
           </Flex>
           <Flex css={{ width: '80%' }} direction="column">
             <Text

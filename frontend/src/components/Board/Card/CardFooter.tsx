@@ -168,6 +168,7 @@ const CardFooter = ({
             id={createdBy?._id}
             isDefaultColor={createdBy?._id === userId}
             size={20}
+            src={createdBy?.avatar}
           />
           <Text
             size="xs"
