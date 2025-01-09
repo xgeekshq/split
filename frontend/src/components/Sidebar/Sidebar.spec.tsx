@@ -8,6 +8,7 @@ const DEFAULT_PROPS = {
   lastName: 'Last',
   email: 'first.last@mail.com',
   strategy: 'local',
+  avatar: 'avatar',
 };
 
 const { mockRouter } = libraryMocks.mockNextRouter({ pathname: '/' });

@@ -36,9 +36,6 @@ const CardEnd: React.FC<CardEndProps> = React.memo(
     userSAdmin = undefined,
     socketId,
   }) => {
-    CardEnd.defaultProps = {
-      userSAdmin: undefined,
-    };
     const { _id: id, title, columns, users, team, createdBy } = board;
 
     const {

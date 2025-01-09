@@ -23,6 +23,9 @@ module.exports = {
     AZURE_CLIENT_SECRET: process.env.AZURE_CLIENT_SECRET,
     AZURE_TENANT_ID: process.env.AZURE_TENANT_ID,
   },
+  images: {
+    domains: [process.env.AZURE_STORAGE_HOSTNAME]
+  },
   rewrites: async () => {
     return [
       {

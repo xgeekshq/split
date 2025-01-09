@@ -23,7 +23,7 @@ export class TeamRepository
 				select: 'user role isNewJoiner canBeResponsible',
 				populate: {
 					path: 'user',
-					select: '_id firstName lastName email joinedAt providerAccountCreatedAt'
+					select: '_id firstName lastName email joinedAt providerAccountCreatedAt avatar'
 				}
 			}
 		);
@@ -36,7 +36,7 @@ export class TeamRepository
 				select: 'user role isNewJoiner canBeResponsible',
 				populate: {
 					path: 'user',
-					select: '_id firstName lastName email joinedAt providerAccountCreatedAt'
+					select: '_id firstName lastName email joinedAt providerAccountCreatedAt avatar'
 				}
 			}
 		]);
@@ -49,7 +49,7 @@ export class TeamRepository
 				select: 'user role email isNewJoiner canBeResponsible',
 				populate: {
 					path: 'user',
-					select: '_id firstName lastName email joinedAt providerAccountCreatedAt'
+					select: '_id firstName lastName email joinedAt providerAccountCreatedAt avatar'
 				}
 			}
 		]);

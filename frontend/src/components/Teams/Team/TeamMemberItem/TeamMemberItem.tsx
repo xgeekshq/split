@@ -13,6 +13,7 @@ import useCurrentSession from '@/hooks/useCurrentSession';
 import { createTeamState } from '@/store/team.atom';
 import { InnerContainer } from '@/styles/pages/pages.styles';
 import { TeamUser, TeamUserUpdate } from '@/types/team/team.user';
+import Avatar from '@components/Primitives/Avatars/Avatar/Avatar';
 
 export type TeamMemberItemProps = {
   member: TeamUser;
@@ -95,7 +96,17 @@ const TeamMemberItem = React.memo<TeamMemberItemProps>(
       <Flex data-testid="teamMemberItem" direction="column">
         <InnerContainer align="center" elevation="1" gap="40">
           <Flex align="center" css={{ flex: '4' }} gap="8">
-            <Icon name="blob-personal" size={32} />
+            {member.user.avatar ? (
+              <Avatar
+                key={`${member}-${member._id}-${Math.random()}`}
+                css={{ position: 'relative', mr: '$10' }}
+                fallbackText={member.user.firstName.charAt(0) + member.user.lastName.charAt(0)}
+                size={32}
+                src={member.user.avatar}
+              />
+            ) : (
+              <Icon name="blob-personal" size={32} />
+            )}
             <MemberTitle
               hasPermissions={isSAdmin}
               name={`${member.user.firstName} ${member.user.lastName}`}
