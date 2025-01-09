@@ -26,6 +26,8 @@ jobs:
       DOCKERFILE: ./frontend/Dockerfile
       REPOSITORY: frontend
       ROOT: ./frontend
+      BUILD_ARGS: |
+       "ASH=${{ vars.AZURE_STORAGE_HOSTNAME }}"
     secrets: inherit
 
   deploy_dev:
