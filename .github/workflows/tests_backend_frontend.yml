@@ -38,7 +38,7 @@ jobs:
           key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-npm-
-      
+
       - name: Install
         if: steps.cache.outputs.cache-hit != 'true'
         run: npm ci --legacy-peer-deps
@@ -67,7 +67,7 @@ jobs:
           key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-npm-
-      
+
       - name: Install
         if: steps.cache.outputs.cache-hit != 'true'
         run: npm ci
@@ -84,10 +84,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Use Node.js ${{ env.NODE_VERSION}}
+      - name: Use Node.js ${{ env.NODE_VERSION }}
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ env.NODE_VERSION}}
+          node-version: ${{ env.NODE_VERSION }}
           cache: "npm"
 
       - name: Cache multiple paths
@@ -100,7 +100,7 @@ jobs:
           key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-npm-
-      
+
       - name: Install
         if: steps.cache.outputs.cache-hit != 'true'
         run: npm ci
@@ -108,7 +108,7 @@ jobs:
       - name: Test
         run: npm run test:cov
         working-directory: backend
-  
+
   build_frontend:
     name: Build Frontend
     runs-on: ubuntu-latest
@@ -133,13 +133,15 @@ jobs:
           key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-npm-
-      
+
       - name: Install
         if: steps.cache.outputs.cache-hit != 'true'
         run: npm ci --legacy-peer-deps
 
       - name: Build
         run: npm run build
+        env:
+          AZURE_STORAGE_HOSTNAME: ${{ secrets.AZURE_STORAGE_HOSTNAME }}
         working-directory: frontend
 
   test_frontend:
@@ -166,7 +168,7 @@ jobs:
           key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-npm-
-      
+
       - name: Install
         if: steps.cache.outputs.cache-hit != 'true'
         run: npm ci --legacy-peer-deps
