@@ -152,10 +152,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Use Node.js ${{ env.NODE_VERSION}}
+      - name: Use Node.js ${{ env.NODE_VERSION }}
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ env.NODE_VERSION}}
+          node-version: ${{ env.NODE_VERSION }}
           cache: "npm"
 
       - name: Cache multiple paths
@@ -175,4 +175,6 @@ jobs:
 
       - name: Test
         run: npm run jest -- --coverage
+        env:
+          AZURE_STORAGE_HOSTNAME: ${{ secrets.AZURE_STORAGE_HOSTNAME }}
         working-directory: frontend
