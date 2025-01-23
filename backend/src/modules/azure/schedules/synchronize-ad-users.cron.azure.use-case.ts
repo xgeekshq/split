@@ -10,7 +10,7 @@ import {
 } from 'src/modules/users/constants';
 import { UseCase } from 'src/libs/interfaces/use-case.interface';
 import User from 'src/modules/users/entities/user.schema';
-import { AzureUserDTO } from '../dto/azure-user.dto';
+import { AzureUserDTO, AzureUserSyncDTO } from '../dto/azure-user.dto';
 import { CreateUserServiceInterface } from 'src/modules/users/interfaces/services/create.user.service.interface';
 import { GET_TEAM_BY_NAME_USE_CASE } from 'src/modules/teams/constants';
 import Team from 'src/modules/teams/entities/team.schema';
@@ -61,25 +61,24 @@ export class SynchronizeADUsersCronUseCase implements SynchronizeADUsersCronUseC
 				throw new Error('Azure AD users list is empty.');
 			}
 
-			const usersApp = await this.getAllUsersIncludeDeletedUseCase.execute();
-
-			if (!usersApp.length) {
-				throw new Error('Split app users list is empty.');
-			}
-
-			let usersAppFiltered = usersApp;
+			let usersApp = await this.getAllUsersIncludeDeletedUseCase.execute();
 
 			if (userEmailDomain) {
 				const emailDomain = '@' + userEmailDomain;
-				usersAppFiltered = usersAppFiltered.filter(
-					(user) => user.email && user.email.endsWith(emailDomain)
-				);
+				usersApp = usersApp.filter((user) => user.email && user.email.endsWith(emailDomain));
 			}
 
 			const today = new Date();
+
 			//Filter out users that don't have a '.' in the beggining of the email
 			let usersADFiltered = usersADAll.filter((u) =>
 				/[a-z]+\.[a-zA-Z0-9]+@/.test(u.userPrincipalName)
+			);
+
+			//Filter out users that don't have at least first and last name
+			usersADFiltered = usersADFiltered.filter(
+				(u: AzureUserSyncDTO) =>
+					!(u.displayName.split(' ').length < 2 && (!u.givenName || !u.surName))
 			);
 
 			//Filter out users that have a deletedDateTime bigger than 'today'
@@ -94,8 +93,8 @@ export class SynchronizeADUsersCronUseCase implements SynchronizeADUsersCronUseC
 					: true
 			);
 
-			await this.removeUsersFromApp(usersADFiltered, usersAppFiltered);
-			await this.addUsersToApp(usersADFiltered, usersAppFiltered, team);
+			await this.removeUsersFromApp(usersADFiltered, usersApp);
+			await this.addUsersToApp(usersADFiltered, usersApp, team);
 
 			this.logger.log('Synchronization of users between App and AD runned successfully.');
 		} catch (err) {
@@ -125,7 +124,7 @@ export class SynchronizeADUsersCronUseCase implements SynchronizeADUsersCronUseC
 		}
 	}
 	private async addUsersToApp(
-		usersADFiltered: Array<AzureUserDTO>,
+		usersADFiltered: Array<AzureUserSyncDTO>,
 		usersApp: Array<User>,
 		team: Team
 	) {
@@ -137,16 +136,20 @@ export class SynchronizeADUsersCronUseCase implements SynchronizeADUsersCronUseC
 		);
 
 		try {
-			const usersToCreate: Array<CreateUserAzureDto> = notIntersectedUsers.map((user) => {
-				const splittedName = user.displayName.split(' ');
+			const usersToCreate: Array<CreateUserAzureDto> = notIntersectedUsers
+				.map((user) => {
+					const splittedName = user.displayName.split(' ');
+					const firstName = user.givenName?.split(' ')[0] ?? splittedName[0];
+					const lastName = user.surName?.split(' ').at(-1) ?? splittedName.at(-1);
 
-				return {
-					email: user.mail ?? user.userPrincipalName,
-					firstName: splittedName[0],
-					lastName: splittedName[-1],
-					providerAccountCreatedAt: user.createdDateTime
-				};
-			});
+					return {
+						email: user.mail ?? user.userPrincipalName,
+						firstName,
+						lastName,
+						providerAccountCreatedAt: user.createdDateTime
+					};
+				})
+				.filter((u) => u.firstName && u.lastName);
 
 			const createdUsers = await this.createUserService.createMany(usersToCreate);
 

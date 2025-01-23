@@ -4,7 +4,7 @@ import { ConfidentialClientApplication } from '@azure/msal-node';
 import { Client, PageCollection } from '@microsoft/microsoft-graph-client';
 import { ConfigService } from '@nestjs/config';
 import { AZURE_AUTHORITY, AZURE_CLIENT_ID, AZURE_CLIENT_SECRET } from 'src/libs/constants/azure';
-import { AzureUserDTO } from '../dto/azure-user.dto';
+import { AzureUserDTO, AzureUserSyncDTO } from '../dto/azure-user.dto';
 
 export type AzureDecodedUser = {
 	unique_name: string;
@@ -71,7 +71,7 @@ export default class AuthAzureService implements AuthAzureServiceInterface {
 		return this.graphClient.api(`/users/${userId}/photos/240x240/$value`).get();
 	}
 
-	async getADUsers(): Promise<Array<AzureUserDTO>> {
+	async getADUsers(): Promise<Array<AzureUserSyncDTO>> {
 		let response: PageCollection = await this.graphClient
 			.api('/users')
 			.header('ConsistencyLevel', 'eventual')
@@ -85,7 +85,9 @@ export default class AuthAzureService implements AuthAzureServiceInterface {
 				'createdDateTime',
 				'accountEnabled',
 				'deletedDateTime',
-				'employeeLeaveDateTime'
+				'employeeLeaveDateTime',
+				'givenName',
+				'surname'
 			])
 			.get();
 

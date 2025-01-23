@@ -3,7 +3,7 @@ import User from '../entities/user.schema';
 
 export const sortAlphabetically = (a: User, b: User) => {
 	if (a.firstName.toLowerCase() === b.firstName.toLowerCase()) {
-		return a.lastName.toLowerCase() < b.lastName.toLowerCase() ? -1 : 1;
+		return a.lastName?.toLowerCase() < b.lastName?.toLowerCase() ? -1 : 1;
 	}
 
 	return a.firstName.toLowerCase() < b.firstName.toLowerCase() ? -1 : 1;

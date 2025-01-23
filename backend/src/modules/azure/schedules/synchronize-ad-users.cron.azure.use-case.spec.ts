@@ -116,13 +116,22 @@ describe('SynchronizeAdUsersCronUseCase', () => {
 			employeeLeaveDateTime: null,
 			deletedDateTime: null
 		});
+		const userWithInvalidName = AzureUserFactory.create({
+			employeeLeaveDateTime: null,
+			deletedDateTime: null
+		});
+
+		//Invalidate last name - represents a user only with first name
+		userWithInvalidName.surName = '';
+		userWithInvalidName.displayName = userWithInvalidName.displayName.split(' ')[0];
+
 		const azureUserDto: CreateUserAzureDto = {
 			email: userNotInApp.mail,
 			firstName: userNotInApp.displayName.split(' ')[0],
-			lastName: userNotInApp.displayName.split(' ')[-1],
+			lastName: userNotInApp.displayName.split(' ').at(-1),
 			providerAccountCreatedAt: userNotInApp.createdDateTime
 		};
-		const finalADUsers = [userNotInApp, ...usersAD];
+		const finalADUsers = [userNotInApp, userWithInvalidName, ...usersAD];
 		const userNotInAD = UserFactory.create({
 			isDeleted: false,
 			email: 'anything.anyone@xgeeks.com'
@@ -149,7 +158,7 @@ describe('SynchronizeAdUsersCronUseCase', () => {
 		await synchronizeADUsers.execute();
 		expect(getTeamByNameUseCase.execute).toHaveBeenCalledWith('xgeeks');
 		expect(deleteUserMock.execute).toHaveBeenCalledWith(userNotInAD._id);
-		expect(createUserServiceMock.createMany).toHaveBeenCalledWith([azureUserDto]);
+		expect(createUserServiceMock.createMany).toHaveBeenCalledWith([azureUserDto]); //userWithInvalidName isn't called here because of the name rules
 		expect(addAndRemoveTeamUserUseCase.execute).toHaveBeenCalledWith(updateUsersTeam);
 	});
 });
