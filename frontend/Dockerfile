@@ -13,6 +13,8 @@ COPY . .
 
 # Rebuild the source code only when needed
 FROM node:$TAG AS builder
+ARG ASH
+ENV AZURE_STORAGE_HOSTNAME $ASH
 ENV NODE_ENV=production
 WORKDIR /app
 COPY --from=development /app/node_modules ./node_modules

@@ -141,7 +141,7 @@ jobs:
       - name: Build
         run: npm run build
         env:
-          AZURE_STORAGE_HOSTNAME: ${{ secrets.AZURE_STORAGE_HOSTNAME }}
+          AZURE_STORAGE_HOSTNAME: ${{ vars.AZURE_STORAGE_HOSTNAME }}
         working-directory: frontend
 
   test_frontend:
@@ -176,5 +176,5 @@ jobs:
       - name: Test
         run: npm run jest -- --coverage
         env:
-          AZURE_STORAGE_HOSTNAME: ${{ secrets.AZURE_STORAGE_HOSTNAME }}
+          AZURE_STORAGE_HOSTNAME: ${{ vars.AZURE_STORAGE_HOSTNAME }}
         working-directory: frontend
