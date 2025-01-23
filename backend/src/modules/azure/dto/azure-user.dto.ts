@@ -8,3 +8,8 @@ export type AzureUserDTO = {
 	deletedDateTime: Date | null;
 	employeeLeaveDateTime: Date | null;
 };
+
+export type AzureUserSyncDTO = AzureUserDTO & {
+	givenName: string;
+	surName: string;
+};
