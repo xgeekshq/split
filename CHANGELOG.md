@@ -2,7 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
-## [Unreleased](https://github.com/xgeekshq/split/compare/v0.1.32...HEAD)
+## [Unreleased](https://github.com/xgeekshq/split/compare/v0.1.33...HEAD)
+
+## [v0.1.33](https://github.com/xgeekshq/split/compare/v0.1.32...v0.1.33) - 2025-01-24
+
+### What Changed 👀
+
+- fix: user name in ad synchronization @joaofrparreira (#1621)
+- chore: change AZURE_STORAGE_HOSTNAME from secret to var @r-p-alves (#1619)
+- feat: show user avatar photo @joaofrparreira (#1614)
+- fix: synchronization user email domain filter @joaofrparreira (#1609)
+
+**Full Changelog**: https://github.com/xgeekshq/split/compare/v0.1.32...v0.1.33
 
 ## [v0.1.32](https://github.com/xgeekshq/split/compare/v0.1.31...v0.1.32) - 2024-12-06
 
@@ -256,7 +267,6 @@ All notable changes to this project will be documented in this file.
 - refactor: unmergecardservice to usecase and tests @GoncaloCanteiro (#1312)
 - refactor: mergecardservice to usecase @GoncaloCanteiro (#1309)
 - refactor: create card service to usecase @GoncaloCanteiro (#1306)
-
 ### 🐛 Bug Fixes
 
 - fix: removed deleted import @StereoPT (#1442)
@@ -336,7 +346,6 @@ All notable changes to this project will be documented in this file.
 - refactor: user components @StereoPT (#1272)
 - fix: split teams @nunocaseiro (#1279)
 ### 🧩 Dependency Updates
-
 - chore(deps): bump webpack and @nestjs/cli in /backend @dependabot (#1270)
 - chore(deps): bump amannn/action-semantic-pull-request from 5.1.0 to 5.2.0 @dependabot (#1265)
 
