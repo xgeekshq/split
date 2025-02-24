@@ -41,7 +41,7 @@ jobs:
           use-kubelogin: 'true'
 
       - name: Install Helm
-        uses: azure/setup-helm@v4.2.0
+        uses: azure/setup-helm@v4.3.0
 
       - name: Deploy
         run: helm upgrade --install split ${{ env.CHART-PATH }} -f ${{ inputs.CHART_OVERRIDE_PATH }} --set global.image.tag=${{ env.TAG }} --namespace=split-${{ inputs.ENVIRONMENT }} --create-namespace --atomic
